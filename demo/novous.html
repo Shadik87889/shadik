@@ -1,0 +1,1154 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NOVUS ACADEMIA | The New Classical</title>
+
+    <!-- Fonts: Cormorant Garamond (Elegant Serif), Manrope (Modern Sans) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,600&family=Manrope:wght@200;300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <!-- Lenis Smooth Scroll -->
+    <script src="https://unpkg.com/lenis@1.1.20/dist/lenis.min.js"></script>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              serif: ['"Cormorant Garamond"', "serif"],
+              sans: ['"Manrope"', "sans-serif"],
+            },
+            colors: {
+              "novus-cream": "#F5F5F0",
+              "novus-black": "#0F0F0F",
+              "novus-red": "#8A1C1C",
+              "novus-stone": "#D6D6D2",
+            },
+            animation: {
+              "spin-slow": "spin 12s linear infinite",
+              float: "float 6s ease-in-out infinite",
+              marquee: "marquee 30s linear infinite",
+            },
+            keyframes: {
+              float: {
+                "0%, 100%": { transform: "translateY(0)" },
+                "50%": { transform: "translateY(-20px)" },
+              },
+              marquee: {
+                "0%": { transform: "translateX(0)" },
+                "100%": { transform: "translateX(-100%)" },
+              },
+            },
+          },
+        },
+      };
+    </script>
+
+    <style>
+      /* --- CORE STYLES --- */
+      html.lenis,
+      html.lenis body {
+        height: auto;
+      }
+      .lenis.lenis-smooth {
+        scroll-behavior: auto !important;
+      }
+      .lenis.lenis-smooth [data-lenis-prevent] {
+        overscroll-behavior: contain;
+      }
+      .lenis.lenis-stopped {
+        overflow: hidden;
+      }
+
+      body {
+        background-color: #f5f5f0;
+        color: #0f0f0f;
+        cursor: none; /* Custom cursor */
+        overflow-x: hidden;
+      }
+
+      /* Global Grain Overlay */
+      .grain-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 9000;
+        opacity: 0.04;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+      }
+
+      /* --- TYPOGRAPHY --- */
+      .display-text {
+        font-family: "Cormorant Garamond", serif;
+        line-height: 0.9;
+      }
+
+      /* --- AWESOME ROLLING TEXT HOVER --- */
+      .roll-link {
+        display: inline-block;
+        overflow: hidden;
+        height: 1.1em; /* Slight buffer for font metrics */
+        line-height: 1.1;
+        vertical-align: bottom;
+        position: relative;
+      }
+      .roll-link span {
+        display: block;
+        transition: transform 0.5s cubic-bezier(0.76, 0, 0.24, 1);
+      }
+      .roll-link::after {
+        content: attr(data-text);
+        display: block;
+        font-style: italic;
+        color: #8a1c1c;
+        transform: translateY(105%); /* Ensure it's fully hidden initially */
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        transition: transform 0.5s cubic-bezier(0.76, 0, 0.24, 1);
+      }
+      .roll-link:hover span {
+        transform: translateY(-105%);
+      }
+      .roll-link:hover::after {
+        transform: translateY(0);
+      }
+
+      /* --- CUSTOM CURSOR --- */
+      #cursor {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 12px;
+        height: 12px;
+        background-color: #0f0f0f;
+        border-radius: 50%;
+        pointer-events: none;
+        z-index: 9999;
+        transform: translate(-50%, -50%);
+        transition: width 0.3s, height 0.3s, background-color 0.3s;
+        mix-blend-mode: exclusion;
+      }
+      #cursor.hovered {
+        width: 80px;
+        height: 80px;
+        background-color: white;
+        mix-blend-mode: difference;
+      }
+      #cursor.magnetic {
+        transition: transform 0.1s linear, width 0.3s, height 0.3s;
+      }
+
+      /* --- PRELOADER (FIXED ALIGNMENT) --- */
+      .preloader {
+        position: fixed;
+        inset: 0;
+        background: #0f0f0f;
+        z-index: 10000;
+        display: flex;
+        justify-content: center;
+        align-items: center; /* Fixed from items-center */
+        color: #f5f5f0;
+        transition: transform 1s cubic-bezier(0.76, 0, 0.24, 1);
+      }
+
+      /* --- MAGNETIC BUTTON --- */
+      .magnetic-wrap {
+        display: inline-block;
+        position: relative;
+      }
+
+      /* --- MENU --- */
+      #menu-overlay {
+        clip-path: polygon(0 0, 100% 0, 100% 0, 0 0);
+        transition: clip-path 0.8s cubic-bezier(0.76, 0, 0.24, 1);
+      }
+      #menu-overlay.open {
+        clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+      }
+
+      /* --- STICKY HORIZONTAL SCROLL (DESKTOP) --- */
+      .sticky-scroll-section {
+        height: 400vh;
+        position: relative;
+      }
+      .sticky-wrapper {
+        position: sticky;
+        top: 0;
+        height: 100vh;
+        width: 100%;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+      }
+      .horizontal-track {
+        display: flex;
+        gap: 4rem;
+        padding-left: 5vw;
+        padding-right: 5vw;
+        width: max-content;
+        will-change: transform;
+      }
+
+      /* --- MOBILE OPTIMIZATIONS (The "Perfect" Mobile Experience) --- */
+      @media (max-width: 768px) {
+        .cursor-none {
+          cursor: auto;
+        }
+        #cursor {
+          display: none;
+        }
+
+        /* Disable sticky scroll on mobile, switch to vertical stack */
+        .sticky-scroll-section {
+          height: auto !important;
+        }
+        .sticky-wrapper {
+          position: relative;
+          height: auto;
+          top: 0;
+          display: block;
+          overflow: visible;
+        }
+        .horizontal-track {
+          display: flex;
+          flex-direction: column;
+          width: 100%;
+          gap: 3rem;
+          padding: 4rem 1.5rem;
+          transform: none !important;
+        }
+        .horizontal-track > div {
+          width: 100% !important;
+          padding-left: 0;
+        }
+
+        /* Adjust typography scaling for mobile */
+        .text-\[16vw\] {
+          font-size: 3.5rem;
+        }
+        .text-\[8vw\] {
+          font-size: 3rem;
+        }
+      }
+
+      /* --- BENTO GRID HOVER --- */
+      .bento-card img {
+        transition: transform 0.7s cubic-bezier(0.25, 1, 0.5, 1);
+      }
+      .bento-card:hover img {
+        transform: scale(1.05);
+      }
+    </style>
+  </head>
+  <body class="antialiased selection:bg-novus-red selection:text-white">
+    <!-- GRAIN OVERLAY -->
+    <div class="grain-overlay"></div>
+
+    <!-- PRELOADER -->
+    <div class="preloader" id="preloader">
+      <div class="text-center">
+        <div class="font-serif text-6xl italic mb-4 overflow-hidden">
+          <span
+            class="block transform translate-y-full transition-transform duration-700 delay-100"
+            id="loader-text"
+            >Novus.</span
+          >
+        </div>
+        <div class="w-32 h-[1px] bg-white/20 mx-auto overflow-hidden">
+          <div
+            class="w-full h-full bg-white transform -translate-x-full transition-transform duration-[1.5s] ease-in-out"
+            id="loader-line"
+          ></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CURSOR -->
+    <div id="cursor"></div>
+
+    <!-- FLOATING COURSE PREVIEW -->
+    <div
+      id="course-preview"
+      class="fixed top-0 left-0 w-[300px] h-[400px] pointer-events-none z-40 opacity-0 transition-opacity duration-500 overflow-hidden rounded-sm hidden md:block"
+    >
+      <img
+        src=""
+        id="course-preview-img"
+        class="w-full h-full object-cover grayscale mix-blend-screen"
+        alt="Preview"
+      />
+    </div>
+
+    <!-- MENU OVERLAY -->
+    <div
+      id="menu-overlay"
+      class="fixed inset-0 bg-novus-black z-40 flex items-center justify-center text-novus-cream"
+    >
+      <div class="flex flex-col gap-4 text-center">
+        <a
+          href="#curriculum"
+          class="text-[12vw] md:text-[8vw] font-serif font-light leading-none hover:text-white transition-colors interactive roll-link"
+          data-text="Academics"
+          ><span>Academics</span></a
+        >
+        <a
+          href="#about"
+          class="text-[12vw] md:text-[8vw] font-serif font-light leading-none hover:text-white transition-colors interactive roll-link"
+          data-text="Admissions"
+          ><span>Admissions</span></a
+        >
+        <a
+          href="#journal"
+          class="text-[12vw] md:text-[8vw] font-serif font-light leading-none hover:text-white transition-colors interactive roll-link"
+          data-text="The Journal"
+          ><span>The Journal</span></a
+        >
+        <a
+          href="#contact"
+          class="text-[12vw] md:text-[8vw] font-serif font-light leading-none hover:text-white transition-colors interactive roll-link"
+          data-text="Contact"
+          ><span>Contact</span></a
+        >
+      </div>
+    </div>
+
+    <!-- NAVIGATION -->
+    <nav
+      class="fixed inset-0 pointer-events-none z-50 p-6 md:p-12 flex flex-col justify-between text-novus-black mix-blend-difference text-white"
+    >
+      <!-- Top Left -->
+      <div class="flex justify-between w-full pointer-events-auto items-start">
+        <a
+          href="#"
+          class="font-serif text-xl md:text-2xl font-bold tracking-tight interactive magnetic-wrap roll-link"
+          data-text="N / A"
+        >
+          <span>N / A</span>
+        </a>
+
+        <!-- Top Right: Menu Trigger -->
+        <button
+          id="menu-btn"
+          class="group flex flex-col items-end gap-1 interactive magnetic-wrap"
+        >
+          <div
+            class="w-8 h-[2px] bg-current group-hover:w-12 transition-all duration-300"
+            id="menu-line-1"
+          ></div>
+          <div
+            class="w-6 h-[2px] bg-current group-hover:w-12 transition-all duration-300 delay-75"
+            id="menu-line-2"
+          ></div>
+        </button>
+      </div>
+
+      <!-- Bottom -->
+      <div class="flex justify-between w-full pointer-events-auto items-end">
+        <div
+          class="hidden md:block font-sans text-xs tracking-widest uppercase opacity-70"
+        >
+          Est. 1842 — Cambridge
+        </div>
+        <button
+          onclick="document.getElementById('contact').scrollIntoView({behavior: 'smooth'})"
+          class="bg-novus-black text-novus-cream px-8 py-4 rounded-full font-sans text-xs uppercase tracking-widest font-bold hover:bg-novus-red transition-colors duration-300 interactive magnetic-wrap overflow-hidden relative group"
+        >
+          <span class="relative z-10 group-hover:text-white transition-colors"
+            >Inquire</span
+          >
+        </button>
+      </div>
+    </nav>
+
+    <main id="main">
+      <!-- HERO SECTION -->
+      <section
+        id="home"
+        class="relative min-h-screen flex items-center justify-center overflow-hidden px-6 pt-24 pb-12"
+      >
+        <div
+          class="text-center relative z-10 mix-blend-difference text-[#F5F5F0]"
+        >
+          <p
+            class="font-sans text-xs md:text-sm uppercase tracking-[0.3em] mb-6 opacity-80 animate-reveal"
+          >
+            The New Classical
+          </p>
+          <h1
+            class="display-text text-6xl md:text-[16vw] font-light leading-none tracking-tighter mb-4 animate-reveal"
+          >
+            NOVUS
+          </h1>
+          <h1
+            class="display-text text-6xl md:text-[16vw] font-italic italic leading-none tracking-tighter animate-reveal text-transparent stroke-text opacity-80"
+          >
+            ACADEMIA
+          </h1>
+        </div>
+
+        <!-- Hero Image (Centered Portal) -->
+        <div class="absolute inset-0 z-0 flex items-center justify-center">
+          <div
+            class="w-[80vw] h-[50vh] md:w-[25vw] md:h-[70vh] overflow-hidden rounded-t-[10rem] shadow-2xl parallax-img-container"
+          >
+            <img
+              src="https://images.unsplash.com/photo-1541339907198-e08756dedf3f?q=80&w=2070&auto=format&fit=crop"
+              alt="Classic Hall"
+              class="w-full h-full object-cover scale-125 parallax-img"
+              data-speed="0.5"
+            />
+          </div>
+        </div>
+
+        <!-- Scroll Indicator -->
+        <div
+          class="absolute bottom-12 left-1/2 -translate-x-1/2 text-novus-black flex flex-col items-center gap-2 mix-blend-difference text-white"
+        >
+          <div class="w-[1px] h-12 bg-current animate-pulse"></div>
+          <span class="font-sans text-[10px] tracking-widest uppercase"
+            >Scroll</span
+          >
+        </div>
+      </section>
+
+      <!-- INTRO / MANIFESTO -->
+      <section
+        id="about"
+        class="py-24 md:py-32 px-6 md:px-24 max-w-[1600px] mx-auto border-b border-gray-200"
+      >
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-12 items-start">
+          <div class="md:col-span-4">
+            <span
+              class="font-sans text-xs text-novus-red uppercase tracking-widest border-b border-novus-red pb-1"
+              >Our Ethos</span
+            >
+          </div>
+          <div class="md:col-span-8">
+            <p
+              class="font-serif text-3xl md:text-6xl leading-[1.2] md:leading-[1.1] font-light text-novus-black"
+            >
+              Tradition is not the worship of ashes, but the preservation of
+              fire. At Novus, we blend
+              <span class="italic text-gray-500">classical rigor</span> with
+              <span class="italic text-gray-500">radical innovation</span>.
+            </p>
+            <div class="mt-20 flex gap-8">
+              <!-- BUTTON FIX: Increased padding-bottom to separate line from text -->
+              <a
+                href="#"
+                class="font-sans text-xs uppercase tracking-widest border-b border-black pb-3 hover:text-novus-red hover:border-novus-red transition-all interactive roll-link"
+                data-text="Read Manifesto"
+              >
+                <span>Read Manifesto</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- STATS SECTION -->
+      <section
+        class="py-24 bg-novus-cream text-novus-black border-b border-gray-200"
+      >
+        <div
+          class="max-w-[1600px] mx-auto px-6 md:px-24 grid grid-cols-2 md:grid-cols-4 gap-12"
+        >
+          <div class="flex flex-col">
+            <span class="font-serif text-5xl md:text-8xl font-light">12</span>
+            <span
+              class="font-sans text-xs uppercase tracking-widest opacity-60 mt-2"
+              >Nobel Laureates</span
+            >
+          </div>
+          <div class="flex flex-col">
+            <span class="font-serif text-5xl md:text-8xl font-light">42</span>
+            <span
+              class="font-sans text-xs uppercase tracking-widest opacity-60 mt-2"
+              >Research Labs</span
+            >
+          </div>
+          <div class="flex flex-col">
+            <span class="font-serif text-5xl md:text-8xl font-light">1842</span>
+            <span
+              class="font-sans text-xs uppercase tracking-widest opacity-60 mt-2"
+              >Founded</span
+            >
+          </div>
+          <div class="flex flex-col">
+            <span class="font-serif text-5xl md:text-8xl font-light">0.4%</span>
+            <span
+              class="font-sans text-xs uppercase tracking-widest opacity-60 mt-2"
+              >Acceptance Rate</span
+            >
+          </div>
+        </div>
+      </section>
+
+      <!-- FACULTY / COURSES -->
+      <section
+        id="curriculum"
+        class="py-24 md:py-32 bg-white text-novus-black relative z-10"
+      >
+        <div
+          class="px-6 md:px-24 mb-16 md:mb-24 flex flex-col md:flex-row justify-between items-end"
+        >
+          <h2 class="font-serif text-5xl md:text-8xl">Curriculum</h2>
+          <!-- BUTTON FIX: Increased padding-bottom -->
+          <a
+            href="#"
+            class="hidden md:block font-sans text-xs uppercase tracking-widest border-b border-black pb-3 hover:text-novus-red hover:border-novus-red transition-all interactive roll-link"
+            data-text="Full Syllabus"
+            ><span>Full Syllabus</span></a
+          >
+        </div>
+
+        <div class="border-t border-gray-200">
+          <!-- Item 1 -->
+          <div
+            class="course-item group relative py-12 md:py-16 px-6 md:px-24 border-b border-gray-200 flex justify-between items-center cursor-pointer hover:bg-gray-50 transition-colors interactive"
+            data-img="https://images.unsplash.com/photo-1507413245164-6160d8298b31?q=80&w=2070&auto=format&fit=crop"
+          >
+            <div class="flex items-center gap-6 md:gap-24">
+              <span
+                class="font-serif text-xl md:text-3xl text-gray-300 group-hover:text-novus-red transition-colors italic"
+                >I</span
+              >
+              <h3
+                class="font-serif text-3xl md:text-7xl group-hover:translate-x-6 transition-transform duration-500 font-light"
+              >
+                Philosophy of AI
+              </h3>
+            </div>
+            <div
+              class="hidden md:flex flex-col items-end opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+            >
+              <span class="font-sans text-xs uppercase tracking-widest"
+                >Dr. Vance</span
+              >
+              <span class="font-serif italic text-gray-500"
+                >Department of Logic</span
+              >
+            </div>
+          </div>
+
+          <!-- Item 2 -->
+          <div
+            class="course-item group relative py-12 md:py-16 px-6 md:px-24 border-b border-gray-200 flex justify-between items-center cursor-pointer hover:bg-gray-50 transition-colors interactive"
+            data-img="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2070&auto=format&fit=crop"
+          >
+            <div class="flex items-center gap-6 md:gap-24">
+              <span
+                class="font-serif text-xl md:text-3xl text-gray-300 group-hover:text-novus-red transition-colors italic"
+                >II</span
+              >
+              <h3
+                class="font-serif text-3xl md:text-7xl group-hover:translate-x-6 transition-transform duration-500 font-light"
+              >
+                Sustainable Finance
+              </h3>
+            </div>
+            <div
+              class="hidden md:flex flex-col items-end opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+            >
+              <span class="font-sans text-xs uppercase tracking-widest"
+                >Prof. Akiyama</span
+              >
+              <span class="font-serif italic text-gray-500"
+                >School of Economics</span
+              >
+            </div>
+          </div>
+
+          <!-- Item 3 -->
+          <div
+            class="course-item group relative py-12 md:py-16 px-6 md:px-24 border-b border-gray-200 flex justify-between items-center cursor-pointer hover:bg-gray-50 transition-colors interactive"
+            data-img="https://images.unsplash.com/photo-1555445054-01d73c2a9a96?q=80&w=2070&auto=format&fit=crop"
+          >
+            <div class="flex items-center gap-6 md:gap-24">
+              <span
+                class="font-serif text-xl md:text-3xl text-gray-300 group-hover:text-novus-red transition-colors italic"
+                >III</span
+              >
+              <h3
+                class="font-serif text-3xl md:text-7xl group-hover:translate-x-6 transition-transform duration-500 font-light"
+              >
+                Neo-Classical Art
+              </h3>
+            </div>
+            <div
+              class="hidden md:flex flex-col items-end opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+            >
+              <span class="font-sans text-xs uppercase tracking-widest"
+                >Mme. Dubois</span
+              >
+              <span class="font-serif italic text-gray-500">Fine Arts</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- BENTO GRID ECOSYSTEM -->
+      <section
+        class="py-24 md:py-32 px-6 md:px-24 bg-novus-cream max-w-[1600px] mx-auto"
+      >
+        <div class="mb-16">
+          <span
+            class="font-sans text-xs text-novus-red uppercase tracking-widest border-b border-novus-red pb-1"
+            >The Ecosystem</span
+          >
+          <h2 class="font-serif text-5xl md:text-7xl mt-6">
+            Institute Facilities
+          </h2>
+        </div>
+
+        <div
+          class="grid grid-cols-1 md:grid-cols-3 gap-6 auto-rows-[300px] md:auto-rows-[400px]"
+        >
+          <!-- Card 1 -->
+          <div
+            class="md:col-span-2 relative group overflow-hidden bento-card interactive cursor-none"
+          >
+            <img
+              src="https://images.unsplash.com/photo-1562774053-701939374585?q=80&w=2086&auto=format&fit=crop"
+              class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700"
+              alt="Labs"
+            />
+            <div
+              class="absolute bottom-0 left-0 p-8 w-full bg-gradient-to-t from-black/80 to-transparent text-white"
+            >
+              <h3 class="font-serif text-3xl italic">The Quantum Labs</h3>
+              <p class="font-sans text-xs uppercase tracking-widest mt-2">
+                Advanced Research
+              </p>
+            </div>
+          </div>
+
+          <!-- Card 2 -->
+          <div
+            class="md:row-span-2 relative group overflow-hidden bento-card interactive"
+          >
+            <img
+              src="https://images.unsplash.com/photo-1505567745926-ba89000d255a?q=80&w=2071&auto=format&fit=crop"
+              class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700"
+              alt="Archives"
+            />
+            <div class="absolute top-0 right-0 p-8 text-right">
+              <div
+                class="w-12 h-12 bg-white rounded-full flex items-center justify-center mb-4 ml-auto text-black"
+              >
+                <i class="ph ph-arrow-up-right text-xl"></i>
+              </div>
+            </div>
+            <div
+              class="absolute bottom-0 left-0 p-8 w-full bg-gradient-to-t from-black/80 to-transparent text-white"
+            >
+              <h3 class="font-serif text-3xl italic">The Archives</h3>
+              <p class="font-sans text-xs uppercase tracking-widest mt-2">
+                Historical Records
+              </p>
+            </div>
+          </div>
+
+          <!-- Card 3 -->
+          <div class="relative group overflow-hidden bento-card interactive">
+            <img
+              src="https://images.unsplash.com/photo-1598387181032-a3103a2db5b3?q=80&w=2076&auto=format&fit=crop"
+              class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700"
+              alt="Auditorium"
+            />
+            <div
+              class="absolute bottom-0 left-0 p-8 w-full bg-gradient-to-t from-black/80 to-transparent text-white"
+            >
+              <h3 class="font-serif text-3xl italic">Grand Auditorium</h3>
+              <p class="font-sans text-xs uppercase tracking-widest mt-2">
+                Events
+              </p>
+            </div>
+          </div>
+
+          <!-- Card 4 -->
+          <div
+            class="bg-novus-black text-novus-cream p-12 flex flex-col justify-between group interactive"
+          >
+            <i class="ph ph-asterisk text-6xl animate-spin-slow"></i>
+            <div>
+              <p class="font-serif text-2xl leading-relaxed italic opacity-80">
+                "Architecture is the petrification of a moment of culture."
+              </p>
+              <p
+                class="font-sans text-xs uppercase tracking-widest mt-4 opacity-50"
+              >
+                — Jean Nouvel
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- HORIZONTAL SCROLL GALLERY (Responsive Stack on Mobile) -->
+      <section
+        id="horizontal-section"
+        class="sticky-scroll-section bg-novus-black text-novus-cream"
+      >
+        <div class="sticky-wrapper">
+          <div
+            class="md:absolute top-12 left-12 md:left-24 z-10 px-6 md:px-0 pt-12 md:pt-0"
+          >
+            <h2 class="font-serif text-4xl md:text-5xl mix-blend-difference">
+              Campus Life
+            </h2>
+          </div>
+
+          <div class="horizontal-track">
+            <!-- Title Card (Desktop only) -->
+            <div class="w-[30vw] hidden md:flex items-center pl-12">
+              <p class="font-serif text-3xl italic opacity-70 max-w-xs">
+                "A theatre of memory where every corner tells a story."
+              </p>
+            </div>
+
+            <!-- Card 1 -->
+            <div class="w-[80vw] md:w-[45vw] flex-shrink-0 group">
+              <div class="overflow-hidden h-[60vh] relative mb-6">
+                <div
+                  class="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors z-10"
+                ></div>
+                <img
+                  src="https://images.unsplash.com/photo-1590579491624-f98f36d4c763?q=80&w=2070&auto=format&fit=crop"
+                  class="w-full h-full object-cover transition-transform duration-[1.5s] group-hover:scale-110 grayscale group-hover:grayscale-0"
+                  alt="The Great Hall"
+                />
+              </div>
+              <div
+                class="flex justify-between items-end border-b border-white/20 pb-4"
+              >
+                <h3 class="font-serif text-3xl md:text-4xl italic">
+                  The Great Hall
+                </h3>
+                <span
+                  class="font-sans text-xs uppercase tracking-widest opacity-60"
+                  >Study</span
+                >
+              </div>
+            </div>
+
+            <!-- Card 2 -->
+            <div class="w-[80vw] md:w-[45vw] flex-shrink-0 group">
+              <div class="overflow-hidden h-[60vh] relative mb-6">
+                <div
+                  class="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors z-10"
+                ></div>
+                <img
+                  src="https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?q=80&w=2070&auto=format&fit=crop"
+                  class="w-full h-full object-cover transition-transform duration-[1.5s] group-hover:scale-110 grayscale group-hover:grayscale-0"
+                  alt="Residences"
+                />
+              </div>
+              <div
+                class="flex justify-between items-end border-b border-white/20 pb-4"
+              >
+                <h3 class="font-serif text-3xl md:text-4xl italic">
+                  Residences
+                </h3>
+                <span
+                  class="font-sans text-xs uppercase tracking-widest opacity-60"
+                  >Living</span
+                >
+              </div>
+            </div>
+
+            <!-- Card 3 -->
+            <div class="w-[80vw] md:w-[45vw] flex-shrink-0 group">
+              <div class="overflow-hidden h-[60vh] relative mb-6">
+                <div
+                  class="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors z-10"
+                ></div>
+                <img
+                  src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=2070&auto=format&fit=crop"
+                  class="w-full h-full object-cover transition-transform duration-[1.5s] group-hover:scale-110 grayscale group-hover:grayscale-0"
+                  alt="Athletics"
+                />
+              </div>
+              <div
+                class="flex justify-between items-end border-b border-white/20 pb-4"
+              >
+                <h3 class="font-serif text-3xl md:text-4xl italic">
+                  Athletics
+                </h3>
+                <span
+                  class="font-sans text-xs uppercase tracking-widest opacity-60"
+                  >Sport</span
+                >
+              </div>
+            </div>
+
+            <!-- End Card -->
+            <div class="w-[30vw] hidden md:flex items-center justify-center">
+              <div class="w-[1px] h-32 bg-white/20"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- THE JOURNAL -->
+      <section
+        id="journal"
+        class="py-24 md:py-32 px-6 md:px-24 max-w-[1600px] mx-auto"
+      >
+        <div class="mb-16 flex justify-between items-end">
+          <div>
+            <span
+              class="font-sans text-xs text-novus-red uppercase tracking-widest border-b border-novus-red pb-1"
+              >The Journal</span
+            >
+            <h2 class="font-serif text-5xl md:text-7xl mt-6">
+              Recent Thoughts
+            </h2>
+          </div>
+          <!-- BUTTON FIX: Increased padding-bottom -->
+          <a
+            href="#"
+            class="hidden md:block font-sans text-xs uppercase tracking-widest border-b border-black pb-3 hover:text-novus-red hover:border-novus-red transition-all interactive roll-link"
+            data-text="View All"
+            ><span>View All</span></a
+          >
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+          <article class="group cursor-pointer interactive">
+            <div class="overflow-hidden mb-6 aspect-[4/3]">
+              <img
+                src="https://images.unsplash.com/photo-1506784983877-45594efa4cbe?q=80&w=2068&auto=format&fit=crop"
+                class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 grayscale group-hover:grayscale-0"
+                alt="News 1"
+              />
+            </div>
+            <span
+              class="font-sans text-[10px] uppercase tracking-widest text-gray-400"
+              >Oct 24, 2025</span
+            >
+            <h3
+              class="font-serif text-2xl mt-3 group-hover:text-novus-red transition-colors"
+            >
+              The Future of Classical Education in a Digital Age
+            </h3>
+          </article>
+
+          <article class="group cursor-pointer interactive">
+            <div class="overflow-hidden mb-6 aspect-[4/3]">
+              <img
+                src="https://images.unsplash.com/photo-1457369804613-52c61a468e7d?q=80&w=2070&auto=format&fit=crop"
+                class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 grayscale group-hover:grayscale-0"
+                alt="News 2"
+              />
+            </div>
+            <span
+              class="font-sans text-[10px] uppercase tracking-widest text-gray-400"
+              >Sep 12, 2025</span
+            >
+            <h3
+              class="font-serif text-2xl mt-3 group-hover:text-novus-red transition-colors"
+            >
+              Architectural Silence: Designing for Thought
+            </h3>
+          </article>
+
+          <article class="group cursor-pointer interactive">
+            <div class="overflow-hidden mb-6 aspect-[4/3]">
+              <img
+                src="https://images.unsplash.com/photo-1434030216411-0b793f4b4173?q=80&w=2070&auto=format&fit=crop"
+                class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 grayscale group-hover:grayscale-0"
+                alt="News 3"
+              />
+            </div>
+            <span
+              class="font-sans text-[10px] uppercase tracking-widest text-gray-400"
+              >Aug 08, 2025</span
+            >
+            <h3
+              class="font-serif text-2xl mt-3 group-hover:text-novus-red transition-colors"
+            >
+              Symposium: The Ethics of Artificial Intelligence
+            </h3>
+          </article>
+        </div>
+      </section>
+
+      <!-- FOOTER -->
+      <footer
+        id="contact"
+        class="bg-novus-black text-novus-cream pt-24 md:pt-32 pb-12 px-6 md:px-12"
+      >
+        <div class="max-w-[1600px] mx-auto">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-20 mb-32">
+            <div class="flex flex-col justify-between">
+              <h2
+                class="font-serif text-6xl md:text-9xl leading-[0.9] md:leading-[0.8] tracking-tight mb-8"
+              >
+                Join the <br />
+                <span class="italic text-gray-500">Legacy.</span>
+              </h2>
+            </div>
+            <div
+              class="grid grid-cols-2 gap-12 font-sans text-xs uppercase tracking-widest"
+            >
+              <div class="flex flex-col gap-6">
+                <span class="text-gray-500 mb-4 border-b border-gray-800 pb-2"
+                  >Explore</span
+                >
+                <a
+                  href="#"
+                  class="hover:text-white transition-colors interactive roll-link"
+                  data-text="Campuses"
+                  ><span>Campuses</span></a
+                >
+                <a
+                  href="#"
+                  class="hover:text-white transition-colors interactive roll-link"
+                  data-text="History"
+                  ><span>History</span></a
+                >
+                <a
+                  href="#"
+                  class="hover:text-white transition-colors interactive roll-link"
+                  data-text="Endowment"
+                  ><span>Endowment</span></a
+                >
+              </div>
+              <div class="flex flex-col gap-6">
+                <span class="text-gray-500 mb-4 border-b border-gray-800 pb-2"
+                  >Contact</span
+                >
+                <a
+                  href="#"
+                  class="hover:text-white transition-colors interactive roll-link"
+                  data-text="Admissions"
+                  ><span>Admissions</span></a
+                >
+                <a
+                  href="#"
+                  class="hover:text-white transition-colors interactive roll-link"
+                  data-text="Press"
+                  ><span>Press</span></a
+                >
+                <a
+                  href="#"
+                  class="hover:text-white transition-colors interactive roll-link"
+                  data-text="Careers"
+                  ><span>Careers</span></a
+                >
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="flex flex-col md:flex-row justify-between items-end text-xs font-sans uppercase tracking-widest opacity-50 border-t border-white/10 pt-8"
+          >
+            <span>© 2025 Novus Academia</span>
+            <span>Designed for Excellence</span>
+          </div>
+        </div>
+      </footer>
+    </main>
+
+    <script>
+      // --- PRELOADER ---
+      window.addEventListener("load", () => {
+        const text = document.getElementById("loader-text");
+        const line = document.getElementById("loader-line");
+        const preloader = document.getElementById("preloader");
+
+        text.classList.remove("translate-y-full");
+        line.classList.remove("-translate-x-full");
+
+        setTimeout(() => {
+          preloader.style.transform = "translateY(-100%)";
+        }, 1800);
+      });
+
+      // --- LENIS SMOOTH SCROLL ---
+      const lenis = new Lenis({
+        duration: 1.2,
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        direction: "vertical",
+        smooth: true,
+      });
+
+      function raf(time) {
+        lenis.raf(time);
+        requestAnimationFrame(raf);
+      }
+      requestAnimationFrame(raf);
+
+      // --- STICKY HORIZONTAL SCROLL LOGIC ---
+      const stickySection = document.querySelector(".sticky-scroll-section");
+      const track = document.querySelector(".horizontal-track");
+
+      lenis.on("scroll", ({ scroll }) => {
+        const parallaxImg = document.querySelector(".parallax-img");
+        if (parallaxImg)
+          parallaxImg.style.transform = `scale(1.25) translateY(${
+            scroll * 0.05
+          }px)`;
+
+        // Only run sticky logic on desktop (>768px)
+        if (window.innerWidth > 768 && stickySection && track) {
+          const sectionTop = stickySection.offsetTop;
+          const sectionHeight = stickySection.offsetHeight;
+          const windowHeight = window.innerHeight;
+
+          const rawProgress =
+            (scroll - sectionTop) / (sectionHeight - windowHeight);
+          const progress = Math.max(0, Math.min(1, rawProgress));
+
+          const trackWidth = track.scrollWidth;
+          const moveAmount = trackWidth - window.innerWidth;
+
+          track.style.transform = `translateX(-${progress * moveAmount}px)`;
+        }
+      });
+
+      // --- CUSTOM CURSOR & HOVER LOGIC ---
+      const cursor = document.getElementById("cursor");
+      const previewObj = document.getElementById("course-preview");
+      const previewImg = document.getElementById("course-preview-img");
+      const courseItems = document.querySelectorAll(".course-item");
+
+      let mouseX = 0,
+        mouseY = 0;
+      let cursorX = 0,
+        cursorY = 0;
+      let previewX = 0,
+        previewY = 0;
+
+      document.addEventListener("mousemove", (e) => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+      });
+
+      const animate = () => {
+        // Cursor Follow
+        cursorX += (mouseX - cursorX) * 0.15;
+        cursorY += (mouseY - cursorY) * 0.15;
+        if (cursor) {
+          cursor.style.left = `${cursorX}px`;
+          cursor.style.top = `${cursorY}px`;
+        }
+
+        // Preview Follow (Inertia) - Desktop Only
+        if (window.innerWidth > 768 && previewObj) {
+          previewX += (mouseX - previewX) * 0.08;
+          previewY += (mouseY - previewY) * 0.08;
+
+          const width = previewObj.offsetWidth;
+          const height = previewObj.offsetHeight;
+          const xOffset = -width / 2;
+          const yOffset = -height / 2;
+
+          const rotate = (mouseX - previewX) * 0.05;
+
+          previewObj.style.transform = `translate(${previewX + xOffset}px, ${
+            previewY + yOffset
+          }px) rotate(${rotate}deg)`;
+        }
+
+        requestAnimationFrame(animate);
+      };
+      animate();
+
+      // Cursor States
+      document.querySelectorAll(".interactive").forEach((el) => {
+        el.addEventListener("mouseenter", () =>
+          cursor?.classList.add("hovered")
+        );
+        el.addEventListener("mouseleave", () =>
+          cursor?.classList.remove("hovered")
+        );
+      });
+
+      // Course Hover Logic
+      courseItems.forEach((item) => {
+        item.addEventListener("mouseenter", () => {
+          const img = item.getAttribute("data-img");
+          if (previewImg && img) {
+            previewImg.src = img;
+            previewObj.classList.remove("opacity-0");
+            previewObj.classList.add("opacity-100");
+          }
+        });
+        item.addEventListener("mouseleave", () => {
+          if (previewObj) {
+            previewObj.classList.remove("opacity-100");
+            previewObj.classList.add("opacity-0");
+          }
+        });
+      });
+
+      // --- MENU TOGGLE & NAVIGATION ---
+      const menuBtn = document.getElementById("menu-btn");
+      const menuOverlay = document.getElementById("menu-overlay");
+      const menuLinks = document.querySelectorAll("#menu-overlay a");
+      let isMenuOpen = false;
+
+      const toggleMenu = () => {
+        isMenuOpen = !isMenuOpen;
+        if (isMenuOpen) {
+          menuOverlay.classList.add("open");
+          menuBtn.classList.add("text-novus-cream");
+        } else {
+          menuOverlay.classList.remove("open");
+          menuBtn.classList.remove("text-novus-cream");
+        }
+      };
+
+      if (menuBtn) menuBtn.addEventListener("click", toggleMenu);
+
+      menuLinks.forEach((link) => {
+        link.addEventListener("click", (e) => {
+          toggleMenu();
+          const targetId = link.getAttribute("href");
+          if (targetId && targetId.startsWith("#")) {
+            const targetElement = document.querySelector(targetId);
+            if (targetElement) {
+              setTimeout(() => {
+                lenis.scrollTo(targetElement);
+              }, 300);
+            }
+          }
+        });
+      });
+
+      // --- MAGNETIC BUTTON EFFECT ---
+      const magnets = document.querySelectorAll(".magnetic-wrap");
+      magnets.forEach((magnet) => {
+        magnet.addEventListener("mousemove", function (e) {
+          const rect = magnet.getBoundingClientRect();
+          const x = e.clientX - rect.left - rect.width / 2;
+          const y = e.clientY - rect.top - rect.height / 2;
+          magnet.style.transform = `translate(${x * 0.3}px, ${y * 0.3}px)`;
+          if (cursor) cursor.classList.add("magnetic");
+        });
+        magnet.addEventListener("mouseleave", function () {
+          magnet.style.transform = "translate(0, 0)";
+          if (cursor) cursor.classList.remove("magnetic");
+        });
+      });
+    </script>
+  </body>
+</html>

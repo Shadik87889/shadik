@@ -1,0 +1,1347 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Shadik Hossain Shakib | Architect of The Future</title>
+
+    <!-- Fonts: Playfair Display (Serif) & Inter (Sans) for ultra-premium readability -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Lenis for Premium Smooth Scroll -->
+    <script src="https://unpkg.com/@studio-freight/lenis@1.0.33/dist/lenis.min.js"></script>
+
+    <!-- GSAP for Interactions -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+    <!-- Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['"Inter"', "sans-serif"],
+              serif: ['"Playfair Display"', "serif"],
+            },
+            colors: {
+              obsidian: "#050505",
+              charcoal: "#121212",
+              alabaster: "#FAFAFA",
+              "gold-accent": "#C6A87C",
+              "subtle-gray": "#E5E5E5",
+            },
+            spacing: {
+              "128": "32rem",
+            },
+          },
+        },
+      };
+    </script>
+
+    <style>
+      body {
+        background-color: #fafafa;
+        color: #121212;
+        overflow-x: hidden;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+
+      /* Hide Scrollbar */
+      ::-webkit-scrollbar {
+        width: 0px;
+        background: transparent;
+      }
+
+      .reveal-text {
+        clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
+      }
+
+      .hover-lift {
+        transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      }
+      .hover-lift:hover {
+        transform: translateY(-4px);
+      }
+
+      /* Book Specific Styles */
+      .book-container {
+        perspective: 1000px;
+      }
+      .book-card {
+        transition: transform 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+        transform-style: preserve-3d;
+      }
+      .book-card:hover {
+        transform: translateY(-10px) rotateX(2deg) rotateY(-2deg);
+      }
+      /* Spotlight effect for books */
+      .book-spotlight {
+        background: radial-gradient(
+          circle at center,
+          rgba(0, 0, 0, 0.03) 0%,
+          transparent 70%
+        );
+      }
+
+      /* Modal Transitions */
+      .modal-overlay {
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.4s ease;
+      }
+      .modal-overlay.active {
+        opacity: 1;
+        pointer-events: auto;
+      }
+      .modal-content {
+        transform: translateY(20px) scale(0.98);
+        opacity: 0;
+        transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+      .modal-overlay.active .modal-content {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+      }
+
+      /* Loader */
+      .loader {
+        position: fixed;
+        inset: 0;
+        background: #fff;
+        z-index: 9999;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+    </style>
+  </head>
+  <body class="selection:bg-obsidian selection:text-white">
+    <!-- Loading Curtain -->
+    <div class="loader">
+      <div class="flex flex-col items-center">
+        <div
+          class="text-3xl md:text-4xl font-serif italic text-obsidian overflow-hidden mb-2"
+        >
+          <span class="reveal-text block">Shadik Hossain Shakib</span>
+        </div>
+        <div class="h-[1px] bg-gray-200 w-0 loader-line"></div>
+      </div>
+    </div>
+
+    <!-- Minimalist Navigation -->
+    <nav
+      class="fixed top-0 w-full z-50 px-6 py-6 md:py-8 transition-all duration-300"
+      id="navbar"
+    >
+      <div class="max-w-7xl mx-auto flex justify-between items-center">
+        <a
+          href="#"
+          class="text-2xl font-serif font-bold tracking-tight text-obsidian mix-blend-difference z-50"
+          >SHS.</a
+        >
+
+        <div
+          class="hidden md:flex gap-8 text-[11px] font-bold tracking-[0.2em] uppercase text-obsidian/80 mix-blend-difference z-50 bg-white/70 backdrop-blur-md px-8 py-3 rounded-full border border-white/20 shadow-sm"
+        >
+          <!-- <a href="#origins" class="link-underline">Origins</a>
+          <a href="#ecosystem" class="link-underline">SoftShilpo</a>
+          <a href="#humanity" class="link-underline">Humanity</a>
+          <a href="#journalism" class="link-underline">Journalism</a>
+          <a href="#books" class="link-underline">Books</a> -->
+          <a href="#origins" class="hover:text-black transition-colors"
+            >Origins</a
+          >
+          <a href="#ecosystem" class="hover:text-black transition-colors"
+            >SoftShilpo</a
+          >
+          <a href="#humanity" class="hover:text-black transition-colors"
+            >Humanity</a
+          >
+          <a href="#journalism" class="link-underline">Journalism</a>
+
+          <a href="#books" class="hover:text-black transition-colors"
+            >Library</a
+          >
+          <a href="#vision" class="hover:text-black transition-colors"
+            >Vision</a
+          >
+        </div>
+
+        <button
+          onclick="window.location.href='mailto:contact@shadik.dev'"
+          class="hidden md:block bg-obsidian text-white px-6 py-2.5 rounded-full text-xs font-medium uppercase tracking-wider hover:bg-gray-800 transition-colors shadow-lg z-50"
+        >
+          Contact
+        </button>
+      </div>
+    </nav>
+
+    <!-- Hero: The Visionary -->
+    <header class="relative min-h-screen flex items-center pt-20">
+      <div
+        class="absolute top-0 right-0 w-[50%] h-full bg-subtle-gray/30 -z-10 clip-diagonal hidden lg:block"
+      ></div>
+
+      <div
+        class="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center w-full"
+      >
+        <div class="lg:col-span-7 space-y-8 hero-text-section">
+          <div
+            class="inline-flex items-center gap-2 border-b border-gray-300 pb-1"
+          >
+            <span
+              class="text-xs font-bold uppercase tracking-widest text-gray-500"
+              >Full Stack Architect & Humanitarian</span
+            >
+          </div>
+
+          <h1
+            class="text-6xl md:text-8xl lg:text-9xl font-serif text-obsidian leading-[0.85] tracking-tight"
+          >
+            Beyond <br />
+            <span class="italic text-gray-400 font-light">Code.</span>
+          </h1>
+
+          <p class="text-xl text-gray-600 max-w-xl font-light leading-relaxed">
+            I craft digital ecosystems that breathe. From comprehensive ERP
+            solutions to grassroots humanitarian movements, my work operates at
+            the intersection of
+            <span class="text-obsidian font-medium"
+              >technological precision</span
+            >
+            and
+            <span class="text-obsidian font-medium">social responsibility</span
+            >.
+          </p>
+
+          <div class="flex flex-col md:flex-row gap-6 pt-6">
+            <a
+              href="#ecosystem"
+              class="group flex items-center gap-4 text-obsidian hover:gap-6 transition-all"
+            >
+              <span
+                class="text-sm font-bold uppercase tracking-widest border-b border-obsidian pb-1"
+                >Explore Ecosystem</span
+              >
+              <i data-lucide="arrow-right" class="w-4 h-4"></i>
+            </a>
+          </div>
+        </div>
+
+        <div class="lg:col-span-5 relative hero-image-section">
+          <div
+            class="relative aspect-[3/4] overflow-hidden rounded-sm shadow-2xl"
+          >
+            <img
+              src="the_daily_origin_founder.jpg"
+              alt="Shadik Hossain Shakib"
+              class="object-cover w-full h-full scale-105 hover:scale-100 transition-transform duration-[1.5s] ease-out grayscale hover:grayscale-0"
+            />
+
+            <div
+              class="absolute bottom-0 left-0 w-full p-8 bg-gradient-to-t from-black/90 to-transparent text-white"
+            >
+              <!-- <div class="flex items-center gap-3 mb-2">
+                <div class="w-2 h-2 rounded-full bg-green-500"></div>
+                <span
+                  class="text-xs font-medium uppercase tracking-wider opacity-80"
+                  >Online & Active</span
+                >
+              </div> -->
+              <p class="font-serif italic text-lg">
+                "Experience outweighs theory."
+              </p>
+            </div>
+          </div>
+
+          <!-- Floating Achievement Badge -->
+          <div
+            class="absolute -left-10 bottom-20 bg-white p-6 shadow-xl max-w-[16rem] hidden lg:block border border-gray-100"
+          >
+            <p class="text-xs text-gray-400 uppercase tracking-wider mb-2">
+              Education Board Record
+            </p>
+            <div class="flex items-baseline gap-2">
+              <span class="text-4xl font-serif font-bold text-obsidian"
+                >57th</span
+              >
+              <span class="text-sm text-gray-500">Rank</span>
+            </div>
+            <p class="text-xs text-gray-500 mt-2 leading-relaxed">
+              Out of 181,904 students in Rajshahi Board.
+            </p>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Section: Origins (Academic & Awards) -->
+    <section id="origins" class="py-32 bg-white">
+      <div class="max-w-7xl mx-auto px-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-16 md:gap-24">
+          <div>
+            <h2 class="text-4xl md:text-5xl font-serif mb-8 text-obsidian">
+              Rooted in Discipline.
+            </h2>
+            <p class="text-lg text-gray-600 leading-relaxed font-light mb-8">
+              My foundation is built on rigorous academic performance and
+              cultural engagement. Achieving a
+              <strong class="text-obsidian font-medium">GPA 5.0</strong> in both
+              SSC and HSC was not merely a grade, but a testament to
+              consistency.
+            </p>
+            <p class="text-lg text-gray-600 leading-relaxed font-light">
+              Securing the
+              <span class="text-obsidian font-medium border-b border-gray-300"
+                >57th position among ~181,000 students</span
+              >
+              defines my approach to every project: I do not settle for average.
+            </p>
+
+            <div
+              class="mt-12 flex items-center gap-4 cursor-pointer group"
+              id="viewProofBtn"
+            >
+              <div
+                class="w-12 h-12 rounded-full border border-gray-200 flex items-center justify-center group-hover:bg-obsidian group-hover:text-white transition-colors"
+              >
+                <i data-lucide="award" class="w-5 h-5"></i>
+              </div>
+              <span
+                class="text-sm font-bold uppercase tracking-widest text-gray-400 group-hover:text-obsidian transition-colors"
+                >View Academic Credentials</span
+              >
+            </div>
+          </div>
+
+          <div class="space-y-8">
+            <!-- National Anthem Award -->
+            <div class="border-l-2 border-gold-accent pl-8 py-2">
+              <span
+                class="text-xs font-bold uppercase tracking-widest text-gold-accent"
+                >Cultural Excellence</span
+              >
+              <h3 class="text-2xl font-serif mt-2 mb-2">
+                National Anthem Competition Winner
+              </h3>
+              <p class="text-gray-500 text-sm leading-relaxed">
+                Recognized at the Union, Sub-district, and District levels for
+                precise rendition and cultural dedication.
+              </p>
+            </div>
+
+            <!-- Tech Stack Marquee (Static List for Elegance) -->
+            <div class="pt-8">
+              <span
+                class="text-xs font-bold uppercase tracking-widest text-gray-300 block mb-6"
+                >Technical Arsenal</span
+              >
+              <div class="flex flex-wrap gap-3">
+                <span
+                  class="px-4 py-2 bg-gray-50 text-xs font-medium uppercase tracking-wide text-gray-600 border border-gray-100"
+                  >JavaScript (ES6+)</span
+                >
+                <span
+                  class="px-4 py-2 bg-gray-50 text-xs font-medium uppercase tracking-wide text-gray-600 border border-gray-100"
+                  >React.js</span
+                >
+                <span
+                  class="px-4 py-2 bg-gray-50 text-xs font-medium uppercase tracking-wide text-gray-600 border border-gray-100"
+                  >Node.js</span
+                >
+                <span
+                  class="px-4 py-2 bg-gray-50 text-xs font-medium uppercase tracking-wide text-gray-600 border border-gray-100"
+                  >GSAP</span
+                >
+                <span
+                  class="px-4 py-2 bg-gray-50 text-xs font-medium uppercase tracking-wide text-gray-600 border border-gray-100"
+                  >Three.js</span
+                >
+                <span
+                  class="px-4 py-2 bg-gray-50 text-xs font-medium uppercase tracking-wide text-gray-600 border border-gray-100"
+                  >Locomotive</span
+                >
+                <span
+                  class="px-4 py-2 bg-gray-50 text-xs font-medium uppercase tracking-wide text-gray-600 border border-gray-100"
+                  >Firebase</span
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section: The SoftShilpo Ecosystem -->
+    <section id="ecosystem" class="py-32 bg-[#F5F5F7] relative overflow-hidden">
+      <!-- Background Decor -->
+      <div
+        class="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-gray-300 to-transparent"
+      ></div>
+
+      <div class="max-w-7xl mx-auto px-6">
+        <div class="mb-20 md:flex justify-between items-end">
+          <div>
+            <h2 class="text-5xl md:text-6xl font-serif text-obsidian mb-4">
+              The SoftShilpo<br />Ecosystem
+            </h2>
+            <p class="text-gray-500 font-light max-w-md">
+              Where <em>Shilpo</em> (Art) meets Engineering. A suite of
+              interconnected platforms redefining digital management.
+            </p>
+          </div>
+          <div class="mt-8 md:mt-0">
+            <div class="flex items-center gap-2 text-obsidian">
+              <i data-lucide="star" class="w-4 h-4 fill-obsidian"></i>
+              <span class="font-bold text-lg">5.0/5.0</span>
+              <span class="text-sm text-gray-400 ml-2"
+                >Client Satisfaction</span
+              >
+            </div>
+          </div>
+        </div>
+
+        <!-- Complex Bento Grid -->
+        <div
+          class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 grid-rows-auto gap-6"
+        >
+          <!-- CashShilpo (Large Feature) -->
+          <div
+            class="md:col-span-2 lg:col-span-2 row-span-2 bg-white rounded-2xl p-10 shadow-sm hover:shadow-xl transition-all duration-500 group relative overflow-hidden border border-gray-100"
+          >
+            <div class="relative z-10">
+              <div
+                class="w-14 h-14 bg-obsidian rounded-xl flex items-center justify-center mb-8 shadow-lg"
+              >
+                <i data-lucide="banknote" class="text-white w-6 h-6"></i>
+              </div>
+              <h3 class="text-3xl font-serif font-medium mb-4">CashShilpo</h3>
+              <p class="text-gray-500 leading-relaxed mb-8 text-sm">
+                An advanced ERP & POS powerhouse engineered for modern retail.
+                Featuring <strong>AI-driven analytics</strong>,
+                <strong>bi-lingual interfaces (Bangla/English)</strong>, and
+                real-time multi-store synchronization.
+              </p>
+              <div class="flex flex-wrap gap-2 mb-8">
+                <span
+                  class="px-2 py-1 bg-gray-100 text-[10px] uppercase tracking-wide font-bold text-gray-600 rounded"
+                  >Inventory</span
+                >
+                <span
+                  class="px-2 py-1 bg-gray-100 text-[10px] uppercase tracking-wide font-bold text-gray-600 rounded"
+                  >CRM</span
+                >
+                <span
+                  class="px-2 py-1 bg-gray-100 text-[10px] uppercase tracking-wide font-bold text-gray-600 rounded"
+                  >Payroll</span
+                >
+              </div>
+              <a
+                href="https://cashshilpo.com"
+                target="_blank"
+                class="inline-flex items-center gap-2 text-sm font-bold border-b border-gray-200 pb-1 hover:border-obsidian transition-colors"
+              >
+                Launch Platform
+                <i data-lucide="external-link" class="w-3 h-3"></i>
+              </a>
+            </div>
+            <!-- Abstract Shape -->
+            <div
+              class="absolute -right-12 -bottom-12 w-64 h-64 bg-gradient-to-br from-gray-50 to-gray-100 rounded-full opacity-50 group-hover:scale-110 transition-transform duration-700"
+            ></div>
+          </div>
+
+          <!-- HostelShilpo -->
+          <a
+            href="https://softshilpo.onrender.com/hostelshilpo"
+            target="_blank"
+            class="md:col-span-1 lg:col-span-1 row-span-1 bg-white rounded-2xl p-8 shadow-sm hover:shadow-lg transition-all duration-300 border border-gray-100 group block"
+          >
+            <div class="flex justify-between items-start mb-4">
+              <i
+                data-lucide="home"
+                class="w-6 h-6 text-gray-400 group-hover:text-obsidian transition-colors"
+              ></i>
+              <i data-lucide="arrow-up-right" class="w-4 h-4 text-gray-300"></i>
+            </div>
+            <h3 class="text-xl font-bold mb-2">HostelShilpo</h3>
+            <p class="text-xs text-gray-500 leading-relaxed">
+              Solving logistical friction in student accommodation through
+              automated management.
+            </p>
+          </a>
+
+          <!-- TypeShilpo -->
+          <a
+            href="https://softshilpo.onrender.com/typeshilpo"
+            target="_blank"
+            class="md:col-span-1 lg:col-span-1 row-span-1 bg-white rounded-2xl p-8 shadow-sm hover:shadow-lg transition-all duration-300 border border-gray-100 group block"
+          >
+            <div class="flex justify-between items-start mb-4">
+              <i
+                data-lucide="keyboard"
+                class="w-6 h-6 text-gray-400 group-hover:text-blue-500 transition-colors"
+              ></i>
+              <i data-lucide="arrow-up-right" class="w-4 h-4 text-gray-300"></i>
+            </div>
+            <h3 class="text-xl font-bold mb-2">TypeShilpo</h3>
+            <p class="text-xs text-gray-500 leading-relaxed">
+              Competitive typing leaderboards and educational modules.
+            </p>
+          </a>
+
+          <!-- Recent Client Works (List Style) -->
+          <div
+            class="md:col-span-1 lg:col-span-1 row-span-2 bg-obsidian text-white rounded-2xl p-8 shadow-lg flex flex-col justify-between"
+          >
+            <div>
+              <h3 class="text-lg font-serif italic mb-6 text-gray-400">
+                Selected Client Works
+              </h3>
+              <ul class="space-y-6">
+                <li>
+                  <a
+                    href="https://ieltsmahir.com"
+                    target="_blank"
+                    class="block group"
+                  >
+                    <span
+                      class="block text-sm font-bold group-hover:text-gold-accent transition-colors"
+                      >IELTS Mahir</span
+                    >
+                    <span
+                      class="text-[10px] uppercase tracking-wider text-gray-500"
+                      >Education Platform</span
+                    >
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="https://zestcorporationltd.com"
+                    target="_blank"
+                    class="block group"
+                  >
+                    <span
+                      class="block text-sm font-bold group-hover:text-gold-accent transition-colors"
+                      >Zest Corporation</span
+                    >
+                    <span
+                      class="text-[10px] uppercase tracking-wider text-gray-500"
+                      >Aqua Medicine</span
+                    >
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="https://novofitbd.com"
+                    target="_blank"
+                    class="block group"
+                  >
+                    <span
+                      class="block text-sm font-bold group-hover:text-gold-accent transition-colors"
+                      >NovoFit BD</span
+                    >
+                    <span
+                      class="text-[10px] uppercase tracking-wider text-gray-500"
+                      >Fashion Retail</span
+                    >
+                  </a>
+                </li>
+              </ul>
+            </div>
+            <div class="pt-6 border-t border-gray-800">
+              <p class="text-[10px] text-gray-500">
+                All projects delivered with 100% satisfaction.
+              </p>
+            </div>
+          </div>
+
+          <!-- ElectionShilpo -->
+          <a
+            href="https://softshilpo.onrender.com/electionshilpo"
+            target="_blank"
+            class="md:col-span-2 lg:col-span-1 row-span-1 bg-white rounded-2xl p-8 shadow-sm hover:shadow-lg transition-all duration-300 border border-gray-100 flex items-center justify-between group"
+          >
+            <div>
+              <h3 class="text-lg font-bold">ElectionShilpo</h3>
+              <p class="text-xs text-gray-500 mt-1">Campaign Management</p>
+            </div>
+            <i
+              data-lucide="vote"
+              class="w-6 h-6 text-gray-300 group-hover:text-obsidian transition-colors"
+            ></i>
+          </a>
+
+          <!-- GramShilpo -->
+          <a
+            href="https://softshilpo.onrender.com/gramshilpo"
+            target="_blank"
+            class="md:col-span-2 lg:col-span-2 row-span-1 bg-white rounded-2xl p-8 shadow-sm hover:shadow-lg transition-all duration-300 border border-gray-100 flex items-center justify-between group"
+          >
+            <div>
+              <h3 class="text-lg font-bold">GramShilpo</h3>
+              <p class="text-xs text-gray-500 mt-1">
+                Village Demographics & Event Data
+              </p>
+            </div>
+            <i
+              data-lucide="map"
+              class="w-6 h-6 text-gray-300 group-hover:text-obsidian transition-colors"
+            ></i>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section: Humanity (Rural Peace) -->
+    <section id="humanity" class="py-32 bg-white overflow-hidden">
+      <div class="max-w-7xl mx-auto px-6">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
+          <!-- Image Column -->
+          <div class="relative order-2 lg:order-1">
+            <div
+              class="aspect-square bg-gray-100 rounded-lg overflow-hidden relative group"
+            >
+              <img
+                src="https://images.unsplash.com/photo-1593113598332-cd288d649433?q=80&w=2070&auto=format&fit=crop"
+                class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700"
+                alt="Volunteers"
+              />
+              <div class="absolute inset-0 bg-black/10"></div>
+            </div>
+            <!-- Caption Box -->
+            <div
+              class="absolute -bottom-10 -right-10 bg-white p-8 shadow-2xl max-w-sm hidden md:block border border-gray-50 z-10"
+            >
+              <p class="font-serif italic text-lg text-obsidian">
+                "Peace is not passive; it is an active construction."
+              </p>
+              <p
+                class="text-xs font-bold uppercase tracking-widest text-gray-400 mt-4"
+              >
+                — Shadik Hossain
+              </p>
+            </div>
+          </div>
+
+          <!-- Content Column -->
+          <div class="order-1 lg:order-2">
+            <span
+              class="text-xs font-bold uppercase tracking-widest text-red-600 mb-4 block"
+            >
+              Founded Sept 2024
+            </span>
+            <h2 class="text-5xl font-serif text-obsidian mb-8">
+              Rural Peace Organization
+            </h2>
+            <p class="text-lg text-gray-600 leading-relaxed mb-8">
+              Following the <strong>July Revolution</strong>, civic structures
+              faced a momentary collapse. In this vacuum, I founded Rural Peace
+              as a grassroots response. We didn't just watch; we acted.
+            </p>
+
+            <div class="space-y-8 mb-10">
+              <!-- Feature 1 -->
+              <div class="flex gap-6">
+                <div
+                  class="w-12 h-12 rounded-full bg-red-50 flex-shrink-0 flex items-center justify-center text-red-600"
+                >
+                  <i data-lucide="activity" class="w-5 h-5"></i>
+                </div>
+                <div>
+                  <h4 class="text-xl font-bold mb-2">Crisis Management</h4>
+                  <p class="text-sm text-gray-500 leading-relaxed">
+                    Our volunteers assumed responsibility for traffic management
+                    and public safety when law enforcement was absent, ensuring
+                    order during the transition.
+                  </p>
+                </div>
+              </div>
+
+              <!-- Feature 2 -->
+              <div class="flex gap-6">
+                <div
+                  class="w-12 h-12 rounded-full bg-blue-50 flex-shrink-0 flex items-center justify-center text-blue-600"
+                >
+                  <i data-lucide="droplets" class="w-5 h-5"></i>
+                </div>
+                <div>
+                  <h4 class="text-xl font-bold mb-2">Sylhet Flood Response</h4>
+                  <p class="text-sm text-gray-500 leading-relaxed">
+                    Mobilized rapid fundraising networks to deliver aid directly
+                    to flood-affected families, bridging the gap between urban
+                    donors and rural victims.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Action Button -->
+            <div class="pt-2 border-t border-gray-100">
+              <a
+                href="https://rural-peace.onrender.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="inline-flex items-center gap-3 px-8 py-4 bg-obsidian text-white rounded-full hover:bg-gray-700 transition-all duration-300 shadow-lg hover:shadow-xl group"
+              >
+                <span class="font-medium tracking-wide"
+                  >Visit Rural Peace Website</span
+                >
+                <i
+                  data-lucide="arrow-right"
+                  class="w-4 h-4 group-hover:translate-x-1 transition-transform"
+                ></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section: Journalism -->
+    <section id="journalism" class="py-32 bg-charcoal text-white relative">
+      <div
+        class="absolute top-0 right-0 w-1/3 h-full bg-white/5 opacity-50"
+      ></div>
+
+      <div class="max-w-7xl mx-auto px-6 relative z-10">
+        <div class="text-center mb-20">
+          <span
+            class="text-xs font-bold uppercase tracking-[0.3em] text-gray-400"
+            >Founder & Chief Editor</span
+          >
+          <h2 class="text-6xl font-serif mt-4">The Daily Origin</h2>
+          <div class="w-20 h-1 bg-gold-accent mx-auto mt-8"></div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+          <!-- English -->
+          <div
+            class="group border border-white/10 p-10 hover:bg-white/5 transition-colors duration-500"
+          >
+            <span
+              class="text-xs text-gold-accent font-bold uppercase tracking-widest"
+              >Global Edition</span
+            >
+            <h3 class="text-3xl font-serif mt-4 mb-4">en.thedailyorigin.net</h3>
+            <p class="text-gray-400 font-light mb-8 leading-relaxed">
+              Thoughtful commentary on politics, economy, and science. We
+              prioritize unbiased reporting for an international audience.
+            </p>
+            <a
+              href="#"
+              class="inline-block text-sm font-bold border-b border-white/30 pb-1 group-hover:border-white transition-colors"
+              >Read English Edition</a
+            >
+          </div>
+
+          <!-- Bangla -->
+          <div
+            class="group border border-white/10 p-10 hover:bg-white/5 transition-colors duration-500"
+          >
+            <span
+              class="text-xs text-green-500 font-bold uppercase tracking-widest"
+              >Bangla Edition</span
+            >
+            <h3 class="text-3xl font-serif mt-4 mb-4">bn.thedailyorigin.net</h3>
+            <p class="text-gray-400 font-light mb-8 leading-relaxed">
+              Deep cultural stories and local perspectives tailored specifically
+              for the Bengali-speaking demographic.
+            </p>
+            <a
+              href="#"
+              class="inline-block text-sm font-bold border-b border-white/30 pb-1 group-hover:border-white transition-colors"
+              >Read Bangla Edition</a
+            >
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Books Section (Completely Redesigned) -->
+    <section id="books" class="py-40 bg-[#FFFDF9] relative overflow-hidden">
+      <div class="max-w-7xl mx-auto px-6 relative z-10">
+        <div class="text-center mb-20">
+          <span
+            class="text-xs font-bold uppercase tracking-[0.3em] text-gray-400"
+            >Author & Philosopher</span
+          >
+          <h2 class="text-5xl md:text-6xl font-serif mt-4 text-obsidian">
+            Published Works
+          </h2>
+          <p class="text-gray-500 mt-4 max-w-2xl mx-auto font-light">
+            Writing is my method of processing reality. Exploring the depths of
+            mental resilience and the intrinsic value of lived experience.
+          </p>
+        </div>
+
+        <!-- Book 1: The Incidents I Faced -->
+        <div
+          class="flex flex-col lg:flex-row items-center gap-16 lg:gap-32 mb-40"
+        >
+          <div class="w-full lg:w-1/2 flex justify-center lg:justify-end">
+            <div
+              class="relative w-64 md:w-80 aspect-[2/3] book-cover-container"
+            >
+              <img
+                src="books/The incidents I faced book cover.png"
+                alt="Book Cover"
+                class="w-full h-full object-cover rounded-sm z-10 relative"
+              />
+              <div class="book-shadow"></div>
+              <!-- Decorative binding line -->
+              <div
+                class="absolute left-2 top-0 bottom-0 w-[2px] bg-white/20 z-20"
+              ></div>
+            </div>
+          </div>
+
+          <div class="w-full lg:w-1/2 text-center lg:text-left">
+            <span
+              class="text-xs font-bold uppercase tracking-widest text-gold-accent mb-2 block"
+              >Memoir • 2022</span
+            >
+            <h3 class="text-4xl md:text-5xl font-serif text-obsidian mb-6">
+              The Incidents I Faced
+            </h3>
+            <p
+              class="text-lg text-gray-600 leading-relaxed font-light mb-8 max-w-md mx-auto lg:mx-0"
+            >
+              A raw, unfiltered exploration of mental resilience. This chronicle
+              maps the journey through severe anxiety and depression, offering a
+              practical roadmap back to a sound life through radical
+              self-acceptance.
+            </p>
+            <button
+              onclick="openReader('The Incidents I Faced', 'https://drive.google.com/file/d/1esJJqyLAyZI7afHGsdhPU25j7xG9UkTr/preview')"
+              class="group inline-flex items-center gap-3 bg-obsidian text-white px-8 py-4 rounded-full text-sm font-bold uppercase tracking-widest hover:bg-gray-800 transition-all shadow-xl hover:shadow-2xl hover:-translate-y-1"
+            >
+              Start Reading
+              <i
+                data-lucide="book-open"
+                class="w-4 h-4 group-hover:ml-1 transition-all"
+              ></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Book 2: The Experience -->
+        <div
+          class="flex flex-col lg:flex-row-reverse items-center gap-16 lg:gap-32"
+        >
+          <div class="w-full lg:w-1/2 flex justify-center lg:justify-start">
+            <div
+              class="relative w-64 md:w-80 aspect-[2/3] book-cover-container"
+            >
+              <img
+                src="books/The Experience Book Cover.png"
+                alt="Book Cover"
+                class="w-full h-full object-cover rounded-sm z-10 relative"
+              />
+              <div class="book-shadow"></div>
+            </div>
+          </div>
+
+          <div class="w-full lg:w-1/2 text-center lg:text-left lg:pl-12">
+            <span
+              class="text-xs font-bold uppercase tracking-widest text-gold-accent mb-2 block"
+              >Philosophy • 2023</span
+            >
+            <h3 class="text-4xl md:text-5xl font-serif text-obsidian mb-6">
+              The Experience
+            </h3>
+            <p
+              class="text-lg text-gray-600 leading-relaxed font-light mb-8 max-w-md mx-auto lg:mx-0"
+            >
+              A philosophical argument challenging modern education. This work
+              posits that lived experience holds more intrinsic value than
+              theoretical knowledge, guiding readers to learn directly from the
+              world.
+            </p>
+            <button
+              onclick="openReader('The Experience', 'https://drive.google.com/file/d/1XZuzMG9U42-La2ghrwulbQX1QN2aXiAL/preview')"
+              class="group inline-flex items-center gap-3 bg-obsidian text-white px-8 py-4 rounded-full text-sm font-bold uppercase tracking-widest hover:bg-gray-800 transition-all shadow-xl hover:shadow-2xl hover:-translate-y-1"
+            >
+              Start Reading
+              <i
+                data-lucide="book-open"
+                class="w-4 h-4 group-hover:ml-1 transition-all"
+              ></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- NEW SECTION: The Visionary / Blueprint -->
+    <section
+      id="vision"
+      class="py-32 bg-obsidian text-white relative overflow-hidden"
+    >
+      <!-- Abstract Background -->
+      <div
+        class="absolute top-0 left-0 w-full h-full opacity-20 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-blue-900 via-obsidian to-obsidian pointer-events-none"
+      ></div>
+
+      <div class="max-w-7xl mx-auto px-6 relative z-10">
+        <div class="mb-24">
+          <h2 class="text-5xl md:text-7xl font-serif mb-6">The Blueprint.</h2>
+          <div class="w-32 h-1 bg-white mb-8"></div>
+          <p
+            class="text-xl md:text-2xl text-gray-300 font-light max-w-3xl leading-relaxed"
+          >
+            My mission is not just to build software, but to architect the
+            future of Bangladesh. This is the roadmap to a digitized, resilient,
+            and empowered nation.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
+          <!-- Pillar 1: Digital Nation -->
+          <div class="space-y-6 group">
+            <div
+              class="w-12 h-12 border border-white/20 rounded-full flex items-center justify-center text-white group-hover:bg-white group-hover:text-obsidian transition-colors duration-500"
+            >
+              <span class="font-serif font-bold text-lg">01</span>
+            </div>
+            <h3 class="text-2xl font-serif">Digitalize Bangladesh</h3>
+            <p class="text-gray-400 leading-relaxed text-sm">
+              Automating the flow of business and village administration. From
+              <span class="text-white">GramShilpo</span> to corporate ERPs, the
+              goal is to eliminate inefficiency and corruption through
+              transparent data systems.
+            </p>
+          </div>
+
+          <!-- Pillar 2: Economic Strength -->
+          <div class="space-y-6 group">
+            <div
+              class="w-12 h-12 border border-white/20 rounded-full flex items-center justify-center text-white group-hover:bg-white group-hover:text-obsidian transition-colors duration-500"
+            >
+              <span class="font-serif font-bold text-lg">02</span>
+            </div>
+            <h3 class="text-2xl font-serif">Business Automation</h3>
+            <p class="text-gray-400 leading-relaxed text-sm">
+              Strengthening the local business field by reducing operational
+              friction. Empowering SMEs with tools previously reserved for
+              multinational corporations.
+            </p>
+          </div>
+
+          <!-- Pillar 3: Social Architecture -->
+          <div class="space-y-6 group">
+            <div
+              class="w-12 h-12 border border-white/20 rounded-full flex items-center justify-center text-white group-hover:bg-white group-hover:text-obsidian transition-colors duration-500"
+            >
+              <span class="font-serif font-bold text-lg">03</span>
+            </div>
+            <h3 class="text-2xl font-serif">Rural Peace Org</h3>
+            <p class="text-gray-400 leading-relaxed text-sm">
+              Expanding social work from reactive aid to proactive community
+              building. Solving village-level problems through organized
+              volunteerism and resource distribution.
+            </p>
+          </div>
+
+          <!-- Pillar 4: Personal Growth -->
+          <div class="space-y-6 group">
+            <div
+              class="w-12 h-12 border border-white/20 rounded-full flex items-center justify-center text-white group-hover:bg-white group-hover:text-obsidian transition-colors duration-500"
+            >
+              <span class="font-serif font-bold text-lg">04</span>
+            </div>
+            <h3 class="text-2xl font-serif">Global Academia</h3>
+            <p class="text-gray-400 leading-relaxed text-sm">
+              Pursuing higher education abroad to absorb global best practices.
+              Experiencing diverse cultures to bring fresh perspectives back to
+              the homeland.
+            </p>
+          </div>
+
+          <!-- Pillar 5: Intellectual Legacy -->
+          <div class="space-y-6 group">
+            <div
+              class="w-12 h-12 border border-white/20 rounded-full flex items-center justify-center text-white group-hover:bg-white group-hover:text-obsidian transition-colors duration-500"
+            >
+              <span class="font-serif font-bold text-lg">05</span>
+            </div>
+            <h3 class="text-2xl font-serif">Author & Founder</h3>
+            <p class="text-gray-400 leading-relaxed text-sm">
+              To continue writing books that challenge the status quo and to
+              solidify my status as a Founder & CEO who leads by example, not
+              just title.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- Footer -->
+    <footer class="bg-obsidian text-white pt-24 pb-12">
+      <div class="max-w-7xl mx-auto px-6">
+        <div
+          class="flex flex-col md:flex-row justify-between items-start md:items-center border-b border-gray-800 pb-16"
+        >
+          <div>
+            <h2 class="text-5xl md:text-7xl font-serif">Let's Create.</h2>
+          </div>
+          <div class="mt-8 md:mt-0 text-right">
+            <a
+              href="mailto:contact@shadik.dev"
+              class="text-2xl hover:text-gray-300 transition-colors"
+              >hello@shadik.dev</a
+            >
+            <p class="text-gray-500 mt-2 text-sm">Dhaka, Bangladesh</p>
+          </div>
+        </div>
+
+        <div
+          class="flex flex-col md:flex-row justify-between pt-12 text-xs text-gray-500 font-medium tracking-wide uppercase"
+        >
+          <p>&copy; 2024 Shadik Hossain Shakib.</p>
+          <div class="flex gap-8 mt-4 md:mt-0">
+            <a href="#" class="hover:text-white transition-colors">LinkedIn</a>
+            <a href="#" class="hover:text-white transition-colors">GitHub</a>
+            <a href="#" class="hover:text-white transition-colors">Twitter</a>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Verification Modal -->
+    <div
+      id="proofModal"
+      class="modal-overlay fixed inset-0 z-[100] flex items-center justify-center bg-black/90 backdrop-blur-sm p-4"
+    >
+      <div
+        class="modal-content bg-white rounded-lg max-w-3xl w-full overflow-hidden shadow-2xl relative"
+      >
+        <div class="relative aspect-[16/9] bg-gray-100 group">
+          <button
+            onclick="closeAllModals()"
+            class="absolute top-4 right-4 bg-white/10 hover:bg-white text-white hover:text-black p-2 rounded-full transition-all z-20 backdrop-blur-md"
+          >
+            <i data-lucide="x" class="w-5 h-5"></i>
+          </button>
+          <img
+            src="https://placehold.co/1200x800/e5e5e5/333333?text=Proof+of+Academic+Excellence:+Rank+57th"
+            alt="Academic Proof"
+            class="w-full h-full object-cover"
+          />
+          <div
+            class="absolute bottom-0 left-0 w-full p-8 bg-gradient-to-t from-black/90 to-transparent text-white"
+          >
+            <h3 class="font-bold text-2xl font-serif">
+              Rajshahi Board Results
+            </h3>
+            <p class="text-gray-300 mt-1">Official Transcript Verification</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Book Details Modal -->
+    <div
+      id="bookDetailModal"
+      class="modal-overlay fixed inset-0 z-[100] flex items-center justify-center bg-white/95 backdrop-blur-md p-4"
+    >
+      <div
+        class="modal-content max-w-4xl w-full bg-white shadow-2xl rounded-2xl overflow-hidden border border-gray-100 relative grid grid-cols-1 md:grid-cols-2"
+      >
+        <button
+          onclick="closeAllModals()"
+          class="absolute top-4 right-4 bg-gray-100 hover:bg-gray-200 text-black p-2 rounded-full transition-all z-20"
+        >
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+
+        <!-- Book Image Side -->
+        <div
+          class="bg-gray-50 p-12 flex items-center justify-center relative overflow-hidden"
+        >
+          <div
+            class="absolute inset-0 bg-gradient-to-br from-gray-100 to-transparent"
+          ></div>
+          <img
+            id="modalBookImage"
+            src=""
+            alt="Book Cover"
+            class="w-48 shadow-2xl transform rotate-y-12 rotate-x-6 relative z-10"
+          />
+        </div>
+
+        <!-- Content Side -->
+        <div class="p-12 flex flex-col justify-center">
+          <span
+            class="text-xs font-bold uppercase tracking-widest text-gold-accent mb-2"
+            id="modalBookYear"
+            >Published 2023</span
+          >
+          <h2
+            class="text-4xl font-serif text-obsidian mb-6"
+            id="modalBookTitle"
+          >
+            The Experience
+          </h2>
+          <p class="text-gray-600 leading-relaxed mb-8" id="modalBookDesc">
+            A philosophical journey into the depths of human understanding...
+          </p>
+
+          <div class="flex gap-4">
+            <button
+              id="readBookBtn"
+              class="bg-obsidian text-white px-8 py-3 rounded-full font-medium hover:bg-gray-800 transition-all flex items-center gap-2"
+            >
+              <i data-lucide="book-open" class="w-4 h-4"></i> Read For Free
+            </button>
+            <button
+              class="border border-gray-200 text-obsidian px-8 py-3 rounded-full font-medium hover:bg-gray-50 transition-all"
+            >
+              Buy Print Copy
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Full Screen Reader Modal (Fixed) -->
+    <div
+      id="readerModal"
+      class="modal-overlay fixed inset-0 z-[150] bg-charcoal flex flex-col"
+    >
+      <!-- Reader Toolbar -->
+      <div
+        class="h-16 border-b border-gray-800 flex justify-between items-center px-6 bg-obsidian text-white z-20"
+      >
+        <div class="flex items-center gap-4">
+          <span class="text-sm font-bold uppercase tracking-wider text-gray-400"
+            >Now Reading:</span
+          >
+          <span class="font-serif text-lg" id="readerTitle">Book Title</span>
+        </div>
+        <button
+          onclick="closeReader()"
+          class="bg-gray-800 hover:bg-gray-700 p-2 rounded-full transition-colors"
+        >
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <!-- Reader Content (Iframe) -->
+      <div class="flex-grow bg-charcoal relative">
+        <!-- New Spinner -->
+        <div
+          id="readerSpinner"
+          class="absolute inset-0 flex items-center justify-center bg-charcoal z-0"
+        >
+          <div class="spinner"></div>
+        </div>
+        <iframe
+          id="bookFrame"
+          src=""
+          class="absolute inset-0 w-full h-full border-0 z-10 opacity-0 transition-opacity duration-500"
+          onload="this.style.opacity='1'; document.getElementById('readerSpinner').style.display='none';"
+        ></iframe>
+      </div>
+    </div>
+
+    <script>
+      // --- 1. Icons ---
+      lucide.createIcons();
+
+      // --- 2. Ultra-Smooth Scroll (Lenis Optimized) ---
+      const lenis = new Lenis({
+        duration: 1.0,
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        direction: "vertical",
+        gestureDirection: "vertical",
+        smooth: true,
+        mouseMultiplier: 1,
+        smoothTouch: false,
+        touchMultiplier: 2,
+      });
+
+      function raf(time) {
+        lenis.raf(time);
+        requestAnimationFrame(raf);
+      }
+      requestAnimationFrame(raf);
+
+      // --- 3. GSAP Animations ---
+      gsap.registerPlugin(ScrollTrigger);
+
+      // Navbar Blur Effect on Scroll
+      window.addEventListener("scroll", () => {
+        const nav = document.getElementById("navbar");
+        if (window.scrollY > 50) {
+          nav.classList.add("py-4");
+          nav.classList.remove("py-6", "md:py-8");
+        } else {
+          nav.classList.remove("py-4");
+          nav.classList.add("py-6", "md:py-8");
+        }
+      });
+
+      // Loading Sequence
+      const tl = gsap.timeline();
+      tl.to(".reveal-text", {
+        clipPath: "polygon(0 0, 100% 0, 100% 0, 0 0)",
+        y: -50,
+        duration: 1,
+        delay: 1.5,
+        ease: "power4.inOut",
+      })
+        .to(
+          ".loader-line",
+          {
+            width: "100%",
+            duration: 1.5,
+            ease: "power2.inOut",
+          },
+          "-=1.5"
+        )
+        .to(
+          ".loader-line",
+          {
+            width: "0%",
+            x: 0,
+            duration: 1.5,
+            ease: "power2.inOut",
+          },
+          "-=.5"
+        )
+        .to(".loader", {
+          height: 0,
+          duration: 0.8,
+          ease: "power4.inOut",
+        })
+        .from(
+          ".hero-text-section > *",
+          {
+            y: 40,
+            opacity: 0,
+            duration: 1,
+            stagger: 0.1,
+            ease: "power3.out",
+          },
+          "-=0.3"
+        )
+        .from(
+          ".hero-image-section",
+          {
+            scale: 1.1,
+            opacity: 0,
+            duration: 1.5,
+            ease: "power3.out",
+          },
+          "-=1"
+        );
+
+      // Section Titles Parallax
+      document.querySelectorAll("section h2").forEach((heading) => {
+        gsap.from(heading, {
+          scrollTrigger: {
+            trigger: heading,
+            start: "top 85%",
+          },
+          y: 30,
+          opacity: 0,
+          duration: 1,
+          ease: "power3.out",
+        });
+      });
+
+      // --- 4. Book Data & Logic ---
+      const books = {
+        incidents: {
+          title: "The Incidents I Faced",
+          year: "Published 2022",
+          desc:
+            "A raw and unfiltered exploration of mental resilience. This book chronicles the personal journey of overcoming severe depression and anxiety, offering a roadmap back to a sound life through radical self-acceptance and perseverance.",
+          img: "books/The incidents I faced book cover.png",
+          // Using /preview for embeddable view
+          link:
+            "https://drive.google.com/file/d/1esJJqyLAyZI7afHGsdhPU25j7xG9UkTr/preview",
+        },
+        experience: {
+          title: "The Experience",
+          year: "Published 2023",
+          desc:
+            "A philosophical argument that lived experience holds more intrinsic value than theoretical knowledge. This work guides readers to learn from the world directly, challenging the conventional education system and promoting experiential wisdom.",
+          img: "books/The Experience Book Cover.png",
+          link:
+            "https://drive.google.com/file/d/1XZuzMG9U42-La2ghrwulbQX1QN2aXiAL/preview",
+        },
+      };
+
+      const modalOverlay = document.getElementById("bookDetailModal");
+      const readerModal = document.getElementById("readerModal");
+      const proofModal = document.getElementById("proofModal");
+
+      // Populate and Open Detail Modal
+      function openBookDetail(bookKey) {
+        const book = books[bookKey];
+        document.getElementById("modalBookTitle").textContent = book.title;
+        document.getElementById("modalBookYear").textContent = book.year;
+        document.getElementById("modalBookDesc").textContent = book.desc;
+        document.getElementById("modalBookImage").src = book.img;
+
+        // Set up the Read button to open the reader
+        document.getElementById("readBookBtn").onclick = function () {
+          openReader(book.title, book.link);
+        };
+
+        modalOverlay.classList.add("active");
+      }
+
+      // Open Full Screen Reader
+      function openReader(title, link) {
+        // Close detail modal first
+        modalOverlay.classList.remove("active");
+
+        // Setup Reader
+        document.getElementById("readerTitle").textContent = title;
+        document.getElementById("bookFrame").src = link;
+
+        // Open Reader
+        readerModal.classList.add("active");
+      }
+
+      function closeReader() {
+        readerModal.classList.remove("active");
+        // Clear src to stop loading
+        setTimeout(() => {
+          document.getElementById("bookFrame").src = "";
+        }, 300);
+      }
+
+      function closeAllModals() {
+        modalOverlay.classList.remove("active");
+        proofModal.classList.remove("active");
+      }
+
+      // Proof Modal Logic (Legacy)
+      const openProofBtn = document.getElementById("viewProofBtn");
+      openProofBtn.addEventListener("click", () => {
+        proofModal.classList.add("active");
+      });
+
+      // Close on outside click
+      [modalOverlay, proofModal].forEach((modal) => {
+        modal.addEventListener("click", (e) => {
+          if (e.target === modal) closeAllModals();
+        });
+      });
+    </script>
+  </body>
+</html>

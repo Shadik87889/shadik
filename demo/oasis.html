@@ -1,0 +1,1005 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>OASIS | Structural Form</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Archivo:wght@100..900&family=Syncopate:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      :root {
+        --bg-concrete: #ebebeb;
+        --text-ink: #1a1a1a;
+        --grid-line: #d1d1d1;
+        --accent-orange: #ff4d00;
+      }
+
+      body {
+        background-color: var(--bg-concrete);
+        color: var(--text-ink);
+        font-family: "Archivo", sans-serif;
+        overflow-x: hidden;
+        margin: 0;
+        width: 100%;
+      }
+
+      h1,
+      h2,
+      .display-font {
+        font-family: "Syncopate", sans-serif;
+        text-transform: uppercase;
+        letter-spacing: -0.05em;
+      }
+
+      /* LENIS SCROLL */
+      html.lenis,
+      html.lenis body {
+        height: auto;
+      }
+      .lenis.lenis-smooth {
+        scroll-behavior: auto !important;
+      }
+      .lenis.lenis-smooth [data-lenis-prevent] {
+        overscroll-behavior: contain;
+      }
+      .lenis.lenis-stopped {
+        overflow: hidden;
+      }
+
+      /* GRID LINES */
+      .grid-lines {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 0;
+        display: flex;
+        justify-content: space-between;
+        padding: 0 4rem;
+      }
+      .line {
+        width: 1px;
+        height: 100%;
+        background: var(--grid-line);
+      }
+      @media (max-width: 768px) {
+        .grid-lines {
+          display: none;
+        }
+      }
+
+      /* CUSTOM SCROLLBAR HIDE */
+      ::-webkit-scrollbar {
+        width: 0px;
+        background: transparent;
+      }
+
+      /* HORIZONTAL SCROLL SECTION */
+      .horizontal-container {
+        display: flex;
+        flex-wrap: nowrap;
+        height: 100vh;
+        width: 400%; /* 4 sections wide */
+        will-change: transform;
+      }
+
+      .panel {
+        width: 100vw;
+        height: 100vh;
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        padding: 4rem;
+        border-right: 1px solid var(--grid-line);
+        overflow: hidden;
+      }
+
+      /* MOBILE PANEL OVERRIDES */
+      @media (max-width: 768px) {
+        .horizontal-container {
+          width: 100%;
+          height: auto;
+          flex-direction: column;
+        }
+        .panel {
+          width: 100%;
+          height: auto;
+          min-height: 100vh;
+          padding: 1.5rem;
+          border-right: none;
+          border-bottom: 1px solid var(--grid-line);
+        }
+      }
+
+      /* IMAGES */
+      .arch-img-wrapper {
+        overflow: hidden;
+        position: relative;
+        /* Initial clip-path for animation */
+        clip-path: inset(0 100% 0 0);
+      }
+      .arch-img {
+        transition: transform 1.5s cubic-bezier(0.19, 1, 0.22, 1);
+        transform: scale(1.3);
+        will-change: transform;
+      }
+      .panel:hover .arch-img {
+        transform: scale(1);
+      }
+
+      /* TYPOGRAPHY REVEAL CONTAINERS */
+      .text-reveal-mask {
+        overflow: hidden;
+        display: block;
+      }
+      .text-reveal-line {
+        display: block;
+        transform: translateY(100%);
+        will-change: transform;
+      }
+
+      .outline-text {
+        -webkit-text-stroke: 1px var(--text-ink);
+        color: transparent;
+      }
+
+      .outline-text-white {
+        -webkit-text-stroke: 1px rgba(255, 255, 255, 0.3);
+        color: transparent;
+        transition: color 0.3s, -webkit-text-stroke 0.3s;
+      }
+
+      a:hover .outline-text-white {
+        color: white;
+        -webkit-text-stroke: 1px white;
+      }
+
+      /* NAVIGATION */
+      .nav-dot {
+        width: 6px;
+        height: 6px;
+        background: var(--text-ink);
+        border-radius: 50%;
+        margin-bottom: 12px;
+        opacity: 0.3;
+        transition: all 0.3s;
+      }
+      .nav-dot.active {
+        opacity: 1;
+        transform: scale(1.5);
+        background: var(--accent-orange);
+      }
+
+      /* LOADING CURTAIN */
+      .curtain {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: #1a1a1a;
+        z-index: 9999;
+        transform-origin: top;
+      }
+
+      /* FOOTER REVEAL */
+      .footer-link {
+        position: relative;
+        display: inline-block;
+      }
+      .footer-link::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 2px;
+        background: var(--accent-orange);
+        transform: scaleX(0);
+        transform-origin: right;
+        transition: transform 0.5s cubic-bezier(0.77, 0, 0.175, 1);
+      }
+      .footer-link:hover::after {
+        transform: scaleX(1);
+        transform-origin: left;
+      }
+
+      /* MENU OVERLAY */
+      .menu-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: #111;
+        z-index: 9000;
+        transform: translateY(-100%);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: 4rem;
+        color: white;
+      }
+
+      .menu-close {
+        position: absolute;
+        top: 2rem;
+        right: 2rem;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        padding: 0.5rem 1.5rem;
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: all 0.3s;
+      }
+      .menu-close:hover {
+        background: white;
+        color: black;
+      }
+    </style>
+  </head>
+  <body class="selection:bg-[#FF4D00] selection:text-white">
+    <!-- LOADING CURTAIN -->
+    <div class="curtain"></div>
+
+    <!-- MENU OVERLAY -->
+    <div class="menu-overlay" id="menu">
+      <button class="menu-close" id="menu-close">Close</button>
+      <div
+        class="grid grid-cols-1 md:grid-cols-2 w-full max-w-7xl mx-auto h-full items-center"
+      >
+        <!-- Left: Headline -->
+        <div class="mb-12 md:mb-0">
+          <h2 class="text-6xl md:text-8xl font-bold leading-none mb-4">
+            START <br />
+            PROJECT
+          </h2>
+          <a
+            href="mailto:hello@oasis.arch"
+            class="text-2xl md:text-4xl font-light hover:text-[var(--accent-orange)] transition-colors flex items-center gap-4 group"
+          >
+            hello@oasis.arch
+            <span
+              class="transform group-hover:-translate-y-1 group-hover:translate-x-1 transition-transform"
+              >↗</span
+            >
+          </a>
+        </div>
+
+        <!-- Right: Links -->
+        <div class="flex flex-col gap-12 pl-0 md:pl-24">
+          <div class="grid grid-cols-2 gap-12">
+            <div>
+              <h4 class="text-[var(--accent-orange)] font-mono text-xs mb-4">
+                DUBAI
+              </h4>
+              <p class="text-gray-400 text-sm">
+                Alserkal Avenue<br />Warehouse 44
+              </p>
+            </div>
+            <div>
+              <h4 class="text-[var(--accent-orange)] font-mono text-xs mb-4">
+                LONDON
+              </h4>
+              <p class="text-gray-400 text-sm">180 The Strand<br />WC2R 1EA</p>
+            </div>
+          </div>
+          <div class="flex gap-8 text-sm text-gray-400">
+            <a href="#" class="hover:text-white">Instagram</a>
+            <a href="#" class="hover:text-white">LinkedIn</a>
+            <a href="#" class="hover:text-white">Behance</a>
+          </div>
+          <div class="text-xs text-gray-600 font-mono mt-12">
+            © 2025 OASIS ARCHITECTURE
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BACKGROUND GRID -->
+    <div class="grid-lines hidden md:flex">
+      <div class="line"></div>
+      <div class="line"></div>
+      <div class="line"></div>
+      <div class="line"></div>
+    </div>
+
+    <!-- NAVIGATION -->
+    <nav
+      class="fixed top-0 left-0 w-full p-6 md:p-8 z-50 flex justify-between items-start text-white pointer-events-none"
+    >
+      <div class="pointer-events-auto">
+        <a href="#" class="text-xl md:text-2xl font-bold tracking-tighter block"
+          >OASIS.</a
+        >
+        <span class="text-[10px] md:text-xs font-mono text-white/80"
+          >ARCHITECTURAL STUDIO</span
+        >
+      </div>
+
+      <div class="pointer-events-auto flex flex-col items-end gap-1">
+        <span class="text-[10px] md:text-xs font-mono hidden md:block"
+          >DXB / LDN / NYC</span
+        >
+        <button
+          id="menu-trigger"
+          class="mt-2 md:mt-4 px-4 md:px-6 py-2 border border-white/50 text-[10px] md:text-xs font-bold uppercase hover:bg-white hover:text-black transition-colors backdrop-blur-sm"
+        >
+          Menu
+        </button>
+      </div>
+    </nav>
+
+    <!-- PROGRESS INDICATOR (Desktop Only) -->
+    <div
+      class="fixed right-8 top-1/2 -translate-y-1/2 z-40 hidden md:flex flex-col items-center"
+    >
+      <div class="nav-dot active"></div>
+      <div class="nav-dot"></div>
+      <div class="nav-dot"></div>
+      <div class="nav-dot"></div>
+    </div>
+
+    <main>
+      <!-- SECTION 1: HERO (VERTICAL) -->
+      <section
+        id="hero"
+        class="h-screen w-full relative flex items-center justify-center overflow-hidden border-b border-[#D1D1D1]"
+      >
+        <div class="absolute inset-0 z-0">
+          <img
+            src="https://images.unsplash.com/photo-1486325212027-8081e485255e?q=80&w=2670&auto=format&fit=crop"
+            class="w-full h-full object-cover opacity-0 parallax-bg origin-center"
+            alt="Concrete Architecture"
+          />
+          <!-- Stronger gradient for mobile/desktop text visibility -->
+          <div
+            class="absolute inset-0 bg-gradient-to-b from-black/80 via-transparent to-black/40 pointer-events-none"
+          ></div>
+        </div>
+
+        <div class="relative z-10 text-center px-4">
+          <div class="overflow-hidden">
+            <h1
+              class="text-[15vw] md:text-[12vw] leading-none font-bold text-white hero-text translate-y-full drop-shadow-lg"
+            >
+              CONCRETE
+            </h1>
+          </div>
+          <div class="overflow-hidden">
+            <h1
+              class="text-[15vw] md:text-[12vw] leading-none font-bold text-white hero-text translate-y-full ml-0 md:ml-24 drop-shadow-lg"
+            >
+              & LIGHT
+            </h1>
+          </div>
+        </div>
+
+        <div
+          class="absolute bottom-12 left-6 md:left-12 max-w-xs text-xs font-mono leading-relaxed hidden md:block text-white"
+        >
+          (01) <br />
+          WE SCULPT SPACE TO CREATE TIMELESS ENVIRONMENTS. RADICAL SIMPLICITY
+          MEETS MONOLITHIC FORM.
+        </div>
+
+        <div
+          class="absolute bottom-12 right-6 md:right-12 text-white font-bold animate-bounce"
+        >
+          ↓
+        </div>
+      </section>
+
+      <!-- SECTION 2: HORIZONTAL GALLERY (Vertical on Mobile) -->
+      <!-- Fixed: Removed forced 400vh on mobile, allowed auto height -->
+      <div
+        class="overflow-hidden w-full relative min-h-screen"
+        id="scroll-wrapper"
+      >
+        <div class="horizontal-container md:flex">
+          <!-- PANEL 1: RESIDENTIAL -->
+          <section class="panel bg-[#EBEBEB]" id="panel-1">
+            <div
+              class="grid grid-cols-1 md:grid-cols-12 gap-8 w-full max-w-7xl items-center"
+            >
+              <div
+                class="col-span-12 md:col-span-5 relative z-10 p-1-content order-2 md:order-1"
+              >
+                <span
+                  class="text-[var(--accent-orange)] font-mono text-xs mb-4 block"
+                  >PROJECT_01</span
+                >
+
+                <h2 class="text-5xl md:text-8xl font-bold mb-8">
+                  <span class="text-reveal-mask"
+                    ><span class="text-reveal-line p1-title">THE</span></span
+                  >
+                  <span class="text-reveal-mask"
+                    ><span class="text-reveal-line p1-title">VOID</span></span
+                  >
+                </h2>
+
+                <p
+                  class="max-w-md text-gray-600 mb-8 leading-relaxed p1-desc opacity-0 transform translate-y-4"
+                >
+                  A residential monolith in the Mojave Desert. Designed to
+                  disappear into the landscape using mirrored concrete
+                  composites.
+                </p>
+                <a
+                  href="#"
+                  class="inline-block border-b border-black pb-1 hover:text-[var(--accent-orange)] hover:border-[var(--accent-orange)] transition-colors p1-desc opacity-0"
+                  >VIEW CASE STUDY</a
+                >
+              </div>
+              <div class="col-span-12 md:col-span-7 order-1 md:order-2">
+                <div class="arch-img-wrapper aspect-[4/3] w-full p1-img-mask">
+                  <img
+                    src="https://images.unsplash.com/photo-1516455590571-18256e5bb9ff?q=80&w=2670&auto=format&fit=crop"
+                    class="arch-img w-full h-full object-cover p1-img-scale"
+                    alt="House"
+                  />
+                </div>
+              </div>
+            </div>
+            <div
+              class="absolute bottom-4 right-4 text-[5rem] md:text-[15rem] font-bold text-white outline-text opacity-20 pointer-events-none leading-none -mb-8 md:-mb-16 p1-number"
+            >
+              01
+            </div>
+          </section>
+
+          <!-- PANEL 2: COMMERCIAL -->
+          <section class="panel bg-[#E5E5E5]" id="panel-2">
+            <div
+              class="grid grid-cols-1 md:grid-cols-12 gap-8 w-full max-w-7xl items-center"
+            >
+              <div class="col-span-12 md:col-span-7 order-1 md:order-1">
+                <div
+                  class="arch-img-wrapper aspect-[3/4] w-full md:w-3/4 mx-auto p2-img-mask"
+                >
+                  <img
+                    src="https://images.unsplash.com/photo-1487958449943-2429e8be8625?q=80&w=2670&auto=format&fit=crop"
+                    class="arch-img w-full h-full object-cover p2-img-scale"
+                    alt="Building"
+                  />
+                </div>
+              </div>
+              <div
+                class="col-span-12 md:col-span-5 order-2 md:order-2 p-2-content"
+              >
+                <span
+                  class="text-[var(--accent-orange)] font-mono text-xs mb-4 block"
+                  >PROJECT_02</span
+                >
+
+                <h2 class="text-5xl md:text-8xl font-bold mb-8">
+                  <span class="text-reveal-mask"
+                    ><span class="text-reveal-line p2-title">AXIS</span></span
+                  >
+                  <span class="text-reveal-mask"
+                    ><span class="text-reveal-line p2-title">TOWER</span></span
+                  >
+                </h2>
+
+                <p
+                  class="max-w-md text-gray-600 mb-8 leading-relaxed p2-desc opacity-0 translate-y-4"
+                >
+                  Headquarters for a global fintech giant. The structure defies
+                  gravity with a 40-meter cantilever over the city plaza.
+                </p>
+                <ul
+                  class="font-mono text-xs text-gray-500 mb-8 space-y-2 border-l border-gray-400 pl-4 p2-desc opacity-0 translate-y-4"
+                >
+                  <li>CLIENT: NEXUS CORP</li>
+                  <li>LOCATION: TOKYO</li>
+                  <li>YEAR: 2024</li>
+                </ul>
+                <a
+                  href="#"
+                  class="inline-block border-b border-black pb-1 hover:text-[var(--accent-orange)] hover:border-[var(--accent-orange)] transition-colors p2-desc opacity-0"
+                  >VIEW CASE STUDY</a
+                >
+              </div>
+            </div>
+            <div
+              class="absolute bottom-4 right-4 text-[5rem] md:text-[15rem] font-bold text-white outline-text opacity-20 pointer-events-none leading-none -mb-8 md:-mb-16 p2-number"
+            >
+              02
+            </div>
+          </section>
+
+          <!-- PANEL 3: CULTURAL -->
+          <section class="panel bg-[#EBEBEB]" id="panel-3">
+            <div
+              class="relative w-full h-full flex items-center justify-center"
+            >
+              <div class="absolute inset-0 flex items-center justify-center">
+                <div
+                  class="arch-img-wrapper w-full h-full p3-img-mask"
+                  style="clip-path: inset(100% 0 0 0);"
+                >
+                  <img
+                    src="https://images.unsplash.com/photo-1470723710355-95304d8aece4?q=80&w=2670&auto=format&fit=crop"
+                    class="arch-img w-full h-full object-cover opacity-100 grayscale p3-img-scale"
+                    alt="Museum"
+                  />
+                </div>
+              </div>
+              <div
+                class="relative z-10 bg-white p-8 md:p-12 max-w-xl shadow-2xl p3-content opacity-0 translate-y-20 mx-4 md:mx-0"
+              >
+                <span
+                  class="text-[var(--accent-orange)] font-mono text-xs mb-4 block"
+                  >PROJECT_03</span
+                >
+
+                <h2 class="text-4xl md:text-5xl font-bold mb-6">
+                  <span class="text-reveal-mask"
+                    ><span class="text-reveal-line p3-title"
+                      >MUSEUM OF</span
+                    ></span
+                  >
+                  <span class="text-reveal-mask"
+                    ><span class="text-reveal-line p3-title"
+                      >SILENCE</span
+                    ></span
+                  >
+                </h2>
+
+                <p
+                  class="text-gray-600 mb-8 leading-relaxed text-sm md:text-base"
+                >
+                  A brutalist sanctuary dedicated to sound art. The walls are
+                  3-meter thick reinforced concrete to ensure absolute acoustic
+                  isolation.
+                </p>
+                <button
+                  class="bg-black text-white px-8 py-4 text-xs font-bold uppercase hover:bg-[var(--accent-orange)] transition-colors"
+                >
+                  Enter Gallery
+                </button>
+              </div>
+            </div>
+          </section>
+
+          <!-- PANEL 4: CONTACT (Premium Redesign) -->
+          <section class="panel bg-[#0a0a0a] text-white">
+            <div
+              class="grid grid-cols-1 md:grid-cols-2 w-full max-w-[90vw] h-full relative z-10"
+            >
+              <!-- Left: Large Text -->
+              <div
+                class="flex flex-col justify-center border-r-0 md:border-r border-white/10 pr-0 md:pr-12 pt-12 md:pt-0"
+              >
+                <span
+                  class="text-[var(--accent-orange)] font-mono text-xs tracking-[0.2em] mb-8"
+                  >INQUIRIES // GLOBAL</span
+                >
+                <h2 class="text-6xl md:text-9xl font-bold leading-[0.9] mb-12">
+                  WORK <br />
+                  WITH <br />
+                  <span class="outline-text-white">OASIS</span>
+                </h2>
+                <div class="flex flex-col md:flex-row gap-4">
+                  <a
+                    href="mailto:hello@oasis.arch"
+                    class="border border-white px-8 py-4 text-sm font-bold uppercase hover:bg-white hover:text-black transition-all text-center"
+                  >
+                    Start Project
+                  </a>
+                  <a
+                    href="#"
+                    class="border border-white/20 px-8 py-4 text-sm font-bold uppercase hover:bg-white/10 transition-all text-center"
+                  >
+                    Download Profile
+                  </a>
+                </div>
+              </div>
+
+              <!-- Right: Info Grid -->
+              <div
+                class="flex flex-col justify-between pl-0 md:pl-12 py-12 md:py-24"
+              >
+                <div class="grid grid-cols-2 gap-8 md:gap-16">
+                  <div>
+                    <h4
+                      class="text-[var(--accent-orange)] font-mono text-xs mb-4"
+                    >
+                      DUBAI HQ
+                    </h4>
+                    <p class="text-gray-400 text-sm leading-relaxed">
+                      Alserkal Avenue<br />
+                      Warehouse 44<br />
+                      Al Quoz 1
+                    </p>
+                  </div>
+                  <div>
+                    <h4
+                      class="text-[var(--accent-orange)] font-mono text-xs mb-4"
+                    >
+                      LONDON
+                    </h4>
+                    <p class="text-gray-400 text-sm leading-relaxed">
+                      180 The Strand<br />
+                      Temple, WC2R 1EA<br />
+                      United Kingdom
+                    </p>
+                  </div>
+                  <div>
+                    <h4
+                      class="text-[var(--accent-orange)] font-mono text-xs mb-4"
+                    >
+                      NEW YORK
+                    </h4>
+                    <p class="text-gray-400 text-sm leading-relaxed">
+                      4 World Trade Center<br />
+                      150 Greenwich St<br />
+                      NY 10007
+                    </p>
+                  </div>
+                  <div>
+                    <h4
+                      class="text-[var(--accent-orange)] font-mono text-xs mb-4"
+                    >
+                      SOCIAL
+                    </h4>
+                    <div class="flex flex-col gap-2 text-sm text-gray-400">
+                      <a href="#" class="hover:text-white transition-colors"
+                        >Instagram ↗</a
+                      >
+                      <a href="#" class="hover:text-white transition-colors"
+                        >LinkedIn ↗</a
+                      >
+                      <a href="#" class="hover:text-white transition-colors"
+                        >Behance ↗</a
+                      >
+                    </div>
+                  </div>
+                </div>
+
+                <div
+                  class="flex justify-between items-end border-t border-white/10 pt-8 mt-12"
+                >
+                  <span class="text-2xl md:text-4xl font-bold tracking-tighter"
+                    >OASIS.</span
+                  >
+                  <div
+                    class="text-right text-[10px] md:text-xs font-mono text-gray-600"
+                  >
+                    ALL RIGHTS RESERVED <br />
+                    © 2025 ARCHITECTURAL STUDIO
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+    </main>
+
+    <!-- SCRIPTS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://unpkg.com/lenis@1.0.45/dist/lenis.min.js"></script>
+
+    <script>
+      gsap.registerPlugin(ScrollTrigger);
+
+      // 1. MENU LOGIC
+      const menuTrigger = document.getElementById("menu-trigger");
+      const menuClose = document.getElementById("menu-close");
+      const menu = document.getElementById("menu");
+
+      const menuTl = gsap.timeline({ paused: true });
+      menuTl.to(menu, {
+        y: "0%",
+        duration: 0.8,
+        ease: "power4.inOut",
+      });
+
+      menuTrigger.addEventListener("click", () => menuTl.play());
+      menuClose.addEventListener("click", () => menuTl.reverse());
+
+      // 2. LOADING ANIMATION
+      gsap.set(".parallax-bg", { scale: 1.5, opacity: 0 });
+
+      window.addEventListener("load", () => {
+        const tl = gsap.timeline();
+
+        tl.to(".curtain", {
+          scaleY: 0,
+          duration: 1.2,
+          ease: "power4.inOut",
+        })
+          .to(
+            ".parallax-bg",
+            {
+              scale: 1.1,
+              opacity: 0.8,
+              duration: 2.0,
+              ease: "power2.out",
+            },
+            "-=0.8"
+          )
+          .to(
+            ".hero-text",
+            {
+              y: 0,
+              duration: 1.5,
+              stagger: 0.1,
+              ease: "power4.out",
+            },
+            "-=1.8"
+          );
+      });
+
+      // 3. SMOOTH SCROLL
+      const lenis = new Lenis({
+        duration: 1.2,
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        direction: "vertical",
+        smooth: true,
+      });
+
+      function raf(time) {
+        lenis.raf(time);
+        requestAnimationFrame(raf);
+      }
+      requestAnimationFrame(raf);
+
+      // 4. RESPONSIVE ANIMATION LOGIC (MATCH MEDIA)
+      let mm = gsap.matchMedia();
+
+      mm.add("(min-width: 769px)", () => {
+        // --- DESKTOP SETUP (Horizontal) ---
+        const sections = gsap.utils.toArray(".panel");
+        const container = document.querySelector(".horizontal-container");
+
+        let scrollTween = gsap.to(sections, {
+          xPercent: -100 * (sections.length - 1),
+          ease: "none",
+          scrollTrigger: {
+            trigger: "#scroll-wrapper",
+            pin: true,
+            scrub: 1,
+            snap: 1 / (sections.length - 1),
+            end: () => "+=" + container.offsetWidth,
+            onUpdate: (self) => {
+              const progress = self.progress;
+              const dots = document.querySelectorAll(".nav-dot");
+              const index = Math.round(progress * (dots.length - 1));
+              dots.forEach((dot, i) => {
+                if (i === index) dot.classList.add("active");
+                else dot.classList.remove("active");
+              });
+            },
+          },
+        });
+
+        // --- ANIMATIONS (DESKTOP) ---
+        // PANEL 1
+        gsap.to(".p1-img-mask", {
+          clipPath: "inset(0 0% 0 0)",
+          duration: 1.5,
+          ease: "power2.out",
+          scrollTrigger: {
+            trigger: "#panel-1",
+            containerAnimation: scrollTween,
+            start: "left left",
+            end: "right left",
+            once: true,
+          },
+        });
+        gsap.to(".p1-title", {
+          y: 0,
+          stagger: 0.1,
+          duration: 0.8,
+          ease: "power2.out",
+          scrollTrigger: {
+            trigger: "#panel-1",
+            containerAnimation: scrollTween,
+            start: "left center",
+            once: true,
+          },
+        });
+        gsap.to(".p1-desc", {
+          opacity: 1,
+          y: 0,
+          stagger: 0.1,
+          duration: 0.8,
+          ease: "power2.out",
+          scrollTrigger: {
+            trigger: "#panel-1",
+            containerAnimation: scrollTween,
+            start: "left center",
+            once: true,
+          },
+        });
+        gsap.to(".p1-number", {
+          x: -200,
+          ease: "none",
+          scrollTrigger: {
+            trigger: "#panel-1",
+            containerAnimation: scrollTween,
+            start: "left right",
+            end: "right left",
+            scrub: true,
+          },
+        });
+
+        // PANEL 2
+        gsap.to(".p2-img-mask", {
+          clipPath: "inset(0 0% 0 0)",
+          duration: 1,
+          ease: "power2.inOut",
+          scrollTrigger: {
+            trigger: "#panel-2",
+            containerAnimation: scrollTween,
+            start: "left center",
+            once: true,
+          },
+        });
+        gsap.to(".p2-title", {
+          y: 0,
+          stagger: 0.1,
+          duration: 0.8,
+          delay: 0.2,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: "#panel-2",
+            containerAnimation: scrollTween,
+            start: "left center",
+            once: true,
+          },
+        });
+        gsap.to(".p2-desc", {
+          opacity: 1,
+          y: 0,
+          stagger: 0.1,
+          duration: 0.8,
+          delay: 0.4,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: "#panel-2",
+            containerAnimation: scrollTween,
+            start: "left center",
+            once: true,
+          },
+        });
+
+        // PANEL 3
+        gsap.to(".p3-img-mask", {
+          clipPath: "inset(0 0% 0 0)",
+          duration: 1.2,
+          ease: "expo.out",
+          scrollTrigger: {
+            trigger: "#panel-3",
+            containerAnimation: scrollTween,
+            start: "left center",
+            once: true,
+          },
+        });
+        gsap.to(".p3-content", {
+          y: 0,
+          opacity: 1,
+          duration: 1,
+          delay: 0.3,
+          ease: "back.out(1.2)",
+          scrollTrigger: {
+            trigger: "#panel-3",
+            containerAnimation: scrollTween,
+            start: "left center",
+            once: true,
+          },
+        });
+        gsap.to(".p3-title", {
+          y: 0,
+          stagger: 0.1,
+          duration: 0.8,
+          delay: 0.5,
+          ease: "power2.out",
+          scrollTrigger: {
+            trigger: "#panel-3",
+            containerAnimation: scrollTween,
+            start: "left center",
+            once: true,
+          },
+        });
+      });
+
+      mm.add("(max-width: 768px)", () => {
+        // --- MOBILE SETUP (Vertical) ---
+        gsap.set(".horizontal-container", { xPercent: 0 });
+
+        const revealOptions = {
+          duration: 1,
+          ease: "power2.out",
+          once: true,
+        };
+
+        // Panel 1 Mobile
+        gsap.to(".p1-img-mask", {
+          ...revealOptions,
+          clipPath: "inset(0 0% 0 0)",
+          scrollTrigger: { trigger: "#panel-1", start: "top 70%", once: true },
+        });
+        gsap.to(".p1-title", {
+          y: 0,
+          stagger: 0.1,
+          duration: 0.8,
+          scrollTrigger: { trigger: "#panel-1", start: "top 70%", once: true },
+        });
+        gsap.to(".p1-desc", {
+          opacity: 1,
+          y: 0,
+          stagger: 0.1,
+          duration: 0.8,
+          scrollTrigger: { trigger: "#panel-1", start: "top 60%", once: true },
+        });
+
+        // Panel 2 Mobile
+        gsap.to(".p2-img-mask", {
+          ...revealOptions,
+          clipPath: "inset(0 0% 0 0)",
+          scrollTrigger: { trigger: "#panel-2", start: "top 70%", once: true },
+        });
+        gsap.to(".p2-title", {
+          y: 0,
+          stagger: 0.1,
+          duration: 0.8,
+          scrollTrigger: { trigger: "#panel-2", start: "top 70%", once: true },
+        });
+        gsap.to(".p2-desc", {
+          opacity: 1,
+          y: 0,
+          stagger: 0.1,
+          duration: 0.8,
+          scrollTrigger: { trigger: "#panel-2", start: "top 60%", once: true },
+        });
+
+        // Panel 3 Mobile
+        gsap.to(".p3-img-mask", {
+          ...revealOptions,
+          clipPath: "inset(0 0% 0 0)",
+          scrollTrigger: { trigger: "#panel-3", start: "top 70%", once: true },
+        });
+        gsap.to(".p3-content", {
+          y: 0,
+          opacity: 1,
+          duration: 1,
+          scrollTrigger: { trigger: "#panel-3", start: "top 60%", once: true },
+        });
+        gsap.to(".p3-title", {
+          y: 0,
+          stagger: 0.1,
+          duration: 0.8,
+          scrollTrigger: { trigger: "#panel-3", start: "top 60%", once: true },
+        });
+      });
+
+      // 5. PARALLAX HERO BACKGROUND (Global)
+      gsap.to(".parallax-bg", {
+        yPercent: 50,
+        ease: "none",
+        scrollTrigger: {
+          trigger: "#hero",
+          start: "top top",
+          end: "bottom top",
+          scrub: true,
+        },
+      });
+    </script>
+  </body>
+</html>

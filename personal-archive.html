@@ -1,0 +1,1594 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Shadik Hossain | Quantum Portfolio</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              display: ["Syncopate", "sans-serif"],
+              body: ["Space Grotesk", "sans-serif"],
+              mono: ["JetBrains Mono", "monospace"],
+            },
+            colors: {
+              void: "#030303",
+              accent: "#ffffff",
+              glass: "rgba(255, 255, 255, 0.02)",
+              "glass-border": "rgba(255, 255, 255, 0.08)",
+            },
+            animation: {
+              "spin-slow": "spin 20s linear infinite",
+            },
+          },
+        },
+      };
+    </script>
+
+    <style>
+      :root {
+        --bg-color: #030303;
+        --card-glow: rgba(255, 255, 255, 0.15);
+      }
+
+      /* --- CORE & RESET --- */
+      html.lenis {
+        height: auto;
+      }
+      .lenis.lenis-smooth {
+        scroll-behavior: auto;
+      }
+      .lenis.lenis-smooth [data-lenis-prevent] {
+        overscroll-behavior: contain;
+      }
+      .lenis.lenis-stopped {
+        overflow: hidden;
+      }
+
+      body {
+        background-color: var(--bg-color);
+        color: #e0e0e0;
+        margin: 0;
+        font-family: "Space Grotesk", sans-serif;
+        overflow-x: hidden;
+      }
+
+      /* --- WEBGL BACKGROUND --- */
+      #webgl-canvas {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+        opacity: 1;
+        pointer-events: none;
+      }
+
+      /* --- GRAIN OVERLAY --- */
+      .grain {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 9000;
+        opacity: 0.04;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+      }
+
+      /* --- TYPOGRAPHY --- */
+      .text-fluid-h1 {
+        font-size: clamp(3.5rem, 9vw, 10rem);
+        line-height: 0.85;
+        letter-spacing: -0.04em;
+        will-change: transform;
+      }
+      .text-outline {
+        -webkit-text-stroke: 1px rgba(255, 255, 255, 0.3);
+        color: transparent;
+        transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+      .text-outline:hover {
+        -webkit-text-stroke: 1px #fff;
+        color: rgba(255, 255, 255, 0.05);
+        text-shadow: 0 0 30px rgba(255, 255, 255, 0.3);
+        letter-spacing: -0.02em;
+      }
+
+      /* --- CUSTOM CURSOR --- */
+      #cursor-dot {
+        width: 6px;
+        height: 6px;
+        background: white;
+        position: fixed;
+        top: 0;
+        left: 0;
+        border-radius: 50%;
+        z-index: 9999;
+        pointer-events: none;
+        transform: translate(-50%, -50%);
+        mix-blend-mode: exclusion;
+        transition: transform 0.1s;
+      }
+      #cursor-circle {
+        width: 40px;
+        height: 40px;
+        border: 1px solid rgba(255, 255, 255, 0.4);
+        position: fixed;
+        top: 0;
+        left: 0;
+        border-radius: 50%;
+        z-index: 9998;
+        pointer-events: none;
+        transform: translate(-50%, -50%);
+        transition: width 0.3s, height 0.3s, background-color 0.3s,
+          border-color 0.3s;
+        mix-blend-mode: exclusion;
+      }
+      #cursor-circle.active {
+        width: 80px;
+        height: 80px;
+        background: rgba(255, 255, 255, 0.1);
+        border-color: transparent;
+        backdrop-filter: blur(2px);
+      }
+
+      /* --- HOLOGRAPHIC CARDS --- */
+      .holo-card {
+        background: rgba(15, 15, 15, 0.6);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        position: relative;
+        overflow: hidden;
+        border-radius: 2px;
+        transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        backdrop-filter: blur(10px);
+      }
+      /* Grid Texture Background */
+      .holo-card::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background-image: linear-gradient(
+            rgba(255, 255, 255, 0.03) 1px,
+            transparent 1px
+          ),
+          linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+        background-size: 30px 30px;
+        opacity: 0;
+        transition: opacity 0.5s;
+        pointer-events: none;
+        z-index: -1;
+      }
+      .holo-card:hover::after {
+        opacity: 1;
+      }
+
+      /* Moving Spotlight Border */
+      .holo-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        border-radius: 2px;
+        padding: 1px;
+        background: radial-gradient(
+          600px circle at var(--mouse-x) var(--mouse-y),
+          rgba(255, 255, 255, 0.6),
+          transparent 40%
+        );
+        -webkit-mask: linear-gradient(#fff 0 0) content-box,
+          linear-gradient(#fff 0 0);
+        -webkit-mask-composite: xor;
+        mask-composite: exclude;
+        opacity: 0;
+        transition: opacity 0.5s;
+        pointer-events: none;
+      }
+      .holo-card:hover::before {
+        opacity: 1;
+      }
+      .holo-card:hover {
+        transform: translateY(-5px);
+      }
+
+      /* --- PRELOADER --- */
+      #preloader {
+        position: fixed;
+        inset: 0;
+        background: #000;
+        z-index: 10000;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
+      .loader-line {
+        width: 0%;
+        height: 1px;
+        background: white;
+        transition: width 0.1s linear;
+      }
+
+      /* --- UTILS --- */
+      .container-padding {
+        padding-left: 6vw;
+        padding-right: 6vw;
+      }
+
+      /* Smart Nav Transition */
+      nav {
+        transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+
+      /* Mobile Adjustment */
+      @media (max-width: 768px) {
+        .text-fluid-h1 {
+          font-size: 14vw;
+        }
+        .container-padding {
+          padding-left: 5vw;
+          padding-right: 5vw;
+        }
+      }
+    </style>
+  </head>
+  <body class="selection:bg-white selection:text-black">
+    <!-- PRELOADER -->
+    <div id="preloader">
+      <div
+        class="font-mono text-xs tracking-[0.5em] mb-4 text-white animate-pulse"
+      >
+        SYSTEM INITIALIZING
+      </div>
+      <div class="w-64 h-[1px] bg-gray-800 relative">
+        <div class="loader-line absolute left-0 top-0 h-full bg-white"></div>
+      </div>
+      <div class="font-mono text-[10px] text-gray-500 mt-2" id="percent-text">
+        00%
+      </div>
+    </div>
+
+    <!-- UI LAYER -->
+    <div class="grain"></div>
+    <div id="cursor-dot"></div>
+    <div id="cursor-circle"></div>
+
+    <!-- 3D BACKGROUND -->
+    <canvas id="webgl-canvas"></canvas>
+
+    <!-- NAVIGATION (Fixed Smart Nav) -->
+    <nav
+      id="navbar"
+      class="fixed top-0 w-full p-8 flex justify-between items-center z-50 mix-blend-difference text-white"
+    >
+      <div class="flex items-center gap-4 hoverable cursor-pointer group">
+        <div
+          class="w-8 h-8 border border-white/30 flex items-center justify-center relative overflow-hidden group-hover:border-white transition-colors"
+        >
+          <div
+            class="absolute inset-0 bg-white transform translate-y-full group-hover:translate-y-0 transition-transform duration-300"
+          ></div>
+          <div
+            class="w-1 h-1 bg-white group-hover:bg-black relative z-10"
+          ></div>
+        </div>
+        <div class="flex flex-col">
+          <span
+            class="font-display font-bold text-xs tracking-[0.2em] group-hover:tracking-[0.3em] transition-all duration-300"
+            >SHADIK H.</span
+          >
+          <span class="font-mono text-[8px] opacity-60">SYSTEM V7.0</span>
+        </div>
+      </div>
+
+      <div class="hidden md:flex gap-8">
+        <a
+          href="https://shadikhossain.onrender.com/business"
+          class="hoverable group relative px-4 py-2 overflow-hidden"
+        >
+          <span
+            class="relative z-10 text-xs font-mono font-bold tracking-widest group-hover:text-black transition-colors"
+            >BUSINESS PORTFOLIO</span
+          >
+          <div
+            class="absolute inset-0 bg-white transform translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-in-out"
+          ></div>
+        </a>
+      </div>
+    </nav>
+
+    <main class="relative z-10">
+      <!-- 1. HERO SECTION (UPDATED) -->
+      <section
+        class="min-h-screen w-full flex flex-col justify-center container-padding relative pt-24 pb-12"
+      >
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+          <!-- Text Content -->
+          <div
+            class="border-l w-full md:w-[60vw] border-white/10 pl-8 md:pl-16 relative order-2 lg:order-1"
+          >
+            <!-- Decorative Line -->
+            <div
+              class="absolute left-0 top-0 w-[1px] h-0 bg-white transition-all duration-1000 delay-500"
+              id="hero-border"
+            ></div>
+
+            <!-- Name Reveal -->
+            <div class="overflow-hidden mb-4">
+              <h2
+                class="font-mono text-teal-400 text-xs md:text-sm tracking-[0.3em] hero-text translate-y-[120%]"
+              >
+                /// IDENTITY: SHADIK HOSSAIN
+              </h2>
+            </div>
+
+            <div class="overflow-hidden mb-2">
+              <h1
+                class="font-display text-fluid-h1 text-white leading-none hero-text translate-y-[120%]"
+              >
+                DIGITAL
+              </h1>
+            </div>
+
+            <div class="overflow-hidden">
+              <h1
+                class="font-display text-fluid-h1 text-outline leading-none hero-text translate-y-[120%] hoverable px-2"
+                data-scramble="CREATOR"
+              >
+                CREATOR
+              </h1>
+            </div>
+
+            <div class="mt-12 max-w-xl opacity-0 fade-in">
+              <!-- Bio Box -->
+              <div
+                class="p-6 border border-white/10 bg-black/40 backdrop-blur-sm relative overflow-hidden group"
+              >
+                <div
+                  class="absolute top-0 left-0 w-2 h-2 border-t border-l border-white transition-all group-hover:w-full group-hover:h-full group-hover:border-white/20"
+                ></div>
+                <div
+                  class="absolute bottom-0 right-0 w-2 h-2 border-b border-r border-white transition-all group-hover:w-full group-hover:h-full group-hover:border-white/20"
+                ></div>
+
+                <p
+                  class="font-mono text-xs md:text-sm text-gray-400 leading-relaxed"
+                >
+                  <span class="text-white font-bold">/// STATUS:</span>
+                  ONLINE<br /><br />
+                  I am <span class="text-white">Shadik Hossain</span>, a
+                  high-achieving Scholar & Engineer. Founder of
+                  <span
+                    class="text-white border-b border-white/30 hover:border-white transition-colors"
+                    >SoftShillo</span
+                  >
+                  &
+                  <span
+                    class="text-teal-400 border-b border-teal-500/30 hover:border-teal-400 transition-colors"
+                    >Rural Peace</span
+                  >. Combining academic rigor (Double GPA 5.0) with social
+                  innovation to build scalable digital ecosystems.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Image Content (UPDATED) -->
+          <div
+            class="relative order-1 lg:order-2 flex justify-center lg:justify-end opacity-0 fade-in delay-300"
+          >
+            <div class="relative w-64 h-80 md:w-80 md:h-96 hoverable group">
+              <!-- Glitch/Frame Effect Layers -->
+              <div
+                class="absolute inset-0 border border-white/20 translate-x-2 translate-y-2 group-hover:translate-x-4 group-hover:translate-y-4 transition-transform duration-500"
+              ></div>
+              <div
+                class="absolute inset-0 bg-teal-900/20 -translate-x-2 -translate-y-2 group-hover:-translate-x-4 group-hover:-translate-y-4 transition-transform duration-500"
+              ></div>
+
+              <!-- Main Image Container -->
+              <div
+                class="absolute inset-0 overflow-hidden grayscale group-hover:grayscale-0 transition-all duration-700 ease-out border border-white/10 bg-[#0a0a0a]"
+              >
+                <img
+                  src="./the_daily_origin_founder.jpg"
+                  alt="Shadik Hossain"
+                  class="w-full h-full object-cover object-center opacity-90 group-hover:opacity-100 scale-100 group-hover:scale-110 transition-all duration-700"
+                />
+              </div>
+
+              <!-- Corner Accents -->
+              <div
+                class="absolute -top-1 -left-1 w-4 h-4 border-t-2 border-l-2 border-teal-500"
+              ></div>
+              <div
+                class="absolute -bottom-1 -right-1 w-4 h-4 border-b-2 border-r-2 border-teal-500"
+              ></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Scroll Indicator -->
+        <!-- <div class="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 opacity-0 fade-in">
+          <div class="w-[1px] h-12 bg-gradient-to-b from-white to-transparent"></div>
+          <span class="text-[9px] font-mono tracking-[0.3em] text-gray-500 animate-pulse">SCROLL</span>
+        </div> -->
+      </section>
+
+      <!-- 2. STATISTICS GRID -->
+      <section
+        class="container-padding py-32 border-t border-white/5 relative bg-black/50 backdrop-blur-sm z-20"
+      >
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+          <!-- Stat 1 -->
+          <div class="holo-card p-8 hoverable" onmousemove="updateCard(event)">
+            <span
+              class="font-mono text-[10px] text-gray-500 block mb-4 tracking-widest"
+              >ACADEMIC CORE</span
+            >
+            <div
+              class="text-5xl font-display text-white mb-2 scramble-num"
+              data-val="5.0"
+            >
+              0.0
+            </div>
+            <div class="h-[1px] w-full bg-white/10 mb-4"></div>
+            <p class="text-[10px] text-gray-400 font-mono leading-relaxed">
+              SSC: GPA 5.0<br />HSC: GPA 5.0<br />Consistent Excellence.
+            </p>
+          </div>
+          <!-- Stat 2 -->
+          <div class="holo-card p-8 hoverable" onmousemove="updateCard(event)">
+            <span
+              class="font-mono text-[10px] text-gray-500 block mb-4 tracking-widest"
+              >VENTURES</span
+            >
+            <div
+              class="text-5xl font-display text-white mb-2 scramble-num"
+              data-val="03"
+            >
+              00
+            </div>
+            <div class="h-[1px] w-full bg-white/10 mb-4"></div>
+            <p class="text-[10px] text-gray-400 font-mono leading-relaxed">
+              Founder: SoftShillo<br />Founder: Rural Peace<br />Founder: The
+              Daily Origin
+            </p>
+          </div>
+          <!-- Stat 3 -->
+          <div class="holo-card p-8 hoverable" onmousemove="updateCard(event)">
+            <span
+              class="font-mono text-[10px] text-gray-500 block mb-4 tracking-widest"
+              >SOFTWARE SUITE</span
+            >
+            <div
+              class="text-5xl font-display text-white mb-2 scramble-num"
+              data-val="09"
+            >
+              00
+            </div>
+            <div class="h-[1px] w-full bg-white/10 mb-4"></div>
+            <p class="text-[10px] text-gray-400 font-mono leading-relaxed">
+              Production tools for Fintech, EdTech & Governance.
+            </p>
+          </div>
+          <!-- Stat 4 -->
+          <div class="holo-card p-8 hoverable" onmousemove="updateCard(event)">
+            <span
+              class="font-mono text-[10px] text-gray-500 block mb-4 tracking-widest"
+              >AUTHORSHIP</span
+            >
+            <div
+              class="text-5xl font-display text-white mb-2 scramble-num"
+              data-val="03"
+            >
+              00
+            </div>
+            <div class="h-[1px] w-full bg-white/10 mb-4"></div>
+            <p class="text-[10px] text-gray-400 font-mono leading-relaxed">
+              Published author of 3 books on life & experience.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 3. HORIZONTAL SCROLL: SOFTSHILLO SUITE -->
+      <section
+        id="ventures-pin-wrapper"
+        class="h-screen w-full overflow-hidden bg-[#030303] relative z-20 flex flex-col justify-center"
+      >
+        <!-- Section Header -->
+        <div
+          class="container-padding mb-12 opacity-0 fade-in absolute top-12 left-0 w-full z-30 pointer-events-none mix-blend-difference"
+        >
+          <div
+            class="flex flex-col md:flex-row md:items-end gap-4 border-b border-white/20 pb-6"
+          >
+            <h2 class="font-display text-3xl md:text-5xl text-white">
+              SOFTSHILLO
+              <span
+                class="text-transparent"
+                style="-webkit-text-stroke: 1px white;"
+                >SUITE</span
+              >
+            </h2>
+            <span
+              class="font-mono text-[10px] text-gray-400 mb-2 tracking-widest"
+              >/// PROPRIETARY ENGINEERING PRODUCTS</span
+            >
+          </div>
+        </div>
+
+        <!-- The Moving Track -->
+        <div
+          id="ventures-move-container"
+          class="flex gap-12 px-[6vw] w-fit items-center"
+        >
+          <!-- Product Card: CashShilpo -->
+          <a
+            href="https://cashshilpo.softshilpo.com"
+            target="_blank"
+            class="w-[85vw] md:w-[45vw] h-[55vh] holo-card hoverable flex flex-col justify-between shrink-0 group border-l-4 border-l-green-500"
+            onmousemove="updateCard(event)"
+          >
+            <div class="p-8 md:p-12 h-full flex flex-col relative z-10">
+              <div class="flex justify-between items-start mb-8">
+                <span
+                  class="font-mono text-[10px] text-green-400 tracking-widest bg-green-900/20 px-2 py-1"
+                  >PRODUCT A // FINTECH</span
+                >
+                <div class="text-3xl opacity-20 font-display">01</div>
+              </div>
+
+              <h3
+                class="font-display text-3xl md:text-4xl mb-4 group-hover:text-green-400 transition-colors duration-300"
+              >
+                CASHSHILPO
+              </h3>
+              <p class="text-gray-400 text-sm leading-relaxed mb-auto max-w-md">
+                Advanced POS & Business Management. Engineered for offline-first
+                reliability in rural markets. Handles inventory, sales, and
+                analytics.
+              </p>
+
+              <div
+                class="mt-8 pt-6 border-t border-white/10 grid grid-cols-2 gap-4 text-[10px] font-mono text-gray-500"
+              >
+                <div>> React Architecture</div>
+                <div>> LocalSync DB</div>
+                <div>> Node.js API</div>
+                <div>> Analytics Engine</div>
+              </div>
+            </div>
+            <!-- BG Decor -->
+            <div
+              class="absolute -right-12 -bottom-12 w-48 h-48 bg-green-500/10 rounded-full blur-3xl group-hover:bg-green-500/20 transition-all duration-500"
+            ></div>
+          </a>
+
+          <!-- Product Card: TypeShilpo -->
+          <a
+            href="https://typeshilpo.softshilpo.com"
+            target="_blank"
+            class="w-[85vw] md:w-[45vw] h-[55vh] holo-card hoverable flex flex-col justify-between shrink-0 group border-l-4 border-l-blue-500"
+            onmousemove="updateCard(event)"
+          >
+            <div class="p-8 md:p-12 h-full flex flex-col relative z-10">
+              <div class="flex justify-between items-start mb-8">
+                <span
+                  class="font-mono text-[10px] text-blue-400 tracking-widest bg-blue-900/20 px-2 py-1"
+                  >PRODUCT B // EDTECH</span
+                >
+                <div class="text-3xl opacity-20 font-display">02</div>
+              </div>
+
+              <h3
+                class="font-display text-3xl md:text-4xl mb-4 group-hover:text-blue-400 transition-colors duration-300"
+              >
+                TYPESHILPO
+              </h3>
+              <p class="text-gray-400 text-sm leading-relaxed mb-auto max-w-md">
+                Typing learning & testing environment. Gamifies digital literacy
+                with real-time WPM analytics and competitive leaderboards.
+              </p>
+
+              <div
+                class="mt-8 pt-6 border-t border-white/10 grid grid-cols-2 gap-4 text-[10px] font-mono text-gray-500"
+              >
+                <div>> Socket.io Realtime</div>
+                <div>> WPM Algorithm</div>
+                <div>> Leaderboard Sys</div>
+              </div>
+            </div>
+            <div
+              class="absolute -right-12 -bottom-12 w-48 h-48 bg-blue-500/10 rounded-full blur-3xl group-hover:bg-blue-500/20 transition-all duration-500"
+            ></div>
+          </a>
+
+          <!-- Product Card: SportsShilpo -->
+          <a
+            href="https://sportsshilpo.softshilpo.com"
+            target="_blank"
+            class="w-[85vw] md:w-[45vw] h-[55vh] holo-card hoverable flex flex-col justify-between shrink-0 group border-l-4 border-l-orange-500"
+            onmousemove="updateCard(event)"
+          >
+            <div class="p-8 md:p-12 h-full flex flex-col relative z-10">
+              <div class="flex justify-between items-start mb-8">
+                <span
+                  class="font-mono text-[10px] text-orange-400 tracking-widest bg-orange-900/20 px-2 py-1"
+                  >PRODUCT C // SPORTS</span
+                >
+                <div class="text-3xl opacity-20 font-display">03</div>
+              </div>
+
+              <h3
+                class="font-display text-3xl md:text-4xl mb-4 group-hover:text-orange-400 transition-colors duration-300"
+              >
+                SPORTSSHILPO
+              </h3>
+              <p class="text-gray-400 text-sm leading-relaxed mb-auto max-w-md">
+                Professional cricket scoring and tournament management. Tracks
+                player stats and match states with millisecond precision.
+              </p>
+
+              <div
+                class="mt-8 pt-6 border-t border-white/10 grid grid-cols-2 gap-4 text-[10px] font-mono text-gray-500"
+              >
+                <div>> WebSocket API</div>
+                <div>> Live Match State</div>
+                <div>> Player DB</div>
+              </div>
+            </div>
+            <div
+              class="absolute -right-12 -bottom-12 w-48 h-48 bg-orange-500/10 rounded-full blur-3xl group-hover:bg-orange-500/20 transition-all duration-500"
+            ></div>
+          </a>
+
+          <!-- Product Card: Campaign OS -->
+          <a
+            href="https://campaignos.softshilpo.com"
+            target="_blank"
+            class="w-[85vw] md:w-[45vw] h-[55vh] holo-card hoverable flex flex-col justify-between shrink-0 group border-l-4 border-l-red-500"
+            onmousemove="updateCard(event)"
+          >
+            <div class="p-8 md:p-12 h-full flex flex-col relative z-10">
+              <div class="flex justify-between items-start mb-8">
+                <span
+                  class="font-mono text-[10px] text-red-400 tracking-widest bg-red-900/20 px-2 py-1"
+                  >PRODUCT D // ANALYTICS</span
+                >
+                <div class="text-3xl opacity-20 font-display">04</div>
+              </div>
+
+              <h3
+                class="font-display text-3xl md:text-4xl mb-4 group-hover:text-red-400 transition-colors duration-300"
+              >
+                CAMPAIGN OS
+              </h3>
+              <p class="text-gray-400 text-sm leading-relaxed mb-auto max-w-md">
+                Strategic tool for planning and managing political election
+                campaigns. Features voter database management and geospatial
+                mapping.
+              </p>
+
+              <div
+                class="mt-8 pt-6 border-t border-white/10 grid grid-cols-2 gap-4 text-[10px] font-mono text-gray-500"
+              >
+                <div>> Big Data</div>
+                <div>> Geo-Mapping</div>
+                <div>> Strategy Tools</div>
+              </div>
+            </div>
+            <div
+              class="absolute -right-12 -bottom-12 w-48 h-48 bg-red-500/10 rounded-full blur-3xl group-hover:bg-red-500/20 transition-all duration-500"
+            ></div>
+          </a>
+
+          <!-- Product Card: GramShilpo (Village Management) -->
+          <a
+            href="https://gramshilpo.softshilpo.com"
+            target="_blank"
+            class="w-[85vw] md:w-[45vw] h-[55vh] holo-card hoverable flex flex-col justify-between shrink-0 group border-l-4 border-l-purple-500"
+            onmousemove="updateCard(event)"
+          >
+            <div class="p-8 md:p-12 h-full flex flex-col relative z-10">
+              <div class="flex justify-between items-start mb-8">
+                <span
+                  class="font-mono text-[10px] text-purple-400 tracking-widest bg-purple-900/20 px-2 py-1"
+                  >PRODUCT E // GOVTECH</span
+                >
+                <div class="text-3xl opacity-20 font-display">05</div>
+              </div>
+
+              <h3
+                class="font-display text-3xl md:text-4xl mb-4 group-hover:text-purple-400 transition-colors duration-300"
+              >
+                GRAMSHILPO
+              </h3>
+              <p class="text-gray-400 text-sm leading-relaxed mb-auto max-w-md">
+                Digital governance ecosystem for village councils. Digitizes
+                citizen records, dispute resolutions, and local resource
+                tracking.
+              </p>
+
+              <div
+                class="mt-8 pt-6 border-t border-white/10 grid grid-cols-2 gap-4 text-[10px] font-mono text-gray-500"
+              >
+                <div>> Next.js</div>
+                <div>> Offline-First</div>
+                <div>> Cloud Sync</div>
+              </div>
+            </div>
+            <div
+              class="absolute -right-12 -bottom-12 w-48 h-48 bg-purple-500/10 rounded-full blur-3xl group-hover:bg-purple-500/20 transition-all duration-500"
+            ></div>
+          </a>
+
+          <!-- Product Card: HostelShilpo (Hostel Management) -->
+          <a
+            href="https://hostelshilpo.softshilpo.com"
+            target="_blank"
+            class="w-[85vw] md:w-[45vw] h-[55vh] holo-card hoverable flex flex-col justify-between shrink-0 group border-l-4 border-l-yellow-500"
+            onmousemove="updateCard(event)"
+          >
+            <div class="p-8 md:p-12 h-full flex flex-col relative z-10">
+              <div class="flex justify-between items-start mb-8">
+                <span
+                  class="font-mono text-[10px] text-yellow-400 tracking-widest bg-yellow-900/20 px-2 py-1"
+                  >PRODUCT F // PROP-TECH</span
+                >
+                <div class="text-3xl opacity-20 font-display">06</div>
+              </div>
+
+              <h3
+                class="font-display text-3xl md:text-4xl mb-4 group-hover:text-yellow-400 transition-colors duration-300"
+              >
+                HOSTELSHILPO
+              </h3>
+              <p class="text-gray-400 text-sm leading-relaxed mb-auto max-w-md">
+                Smart accommodation management system. Automates room
+                allocation, fee collection, and meal planning for large-scale
+                hostels.
+              </p>
+
+              <div
+                class="mt-8 pt-6 border-t border-white/10 grid grid-cols-2 gap-4 text-[10px] font-mono text-gray-500"
+              >
+                <div>> PWA Mobile</div>
+                <div>> Auto-Billing</div>
+                <div>> Biometrics</div>
+              </div>
+            </div>
+            <div
+              class="absolute -right-12 -bottom-12 w-48 h-48 bg-yellow-500/10 rounded-full blur-3xl group-hover:bg-yellow-500/20 transition-all duration-500"
+            ></div>
+          </a>
+        </div>
+      </section>
+
+      <!-- 4. RURAL PEACE -->
+      <section
+        id="rural-peace-section"
+        class="min-h-screen w-full flex flex-col justify-center container-padding relative z-20 bg-[#050505] border-t border-white/10"
+      >
+        <!-- Background Decor -->
+        <div
+          class="absolute left-0 top-0 w-full h-full overflow-hidden pointer-events-none"
+        >
+          <div
+            class="absolute right-0 top-1/3 w-[50vw] h-[50vw] bg-teal-900/10 rounded-full blur-[120px]"
+          ></div>
+          <div
+            class="absolute left-0 bottom-0 w-[30vw] h-[30vw] bg-teal-900/5 rounded-full blur-[80px]"
+          ></div>
+        </div>
+
+        <div
+          class="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center py-20"
+        >
+          <!-- Left: Text Content -->
+          <div>
+            <div class="inline-flex items-center gap-3 mb-6">
+              <div class="w-12 h-[1px] bg-teal-500"></div>
+              <span
+                class="font-mono text-teal-400 text-xs tracking-[0.3em] font-bold"
+                >NON-PROFIT INITIATIVE</span
+              >
+            </div>
+
+            <h2 class="font-display text-5xl md:text-7xl mb-8 leading-none">
+              RURAL<br />
+              <span
+                class="text-transparent"
+                style="-webkit-text-stroke: 1px rgba(20, 184, 166, 0.8);"
+                >PEACE</span
+              >
+            </h2>
+
+            <p
+              class="text-gray-400 text-sm md:text-base leading-relaxed max-w-xl mb-12"
+            >
+              Beyond commerce and code lies the duty to serve.
+              <strong>Rural Peace</strong> is a standalone social organization
+              dedicated to bringing structural integrity to rural development.
+              <br /><br />
+              We utilize custom software to engineer ecosystems for sustainable
+              growth—tracking every dollar, every beneficiary, and every outcome
+              with absolute transparency. It is the intersection of engineering
+              discipline and social responsibility.
+            </p>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-8">
+              <!-- Feature 1 -->
+              <div class="border-l border-teal-500/30 pl-6 group">
+                <h4
+                  class="font-display text-xl text-white mb-2 group-hover:text-teal-400 transition-colors"
+                >
+                  DIGITIZED AID
+                </h4>
+                <p class="font-mono text-[10px] text-gray-500 leading-relaxed">
+                  Custom OS for tracking distribution and inventory in real-time
+                  to prevent resource wastage.
+                </p>
+              </div>
+              <!-- Feature 2 -->
+              <div class="border-l border-teal-500/30 pl-6 group">
+                <h4
+                  class="font-display text-xl text-white mb-2 group-hover:text-teal-400 transition-colors"
+                >
+                  ZERO LEAKAGE
+                </h4>
+                <p class="font-mono text-[10px] text-gray-500 leading-relaxed">
+                  Blockchain-inspired ledger systems ensuring 100% financial
+                  transparency for donors.
+                </p>
+              </div>
+            </div>
+            <div class="mt-12">
+              <a
+                href="#"
+                class="group inline-flex items-center gap-4 text-xs font-mono font-bold tracking-widest text-teal-400 hover:text-white transition-colors"
+              >
+                [ EXPLORE MISSION ]
+                <span class="group-hover:translate-x-2 transition-transform"
+                  >-></span
+                >
+              </a>
+            </div>
+          </div>
+
+          <!-- Right: Visual/Holo Card Representation -->
+          <div class="relative flex justify-center lg:justify-end">
+            <div
+              class="holo-card p-12 hoverable group aspect-square flex flex-col justify-between border-teal-500/20 w-full max-w-md"
+              onmousemove="updateCard(event)"
+            >
+              <div class="flex justify-between w-full">
+                <span
+                  class="font-mono text-[10px] text-teal-500 tracking-widest border border-teal-500/20 px-3 py-1 rounded-full"
+                  >NGO // OS</span
+                >
+                <i class="w-2 h-2 bg-teal-500 rounded-full animate-pulse"></i>
+              </div>
+
+              <div class="text-center relative">
+                <div
+                  class="text-6xl md:text-9xl font-display text-white mb-4 opacity-90 group-hover:scale-105 transition-transform duration-500 group-hover:text-teal-500"
+                >
+                  RP
+                </div>
+                <div class="font-mono text-xs text-teal-400 tracking-[0.5em]">
+                  SYSTEM ONLINE
+                </div>
+              </div>
+
+              <div
+                class="w-full h-[1px] bg-gradient-to-r from-transparent via-teal-500/50 to-transparent"
+              ></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 5. WEB ARCHITECTURE GRID -->
+      <section
+        class="container-padding py-32 relative z-10 border-t border-white/10 bg-black/80"
+      >
+        <div class="flex justify-between items-end mb-16">
+          <h2 class="font-display text-3xl md:text-5xl text-white">
+            WEB <span class="text-outline">ARCHITECTURE</span>
+          </h2>
+          <span class="font-mono text-[10px] text-gray-500 hidden md:block"
+            >CLIENT & PROJECT INDEX</span
+          >
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <!-- Web 1 -->
+          <div
+            class="holo-card p-8 hoverable group cursor-pointer"
+            onmousemove="updateCard(event)"
+          >
+            <div class="flex justify-between items-start mb-6">
+              <span
+                class="text-[9px] font-mono tracking-widest text-white border border-white/20 px-2 py-1"
+                >EDTECH</span
+              >
+              <span
+                class="text-lg group-hover:rotate-45 transition-transform duration-300"
+                >↗</span
+              >
+            </div>
+            <h3
+              class="font-display text-xl mb-3 group-hover:text-white transition-colors"
+            >
+              IELTS MAHIR
+            </h3>
+            <p class="text-[11px] text-gray-400 leading-relaxed">
+              Educational platform for language testing and student resource
+              management.
+            </p>
+          </div>
+
+          <!-- Web 2 -->
+          <div
+            class="holo-card p-8 hoverable group cursor-pointer"
+            onmousemove="updateCard(event)"
+          >
+            <div class="flex justify-between items-start mb-6">
+              <span
+                class="text-[9px] font-mono tracking-widest text-white border border-white/20 px-2 py-1"
+                >E-COMMERCE</span
+              >
+              <span
+                class="text-lg group-hover:rotate-45 transition-transform duration-300"
+                >↗</span
+              >
+            </div>
+            <h3
+              class="font-display text-xl mb-3 group-hover:text-white transition-colors"
+            >
+              FISH CO. GLOBAL
+            </h3>
+            <p class="text-[11px] text-gray-400 leading-relaxed">
+              Product catalog and inventory web system tailored for local
+              business scaling.
+            </p>
+          </div>
+
+          <!-- Web 3 -->
+          <div
+            class="holo-card p-8 hoverable group cursor-pointer"
+            onmousemove="updateCard(event)"
+          >
+            <div class="flex justify-between items-start mb-6">
+              <span
+                class="text-[9px] font-mono tracking-widest text-white border border-white/20 px-2 py-1"
+                >NON-PROFIT</span
+              >
+              <span
+                class="text-lg group-hover:rotate-45 transition-transform duration-300"
+                >↗</span
+              >
+            </div>
+            <h3
+              class="font-display text-xl mb-3 group-hover:text-white transition-colors"
+            >
+              RURALPEACE.ORG
+            </h3>
+            <p class="text-[11px] text-gray-400 leading-relaxed">
+              Official digital presence for the Rural Peace NGO. Features
+              donation portals and impact stories.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 6. THE DAILY ORIGIN (JOURNALISM) -->
+      <section
+        class="min-h-[90vh] container-padding flex items-center py-20 relative z-10 bg-[#050505]"
+      >
+        <!-- Background Decor -->
+        <div
+          class="absolute right-0 top-1/4 w-1/2 h-1/2 bg-red-900/5 blur-[100px] pointer-events-none"
+        ></div>
+
+        <div class="w-full flex flex-col md:flex-row gap-16 items-stretch">
+          <div
+            class="w-full md:w-5/12 flex flex-col justify-center border-l-2 border-red-600 pl-12 relative"
+          >
+            <!-- Blinking live indicator -->
+            <div class="inline-flex items-center gap-3 mb-8">
+              <div class="w-2 h-2 bg-red-600 rounded-full animate-pulse"></div>
+              <span
+                class="font-mono text-[10px] tracking-[0.2em] text-red-500 font-bold"
+                >LIVE NEWS FEED</span
+              >
+            </div>
+
+            <h2 class="font-display text-5xl md:text-7xl mb-8 leading-[0.9]">
+              THE DAILY<br /><span
+                class="text-transparent"
+                style="-webkit-text-stroke: 1px rgba(255, 255, 255, 0.8);"
+                >ORIGIN</span
+              >
+            </h2>
+
+            <p class="text-gray-400 text-sm leading-relaxed mb-10 max-w-sm">
+              <strong>Role:</strong> Founder, Chief Editor & Lead Developer.<br /><br />
+              A fully engineered news platform covering National Affairs,
+              Sports, and Tech Policy. Bridging the gap between journalism and
+              digital distribution.
+            </p>
+
+            <a
+              href="#"
+              class="group inline-flex items-center gap-4 text-xs font-mono font-bold tracking-widest text-white hover:text-red-500 transition-colors"
+            >
+              [ ACCESS PORTAL ]
+              <span class="group-hover:translate-x-2 transition-transform"
+                >-></span
+              >
+            </a>
+          </div>
+
+          <div class="w-full md:w-7/12 flex flex-col justify-center gap-6">
+            <div
+              class="holo-card p-8 flex flex-col justify-end h-48 hoverable group cursor-pointer"
+              onmousemove="updateCard(event)"
+            >
+              <span class="font-mono text-[9px] text-gray-500 mb-3"
+                >EDITORIAL // TODAY</span
+              >
+              <h3
+                class="font-display text-2xl group-hover:text-red-500 transition-colors"
+              >
+                Tech Policy in 2025: The Rural Divide
+              </h3>
+            </div>
+            <div
+              class="holo-card p-8 flex flex-col justify-end h-48 hoverable group cursor-pointer"
+              onmousemove="updateCard(event)"
+            >
+              <span class="font-mono text-[9px] text-gray-500 mb-3"
+                >INTERNATIONAL // YESTERDAY</span
+              >
+              <h3
+                class="font-display text-2xl group-hover:text-red-500 transition-colors"
+              >
+                Global Economic Shifts & Local Impact
+              </h3>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 7. AUTHORSHIP / FOOTER -->
+      <section
+        class="container-padding py-32 relative z-10 flex flex-col items-center text-center"
+      >
+        <div class="mb-24 relative">
+          <span
+            class="font-mono text-[9px] text-gray-500 tracking-[0.5em] block mb-12"
+            >PUBLISHED WORKS</span
+          >
+
+          <div class="flex flex-wrap justify-center gap-8 md:gap-16">
+            <!-- Book 1 -->
+            <div class="group cursor-pointer hoverable">
+              <div
+                class="w-48 h-72 bg-[#0a0a0a] border border-white/10 flex items-center justify-center relative overflow-hidden transition-all duration-500 group-hover:scale-105 group-hover:border-white/40 shadow-2xl"
+              >
+                <div
+                  class="absolute inset-0 bg-gradient-to-b from-transparent to-black/80"
+                ></div>
+                <div
+                  class="absolute inset-0 flex flex-col justify-center items-center p-4"
+                >
+                  <h3
+                    class="font-display text-2xl text-white text-center leading-none mb-2"
+                  >
+                    THE<br />EXPERIENCE
+                  </h3>
+                  <div class="w-8 h-[1px] bg-white my-4"></div>
+                  <span class="font-mono text-[8px] text-gray-400"
+                    >NON-FICTION</span
+                  >
+                </div>
+                <!-- Book Shine -->
+                <div
+                  class="absolute inset-0 bg-gradient-to-tr from-transparent via-white/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"
+                ></div>
+              </div>
+              <span
+                class="block mt-4 text-[9px] font-mono text-gray-500 group-hover:text-white transition-colors"
+                >AVAILABLE ON AMAZON</span
+              >
+            </div>
+
+            <!-- Book 2 -->
+            <div class="group cursor-pointer hoverable">
+              <div
+                class="w-48 h-72 bg-[#0a0a0a] border border-white/10 flex items-center justify-center relative overflow-hidden transition-all duration-500 group-hover:scale-105 group-hover:border-white/40 shadow-2xl"
+              >
+                <div
+                  class="absolute inset-0 bg-gradient-to-b from-transparent to-black/80"
+                ></div>
+                <div
+                  class="absolute inset-0 flex flex-col justify-center items-center p-4"
+                >
+                  <h3
+                    class="font-display text-xl text-white text-center leading-tight mb-2"
+                  >
+                    SOME INCIDENTS<br />I FACED
+                  </h3>
+                  <div class="w-8 h-[1px] bg-white my-4"></div>
+                  <span class="font-mono text-[8px] text-gray-400">MEMOIR</span>
+                </div>
+                <div
+                  class="absolute inset-0 bg-gradient-to-tr from-transparent via-white/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 delay-100"
+                ></div>
+              </div>
+              <span
+                class="block mt-4 text-[9px] font-mono text-gray-500 group-hover:text-white transition-colors"
+                >AVAILABLE ON KOBO</span
+              >
+            </div>
+
+            <!-- Book 3 (Coming Soon) -->
+            <div class="group cursor-pointer hoverable">
+              <div
+                class="w-48 h-72 bg-[#0a0a0a] border border-white/10 flex items-center justify-center relative overflow-hidden transition-all duration-500 group-hover:scale-105 group-hover:border-white/40 shadow-2xl"
+              >
+                <div
+                  class="absolute inset-0 bg-gradient-to-b from-transparent to-black/80"
+                ></div>
+                <!-- Grid Pattern for Mystery -->
+                <div
+                  class="absolute inset-0 opacity-20"
+                  style="
+                    background-image: radial-gradient(
+                      circle at center,
+                      white 1px,
+                      transparent 1px
+                    );
+                    background-size: 20px 20px;
+                  "
+                ></div>
+
+                <div
+                  class="absolute inset-0 flex flex-col justify-center items-center p-4"
+                >
+                  <h3
+                    class="font-display text-2xl text-white text-center leading-none mb-2 blur-sm group-hover:blur-none transition-all duration-500"
+                  >
+                    TITLE<br />REDACTED
+                  </h3>
+                  <div class="w-8 h-[1px] bg-white/50 my-4"></div>
+                  <span
+                    class="font-mono text-[8px] text-teal-400 tracking-widest animate-pulse"
+                    >COMING SOON</span
+                  >
+                </div>
+
+                <div
+                  class="absolute inset-0 bg-gradient-to-tr from-transparent via-teal-500/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 delay-200"
+                ></div>
+              </div>
+              <span
+                class="block mt-4 text-[9px] font-mono text-gray-500 group-hover:text-teal-400 transition-colors"
+                >EST. RELEASE 2026</span
+              >
+            </div>
+          </div>
+        </div>
+        <!-- 8. CONTACT SECTION (ADDED) -->
+        <div class="w-full max-w-3xl mx-auto mb-24 relative z-10">
+          <div
+            class="holo-card p-12 text-center hoverable group border-teal-500/30"
+            onmousemove="updateCard(event)"
+          >
+            <div
+              class="absolute top-0 left-1/2 -translate-x-1/2 w-px h-12 bg-gradient-to-b from-transparent to-teal-500"
+            ></div>
+
+            <span
+              class="font-mono text-[10px] text-teal-400 tracking-[0.3em] mb-6 block"
+            >
+              /// COMMUNICATION CHANNEL
+            </span>
+
+            <h3
+              class="font-display text-3xl md:text-5xl text-white mb-8 group-hover:text-teal-50 transition-colors"
+            >
+              START A PROJECT
+            </h3>
+
+            <a
+              href="mailto:shadikworld@gmail.com"
+              class="relative inline-block group/link"
+            >
+              <span
+                class="font-mono text-lg md:text-2xl text-gray-300 group-hover/link:text-teal-400 transition-colors border-b border-gray-700 group-hover/link:border-teal-400 pb-1"
+              >
+                shadikworld@gmail.com
+              </span>
+              <span
+                class="absolute -right-4 -top-1 w-2 h-2 bg-teal-500 rounded-full animate-pulse"
+              ></span>
+            </a>
+
+            <div class="mt-8 flex justify-center gap-2">
+              <div class="w-1 h-1 bg-gray-600 rounded-full"></div>
+              <div class="w-1 h-1 bg-gray-600 rounded-full"></div>
+              <div class="w-1 h-1 bg-gray-600 rounded-full"></div>
+            </div>
+          </div>
+        </div>
+
+        <footer
+          class="w-full border-t border-white/10 pt-16 flex flex-col md:flex-row justify-between items-end gap-12"
+        >
+          <div class="text-left">
+            <h2 class="font-display text-4xl md:text-6xl text-white mb-4">
+              SHADIK HOSSAIN
+            </h2>
+            <p class="font-mono text-xs text-gray-500 tracking-wide max-w-md">
+              ENGINEERING SCALABLE SYSTEMS FOR A BETTER TOMORROW.<br />
+              COPYRIGHT © 2025. ALL SYSTEMS OPERATIONAL.
+            </p>
+          </div>
+          <div class="flex gap-8 font-mono text-xs text-white">
+            <a href="#" class="hover:text-gray-400 transition-colors hoverable"
+              >LINKEDIN</a
+            >
+            <a href="#" class="hover:text-gray-400 transition-colors hoverable"
+              >GITHUB</a
+            >
+            <a href="#" class="hover:text-gray-400 transition-colors hoverable"
+              >TWITTER</a
+            >
+          </div>
+        </footer>
+      </section>
+    </main>
+
+    <!-- DEPENDENCIES -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.29/bundled/lenis.min.js"></script>
+    <!-- SplitText workaround (Scramble logic implemented manually) -->
+
+    <script>
+      // --- 1. PRELOADER ---
+      const preloader = document.getElementById("preloader");
+      const loaderLine = document.querySelector(".loader-line");
+      const percentText = document.getElementById("percent-text");
+
+      let pct = 0;
+      const loadInt = setInterval(() => {
+        pct += Math.random() * 5;
+        if (pct > 100) pct = 100;
+        loaderLine.style.width = `${pct}%`;
+        percentText.innerText = `${Math.floor(pct)
+          .toString()
+          .padStart(2, "0")}%`;
+
+        if (pct === 100) {
+          clearInterval(loadInt);
+          setTimeout(() => {
+            gsap.to(preloader, {
+              yPercent: -100,
+              duration: 1,
+              ease: "power4.inOut",
+              onComplete: initSite,
+            });
+          }, 500);
+        }
+      }, 30);
+
+      function initSite() {
+        initThree();
+        initAnimations();
+        initScroll();
+        initSmartNav();
+      }
+
+      // --- 2. SMOOTH SCROLL ---
+      const lenis = new Lenis({
+        duration: 1.2,
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        orientation: "vertical",
+        smoothWheel: true,
+      });
+
+      function raf(time) {
+        lenis.raf(time);
+        requestAnimationFrame(raf);
+      }
+      requestAnimationFrame(raf);
+      gsap.registerPlugin(ScrollTrigger);
+
+      // --- 3. THREE.JS: QUANTUM GLOBE ---
+      function initThree() {
+        const canvas = document.querySelector("#webgl-canvas");
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(
+          75,
+          window.innerWidth / window.innerHeight,
+          0.1,
+          1000
+        );
+        const renderer = new THREE.WebGLRenderer({
+          canvas,
+          alpha: true,
+          antialias: true,
+        });
+
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+        // Group to hold everything
+        const group = new THREE.Group();
+        scene.add(group);
+
+        // A. The Wireframe Globe
+        const geometry = new THREE.IcosahedronGeometry(10, 2);
+        const wireframeMaterial = new THREE.MeshBasicMaterial({
+          color: 0x333333,
+          wireframe: true,
+          transparent: true,
+          opacity: 0.1,
+        });
+        const globe = new THREE.Mesh(geometry, wireframeMaterial);
+        group.add(globe);
+
+        // B. The Particle Cloud (Plexus Effect)
+        const pGeo = new THREE.BufferGeometry();
+        const pCount = 600;
+        const posArray = new Float32Array(pCount * 3);
+
+        for (let i = 0; i < pCount * 3; i++) {
+          posArray[i] = (Math.random() - 0.5) * 25; // Scatter around center
+        }
+        pGeo.setAttribute("position", new THREE.BufferAttribute(posArray, 3));
+        const pMat = new THREE.PointsMaterial({
+          size: 0.05,
+          color: 0xffffff,
+          transparent: true,
+          opacity: 0.6,
+        });
+        const particles = new THREE.Points(pGeo, pMat);
+        group.add(particles);
+
+        // C. Connecting Lines (Visual Complexity)
+        // Note: Real-time line calculation is heavy, so we use a static line sphere for performance
+        const lineGeo = new THREE.WireframeGeometry(
+          new THREE.IcosahedronGeometry(8, 1)
+        );
+        const lineMat = new THREE.LineBasicMaterial({
+          color: 0xffffff,
+          transparent: true,
+          opacity: 0.05,
+        });
+        const innerLines = new THREE.LineSegments(lineGeo, lineMat);
+        group.add(innerLines);
+
+        camera.position.z = 20;
+
+        // Mouse Interaction
+        let mouseX = 0,
+          mouseY = 0;
+        let targetX = 0,
+          targetY = 0;
+
+        document.addEventListener("mousemove", (e) => {
+          mouseX = (e.clientX - window.innerWidth / 2) * 0.001;
+          mouseY = (e.clientY - window.innerHeight / 2) * 0.001;
+        });
+
+        const clock = new THREE.Clock();
+
+        function animate() {
+          const t = clock.getElapsedTime();
+
+          targetX = mouseX * 2;
+          targetY = mouseY * 2;
+
+          // Smooth rotation
+          group.rotation.y += 0.002;
+          group.rotation.x += (targetY - group.rotation.x) * 0.05;
+          group.rotation.y += (targetX - group.rotation.y) * 0.05;
+
+          // Breathing effect
+          const scale = 1 + Math.sin(t * 0.5) * 0.02;
+          group.scale.set(scale, scale, scale);
+
+          renderer.render(scene, camera);
+          requestAnimationFrame(animate);
+        }
+        animate();
+
+        window.addEventListener("resize", () => {
+          camera.aspect = window.innerWidth / window.innerHeight;
+          camera.updateProjectionMatrix();
+          renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+      }
+
+      // --- 4. ANIMATIONS & SCRAMBLE TEXT ---
+      function initAnimations() {
+        // Hero Reveal
+        gsap.to(".hero-text", {
+          y: 0,
+          duration: 1.5,
+          stagger: 0.1,
+          ease: "power4.out",
+          delay: 0.2,
+        });
+
+        gsap.to(".fade-in", {
+          opacity: 1,
+          y: 0,
+          duration: 1,
+          delay: 0.8,
+        });
+
+        // Expand Border on Load
+        const heroBorder = document.getElementById("hero-border");
+        if (heroBorder) heroBorder.style.height = "100%";
+
+        // Scramble Numbers on Scroll
+        document.querySelectorAll(".scramble-num").forEach((el) => {
+          const finalVal = el.getAttribute("data-val");
+          ScrollTrigger.create({
+            trigger: el,
+            start: "top 85%",
+            onEnter: () => {
+              let obj = { val: 0 };
+              // Determine if float or int
+              const isFloat = finalVal.includes(".");
+              const target = parseFloat(finalVal);
+
+              gsap.to(obj, {
+                val: target,
+                duration: 2,
+                ease: "power2.out",
+                onUpdate: () => {
+                  el.innerText = isFloat
+                    ? obj.val.toFixed(1)
+                    : Math.floor(obj.val).toString().padStart(2, "0");
+                },
+              });
+            },
+          });
+        });
+
+        // Hacker Text Scramble Effect for Headers
+        const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        document
+          .querySelector(".hoverable[data-scramble]")
+          .addEventListener("mouseenter", (event) => {
+            let iteration = 0;
+            const originalText = event.target.dataset.scramble;
+            let interval = setInterval(() => {
+              event.target.innerText = originalText
+                .split("")
+                .map((letter, index) => {
+                  if (index < iteration) return originalText[index];
+                  return letters[Math.floor(Math.random() * 36)];
+                })
+                .join("");
+
+              if (iteration >= originalText.length) clearInterval(interval);
+              iteration += 1 / 3;
+            }, 30);
+          });
+      }
+
+      // --- 5. HORIZONTAL SCROLL ---
+      function initScroll() {
+        const container = document.querySelector("#ventures-move-container");
+        const wrapper = document.querySelector("#ventures-pin-wrapper");
+
+        // Calculate scroll amount
+        const scrollAmount =
+          container.scrollWidth - window.innerWidth + window.innerWidth * 0.15;
+
+        gsap.to(container, {
+          x: -scrollAmount,
+          ease: "none",
+          scrollTrigger: {
+            trigger: wrapper,
+            pin: true,
+            scrub: 1,
+            end: () => "+=" + scrollAmount,
+            invalidateOnRefresh: true,
+          },
+        });
+      }
+
+      // --- 6. SMART NAVIGATION LOGIC ---
+      function initSmartNav() {
+        let lastScrollY = window.scrollY;
+        const nav = document.getElementById("navbar");
+
+        window.addEventListener("scroll", () => {
+          const currentScrollY = window.scrollY;
+
+          // If scrolling down AND passed a small threshold (50px)
+          if (currentScrollY > lastScrollY && currentScrollY > 50) {
+            nav.style.transform = "translateY(-100%)";
+          } else {
+            // If scrolling up OR at the top
+            nav.style.transform = "translateY(0)";
+          }
+
+          lastScrollY = currentScrollY;
+        });
+      }
+
+      // --- 7. SPOTLIGHT CARD LOGIC ---
+      window.updateCard = function (e) {
+        const card = e.currentTarget;
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        card.style.setProperty("--mouse-x", `${x}px`);
+        card.style.setProperty("--mouse-y", `${y}px`);
+      };
+
+      // --- 8. CURSOR & MAGNETS ---
+      const cursorDot = document.getElementById("cursor-dot");
+      const cursorCircle = document.getElementById("cursor-circle");
+
+      let cursorX = 0,
+        cursorY = 0;
+      let mouseX = 0,
+        mouseY = 0;
+
+      window.addEventListener("mousemove", (e) => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+
+        cursorDot.style.transform = `translate(${mouseX}px, ${mouseY}px) translate(-50%, -50%)`;
+      });
+
+      function animateCursor() {
+        cursorX += (mouseX - cursorX) * 0.15;
+        cursorY += (mouseY - cursorY) * 0.15;
+        cursorCircle.style.transform = `translate(${cursorX}px, ${cursorY}px) translate(-50%, -50%)`;
+        requestAnimationFrame(animateCursor);
+      }
+      animateCursor();
+
+      document.querySelectorAll(".hoverable").forEach((el) => {
+        el.addEventListener("mouseenter", () =>
+          cursorCircle.classList.add("active")
+        );
+        el.addEventListener("mouseleave", () =>
+          cursorCircle.classList.remove("active")
+        );
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="en" class="bg-[#02040a]">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ASCEND | QUANTUM FINANCE</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Share+Tech+Mono&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      :root {
+        --bg: #02040a;
+        --surface: #0b101a;
+        --primary: #00f0ff;
+        --secondary: #7000ff;
+        --accent: #ffffff;
+        --grid: rgba(0, 240, 255, 0.05);
+      }
+
+      body {
+        background-color: var(--bg);
+        color: var(--accent);
+        font-family: "Space Grotesk", sans-serif;
+        overflow-x: hidden;
+        cursor: none; /* Custom Cursor */
+      }
+
+      .font-mono {
+        font-family: "Share Tech Mono", monospace;
+      }
+
+      /* SMOOTH SCROLL */
+      html.lenis,
+      html.lenis body {
+        height: auto;
+      }
+      .lenis.lenis-smooth {
+        scroll-behavior: auto !important;
+      }
+      .lenis.lenis-smooth [data-lenis-prevent] {
+        overscroll-behavior: contain;
+      }
+      .lenis.lenis-stopped {
+        overflow: hidden;
+      }
+
+      /* CUSTOM CURSOR */
+      #cursor {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 20px;
+        height: 20px;
+        border: 1px solid var(--primary);
+        pointer-events: none;
+        z-index: 9999;
+        transform: translate(-50%, -50%);
+        transition: width 0.2s, height 0.2s, background-color 0.2s;
+        border-radius: 50%;
+        mix-blend-mode: difference;
+      }
+      #cursor.active {
+        width: 80px;
+        height: 80px;
+        background-color: rgba(0, 240, 255, 0.1);
+        border-color: transparent;
+      }
+      #cursor-dot {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 4px;
+        height: 4px;
+        background: var(--primary);
+        border-radius: 50%;
+        pointer-events: none;
+        z-index: 10000;
+        transform: translate(-50%, -50%);
+      }
+
+      /* GRID BACKGROUND */
+      .cyber-grid {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background-image: linear-gradient(var(--grid) 1px, transparent 1px),
+          linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+        background-size: 50px 50px;
+        z-index: 0;
+        pointer-events: none;
+        mask-image: radial-gradient(
+          circle at center,
+          black 40%,
+          transparent 80%
+        );
+      }
+
+      /* GLOW TEXT */
+      .glow-text {
+        text-shadow: 0 0 10px rgba(0, 240, 255, 0.5),
+          0 0 20px rgba(0, 240, 255, 0.3);
+      }
+
+      /* CANVAS CONTAINER */
+      #canvas-container {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 1;
+        opacity: 0.6;
+      }
+
+      /* GLASS CARD */
+      .glass-card {
+        background: rgba(11, 16, 26, 0.4);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+      }
+      .glass-card:hover {
+        border-color: var(--primary);
+        box-shadow: 0 0 30px rgba(0, 240, 255, 0.1);
+        transform: translateY(-5px);
+      }
+
+      /* SCROLL TICKER */
+      .ticker-wrap {
+        position: relative;
+        width: 100%;
+        overflow: hidden;
+        height: 3rem;
+        background: var(--surface);
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        display: flex;
+        align-items: center;
+      }
+      .ticker {
+        display: flex;
+        white-space: nowrap;
+        animation: ticker 20s linear infinite;
+      }
+      .ticker-item {
+        padding: 0 2rem;
+        font-family: "Share Tech Mono", monospace;
+        font-size: 0.8rem;
+        color: rgba(255, 255, 255, 0.7);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+      .up {
+        color: #00ff9d;
+      }
+      .down {
+        color: #ff0055;
+      }
+      @keyframes ticker {
+        0% {
+          transform: translateX(0);
+        }
+        100% {
+          transform: translateX(-50%);
+        }
+      }
+
+      /* HOLOGRAPHIC CARD */
+      .holo-card-container {
+        perspective: 1000px;
+      }
+      .holo-card {
+        width: 100%;
+        height: 100%;
+        position: relative;
+        transform-style: preserve-3d;
+        background: linear-gradient(
+          135deg,
+          rgba(255, 255, 255, 0.1),
+          rgba(255, 255, 255, 0)
+        );
+        backdrop-filter: blur(10px);
+        border-radius: 16px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        overflow: hidden;
+      }
+      .holo-shine {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(
+          125deg,
+          transparent 0%,
+          transparent 40%,
+          rgba(255, 255, 255, 0.2) 45%,
+          rgba(0, 240, 255, 0.4) 50%,
+          rgba(255, 255, 255, 0.2) 55%,
+          transparent 60%,
+          transparent 100%
+        );
+        transform: translateX(-100%);
+        transition: transform 0.6s;
+        z-index: 2;
+      }
+      .holo-card:hover .holo-shine {
+        transform: translateX(100%);
+        transition: transform 0.8s ease-in-out;
+      }
+
+      /* LOADING BAR */
+      .loader {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: var(--bg);
+        z-index: 10000;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        transition: transform 0.8s cubic-bezier(0.87, 0, 0.13, 1);
+      }
+      .loader-bar-container {
+        width: 200px;
+        height: 2px;
+        background: rgba(255, 255, 255, 0.1);
+        margin-top: 20px;
+        position: relative;
+        overflow: hidden;
+      }
+      .loader-bar {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 0%;
+        background: var(--primary);
+      }
+      body.loaded .loader {
+        transform: translateY(-100%);
+      }
+
+      /* GLITCH EFFECT */
+      .glitch {
+        position: relative;
+      }
+      .glitch::before,
+      .glitch::after {
+        content: attr(data-text);
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: var(--bg);
+      }
+      .glitch::before {
+        left: 2px;
+        text-shadow: -1px 0 #ff00c1;
+        clip: rect(44px, 450px, 56px, 0);
+        animation: glitch-anim 5s infinite linear alternate-reverse;
+      }
+      .glitch::after {
+        left: -2px;
+        text-shadow: -1px 0 #00fff9;
+        clip: rect(44px, 450px, 56px, 0);
+        animation: glitch-anim2 5s infinite linear alternate-reverse;
+      }
+      @keyframes glitch-anim {
+        0% {
+          clip: rect(30px, 9999px, 10px, 0);
+        }
+        5% {
+          clip: rect(50px, 9999px, 80px, 0);
+        }
+        100% {
+          clip: rect(10px, 9999px, 40px, 0);
+        }
+      }
+    </style>
+  </head>
+  <body class="antialiased">
+    <!-- LOADER -->
+    <div class="loader">
+      <div class="font-mono text-xs tracking-widest text-white/50 mb-2">
+        INITIALIZING SECURE UPLINK
+      </div>
+      <div class="loader-bar-container">
+        <div class="loader-bar"></div>
+      </div>
+      <div
+        class="font-mono text-[10px] text-[var(--primary)] mt-2"
+        id="loader-percent"
+      >
+        0%
+      </div>
+    </div>
+
+    <!-- CURSOR -->
+    <div id="cursor"></div>
+    <div id="cursor-dot"></div>
+
+    <!-- BACKGROUNDS -->
+    <div class="cyber-grid"></div>
+
+    <!-- NAVIGATION -->
+    <nav
+      class="fixed top-0 w-full z-50 px-8 py-6 flex justify-between items-center mix-blend-difference"
+    >
+      <div class="flex items-center gap-2 hover-trigger">
+        <div
+          class="w-3 h-3 bg-[var(--primary)] animate-pulse shadow-[0_0_10px_var(--primary)]"
+        ></div>
+        <span class="font-mono font-bold text-white tracking-widest text-sm"
+          >ASCEND</span
+        >
+      </div>
+      <div class="hidden md:flex gap-8">
+        <a
+          href="#market"
+          class="font-mono text-xs text-white/70 hover:text-[var(--primary)] transition-colors hover-trigger"
+          >[01] MARKET</a
+        >
+        <a
+          href="#technology"
+          class="font-mono text-xs text-white/70 hover:text-[var(--primary)] transition-colors hover-trigger"
+          >[02] CORE</a
+        >
+        <a
+          href="#cards"
+          class="font-mono text-xs text-white/70 hover:text-[var(--primary)] transition-colors hover-trigger"
+          >[03] ASSETS</a
+        >
+      </div>
+      <button
+        class="font-mono text-xs border border-[var(--primary)] text-[var(--primary)] px-4 py-2 hover:bg-[var(--primary)] hover:text-black transition-all hover-trigger"
+      >
+        CONNECT_WALLET
+      </button>
+    </nav>
+
+    <main>
+      <!-- SECTION 1: HERO -->
+      <section
+        class="relative h-screen w-full flex items-center justify-center overflow-hidden"
+      >
+        <div id="canvas-container"></div>
+
+        <div class="relative z-10 text-center px-4">
+          <div
+            class="font-mono text-[var(--primary)] text-xs mb-4 tracking-[0.5em] reveal-text"
+          >
+            /// DECENTRALIZED_LIQUIDITY
+          </div>
+          <h1
+            class="text-6xl md:text-9xl font-bold text-white leading-tight mb-6 reveal-text glitch"
+            data-text="FUTURE OF VALUE"
+          >
+            FUTURE OF VALUE
+          </h1>
+          <p
+            class="font-mono text-white/50 max-w-lg mx-auto leading-relaxed mb-12 reveal-text"
+          >
+            Ascend is the high-frequency trading terminal for the decentralized
+            web. Zero latency. Infinite liquidity. Absolute control.
+          </p>
+
+          <div
+            class="flex flex-col md:flex-row gap-6 justify-center items-center reveal-text"
+          >
+            <button
+              class="group relative px-8 py-4 bg-white text-black font-bold font-mono text-xs tracking-widest overflow-hidden hover-trigger"
+            >
+              <span class="relative z-10">LAUNCH TERMINAL</span>
+              <div
+                class="absolute inset-0 bg-[var(--primary)] transform scale-x-0 origin-left group-hover:scale-x-100 transition-transform duration-300"
+              ></div>
+            </button>
+            <div
+              class="flex items-center gap-2 font-mono text-xs text-white/50"
+            >
+              <span class="w-2 h-2 rounded-full bg-green-500"></span>
+              SYSTEM OPERATIONAL
+            </div>
+          </div>
+        </div>
+
+        <div class="absolute bottom-10 left-10 hidden md:block z-10">
+          <div class="flex gap-8 font-mono text-[10px] text-white/40">
+            <div>
+              <span class="block text-white">BTC/USD</span>
+              <span>$98,421.50</span>
+            </div>
+            <div>
+              <span class="block text-white">ETH/USD</span>
+              <span>$5,231.20</span>
+            </div>
+            <div>
+              <span class="block text-white">SOL/USD</span>
+              <span>$324.80</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TICKER -->
+      <div class="ticker-wrap z-20 relative">
+        <div class="ticker">
+          <div class="ticker-item">BTC <span class="up">+4.2%</span></div>
+          <div class="ticker-item">ETH <span class="up">+2.1%</span></div>
+          <div class="ticker-item">SOL <span class="down">-0.5%</span></div>
+          <div class="ticker-item">XRP <span class="up">+1.8%</span></div>
+          <div class="ticker-item">ADA <span class="down">-1.2%</span></div>
+          <div class="ticker-item">DOT <span class="up">+0.8%</span></div>
+          <div class="ticker-item">AVAX <span class="up">+3.4%</span></div>
+          <div class="ticker-item">LINK <span class="down">-0.2%</span></div>
+          <!-- Repeat -->
+          <div class="ticker-item">BTC <span class="up">+4.2%</span></div>
+          <div class="ticker-item">ETH <span class="up">+2.1%</span></div>
+          <div class="ticker-item">SOL <span class="down">-0.5%</span></div>
+          <div class="ticker-item">XRP <span class="up">+1.8%</span></div>
+          <div class="ticker-item">ADA <span class="down">-1.2%</span></div>
+          <div class="ticker-item">DOT <span class="up">+0.8%</span></div>
+          <div class="ticker-item">AVAX <span class="up">+3.4%</span></div>
+          <div class="ticker-item">LINK <span class="down">-0.2%</span></div>
+        </div>
+      </div>
+
+      <!-- SECTION 2: DATA VISUALIZATION -->
+      <section id="market" class="py-32 px-6 md:px-24 relative z-10">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+          <div>
+            <span
+              class="font-mono text-[var(--primary)] text-xs tracking-widest block mb-4"
+              >REAL-TIME ANALYTICS</span
+            >
+            <h2 class="text-4xl md:text-6xl font-bold mb-8">
+              DATA THAT <br />
+              <span
+                class="text-transparent bg-clip-text bg-gradient-to-r from-[var(--primary)] to-blue-600"
+                >BREATHES.</span
+              >
+            </h2>
+            <p class="text-gray-400 leading-loose mb-8">
+              Traditional finance is static. Ascend visualizes market liquidity
+              as a living, breathing entity. Our proprietary rendering engine
+              processes millions of data points per second to give you the edge.
+            </p>
+
+            <div class="grid grid-cols-2 gap-8 border-t border-white/10 pt-8">
+              <div>
+                <div
+                  class="font-mono text-3xl font-bold text-white mb-2 count-up"
+                  data-target="14"
+                >
+                  0 ms
+                </div>
+                <div class="font-mono text-xs text-gray-500">LATENCY</div>
+              </div>
+              <div>
+                <div
+                  class="font-mono text-3xl font-bold text-white mb-2 count-up"
+                  data-target="99"
+                >
+                  0 %
+                </div>
+                <div class="font-mono text-xs text-gray-500">UPTIME</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Glassmorphism Stats Card -->
+          <div class="relative group hover-trigger">
+            <div
+              class="absolute inset-0 bg-gradient-to-r from-[var(--primary)] to-purple-600 blur-[80px] opacity-20 group-hover:opacity-40 transition-opacity duration-700"
+            ></div>
+            <div class="glass-card rounded-2xl p-8 relative overflow-hidden">
+              <div
+                class="flex justify-between items-center mb-8 border-b border-white/10 pb-4"
+              >
+                <span class="font-mono text-xs text-white/50"
+                  >LIVE_FEED :: NODE_01</span
+                >
+                <div class="flex gap-2">
+                  <div class="w-2 h-2 rounded-full bg-red-500"></div>
+                  <div class="w-2 h-2 rounded-full bg-yellow-500"></div>
+                  <div class="w-2 h-2 rounded-full bg-green-500"></div>
+                </div>
+              </div>
+
+              <!-- Simulated Graph -->
+              <div class="flex items-end gap-1 h-32 mb-8">
+                <div
+                  class="w-full bg-[var(--primary)]/20 hover:bg-[var(--primary)] transition-colors h-[40%]"
+                ></div>
+                <div
+                  class="w-full bg-[var(--primary)]/20 hover:bg-[var(--primary)] transition-colors h-[70%]"
+                ></div>
+                <div
+                  class="w-full bg-[var(--primary)]/20 hover:bg-[var(--primary)] transition-colors h-[50%]"
+                ></div>
+                <div
+                  class="w-full bg-[var(--primary)]/20 hover:bg-[var(--primary)] transition-colors h-[80%]"
+                ></div>
+                <div
+                  class="w-full bg-[var(--primary)]/20 hover:bg-[var(--primary)] transition-colors h-[60%]"
+                ></div>
+                <div
+                  class="w-full bg-[var(--primary)]/20 hover:bg-[var(--primary)] transition-colors h-[90%]"
+                ></div>
+                <div
+                  class="w-full bg-[var(--primary)]/20 hover:bg-[var(--primary)] transition-colors h-[75%]"
+                ></div>
+                <div
+                  class="w-full bg-[var(--primary)]/20 hover:bg-[var(--primary)] transition-colors h-[45%]"
+                ></div>
+              </div>
+
+              <div class="flex justify-between font-mono text-xs text-white">
+                <span>VOLUME: $4.2B</span>
+                <span class="text-[var(--primary)]">+12.4%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 3: THE CARDS (Holo Effect) -->
+      <section
+        id="cards"
+        class="py-32 px-6 relative z-10 bg-gradient-to-b from-transparent to-black"
+      >
+        <div class="text-center mb-24">
+          <h2 class="text-4xl md:text-6xl font-bold mb-4">VIRTUAL ASSETS</h2>
+          <p class="font-mono text-[var(--primary)] text-xs tracking-widest">
+            ENCRYPTED // SECURE // INSTANT
+          </p>
+        </div>
+
+        <div class="flex justify-center perspective-container">
+          <!-- The Holographic Card -->
+          <div
+            class="w-[340px] h-[200px] md:w-[450px] md:h-[280px] holo-card-container group hover-trigger"
+          >
+            <div
+              class="holo-card p-8 flex flex-col justify-between"
+              id="credit-card"
+            >
+              <div class="holo-shine"></div>
+
+              <div class="flex justify-between items-start z-10 relative">
+                <div
+                  class="font-mono text-xl font-bold tracking-widest text-white"
+                >
+                  ASCEND
+                </div>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="w-8 h-8 text-white/80"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="1.5"
+                    d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"
+                  />
+                </svg>
+              </div>
+
+              <div class="flex items-center gap-4 z-10 relative">
+                <div class="w-10 h-8 bg-yellow-500/80 rounded-md"></div>
+                <div class="font-mono text-white/50 text-sm tracking-widest">
+                  8842 •••• •••• 9012
+                </div>
+              </div>
+
+              <div class="flex justify-between items-end z-10 relative">
+                <div>
+                  <div
+                    class="font-mono text-[8px] text-white/40 uppercase mb-1"
+                  >
+                    Card Holder
+                  </div>
+                  <div
+                    class="font-mono text-sm text-white uppercase tracking-widest"
+                  >
+                    SHADIK HOSSAIN
+                  </div>
+                </div>
+                <div class="font-mono text-xs text-white">EXP 12/29</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- FOOTER -->
+      <footer
+        class="py-12 border-t border-white/10 bg-black text-center relative z-20"
+      >
+        <div class="mb-8">
+          <h2 class="text-2xl font-bold tracking-tighter text-white mb-2">
+            ASCEND
+          </h2>
+          <p class="font-mono text-[10px] text-gray-500">
+            PART OF THE QUANTUM NETWORK
+          </p>
+        </div>
+        <div class="flex justify-center gap-8 font-mono text-xs text-gray-400">
+          <a href="#" class="hover:text-[var(--primary)] transition-colors"
+            >TWITTER</a
+          >
+          <a href="#" class="hover:text-[var(--primary)] transition-colors"
+            >DISCORD</a
+          >
+          <a href="#" class="hover:text-[var(--primary)] transition-colors"
+            >GITHUB</a
+          >
+        </div>
+      </footer>
+    </main>
+
+    <!-- Dependencies -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://unpkg.com/lenis@1.0.45/dist/lenis.min.js"></script>
+
+    <script>
+      gsap.registerPlugin(ScrollTrigger);
+
+      // 1. LOADER
+      const loaderBar = document.querySelector(".loader-bar");
+      const loaderPercent = document.getElementById("loader-percent");
+
+      let progress = 0;
+      const interval = setInterval(() => {
+        progress += Math.random() * 5;
+        if (progress > 100) progress = 100;
+        loaderBar.style.width = `${progress}%`;
+        loaderPercent.innerText = `${Math.floor(progress)}%`;
+
+        if (progress === 100) {
+          clearInterval(interval);
+          setTimeout(() => {
+            document.body.classList.add("loaded");
+            initAnimations();
+          }, 500);
+        }
+      }, 50);
+
+      // 2. PARTICLE NETWORK (CANVAS)
+      const canvas = document.createElement("canvas");
+      const ctx = canvas.getContext("2d");
+      document.getElementById("canvas-container").appendChild(canvas);
+
+      let width, height;
+      let particles = [];
+
+      function resize() {
+        width = canvas.width = window.innerWidth;
+        height = canvas.height = window.innerHeight;
+      }
+
+      class Particle {
+        constructor() {
+          this.x = Math.random() * width;
+          this.y = Math.random() * height;
+          this.vx = (Math.random() - 0.5) * 0.5;
+          this.vy = (Math.random() - 0.5) * 0.5;
+          this.size = Math.random() * 2;
+        }
+        update() {
+          this.x += this.vx;
+          this.y += this.vy;
+          if (this.x < 0 || this.x > width) this.vx *= -1;
+          if (this.y < 0 || this.y > height) this.vy *= -1;
+        }
+        draw() {
+          ctx.fillStyle = "rgba(0, 240, 255, 0.5)";
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+
+      function initParticles() {
+        particles = [];
+        for (let i = 0; i < 100; i++) {
+          particles.push(new Particle());
+        }
+      }
+
+      function animateParticles() {
+        ctx.clearRect(0, 0, width, height);
+
+        // Draw connections
+        for (let i = 0; i < particles.length; i++) {
+          for (let j = i + 1; j < particles.length; j++) {
+            const dx = particles[i].x - particles[j].x;
+            const dy = particles[i].y - particles[j].y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+
+            if (dist < 150) {
+              ctx.strokeStyle = `rgba(0, 240, 255, ${0.1 - dist / 1500})`;
+              ctx.lineWidth = 0.5;
+              ctx.beginPath();
+              ctx.moveTo(particles[i].x, particles[i].y);
+              ctx.lineTo(particles[j].x, particles[j].y);
+              ctx.stroke();
+            }
+          }
+          particles[i].update();
+          particles[i].draw();
+        }
+        requestAnimationFrame(animateParticles);
+      }
+
+      window.addEventListener("resize", () => {
+        resize();
+        initParticles();
+      });
+      resize();
+      initParticles();
+      animateParticles();
+
+      // 3. CURSOR
+      const cursor = document.getElementById("cursor");
+      const dot = document.getElementById("cursor-dot");
+      let mouseX = 0,
+        mouseY = 0;
+      let cursorX = 0,
+        cursorY = 0;
+
+      window.addEventListener("mousemove", (e) => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+        gsap.to(dot, { x: mouseX, y: mouseY, duration: 0 });
+      });
+
+      gsap.ticker.add(() => {
+        cursorX += (mouseX - cursorX) * 0.2;
+        cursorY += (mouseY - cursorY) * 0.2;
+        cursor.style.transform = `translate(${cursorX}px, ${cursorY}px) translate(-50%, -50%)`;
+      });
+
+      // Hover Effects
+      document.querySelectorAll(".hover-trigger").forEach((el) => {
+        el.addEventListener("mouseenter", () => cursor.classList.add("active"));
+        el.addEventListener("mouseleave", () =>
+          cursor.classList.remove("active")
+        );
+      });
+
+      // 4. ANIMATIONS & SCROLL
+      function initAnimations() {
+        // Hero Text Reveal
+        gsap.from(".reveal-text", {
+          y: 50,
+          opacity: 0,
+          duration: 1,
+          stagger: 0.1,
+          ease: "power3.out",
+          delay: 0.5,
+        });
+
+        // Count Up Numbers
+        gsap.utils.toArray(".count-up").forEach((el) => {
+          const target = parseInt(el.getAttribute("data-target"));
+          gsap.to(el, {
+            innerText: target,
+            duration: 2,
+            snap: { innerText: 1 },
+            scrollTrigger: {
+              trigger: el,
+              start: "top 85%",
+            },
+            onUpdate: function () {
+              el.innerText =
+                Math.ceil(this.targets()[0].innerText) +
+                (el.innerText.includes("%") ? " %" : " ms");
+            },
+          });
+        });
+
+        // Card Tilt Effect
+        const card = document.getElementById("credit-card");
+        const container = document.querySelector(".holo-card-container");
+
+        container.addEventListener("mousemove", (e) => {
+          const rect = container.getBoundingClientRect();
+          const x = e.clientX - rect.left;
+          const y = e.clientY - rect.top;
+          const centerX = rect.width / 2;
+          const centerY = rect.height / 2;
+
+          const rotateX = ((y - centerY) / centerY) * -10; // Max 10deg
+          const rotateY = ((x - centerX) / centerX) * 10;
+
+          gsap.to(card, {
+            rotationX: rotateX,
+            rotationY: rotateY,
+            duration: 0.5,
+            ease: "power2.out",
+          });
+        });
+
+        container.addEventListener("mouseleave", () => {
+          gsap.to(card, { rotationX: 0, rotationY: 0, duration: 0.5 });
+        });
+      }
+
+      // Lenis Smooth Scroll
+      const lenis = new Lenis();
+      function raf(time) {
+        lenis.raf(time);
+        requestAnimationFrame(raf);
+      }
+      requestAnimationFrame(raf);
+    </script>
+  </body>
+</html>

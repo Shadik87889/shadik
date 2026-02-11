@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html
+  lang="en"
+  class="antialiased scroll-smooth selection:bg-gold selection:text-void"
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>IELTS Mahir | Web Review & Features</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Anton&display=swap"
+      rel="stylesheet"
+    />
+    <!-- Font Awesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+    />
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              void: "#051C2C", // Deep Navy/Black mix for premium feel
+              cream: "#FDFBF7", // Soft warm white
+              gold: "#C6A87C", // Muted, elegant gold
+              "gold-light": "#E5D4B8",
+              surface: "#ffffff",
+            },
+            fontFamily: {
+              sans: ['"Plus Jakarta Sans"', "sans-serif"],
+              serif: ['"Playfair Display"', "serif"],
+              display: ['"Anton"', "sans-serif"],
+            },
+            backgroundImage: {
+              "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
+            },
+          },
+        },
+      };
+    </script>
+
+    <style>
+      body {
+        background-color: #fdfbf7;
+        color: #051c2c;
+      }
+
+      /* Custom Scrollbar */
+      ::-webkit-scrollbar {
+        width: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #fdfbf7;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #c6a87c;
+        border-radius: 4px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #051c2c;
+      }
+
+      .nav-link {
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        padding-left: 1.5rem; /* Space for the line */
+      }
+
+      /* The vertical line indicator */
+      .nav-link::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 2px;
+        height: 0%;
+        background-color: #c6a87c;
+        transition: height 0.3s ease;
+      }
+
+      .nav-link:hover {
+        color: #c6a87c;
+      }
+
+      .nav-link.active {
+        color: #051c2c;
+        font-weight: 700;
+      }
+
+      .nav-link.active::before {
+        height: 100%;
+      }
+
+      /* Sticky Nav Container */
+      .sticky-sidebar {
+        position: sticky;
+        top: 6rem;
+        height: fit-content;
+      }
+
+      /* Smooth Reveal Animation classes */
+      .reveal {
+        opacity: 0;
+        transform: translateY(20px);
+        transition: all 0.8s ease-out;
+      }
+      .reveal.active {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    </style>
+  </head>
+  <body class="font-sans bg-cream text-void">
+    <!-- Navbar -->
+    <nav
+      class="fixed top-0 w-full px-6 py-5 z-50 flex justify-between items-center bg-cream/90 backdrop-blur-lg border-b border-void/5 transition-all duration-300"
+      id="navbar"
+    >
+      <a href="#" class="group flex items-center gap-3">
+        <!-- Using the logo concept from your assets -->
+        <div class="relative w-10 h-10 overflow-hidden rounded-sm">
+          <img
+            src="https://i.ibb.co/3M6d81p/278115481-106536582034386-7446598694214552893-n-removebg-preview.png"
+            alt="IM"
+            class="object-cover w-full h-full"
+          />
+        </div>
+        <span class="font-display text-2xl tracking-wide uppercase text-void"
+          >IELTS Mahir</span
+        >
+      </a>
+
+      <div class="hidden md:flex items-center gap-8">
+        <a
+          href="#ai-ecosystem"
+          class="text-sm font-semibold tracking-widest uppercase hover:text-gold transition-colors"
+          >Features</a
+        >
+        <a
+          href="#location"
+          class="text-sm font-semibold tracking-widest uppercase hover:text-gold transition-colors"
+          >Contact</a
+        >
+        <a
+          href="#"
+          class="px-6 py-2 bg-void text-white text-sm font-semibold tracking-wider hover:bg-gold hover:text-void transition-all duration-300"
+          >Launch Site</a
+        >
+      </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="relative pt-40 pb-20 md:pt-52 md:pb-32 px-6 overflow-hidden">
+      <!-- Background Pattern -->
+      <div
+        class="absolute inset-0 z-0 opacity-[0.03]"
+        style="
+          background-image: linear-gradient(#051c2c 1px, transparent 1px),
+            linear-gradient(to right, #051c2c 1px, transparent 1px);
+          background-size: 40px 40px;
+        "
+      ></div>
+
+      <div class="relative z-10 max-w-5xl mx-auto text-center">
+        <span
+          class="inline-block py-1 px-3 border border-gold/50 rounded-full text-gold text-xs font-bold tracking-[0.2em] uppercase mb-6 animate-fade-in-up"
+        >
+          Web Review 2025
+        </span>
+        <h1
+          class="font-serif text-5xl md:text-7xl lg:text-8xl leading-tight mb-8 text-void"
+        >
+          Get IELTS-Ready with <br />
+          <span class="italic text-gold">IELTS Mahir.</span>
+        </h1>
+        <p
+          class="text-lg md:text-xl text-void/60 max-w-2xl mx-auto leading-relaxed font-light"
+        >
+          A comprehensive showcase of the implemented features: from AI-powered
+          simulators to offline immersion programs in Sylhet.
+        </p>
+      </div>
+    </header>
+
+    <!-- Main Content Layout -->
+    <main class="max-w-7xl mx-auto px-6 py-12 md:py-20">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-16">
+        <!-- Sidebar Navigation (Sticky) -->
+        <aside class="lg:col-span-3 hidden lg:block relative">
+          <div class="sticky-sidebar">
+            <h3
+              class="font-serif font-bold text-2xl mb-8 text-void border-b border-void/10 pb-4"
+            >
+              Implemented
+            </h3>
+            <nav class="flex flex-col space-y-4">
+              <a
+                href="#ai-ecosystem"
+                class="nav-link text-void/50 hover:text-void text-sm uppercase tracking-widest"
+                >AI Ecosystem</a
+              >
+              <a
+                href="#offline-programs"
+                class="nav-link text-void/50 hover:text-void text-sm uppercase tracking-widest"
+                >Premium Programs</a
+              >
+              <a
+                href="#mock-tests"
+                class="nav-link text-void/50 hover:text-void text-sm uppercase tracking-widest"
+                >Mock & Resources</a
+              >
+              <a
+                href="#success-stories"
+                class="nav-link text-void/50 hover:text-void text-sm uppercase tracking-widest"
+                >Success Stories</a
+              >
+              <a
+                href="#global-study"
+                class="nav-link text-void/50 hover:text-void text-sm uppercase tracking-widest"
+                >Global Study Hub</a
+              >
+              <a
+                href="#location"
+                class="nav-link text-void/50 hover:text-void text-sm uppercase tracking-widest"
+                >Location</a
+              >
+            </nav>
+          </div>
+        </aside>
+
+        <!-- Feature Content -->
+        <div class="lg:col-span-9 space-y-32">
+          <!-- Intro Text -->
+          <section
+            class="prose prose-lg max-w-none text-void/70 font-light reveal"
+          >
+            <p
+              class="text-2xl md:text-3xl font-serif text-void leading-relaxed"
+            >
+              "We don't just teach, we guide. This platform bridges the gap
+              between expert-led instruction and cutting-edge technology to
+              ensure your Band 9 success."
+            </p>
+          </section>
+
+          <div class="w-full h-px bg-void/10"></div>
+
+          <!-- 1. AI Ecosystem (Speaking Simulator & Calculator) -->
+          <section id="ai-ecosystem" class="scroll-mt-32 reveal">
+            <div
+              class="flex flex-col md:flex-row md:items-center justify-between mb-10 gap-4"
+            >
+              <div class="flex items-center gap-4">
+                <span class="font-serif text-6xl text-gold/20 font-bold"
+                  >01</span
+                >
+                <h2 class="font-serif text-4xl font-bold text-void">
+                  AI Ecosystem
+                </h2>
+              </div>
+              <span
+                class="px-4 py-1 bg-gold/10 text-gold text-xs font-bold uppercase tracking-widest rounded-full self-start md:self-auto"
+                >Live Feature</span
+              >
+            </div>
+
+            <div
+              class="bg-white p-8 md:p-12 border border-void/5 shadow-[0_20px_40px_-15px_rgba(0,0,0,0.05)] hover:shadow-lg transition-shadow duration-500 mb-8"
+            >
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                <div>
+                  <h3 class="font-display text-2xl mb-4">
+                    Speaking Test Simulator
+                  </h3>
+                  <p class="text-lg text-void/70 mb-6 leading-relaxed">
+                    Practice your speaking with an AI interviewer. Click "Get a
+                    Question" to begin a simulated exam environment with instant
+                    feedback on your transcript.
+                  </p>
+                  <ul class="space-y-3">
+                    <li
+                      class="flex items-center gap-3 text-sm font-semibold text-void"
+                    >
+                      <i class="fas fa-microphone text-gold"></i>
+                      Voice-Activated Interface
+                    </li>
+                    <li
+                      class="flex items-center gap-3 text-sm font-semibold text-void"
+                    >
+                      <i class="fas fa-file-alt text-gold"></i>
+                      Real-time Transcription
+                    </li>
+                    <li
+                      class="flex items-center gap-3 text-sm font-semibold text-void"
+                    >
+                      <i class="fas fa-brain text-gold"></i>
+                      Instant AI Feedback
+                    </li>
+                  </ul>
+                </div>
+                <div
+                  class="bg-void p-6 text-cream rounded-sm relative overflow-hidden group"
+                >
+                  <!-- Visual representation of the simulator UI -->
+                  <div
+                    class="absolute top-0 right-0 w-32 h-32 bg-gold/20 rounded-full blur-2xl -mr-10 -mt-10"
+                  ></div>
+                  <div class="relative z-10 text-center space-y-4">
+                    <div
+                      class="w-16 h-16 mx-auto bg-gold/20 rounded-full flex items-center justify-center animate-pulse"
+                    >
+                      <i class="fas fa-microphone text-2xl text-gold"></i>
+                    </div>
+                    <div class="text-sm font-mono opacity-60">Listening...</div>
+                    <div class="text-xs border border-white/10 p-2 rounded">
+                      "Describe a book you recently read..."
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Band Calculator Sub-feature -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div class="bg-cream p-6 border border-void/5">
+                <h4 class="font-bold text-lg mb-2 text-void">
+                  <i class="fas fa-calculator text-gold mr-2"></i> Band
+                  Calculator
+                </h4>
+                <p class="text-sm text-void/70">
+                  Calculate your Listening, Academic Reading, and General
+                  Reading scores instantly based on raw marks (0-40).
+                </p>
+              </div>
+              <div class="bg-cream p-6 border border-void/5">
+                <h4 class="font-bold text-lg mb-2 text-void">
+                  <i class="fas fa-check-double text-gold mr-2"></i> Grammar
+                  Checker
+                </h4>
+                <p class="text-sm text-void/70">
+                  Integrated tools to refine your writing with advanced grammar
+                  and vocabulary suggestions.
+                </p>
+              </div>
+            </div>
+          </section>
+
+          <!-- 2. Premium Programs -->
+          <section id="offline-programs" class="scroll-mt-32 reveal">
+            <div class="flex items-center gap-4 mb-10">
+              <span class="font-serif text-6xl text-gold/20 font-bold">02</span>
+              <h2 class="font-serif text-4xl font-bold text-void">
+                Premium Programs
+              </h2>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <!-- Program 1 -->
+              <div
+                class="bg-void text-cream p-8 group hover:-translate-y-2 transition-transform duration-300 relative overflow-hidden"
+              >
+                <div class="absolute top-0 right-0 p-4 opacity-10">
+                  <i class="fas fa-chalkboard-teacher fa-4x"></i>
+                </div>
+                <h3 class="font-display text-2xl mb-3 text-gold">Mastermind</h3>
+                <p class="text-sm opacity-70 font-light mb-6">
+                  Our most comprehensive offline course with small-group classes
+                  and weekly one-on-one mentorship.
+                </p>
+                <ul class="text-xs space-y-2 opacity-60">
+                  <li>• Exclusive physical materials</li>
+                  <li>• Expert-led classroom sessions</li>
+                </ul>
+              </div>
+
+              <!-- Program 2 -->
+              <div
+                class="bg-white border border-void/10 p-8 group hover:-translate-y-2 transition-transform duration-300"
+              >
+                <div class="text-void/10 mb-4">
+                  <i class="fas fa-comments fa-3x"></i>
+                </div>
+                <h3 class="font-display text-2xl mb-3 text-void">Immersion</h3>
+                <p class="text-sm text-void/70 font-light mb-6">
+                  Speaking & Writing intensive. Hands-on program focused on
+                  productive skills with detailed handwritten corrections.
+                </p>
+                <a
+                  href="#"
+                  class="text-xs font-bold uppercase tracking-widest text-gold"
+                  >Enroll Now &rarr;</a
+                >
+              </div>
+
+              <!-- Program 3 -->
+              <div
+                class="bg-white border border-void/10 p-8 group hover:-translate-y-2 transition-transform duration-300"
+              >
+                <div class="text-void/10 mb-4">
+                  <i class="fas fa-calendar-alt fa-3x"></i>
+                </div>
+                <h3 class="font-display text-2xl mb-3 text-void">
+                  Weekend Prep
+                </h3>
+                <p class="text-sm text-void/70 font-light mb-6">
+                  Designed for professionals. Highly concentrated weekend
+                  sessions covering key strategies and exam techniques.
+                </p>
+                <a
+                  href="#"
+                  class="text-xs font-bold uppercase tracking-widest text-gold"
+                  >Enroll Now &rarr;</a
+                >
+              </div>
+            </div>
+          </section>
+
+          <!-- 3. Mock Tests & Resources -->
+          <section id="mock-tests" class="scroll-mt-32 reveal">
+            <div class="flex items-center gap-4 mb-10">
+              <span class="font-serif text-6xl text-gold/20 font-bold">03</span>
+              <h2 class="font-serif text-4xl font-bold text-void">
+                Mock Tests & Resources
+              </h2>
+            </div>
+            <div
+              class="relative bg-void text-cream p-10 md:p-16 overflow-hidden rounded-sm"
+            >
+              <!-- Deco -->
+              <div
+                class="absolute top-0 right-0 w-64 h-64 bg-gold/10 rounded-full blur-3xl -mr-32 -mt-32 pointer-events-none"
+              ></div>
+
+              <div
+                class="relative z-10 grid grid-cols-1 md:grid-cols-2 gap-10 items-center"
+              >
+                <div>
+                  <h3 class="font-display text-3xl mb-6">
+                    Full-Length Simulations
+                  </h3>
+                  <p class="font-light text-cream/80 mb-8 leading-relaxed">
+                    Access our "Take a MOCK test" feature to experience
+                    authentic academic texts and high-quality audio recordings.
+                    We cover Speaking, Writing, Reading, and Listening.
+                  </p>
+                  <div class="flex flex-wrap gap-3">
+                    <span
+                      class="px-3 py-1 border border-gold/50 text-gold text-xs uppercase"
+                      >Band 9 Study Plans</span
+                    >
+                    <span
+                      class="px-3 py-1 border border-gold/50 text-gold text-xs uppercase"
+                      >Quizzes</span
+                    >
+                    <span
+                      class="px-3 py-1 border border-gold/50 text-gold text-xs uppercase"
+                      >Free Resources</span
+                    >
+                  </div>
+                </div>
+                <div class="space-y-4">
+                  <div
+                    class="bg-white/5 backdrop-blur-sm p-4 border border-white/10 rounded flex items-center gap-4 hover:bg-white/10 transition-colors cursor-pointer"
+                  >
+                    <div
+                      class="w-10 h-10 rounded-full bg-gold flex items-center justify-center text-void font-bold"
+                    >
+                      <i class="fas fa-book-open"></i>
+                    </div>
+                    <div>
+                      <h4 class="font-bold text-sm">Reading Module</h4>
+                      <p class="text-xs opacity-60">60 mins • 3 Sections</p>
+                    </div>
+                  </div>
+                  <div
+                    class="bg-white/5 backdrop-blur-sm p-4 border border-white/10 rounded flex items-center gap-4 hover:bg-white/10 transition-colors cursor-pointer"
+                  >
+                    <div
+                      class="w-10 h-10 rounded-full bg-cream text-void flex items-center justify-center font-bold"
+                    >
+                      <i class="fas fa-headphones"></i>
+                    </div>
+                    <div>
+                      <h4 class="font-bold text-sm">Listening Module</h4>
+                      <p class="text-xs opacity-60">30 mins • UK/AUS Accents</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- 4. Success Stories -->
+          <section id="success-stories" class="scroll-mt-32 reveal">
+            <div class="flex items-center gap-4 mb-10">
+              <span class="font-serif text-6xl text-gold/20 font-bold">04</span>
+              <h2 class="font-serif text-4xl font-bold text-void">
+                Success Stories
+              </h2>
+            </div>
+            <div class="bg-white border-y border-void/10 py-12 px-6 md:px-12">
+              <div class="text-center mb-12">
+                <h3 class="font-display text-2xl font-bold mb-4">
+                  "Don’t just take our word for it!"
+                </h3>
+                <p class="text-void/70 leading-relaxed max-w-2xl mx-auto">
+                  Real stories from students who achieved their goals. Filter by
+                  written reviews or watch video testimonials from our alumni.
+                </p>
+              </div>
+
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Testimonial 1 -->
+                <div class="p-6 border border-void/5 rounded-lg bg-cream/50">
+                  <div class="flex items-center gap-4 mb-4">
+                    <div
+                      class="w-12 h-12 bg-gray-200 rounded-full overflow-hidden"
+                    >
+                      <img
+                        src="https://i.postimg.cc/rFFFVww6/student-image-four.png"
+                        class="w-full h-full object-cover"
+                        alt="Student"
+                      />
+                    </div>
+                    <div>
+                      <h4 class="font-bold text-void">Student Feedback</h4>
+                      <div class="text-gold text-xs">
+                        <i class="fas fa-star"></i><i class="fas fa-star"></i
+                        ><i class="fas fa-star"></i><i class="fas fa-star"></i
+                        ><i class="fas fa-star"></i>
+                      </div>
+                    </div>
+                  </div>
+                  <p class="italic text-void/60 text-sm">
+                    "The personalized study plan and the speaking simulator were
+                    game changers for me."
+                  </p>
+                </div>
+                <!-- Testimonial 2 -->
+                <div class="p-6 border border-void/5 rounded-lg bg-cream/50">
+                  <div class="flex items-center gap-4 mb-4">
+                    <div
+                      class="w-12 h-12 bg-gray-200 rounded-full overflow-hidden"
+                    >
+                      <img
+                        src="https://i.postimg.cc/HLjpQZ7v/student-image-five.png"
+                        class="w-full h-full object-cover"
+                        alt="Student"
+                      />
+                    </div>
+                    <div>
+                      <h4 class="font-bold text-void">Student Feedback</h4>
+                      <div class="text-gold text-xs">
+                        <i class="fas fa-star"></i><i class="fas fa-star"></i
+                        ><i class="fas fa-star"></i><i class="fas fa-star"></i
+                        ><i class="fas fa-star"></i>
+                      </div>
+                    </div>
+                  </div>
+                  <p class="italic text-void/60 text-sm">
+                    "I achieved my desired band score thanks to the offline
+                    immersion program."
+                  </p>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- 5. Global Study Hub -->
+          <section id="global-study" class="scroll-mt-32 reveal">
+            <div class="flex items-center gap-4 mb-10">
+              <span class="font-serif text-6xl text-gold/20 font-bold">05</span>
+              <h2 class="font-serif text-4xl font-bold text-void">
+                AI-Powered Global Study Hub
+              </h2>
+            </div>
+            <div
+              class="bg-gradient-to-r from-void to-[#0A2A3D] p-8 md:p-12 text-cream rounded-sm flex flex-col md:flex-row items-center justify-between gap-8"
+            >
+              <div class="space-y-4">
+                <p class="text-lg font-light opacity-90">
+                  Discover universities, fees, visas, and more for any country.
+                  Your seamless journey to higher education starts here.
+                </p>
+                <div class="flex gap-4 text-2xl text-gold">
+                  <i class="fas fa-globe-americas"></i>
+                  <i class="fas fa-university"></i>
+                  <i class="fas fa-passport"></i>
+                </div>
+              </div>
+              <button
+                class="shrink-0 px-8 py-4 border border-gold text-gold hover:bg-gold hover:text-void transition-all duration-300 font-bold uppercase tracking-widest"
+              >
+                Explore Hub
+              </button>
+            </div>
+          </section>
+
+          <!-- 6. Location & Contact -->
+          <section id="location" class="scroll-mt-32 mb-20 reveal">
+            <div
+              class="bg-white p-8 md:p-12 border border-void/10 relative overflow-hidden"
+            >
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+                <div>
+                  <h2 class="font-display text-4xl text-void mb-6">
+                    Visit Us in Sylhet
+                  </h2>
+                  <p class="text-void/70 mb-8">
+                    Whether you have questions, need guidance, or want to join
+                    our offline programs, our team is ready to help.
+                  </p>
+
+                  <ul class="space-y-6">
+                    <li class="flex items-start gap-4">
+                      <div
+                        class="w-10 h-10 bg-gold/10 text-gold flex items-center justify-center rounded-full shrink-0"
+                      >
+                        <i class="fas fa-location-dot"></i>
+                      </div>
+                      <div>
+                        <h4 class="font-bold text-void">Address</h4>
+                        <p class="text-sm text-void/60">
+                          Elegant Shopping Mall (7th floor, lift 6)<br />Jallarpar
+                          road, Zindabazar, Sylhet
+                        </p>
+                      </div>
+                    </li>
+                    <li class="flex items-start gap-4">
+                      <div
+                        class="w-10 h-10 bg-gold/10 text-gold flex items-center justify-center rounded-full shrink-0"
+                      >
+                        <i class="fas fa-clock"></i>
+                      </div>
+                      <div>
+                        <h4 class="font-bold text-void">Office Hours</h4>
+                        <p class="text-sm text-void/60">
+                          Sat-Thu, 10:00 AM – 8:00 PM
+                        </p>
+                      </div>
+                    </li>
+                    <li class="flex items-start gap-4">
+                      <div
+                        class="w-10 h-10 bg-gold/10 text-gold flex items-center justify-center rounded-full shrink-0"
+                      >
+                        <i class="fas fa-phone"></i>
+                      </div>
+                      <div>
+                        <h4 class="font-bold text-void">Contact</h4>
+                        <p class="text-sm text-void/60">
+                          +880 1234 567890<br />info@ieltsmahir.com
+                        </p>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+                <div
+                  class="relative h-64 md:h-auto bg-gray-200 rounded-sm overflow-hidden"
+                >
+                  <!-- Placeholder for Map -->
+                  <iframe
+                    title="IELTS Mahir Location"
+                    src="https://www.google.com/maps?q=Elegant+Shopping+Mall,+Jallarpar+road,+Zindabazar,+Sylhet&output=embed"
+                    class="absolute inset-0 w-full h-full border-0"
+                    allowfullscreen=""
+                    loading="lazy"
+                  >
+                  </iframe>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-void border-t border-white/5 py-16 px-6">
+      <div
+        class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-start gap-12 text-white/40 text-sm"
+      >
+        <div class="flex flex-col gap-4 max-w-xs">
+          <span class="font-display text-2xl text-white">IELTS MAHIR.</span>
+          <p>
+            Certified mentors guiding you every step of the way. Achieve your
+            desired band score with our proven methods.
+          </p>
+          <div class="flex gap-4 mt-2">
+            <a href="#" class="hover:text-gold transition-colors"
+              ><i class="fab fa-facebook-f"></i
+            ></a>
+            <a href="#" class="hover:text-gold transition-colors"
+              ><i class="fab fa-instagram"></i
+            ></a>
+            <a href="#" class="hover:text-gold transition-colors"
+              ><i class="fab fa-youtube"></i
+            ></a>
+          </div>
+        </div>
+        <div class="grid grid-cols-2 md:grid-cols-3 gap-12">
+          <div>
+            <h4
+              class="text-white font-bold mb-4 uppercase tracking-widest text-xs"
+            >
+              Quick Access
+            </h4>
+            <ul class="space-y-2">
+              <li>
+                <a href="#" class="hover:text-gold transition-colors"
+                  >Why Choose Us</a
+                >
+              </li>
+              <li>
+                <a href="#" class="hover:text-gold transition-colors"
+                  >Contact Support</a
+                >
+              </li>
+              <li>
+                <a href="#" class="hover:text-gold transition-colors"
+                  >IELTS FAQs</a
+                >
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h4
+              class="text-white font-bold mb-4 uppercase tracking-widest text-xs"
+            >
+              Learning Hub
+            </h4>
+            <ul class="space-y-2">
+              <li>
+                <a href="#" class="hover:text-gold transition-colors"
+                  >IELTS Blog</a
+                >
+              </li>
+              <li>
+                <a href="#" class="hover:text-gold transition-colors"
+                  >Student Reviews</a
+                >
+              </li>
+              <li>
+                <a href="#" class="hover:text-gold transition-colors"
+                  >Mock Test</a
+                >
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div
+        class="max-w-7xl mx-auto mt-12 pt-8 border-t border-white/5 text-center md:text-left text-xs"
+      >
+        &copy; 2024 IELTS Mahir. All Rights Reserved.
+      </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script>
+      // Intersection Observer for ScrollSpy
+      const observerOptions = {
+        root: null,
+        rootMargin: "-20% 0px -60% 0px", // Trigger active state when section is near top
+        threshold: 0,
+      };
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const id = entry.target.getAttribute("id");
+            document.querySelectorAll(".nav-link").forEach((link) => {
+              link.classList.remove("active");
+              if (link.getAttribute("href") === `#${id}`) {
+                link.classList.add("active");
+              }
+            });
+          }
+        });
+      }, observerOptions);
+
+      document.querySelectorAll("section[id]").forEach((section) => {
+        observer.observe(section);
+      });
+
+      // Scroll Animation Observer
+      const revealObserver = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("active");
+            }
+          });
+        },
+        { threshold: 0.1 }
+      );
+
+      document
+        .querySelectorAll(".reveal")
+        .forEach((el) => revealObserver.observe(el));
+
+      // Navbar transparency on scroll
+      window.addEventListener("scroll", () => {
+        const nav = document.getElementById("navbar");
+        if (window.scrollY > 50) {
+          nav.classList.add("shadow-md");
+        } else {
+          nav.classList.remove("shadow-md");
+        }
+      });
+    </script>
+  </body>
+</html>

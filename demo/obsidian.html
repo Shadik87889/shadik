@@ -1,0 +1,969 @@
+<!DOCTYPE html>
+<html lang="en" class="antialiased">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>OBSIDIAN | The Supremacy of Taste</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;800;900&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://api.fontshare.com/v2/css?f[]=satoshi@300,400,500,700,900&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Styles -->
+    <style>
+      :root {
+        --bg-color: #050505;
+        --text-main: #e8e8e3;
+        --text-muted: #888888;
+        --accent: #c4a661; /* Muted Gold */
+        --cursor-size: 20px;
+      }
+
+      /* STRICT OVERFLOW CONTROL */
+      html {
+        overflow-x: hidden;
+        width: 100%;
+      }
+
+      body {
+        background-color: var(--bg-color);
+        color: var(--text-main);
+        font-family: "Satoshi", sans-serif;
+        cursor: none; /* Custom cursor takes over */
+        overflow-x: hidden; /* Double safety */
+        width: 100%;
+        position: relative;
+      }
+
+      /* Typography Overrides */
+      h1,
+      h2,
+      h3,
+      h4,
+      .serif {
+        font-family: "Cinzel", serif;
+      }
+
+      /* Lenis Recommended CSS */
+      html.lenis,
+      html.lenis body {
+        height: auto;
+      }
+      .lenis.lenis-smooth {
+        scroll-behavior: auto !important;
+      }
+      .lenis.lenis-smooth [data-lenis-prevent] {
+        overscroll-behavior: contain;
+      }
+      .lenis.lenis-stopped {
+        overflow: hidden;
+      }
+      .lenis.lenis-scrolling iframe {
+        pointer-events: none;
+      }
+
+      /* Custom Cursor */
+      #cursor {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: var(--cursor-size);
+        height: var(--cursor-size);
+        border: 1px solid var(--text-main);
+        border-radius: 50%;
+        pointer-events: none;
+        z-index: 9999;
+        transform: translate(-50%, -50%);
+        transition: width 0.3s, height 0.3s, background-color 0.3s,
+          border-color 0.3s;
+        mix-blend-mode: difference;
+      }
+      #cursor.hovered {
+        width: 80px;
+        height: 80px;
+        background-color: var(--text-main);
+        border-color: transparent;
+        mix-blend-mode: difference;
+      }
+
+      /* Grain Overlay for Texture */
+      .noise-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 50;
+        opacity: 0.05;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+      }
+
+      /* Utilities */
+      .reveal-text {
+        clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
+      }
+
+      .char {
+        display: inline-block;
+        transform-origin: 50% 100%;
+      }
+
+      .image-wrapper {
+        overflow: hidden;
+      }
+
+      .image-wrapper img {
+        transform-origin: center;
+        will-change: transform;
+      }
+
+      /* Stacked Menu Cards */
+      .menu-card {
+        position: sticky;
+        top: 0;
+        width: 100%;
+        height: 100vh;
+        overflow: hidden;
+        transform-origin: center top;
+        box-shadow: 0 -20px 50px rgba(0, 0, 0, 0.5); /* Shadow for depth */
+      }
+
+      /* Loader */
+      .loader {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100vh;
+        background: #000;
+        z-index: 10000;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .loader-text {
+        overflow: hidden;
+        color: #fff;
+        font-size: 1.5rem;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+      }
+
+      /* Mobile Menu */
+      .mobile-menu {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100vh;
+        background: #000;
+        z-index: 9000;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.5s ease;
+      }
+      .mobile-menu.open {
+        opacity: 1;
+        pointer-events: all;
+      }
+      .mobile-link {
+        font-family: "Cinzel", serif;
+        font-size: 2rem;
+        color: #fff;
+        margin: 1.5rem 0;
+        overflow: hidden;
+      }
+      .mobile-link span {
+        display: block;
+        transform: translateY(100%);
+        transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+      .mobile-menu.open .mobile-link span {
+        transform: translateY(0);
+      }
+
+      /* Scroll Progress */
+      .scroll-line {
+        position: fixed;
+        right: 40px;
+        top: 50%;
+        transform: translateY(-50%);
+        height: 200px;
+        width: 1px;
+        background: rgba(255, 255, 255, 0.1);
+        z-index: 40;
+        display: none; /* Visible on desktop */
+      }
+      @media (min-width: 1024px) {
+        .scroll-line {
+          display: block;
+        }
+      }
+      .scroll-progress {
+        width: 100%;
+        height: 0%;
+        background: var(--accent);
+        position: absolute;
+        top: 0;
+      }
+
+      /* Custom Selection */
+      ::selection {
+        background: var(--accent);
+        color: #000;
+      }
+    </style>
+  </head>
+  <body class="overflow-hidden">
+    <!-- Cursor -->
+    <div id="cursor"></div>
+
+    <!-- Noise Texture -->
+    <div class="noise-overlay"></div>
+
+    <!-- Preloader -->
+    <div class="loader">
+      <div class="loader-text font-serif">
+        <!-- Removed transition class here to let GSAP handle it smoothly -->
+        <span class="inline-block translate-y-full">Obsidian</span>
+      </div>
+    </div>
+
+    <!-- Mobile Menu Overlay -->
+    <div class="mobile-menu" id="mobileMenu">
+      <button
+        id="closeMenuBtn"
+        class="absolute top-8 right-8 text-sm uppercase tracking-widest text-[#666] hover:text-white transition-colors"
+      >
+        Close
+      </button>
+      <a href="#philosophy" class="mobile-link" onclick="closeMobileMenu()"
+        ><span>Philosophy</span></a
+      >
+      <a href="#menu" class="mobile-link" onclick="closeMobileMenu()"
+        ><span>The Collection</span></a
+      >
+      <a href="#reservations" class="mobile-link" onclick="closeMobileMenu()"
+        ><span>Reservations</span></a
+      >
+    </div>
+
+    <!-- Scroll Indicator -->
+    <div class="scroll-line">
+      <div class="scroll-progress"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav
+      class="fixed top-0 left-0 w-full p-8 md:p-12 flex justify-between items-center z-40 mix-blend-difference"
+    >
+      <div
+        class="logo font-serif text-2xl font-bold tracking-tighter uppercase cursor-pointer hover-trigger"
+        data-cursor-text="Home"
+      >
+        Obsidian.
+      </div>
+      <div
+        class="hidden md:flex gap-12 text-sm font-medium tracking-widest uppercase"
+      >
+        <a
+          href="#philosophy"
+          class="hover-trigger relative group overflow-hidden"
+        >
+          <span
+            class="inline-block transition-transform group-hover:-translate-y-full"
+            >Philosophy</span
+          >
+          <span
+            class="absolute top-0 left-0 translate-y-full transition-transform group-hover:translate-y-0 text-[var(--accent)]"
+            >Philosophy</span
+          >
+        </a>
+        <a href="#menu" class="hover-trigger relative group overflow-hidden">
+          <span
+            class="inline-block transition-transform group-hover:-translate-y-full"
+            >The Collection</span
+          >
+          <span
+            class="absolute top-0 left-0 translate-y-full transition-transform group-hover:translate-y-0 text-[var(--accent)]"
+            >The Collection</span
+          >
+        </a>
+        <a
+          href="#reservations"
+          class="hover-trigger relative group overflow-hidden"
+        >
+          <span
+            class="inline-block transition-transform group-hover:-translate-y-full"
+            >Reservations</span
+          >
+          <span
+            class="absolute top-0 left-0 translate-y-full transition-transform group-hover:translate-y-0 text-[var(--accent)]"
+            >Reservations</span
+          >
+        </a>
+      </div>
+      <!-- Mobile Menu Trigger -->
+      <div
+        id="openMenuBtn"
+        class="md:hidden text-sm uppercase font-bold hover-trigger cursor-pointer"
+      >
+        Menu
+      </div>
+    </nav>
+
+    <main id="main-content">
+      <!-- HERO SECTION -->
+      <section
+        class="relative h-screen w-full flex flex-col justify-center items-center overflow-hidden"
+      >
+        <!-- Video Background (Simulated with Image for Template stability, can replace with video) -->
+        <div class="absolute inset-0 z-0">
+          <div class="absolute inset-0 bg-black/60 z-10"></div>
+          <!-- High-End Dark Interior Image -->
+          <img
+            src="https://images.unsplash.com/photo-1559339352-11d035aa65de?q=80&w=2574&auto=format&fit=crop"
+            class="w-full h-full object-cover scale-110 hero-img"
+            alt="Atmosphere"
+          />
+        </div>
+
+        <div class="relative z-20 text-center mix-blend-difference px-4">
+          <p
+            class="hero-sub text-xs md:text-sm tracking-[0.4em] uppercase mb-6 text-white/80 opacity-0 translate-y-10"
+          >
+            Est. 2024 &mdash; New York
+          </p>
+          <h1
+            class="hero-title text-6xl md:text-8xl lg:text-9xl font-black text-white tracking-tight leading-none overflow-hidden"
+          >
+            <div class="reveal-text translate-y-full">PRIMITIVE</div>
+            <div
+              class="reveal-text translate-y-full text-[var(--accent)] italic serif font-light"
+            >
+              Elegance
+            </div>
+          </h1>
+        </div>
+
+        <div class="absolute bottom-12 left-1/2 -translate-x-1/2 z-20">
+          <span class="block w-[1px] h-24 bg-white/20 overflow-hidden">
+            <span
+              class="block w-full h-full bg-white animate-scrolldown -translate-y-full"
+            ></span>
+          </span>
+        </div>
+      </section>
+
+      <!-- PHILOSOPHY SECTION -->
+      <!-- Added overflow-hidden to prevent decorative elements from causing scroll -->
+      <section
+        id="philosophy"
+        class="relative py-32 md:py-48 px-6 md:px-24 bg-[#050505] overflow-hidden"
+      >
+        <div
+          class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-16 items-center"
+        >
+          <div class="md:col-span-7">
+            <h2
+              class="text-4xl md:text-7xl leading-[1.1] mb-12 text-white split-text"
+            >
+              We don't cook.<br />
+              <span class="text-[var(--accent)] italic font-light serif"
+                >We forge.</span
+              >
+            </h2>
+            <div
+              class="space-y-8 text-lg md:text-xl text-[#888] font-light max-w-2xl fade-in-up opacity-0 translate-y-10"
+            >
+              <p>
+                Obsidian was born from a rejection of the unnecessary. We
+                believe that true luxury lies in the absence of noise.
+              </p>
+              <p>
+                Fire, salt, time, and absolute silence. Our kitchen is not a
+                place of chaotic creation, but a temple of disciplined
+                reduction. Every cut is calculated. Every flame is intentional.
+              </p>
+            </div>
+          </div>
+          <div class="md:col-span-5 relative">
+            <div
+              class="image-wrapper aspect-[3/4] w-full relative z-10 parallax-img-container"
+            >
+              <img
+                src="https://images.unsplash.com/photo-1600891964092-4316c288032e?q=80&w=2670&auto=format&fit=crop"
+                alt="Chef Plating"
+                class="w-full h-full object-cover scale-125 grayscale hover:grayscale-0 transition-all duration-1000 ease-out parallax-img"
+              />
+            </div>
+            <!-- Decorative Element: Adjusted offsets to be safe on mobile -->
+            <div
+              class="absolute -bottom-4 -left-4 md:-bottom-10 md:-left-10 w-full h-full border border-[var(--accent)]/30 z-0"
+            ></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- FEATURED DISH (Full Width Parallax) -->
+      <section
+        class="relative w-full h-[80vh] overflow-hidden flex items-center justify-center"
+      >
+        <div class="absolute inset-0 z-0 parallax-bg-container">
+          <img
+            src="https://images.unsplash.com/photo-1544025162-d76694265947?q=80&w=2574&auto=format&fit=crop"
+            alt="Steak"
+            class="w-full h-full object-cover scale-110 opacity-60 parallax-bg"
+          />
+        </div>
+        <div class="relative z-10 text-center">
+          <div
+            class="uppercase tracking-[0.5em] text-sm mb-4 text-[var(--accent)] fade-in-scroll"
+          >
+            Signature
+          </div>
+          <h2
+            class="text-6xl md:text-9xl text-white font-serif italic fade-in-scroll"
+          >
+            The Tomahawk
+          </h2>
+          <div class="mt-8 hover-trigger">
+            <button
+              class="px-8 py-4 border border-white/20 text-white uppercase tracking-widest text-xs hover:bg-white hover:text-black transition-colors duration-300"
+            >
+              View Details
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- NEW MONOLITH MENU COLLECTION (Sticky Stack) -->
+      <section id="menu" class="relative bg-[#050505]">
+        <div class="pt-24 pb-12 px-6 md:px-24 border-b border-white/5">
+          <div
+            class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-end"
+          >
+            <h2 class="text-5xl md:text-7xl font-serif text-white">
+              The Collection
+            </h2>
+            <p
+              class="text-[#666] uppercase tracking-widest text-sm mt-4 md:mt-0"
+            >
+              Season 04 / Winter
+            </p>
+          </div>
+        </div>
+
+        <!-- CARD 1: WAGYU A5 -->
+        <div
+          class="menu-card bg-[#0a0a0a] flex items-center relative border-t border-white/10"
+        >
+          <div class="absolute inset-0 flex flex-col md:flex-row h-full">
+            <!-- Text Side -->
+            <div
+              class="w-full md:w-1/2 h-full flex flex-col justify-center px-6 md:px-24 relative z-10"
+            >
+              <div
+                class="text-[var(--accent)] uppercase tracking-[0.4em] text-xs mb-6 font-bold"
+              >
+                The Apex
+              </div>
+              <h3
+                class="text-6xl md:text-8xl text-white font-serif leading-none mb-6"
+              >
+                Wagyu <br /><span class="italic text-white/30">A5</span>
+              </h3>
+              <p
+                class="text-[#666] text-lg font-light max-w-sm leading-relaxed mb-8"
+              >
+                Imported directly from Hokkaido. Served with shaved black
+                truffle butter and 24k gold leaf. A study in richness.
+              </p>
+              <div class="text-3xl font-serif text-white">$180</div>
+            </div>
+            <!-- Image Side -->
+            <div
+              class="w-full md:w-1/2 h-full relative overflow-hidden group hover-trigger"
+              data-cursor-text="Indulge"
+            >
+              <!-- UPDATED: Images colorful by default on mobile, grayscale on desktop -->
+              <img
+                src="https://images.unsplash.com/photo-1615937657715-bc7b4b7962c1?q=80&w=2670&auto=format&fit=crop"
+                class="absolute inset-0 w-full h-full object-cover transition-transform duration-[1.5s] ease-out group-hover:scale-110 grayscale-0 opacity-100 md:grayscale md:opacity-60 md:group-hover:grayscale-0 md:group-hover:opacity-100"
+                alt="Wagyu"
+              />
+            </div>
+          </div>
+        </div>
+
+        <!-- CARD 2: BLACK COD -->
+        <div
+          class="menu-card bg-[#050505] flex items-center relative border-t border-white/10"
+        >
+          <div class="absolute inset-0 w-full h-full overflow-hidden">
+            <div class="absolute inset-0 bg-black/50 z-10"></div>
+            <img
+              src="https://images.unsplash.com/photo-1534939561126-855b8675edd7?q=80&w=2574&auto=format&fit=crop"
+              class="w-full h-full object-cover scale-110 opacity-60"
+              alt="Black Cod"
+            />
+          </div>
+          <div class="relative z-20 w-full text-center px-6">
+            <div class="text-white/50 uppercase tracking-[0.4em] text-xs mb-4">
+              Oceanic Depth
+            </div>
+            <h3
+              class="text-7xl md:text-9xl text-white font-serif italic mb-6 hover-trigger"
+              data-cursor-text="Savor"
+            >
+              Black Cod
+            </h3>
+            <p class="text-white/80 text-xl font-light tracking-wide uppercase">
+              Miso Glaze / Charred Scallion / Yuzu
+            </p>
+            <div class="mt-8 text-4xl font-serif text-[var(--accent)]">$65</div>
+          </div>
+        </div>
+
+        <!-- CARD 3: BONE MARROW -->
+        <div
+          class="menu-card bg-[#080808] flex items-center relative border-t border-white/10"
+        >
+          <div
+            class="absolute inset-0 flex flex-col md:flex-row-reverse h-full"
+          >
+            <!-- Text Side -->
+            <div
+              class="w-full md:w-1/2 h-full flex flex-col justify-center px-6 md:px-24 relative z-10 bg-[#080808]"
+            >
+              <div
+                class="text-[var(--accent)] uppercase tracking-[0.4em] text-xs mb-6 font-bold"
+              >
+                Primal
+              </div>
+              <h3
+                class="text-5xl md:text-7xl text-white font-serif leading-tight mb-6"
+              >
+                Smoked <br />Bone Marrow
+              </h3>
+              <p
+                class="text-[#666] text-lg font-light max-w-sm leading-relaxed mb-8"
+              >
+                Roasted for 12 hours. Served with house-made sourdough, parsley
+                salad, and Maldon sea salt.
+              </p>
+              <div class="text-3xl font-serif text-white">$45</div>
+              <button
+                class="mt-12 px-8 py-4 border border-white/10 text-white uppercase text-xs tracking-[0.2em] hover:bg-white hover:text-black transition-colors w-max hover-trigger"
+              >
+                Order Now
+              </button>
+            </div>
+            <!-- Image Side -->
+            <div
+              class="w-full md:w-1/2 h-full relative overflow-hidden group hover-trigger"
+            >
+              <!-- UPDATED: Images colorful by default on mobile, grayscale on desktop -->
+              <img
+                src="https://images.unsplash.com/photo-1544025162-d76694265947?q=80&w=2574&auto=format&fit=crop"
+                class="absolute inset-0 w-full h-full object-cover transition-transform duration-[1.5s] ease-out group-hover:scale-110 grayscale-0 opacity-100 md:grayscale md:opacity-60 md:group-hover:grayscale-0 md:group-hover:opacity-100"
+                alt="Marrow"
+              />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- BIG TYPOGRAPHY / BREAK -->
+      <section class="py-32 bg-[#050505] overflow-hidden">
+        <div class="marquee-container relative whitespace-nowrap">
+          <h2
+            class="text-[10rem] md:text-[15rem] leading-none font-black text-[#111] uppercase select-none marquee-content inline-block"
+          >
+            Precision &middot; Power &middot; Taste &middot; Precision &middot;
+            Power &middot; Taste &middot;
+          </h2>
+          <div
+            class="absolute inset-0 flex items-center justify-center pointer-events-none"
+          >
+            <p
+              class="text-white text-xl md:text-2xl max-w-lg text-center font-serif italic relative z-10 px-6"
+            >
+              "The only thing we serve is perfection. Everything else is
+              discarded."
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- RESERVATION / FOOTER -->
+      <section
+        id="reservations"
+        class="min-h-screen relative flex items-center justify-center bg-[#050505] px-6 overflow-hidden"
+      >
+        <div class="absolute inset-0 z-0">
+          <img
+            src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?q=80&w=2670&auto=format&fit=crop"
+            class="w-full h-full object-cover opacity-20 grayscale"
+            alt="Footer bg"
+          />
+          <div
+            class="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/90 to-transparent"
+          ></div>
+        </div>
+
+        <div class="relative z-10 text-center max-w-4xl">
+          <p
+            class="text-[var(--accent)] tracking-[0.3em] uppercase mb-8 text-sm"
+          >
+            Join the Elite
+          </p>
+          <h2
+            class="text-6xl md:text-9xl text-white font-serif mb-12 cursor-pointer hover:italic transition-all duration-300 hover:text-[var(--accent)] hover-trigger"
+          >
+            Book Table
+          </h2>
+
+          <div
+            class="flex flex-col md:flex-row gap-12 justify-center items-center text-[#666] uppercase text-xs tracking-[0.2em] font-medium"
+          >
+            <div
+              class="hover:text-white transition-colors cursor-pointer hover-trigger"
+            >
+              New York City<br />
+              5th Avenue, 102
+            </div>
+            <div class="w-[1px] h-10 bg-white/20 hidden md:block"></div>
+            <div
+              class="hover:text-white transition-colors cursor-pointer hover-trigger"
+            >
+              +1 (212) 555-0199<br />
+              reservations@obsidian.com
+            </div>
+            <div class="w-[1px] h-10 bg-white/20 hidden md:block"></div>
+            <div class="flex gap-6">
+              <a href="#" class="hover:text-white hover-trigger">Instagram</a>
+              <a href="#" class="hover:text-white hover-trigger">Twitter</a>
+            </div>
+          </div>
+
+          <div class="mt-32 text-white/20 text-[10px] tracking-widest">
+            &copy; 2024 Obsidian. A Template of Dominance.
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Dependencies -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <!-- Use newer unpkg build which is confirmed UMD/Browser compatible -->
+    <script src="https://unpkg.com/lenis@1.0.45/dist/lenis.min.js"></script>
+
+    <!-- Logic -->
+    <script>
+      // --- 1. INITIALIZATION & LENIS ---
+      document.addEventListener("DOMContentLoaded", () => {
+        // Initialize Lenis (Smooth Scrolling)
+        // Added safety check to prevent ReferenceError if CDN fails
+        let lenis;
+        if (typeof Lenis !== "undefined") {
+          lenis = new Lenis({
+            duration: 1.2,
+            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+            direction: "vertical",
+            gestureDirection: "vertical",
+            smooth: true,
+            mouseMultiplier: 1,
+            smoothTouch: false,
+            touchMultiplier: 2,
+          });
+
+          function raf(time) {
+            lenis.raf(time);
+            requestAnimationFrame(raf);
+          }
+          requestAnimationFrame(raf);
+        } else {
+          console.warn("Lenis library not loaded. Smooth scrolling disabled.");
+        }
+
+        // Connect Lenis to ScrollTrigger
+        if (typeof ScrollTrigger !== "undefined") {
+          gsap.registerPlugin(ScrollTrigger);
+        }
+
+        // Loader Sequence
+        const tl = gsap.timeline({
+          onComplete: () => {
+            // Unlock scroll when loader finishes
+            document.body.classList.remove("overflow-hidden");
+            initAnimations();
+          },
+        });
+
+        tl.to(".loader-text span", {
+          y: 0,
+          duration: 1.2,
+          ease: "power4.out",
+          delay: 0.2,
+        })
+          .to(".loader-text span", {
+            y: "-100%",
+            duration: 1,
+            ease: "power4.inOut",
+            delay: 0.5,
+          })
+          .to(
+            ".loader",
+            {
+              height: 0,
+              duration: 1,
+              ease: "power4.inOut",
+            },
+            "-=0.5"
+          )
+          .from(
+            ".hero-title .reveal-text",
+            {
+              y: "120%",
+              duration: 1.5,
+              stagger: 0.2,
+              ease: "power4.out",
+            },
+            "-=0.5"
+          )
+          .to(
+            ".hero-sub",
+            {
+              opacity: 1,
+              y: 0,
+              duration: 1,
+              ease: "power2.out",
+            },
+            "-=1"
+          )
+          .from(
+            ".hero-img",
+            {
+              scale: 1.3,
+              duration: 2,
+              ease: "power2.out",
+            },
+            "-=2"
+          );
+
+        // --- 2. ANIMATION SETUP ---
+        function initAnimations() {
+          // Parallax Images
+          document
+            .querySelectorAll(".parallax-img-container")
+            .forEach((container) => {
+              gsap.to(container.querySelector(".parallax-img"), {
+                y: "20%",
+                ease: "none",
+                scrollTrigger: {
+                  trigger: container,
+                  start: "top bottom",
+                  end: "bottom top",
+                  scrub: true,
+                },
+              });
+            });
+
+          // Full Width Parallax BG
+          gsap.to(".parallax-bg", {
+            yPercent: 30,
+            ease: "none",
+            scrollTrigger: {
+              trigger: ".parallax-bg-container",
+              start: "top bottom",
+              end: "bottom top",
+              scrub: true,
+            },
+          });
+
+          // Text Reveals (Split Text Logic Simplified)
+          const splitElements = document.querySelectorAll(".split-text");
+          splitElements.forEach((el) => {
+            // Manual splitting for demo stability
+            // In production, use SplitType or SplitText plugin
+            const content = el.innerHTML;
+            // Simple fade up for now to avoid plugin dependency complexity
+            gsap.from(el, {
+              y: 50,
+              opacity: 0,
+              duration: 1,
+              ease: "power3.out",
+              scrollTrigger: {
+                trigger: el,
+                start: "top 80%",
+              },
+            });
+          });
+
+          // General Fade In Up
+          gsap.utils.toArray(".fade-in-up").forEach((element) => {
+            gsap.to(element, {
+              opacity: 1,
+              y: 0,
+              duration: 1,
+              ease: "power3.out",
+              scrollTrigger: {
+                trigger: element,
+                start: "top 85%",
+              },
+            });
+          });
+
+          // Marquee Effect
+          gsap.to(".marquee-content", {
+            xPercent: -50,
+            ease: "none",
+            scrollTrigger: {
+              trigger: ".marquee-container",
+              start: "top bottom",
+              end: "bottom top",
+              scrub: 1,
+            },
+          });
+
+          // Scroll Progress Line
+          gsap.to(".scroll-progress", {
+            height: "100%",
+            ease: "none",
+            scrollTrigger: {
+              trigger: "body",
+              start: "top top",
+              end: "bottom bottom",
+              scrub: 0.3,
+            },
+          });
+
+          // --- STACKING CARDS ANIMATION (New) ---
+          // We want the previous card to scale down slightly as the next one covers it
+          const cards = gsap.utils.toArray(".menu-card");
+          cards.forEach((card, index) => {
+            if (index === cards.length - 1) return; // Last card doesn't need to scale down
+
+            const nextCard = cards[index + 1];
+
+            gsap.to(card, {
+              scale: 0.9,
+              opacity: 0.5,
+              filter: "blur(10px)",
+              ease: "none",
+              scrollTrigger: {
+                trigger: nextCard,
+                start: "top bottom", // when top of next card hits bottom of viewport
+                end: "top top", // when top of next card hits top of viewport
+                scrub: true,
+              },
+            });
+          });
+        }
+
+        // --- 3. CUSTOM CURSOR & INTERACTIONS ---
+        const cursor = document.getElementById("cursor");
+        const hoverTriggers = document.querySelectorAll(".hover-trigger");
+
+        // Mouse Movement
+        document.addEventListener("mousemove", (e) => {
+          const { clientX, clientY } = e;
+          gsap.to(cursor, {
+            x: clientX,
+            y: clientY,
+            duration: 0.1, // Lag effect
+            ease: "power2.out",
+          });
+        });
+
+        // Hover States
+        hoverTriggers.forEach((trigger) => {
+          trigger.addEventListener("mouseenter", () => {
+            cursor.classList.add("hovered");
+            const text = trigger.getAttribute("data-cursor-text");
+            // In a full implementation, we'd add logic to inject text into cursor
+          });
+          trigger.addEventListener("mouseleave", () => {
+            cursor.classList.remove("hovered");
+          });
+        });
+
+        // --- 4. ANIMATIONS FOR SCROLL ---
+        // Fade-in Scroll items
+        gsap.utils.toArray(".fade-in-scroll").forEach((element) => {
+          gsap.from(element, {
+            opacity: 0,
+            y: 30,
+            duration: 1,
+            scrollTrigger: {
+              trigger: element,
+              start: "top 80%",
+              toggleActions: "play none none reverse",
+            },
+          });
+        });
+      });
+
+      // --- 5. MOBILE MENU LOGIC ---
+      function openMobileMenu() {
+        const menu = document.getElementById("mobileMenu");
+        const links = menu.querySelectorAll("span");
+        menu.classList.add("open");
+
+        // Stagger animations for links
+        gsap.to(links, {
+          y: 0,
+          duration: 1,
+          stagger: 0.1,
+          ease: "power4.out",
+          delay: 0.2,
+        });
+        document.body.style.overflow = "hidden"; // Lock scroll
+      }
+
+      function closeMobileMenu() {
+        const menu = document.getElementById("mobileMenu");
+        const links = menu.querySelectorAll("span");
+
+        // Animate out
+        gsap.to(links, {
+          y: "100%",
+          duration: 0.5,
+          stagger: 0.05,
+          ease: "power4.in",
+          onComplete: () => {
+            menu.classList.remove("open");
+            document.body.style.overflow = ""; // Unlock scroll
+          },
+        });
+      }
+
+      // Event Listeners
+      document
+        .getElementById("openMenuBtn")
+        .addEventListener("click", openMobileMenu);
+      document
+        .getElementById("closeMenuBtn")
+        .addEventListener("click", closeMobileMenu);
+    </script>
+  </body>
+</html>

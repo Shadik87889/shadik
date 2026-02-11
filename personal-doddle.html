@@ -1,0 +1,1204 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Shadik Hossain Shakib | The Architect</title>
+
+    <!-- Fonts: Outfit (Headings) & Space Grotesk (Tech/Body) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700;800&family=Space+Grotesk:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Lenis for Smooth Scroll -->
+    <script src="https://unpkg.com/lenis@1.0.45/dist/lenis.min.js"></script>
+
+    <!-- GSAP -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollToPlugin.min.js"></script>
+
+    <!-- Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['"Outfit"', "sans-serif"],
+              mono: ['"Space Grotesk"', "monospace"],
+            },
+            colors: {
+              void: "#030712", // Deepest Blue/Black
+              surface: "#0f172a", // Slate 900
+              glass: "rgba(30, 41, 59, 0.4)",
+              neon: "#00f0ff", // Cyber Blue
+              electric: "#7000ff", // Electric Purple
+              alert: "#ff003c",
+            },
+            backgroundImage: {
+              "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
+              "hero-glow":
+                "conic-gradient(from 180deg at 50% 50%, #030712 0deg, #1e293b 180deg, #030712 360deg)",
+            },
+            animation: {
+              "spin-slow": "spin 20s linear infinite",
+              pulse: "pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite",
+            },
+          },
+        },
+      };
+    </script>
+
+    <style>
+      body {
+        background-color: #030712;
+        color: #f8fafc;
+        overflow-x: hidden;
+      }
+
+      /* Custom Scrollbar */
+      ::-webkit-scrollbar {
+        width: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #030712;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #334155;
+        border-radius: 4px;
+      }
+
+      /* Glassmorphism Utilities */
+      .glass-panel {
+        background: rgba(15, 23, 42, 0.6);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+      }
+
+      .glass-nav {
+        background: rgba(3, 7, 18, 0.8);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.5);
+      }
+
+      /* Neon Text Glow */
+      .text-glow {
+        text-shadow: 0 0 20px rgba(0, 240, 255, 0.3);
+      }
+
+      /* Image Hover Effects */
+      .glitch-hover {
+        position: relative;
+        overflow: hidden;
+      }
+      .glitch-hover::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          45deg,
+          rgba(0, 240, 255, 0.2),
+          rgba(112, 0, 255, 0.2)
+        );
+        opacity: 0;
+        transition: opacity 0.3s;
+      }
+      .glitch-hover:hover::after {
+        opacity: 1;
+      }
+
+      /* Loader */
+      .loader-curtain {
+        position: fixed;
+        inset: 0;
+        background: #000;
+        z-index: 9999;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      .loader-text {
+        font-family: "Space Grotesk", monospace;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+      }
+
+      /* Modal Transitions */
+      .modal-bg {
+        transition: opacity 0.3s ease;
+      }
+      .modal-panel {
+        transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+          opacity 0.3s ease;
+      }
+
+      /* Floating Shapes */
+      .orb {
+        position: absolute;
+        border-radius: 50%;
+        filter: blur(80px);
+        z-index: -1;
+        opacity: 0.4;
+      }
+    </style>
+  </head>
+  <body class="selection:bg-neon selection:text-black">
+    <!-- Ambient Background Lighting -->
+    <div class="fixed inset-0 pointer-events-none overflow-hidden">
+      <div class="orb w-96 h-96 bg-electric top-0 left-0 animate-pulse"></div>
+      <div
+        class="orb w-[500px] h-[500px] bg-neon bottom-0 right-0 opacity-20"
+      ></div>
+    </div>
+
+    <!-- Loading Curtain -->
+    <div class="loader-curtain" id="loader">
+      <div class="flex flex-col items-center gap-4">
+        <div class="loader-text text-neon text-xl font-bold">
+          Initializing System
+        </div>
+        <div class="w-64 h-1 bg-gray-800 rounded-full overflow-hidden">
+          <div
+            class="h-full bg-neon w-0 loader-bar shadow-[0_0_10px_#00f0ff]"
+          ></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Floating Dock Navigation (Bottom) -->
+    <nav
+      class="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 w-auto max-w-[90vw]"
+    >
+      <div
+        class="glass-nav rounded-2xl px-2 py-2 flex items-center gap-1 sm:gap-2 overflow-x-auto"
+      >
+        <a
+          href="#"
+          class="p-3 rounded-xl hover:bg-white/10 transition-colors group flex flex-col items-center min-w-[60px]"
+        >
+          <span class="font-bold text-lg text-neon">SHS</span>
+        </a>
+        <div class="w-px h-8 bg-white/10 mx-1"></div>
+
+        <a
+          href="#origins"
+          class="nav-item p-3 rounded-xl hover:bg-white/10 transition-colors flex flex-col items-center min-w-[60px] group"
+        >
+          <i
+            data-lucide="dna"
+            class="w-5 h-5 text-gray-400 group-hover:text-white transition-colors"
+          ></i>
+          <span
+            class="text-[10px] text-gray-500 mt-1 font-mono uppercase opacity-0 group-hover:opacity-100 absolute -top-8 bg-black px-2 py-1 rounded border border-gray-800 transition-opacity"
+            >Origins</span
+          >
+        </a>
+
+        <a
+          href="#ecosystem"
+          class="nav-item p-3 rounded-xl hover:bg-white/10 transition-colors flex flex-col items-center min-w-[60px] group"
+        >
+          <i
+            data-lucide="cpu"
+            class="w-5 h-5 text-gray-400 group-hover:text-white transition-colors"
+          ></i>
+          <span
+            class="text-[10px] text-gray-500 mt-1 font-mono uppercase opacity-0 group-hover:opacity-100 absolute -top-8 bg-black px-2 py-1 rounded border border-gray-800 transition-opacity"
+            >Eco</span
+          >
+        </a>
+
+        <a
+          href="#humanity"
+          class="nav-item p-3 rounded-xl hover:bg-white/10 transition-colors flex flex-col items-center min-w-[60px] group"
+        >
+          <i
+            data-lucide="heart-handshake"
+            class="w-5 h-5 text-gray-400 group-hover:text-white transition-colors"
+          ></i>
+          <span
+            class="text-[10px] text-gray-500 mt-1 font-mono uppercase opacity-0 group-hover:opacity-100 absolute -top-8 bg-black px-2 py-1 rounded border border-gray-800 transition-opacity"
+            >Peace</span
+          >
+        </a>
+
+        <a
+          href="#journalism"
+          class="nav-item p-3 rounded-xl hover:bg-white/10 transition-colors flex flex-col items-center min-w-[60px] group"
+        >
+          <i
+            data-lucide="newspaper"
+            class="w-5 h-5 text-gray-400 group-hover:text-white transition-colors"
+          ></i>
+          <span
+            class="text-[10px] text-gray-500 mt-1 font-mono uppercase opacity-0 group-hover:opacity-100 absolute -top-8 bg-black px-2 py-1 rounded border border-gray-800 transition-opacity"
+            >News</span
+          >
+        </a>
+
+        <a
+          href="#books"
+          class="nav-item p-3 rounded-xl hover:bg-white/10 transition-colors flex flex-col items-center min-w-[60px] group"
+        >
+          <i
+            data-lucide="library"
+            class="w-5 h-5 text-gray-400 group-hover:text-white transition-colors"
+          ></i>
+          <span
+            class="text-[10px] text-gray-500 mt-1 font-mono uppercase opacity-0 group-hover:opacity-100 absolute -top-8 bg-black px-2 py-1 rounded border border-gray-800 transition-opacity"
+            >Lib</span
+          >
+        </a>
+
+        <a
+          href="#vision"
+          class="nav-item p-3 rounded-xl hover:bg-white/10 transition-colors flex flex-col items-center min-w-[60px] group"
+        >
+          <i
+            data-lucide="telescope"
+            class="w-5 h-5 text-gray-400 group-hover:text-white transition-colors"
+          ></i>
+          <span
+            class="text-[10px] text-gray-500 mt-1 font-mono uppercase opacity-0 group-hover:opacity-100 absolute -top-8 bg-black px-2 py-1 rounded border border-gray-800 transition-opacity"
+            >Vis</span
+          >
+        </a>
+
+        <div class="w-px h-8 bg-white/10 mx-1"></div>
+        <a
+          href="mailto:shadikworld@gmail.com"
+          class="p-3 rounded-xl bg-neon text-black hover:bg-white transition-colors flex items-center justify-center shadow-[0_0_15px_rgba(0,240,255,0.4)]"
+        >
+          <i data-lucide="mail" class="w-5 h-5"></i>
+        </a>
+      </div>
+    </nav>
+
+    <!-- Header / Hero Section -->
+    <header
+      class="relative min-h-screen flex items-center justify-center pt-20 pb-32 overflow-hidden"
+    >
+      <!-- Grid Background -->
+      <div
+        class="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-10 mix-blend-overlay"
+      ></div>
+      <div
+        class="absolute inset-0"
+        style="
+          background-image: linear-gradient(
+              rgba(255, 255, 255, 0.03) 1px,
+              transparent 1px
+            ),
+            linear-gradient(
+              90deg,
+              rgba(255, 255, 255, 0.03) 1px,
+              transparent 1px
+            );
+          background-size: 50px 50px;
+        "
+      ></div>
+
+      <div
+        class="max-w-7xl mx-auto px-6 w-full grid grid-cols-1 lg:grid-cols-2 gap-12 items-center relative z-10"
+      >
+        <!-- Text Content -->
+        <div class="order-2 lg:order-1 space-y-8">
+          <div
+            class="inline-flex items-center gap-3 px-4 py-2 rounded-full border border-neon/30 bg-neon/5 backdrop-blur-md"
+          >
+            <span class="w-2 h-2 rounded-full bg-neon animate-pulse"></span>
+            <span class="text-xs font-mono uppercase tracking-widest text-neon"
+              >System Status: Online</span
+            >
+          </div>
+
+          <h1
+            class="text-6xl md:text-8xl font-bold tracking-tighter leading-[0.9]"
+          >
+            <span class="text-gray-500 block text-4xl mb-2 font-light"
+              >I am the</span
+            >
+            Architect of <br />
+            <span
+              class="text-transparent bg-clip-text bg-gradient-to-r from-white via-gray-200 to-gray-500 text-glow"
+              >The Future.</span
+            >
+          </h1>
+
+          <p
+            class="text-lg text-gray-400 max-w-lg font-mono leading-relaxed border-l-2 border-electric pl-6"
+          >
+            Crafting digital ecosystems that breathe. Operating at the
+            intersection of
+            <span class="text-white">technological precision</span> and
+            <span class="text-white">social responsibility</span>.
+          </p>
+
+          <div class="flex gap-6 pt-4">
+            <a
+              href="#ecosystem"
+              class="px-8 py-4 bg-white text-black font-bold rounded hover:bg-neon transition-colors duration-300"
+            >
+              Explore Ecosystem
+            </a>
+            <a
+              href="#humanity"
+              class="px-8 py-4 border border-white/20 hover:border-white transition-colors duration-300 rounded text-white"
+            >
+              Humanitarian Work
+            </a>
+          </div>
+        </div>
+
+        <!-- Hero Image -->
+        <div class="order-1 lg:order-2 relative flex justify-center">
+          <div class="relative w-72 md:w-96 aspect-[3/4] group">
+            <!-- Tech Frame -->
+            <div
+              class="absolute -inset-4 border border-neon/20 rounded-lg group-hover:scale-105 transition-transform duration-500"
+            ></div>
+            <div
+              class="absolute -inset-4 border border-electric/20 rounded-lg rotate-3 group-hover:rotate-6 transition-transform duration-500"
+            ></div>
+
+            <div
+              class="w-full h-full relative overflow-hidden rounded-lg grayscale group-hover:grayscale-0 transition-all duration-700"
+            >
+              <img
+                src="the_daily_origin_founder.jpg"
+                alt="Shadik Hossain Shakib"
+                class="w-full h-full object-cover"
+              />
+              <div
+                class="absolute inset-0 bg-gradient-to-t from-void via-transparent to-transparent opacity-80"
+              ></div>
+            </div>
+
+            <!-- Floating Badge -->
+            <div
+              class="absolute -right-8 bottom-12 glass-panel p-4 rounded-xl border-l-4 border-neon shadow-lg transform translate-x-4 lg:translate-x-12"
+            >
+              <p class="text-[10px] text-gray-400 font-mono uppercase mb-1">
+                Rajshahi Board Record
+              </p>
+              <div class="text-3xl font-bold text-white">
+                57th <span class="text-sm font-normal text-gray-400">Rank</span>
+              </div>
+              <p class="text-[10px] text-gray-500 mt-1">
+                Top 0.03% of 181,904 Students
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Origins Section (Timeline/Cards) -->
+    <section id="origins" class="py-32 relative">
+      <div class="max-w-7xl mx-auto px-6">
+        <div
+          class="flex flex-col md:flex-row justify-between items-end mb-20 border-b border-gray-800 pb-8"
+        >
+          <div>
+            <span class="text-neon font-mono text-sm tracking-widest uppercase"
+              >/// Database: Origins</span
+            >
+            <h2 class="text-5xl font-bold mt-2">Rooted in Discipline</h2>
+          </div>
+          <p
+            class="text-gray-400 max-w-md text-right font-mono text-sm mt-4 md:mt-0"
+          >
+            Excellence is not an act, but a habit. <br />Verified metrics of
+            academic and cultural performance.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <!-- Card 1: Academic -->
+          <div
+            class="glass-panel p-8 rounded-2xl relative overflow-hidden group hover:border-neon/50 transition-colors"
+          >
+            <div
+              class="absolute top-0 right-0 p-4 opacity-20 group-hover:opacity-100 transition-opacity"
+            >
+              <i data-lucide="award" class="w-12 h-12 text-neon"></i>
+            </div>
+            <h3 class="text-2xl font-bold mb-2">Academic Consistency</h3>
+            <div class="text-4xl font-mono text-white mb-4">GPA 5.0</div>
+            <p class="text-gray-400 mb-6 leading-relaxed">
+              Maintained perfect scores throughout SSC and HSC levels. Securing
+              the 57th position defines my approach: absolute precision.
+            </p>
+            <button
+              onclick="openImageModal('ranking-transcript.jpg', 'Rajshahi Board Results', 'Official Transcript Verification')"
+              class="flex items-center gap-2 text-sm font-mono text-neon hover:text-white transition-colors"
+            >
+              [View_Transcript_Data]
+              <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
+            </button>
+          </div>
+
+          <!-- Card 2: Cultural -->
+          <div
+            class="glass-panel p-8 rounded-2xl relative overflow-hidden group hover:border-electric/50 transition-colors"
+          >
+            <div
+              class="absolute top-0 right-0 p-4 opacity-20 group-hover:opacity-100 transition-opacity"
+            >
+              <i data-lucide="music" class="w-12 h-12 text-electric"></i>
+            </div>
+            <h3 class="text-2xl font-bold mb-2">Cultural Excellence</h3>
+            <div class="text-xl font-mono text-white mb-4">
+              National Anthem Winner
+            </div>
+            <p class="text-gray-400 mb-6 leading-relaxed">
+              Recognized at Union, Sub-district, and District levels. A
+              testament to cultural dedication alongside technical prowess.
+            </p>
+            <button
+              onclick="openImageModal('anthem_certificate.jpg', 'Cultural Award', 'District Level National Anthem Competition Winner')"
+              class="flex items-center gap-2 text-sm font-mono text-electric hover:text-white transition-colors"
+            >
+              [Access_Certificate]
+              <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Tech Stack Ticker -->
+        <div
+          class="mt-16 border-y border-gray-800 py-6 overflow-hidden relative"
+        >
+          <div
+            class="absolute inset-0 bg-gradient-to-r from-void via-transparent to-void z-10"
+          ></div>
+          <div
+            class="flex gap-12 whitespace-nowrap animate-[ticker_20s_linear_infinite] font-mono text-gray-500"
+          >
+            <span>JAVASCRIPT_ES6</span> <span>//</span> <span>REACT_JS</span>
+            <span>//</span> <span>NODE_JS</span> <span>//</span>
+            <span>WEBGL_THREEJS</span> <span>//</span>
+            <span>GSAP_ANIMATION</span> <span>//</span>
+            <span>FIREBASE_DB</span> <span>//</span> <span>TAILWIND_CSS</span>
+            <span>//</span> <span>JAVASCRIPT_ES6</span> <span>//</span>
+            <span>REACT_JS</span> <span>//</span> <span>NODE_JS</span>
+            <span>//</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Ecosystem (Holographic Grid) -->
+    <section id="ecosystem" class="py-32 bg-surface/30 relative">
+      <div class="max-w-7xl mx-auto px-6">
+        <div class="text-center mb-20">
+          <span
+            class="px-3 py-1 rounded-full border border-gray-700 bg-gray-900 text-xs font-mono text-gray-300"
+            >Architecture v2.0</span
+          >
+          <h2 class="text-5xl md:text-7xl font-bold mt-6 mb-6">
+            The SoftShilpo<span class="text-neon">.net</span>
+          </h2>
+          <p class="text-gray-400 max-w-2xl mx-auto">
+            A decentralized suite of interconnected platforms. Where
+            <em>Shilpo</em> (Art) meets Engineering.
+          </p>
+        </div>
+
+        <div
+          class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 auto-rows-[minmax(180px,auto)]"
+        >
+          <!-- CashShilpo (Main) -->
+          <div
+            class="md:col-span-2 lg:col-span-2 row-span-2 glass-panel rounded-3xl p-8 relative overflow-hidden group border-gray-800 hover:border-neon transition-all duration-500"
+          >
+            <div
+              class="absolute inset-0 bg-gradient-to-br from-neon/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"
+            ></div>
+            <div class="relative z-10 h-full flex flex-col justify-between">
+              <div>
+                <div
+                  class="w-12 h-12 bg-neon rounded-lg flex items-center justify-center text-black mb-6"
+                >
+                  <i data-lucide="banknote" class="w-6 h-6"></i>
+                </div>
+                <h3 class="text-3xl font-bold mb-2">CashShilpo</h3>
+                <p class="text-gray-400 font-mono text-sm mb-6">
+                  Advanced ERP & POS Neural Network. AI-driven analytics,
+                  bi-lingual interfaces, and multi-store sync.
+                </p>
+                <div class="flex gap-2">
+                  <span
+                    class="px-2 py-1 bg-white/5 rounded text-[10px] uppercase text-neon border border-neon/20"
+                    >Inventory</span
+                  >
+                  <span
+                    class="px-2 py-1 bg-white/5 rounded text-[10px] uppercase text-neon border border-neon/20"
+                    >CRM</span
+                  >
+                </div>
+              </div>
+              <a
+                href="https://cashshilpo.com"
+                target="_blank"
+                class="mt-8 self-start px-6 py-2 bg-white/10 hover:bg-white hover:text-black rounded-full text-sm font-bold transition-all"
+                >Launch Node -></a
+              >
+            </div>
+          </div>
+
+          <!-- HostelShilpo -->
+          <a
+            href="https://softshilpo.onrender.com/hostelshilpo"
+            target="_blank"
+            class="glass-panel p-6 rounded-3xl hover:bg-white/5 transition-all group flex flex-col justify-between"
+          >
+            <div class="flex justify-between items-start">
+              <i
+                data-lucide="home"
+                class="text-gray-400 group-hover:text-white"
+              ></i>
+              <i
+                data-lucide="arrow-up-right"
+                class="text-gray-600 group-hover:text-white"
+              ></i>
+            </div>
+            <div>
+              <h4 class="text-xl font-bold mt-4">HostelShilpo</h4>
+              <p class="text-xs text-gray-500 mt-2 font-mono">
+                Logistics Automation
+              </p>
+            </div>
+          </a>
+
+          <!-- TypeShilpo -->
+          <a
+            href="https://softshilpo.onrender.com/typeshilpo"
+            target="_blank"
+            class="glass-panel p-6 rounded-3xl hover:bg-white/5 transition-all group flex flex-col justify-between"
+          >
+            <div class="flex justify-between items-start">
+              <i
+                data-lucide="keyboard"
+                class="text-gray-400 group-hover:text-electric"
+              ></i>
+              <i
+                data-lucide="arrow-up-right"
+                class="text-gray-600 group-hover:text-white"
+              ></i>
+            </div>
+            <div>
+              <h4 class="text-xl font-bold mt-4">TypeShilpo</h4>
+              <p class="text-xs text-gray-500 mt-2 font-mono">
+                Competitive Input
+              </p>
+            </div>
+          </a>
+
+          <!-- SportShilpo -->
+          <a
+            href="https://softshilpo.onrender.com/sportshilpo"
+            target="_blank"
+            class="glass-panel p-6 rounded-3xl hover:bg-white/5 transition-all group flex flex-col justify-between"
+          >
+            <div class="flex justify-between items-start">
+              <i
+                data-lucide="trophy"
+                class="text-gray-400 group-hover:text-yellow-400"
+              ></i>
+              <i
+                data-lucide="arrow-up-right"
+                class="text-gray-600 group-hover:text-white"
+              ></i>
+            </div>
+            <div>
+              <h4 class="text-xl font-bold mt-4">SportShilpo</h4>
+              <p class="text-xs text-gray-500 mt-2 font-mono">
+                Real-time Analytics
+              </p>
+            </div>
+          </a>
+
+          <!-- Client Works List -->
+          <div
+            class="md:col-span-1 lg:col-span-1 row-span-2 bg-gradient-to-b from-gray-900 to-black rounded-3xl p-8 border border-gray-800"
+          >
+            <h3
+              class="text-gray-500 font-mono text-xs uppercase tracking-widest mb-6"
+            >
+              External Clients
+            </h3>
+            <ul class="space-y-6">
+              <li class="group">
+                <a
+                  href="https://ieltsmahir.com"
+                  target="_blank"
+                  class="flex justify-between items-center"
+                >
+                  <span
+                    class="font-bold group-hover:text-neon transition-colors"
+                    >IELTS Mahir</span
+                  >
+                  <span class="text-[10px] text-gray-600">ED-TECH</span>
+                </a>
+              </li>
+              <li class="group">
+                <a
+                  href="https://zestcorporationltd.com"
+                  target="_blank"
+                  class="flex justify-between items-center"
+                >
+                  <span
+                    class="font-bold group-hover:text-neon transition-colors"
+                    >Zest Corp</span
+                  >
+                  <span class="text-[10px] text-gray-600">PHARMA</span>
+                </a>
+              </li>
+              <li class="group">
+                <a
+                  href="https://novofitbd.com"
+                  target="_blank"
+                  class="flex justify-between items-center"
+                >
+                  <span
+                    class="font-bold group-hover:text-neon transition-colors"
+                    >NovoFit BD</span
+                  >
+                  <span class="text-[10px] text-gray-600">RETAIL</span>
+                </a>
+              </li>
+            </ul>
+            <div class="mt-12 pt-6 border-t border-gray-800">
+              <p class="text-[10px] text-gray-500 font-mono">
+                Status: 100% Satisfaction Rate
+              </p>
+            </div>
+          </div>
+
+          <!-- ElectionShilpo -->
+          <a
+            href="https://softshilpo.onrender.com/electionshilpo"
+            target="_blank"
+            class="glass-panel p-6 rounded-3xl hover:bg-white/5 transition-all group"
+          >
+            <div class="flex justify-between items-start">
+              <i
+                data-lucide="vote"
+                class="text-gray-400 group-hover:text-white"
+              ></i>
+            </div>
+            <h4 class="text-xl font-bold mt-4">ElectionShilpo</h4>
+            <p class="text-xs text-gray-500 mt-2 font-mono">Campaign Manager</p>
+          </a>
+
+          <!-- GramShilpo -->
+          <a
+            href="https://softshilpo.onrender.com/gramshilpo"
+            target="_blank"
+            class="md:col-span-2 glass-panel p-6 rounded-3xl hover:bg-white/5 transition-all group flex items-center justify-between"
+          >
+            <div>
+              <h4 class="text-xl font-bold">GramShilpo</h4>
+              <p class="text-xs text-gray-500 mt-1 font-mono">
+                Village Demographics & Data System
+              </p>
+            </div>
+            <i
+              data-lucide="map"
+              class="text-gray-400 group-hover:text-neon w-8 h-8"
+            ></i>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Humanity (Split Screen) -->
+    <section id="humanity" class="py-32 bg-black relative">
+      <div
+        class="absolute inset-0 bg-gradient-to-r from-red-900/10 to-transparent pointer-events-none"
+      ></div>
+      <div class="max-w-7xl mx-auto px-6">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
+          <div class="relative group cursor-none">
+            <div
+              class="absolute -inset-2 bg-red-600/20 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-700"
+            ></div>
+            <div
+              class="relative rounded-2xl overflow-hidden aspect-square border border-gray-800"
+            >
+              <img
+                src="all-our-works.png"
+                class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700"
+                alt="Humanity"
+              />
+              <div class="absolute inset-0 bg-black/40"></div>
+
+              <!-- Hover Overlay Text -->
+              <div
+                class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+              >
+                <p
+                  class="text-2xl font-bold text-white tracking-widest uppercase"
+                >
+                  We Act.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="space-y-8">
+            <div class="flex items-center gap-4">
+              <span class="w-12 h-[1px] bg-red-600"></span>
+              <span class="text-red-500 font-mono text-xs uppercase"
+                >Est. Sept 2024</span
+              >
+            </div>
+            <h2 class="text-5xl font-bold">Rural Peace Organization</h2>
+            <p class="text-gray-400 text-lg leading-relaxed">
+              Following the <strong>July Revolution</strong>, civic structures
+              collapsed. In this vacuum, I founded Rural Peace. We didn't wait
+              for permission.
+            </p>
+
+            <div class="grid grid-cols-1 gap-6">
+              <div
+                class="p-6 border border-gray-800 rounded-xl hover:border-red-600/50 transition-colors bg-surface/50"
+              >
+                <div class="flex items-center gap-4 mb-3">
+                  <i data-lucide="activity" class="text-red-500"></i>
+                  <h4 class="font-bold">Crisis Management</h4>
+                </div>
+                <p class="text-sm text-gray-500">
+                  Taking responsibility for traffic & safety when law
+                  enforcement was absent.
+                </p>
+              </div>
+
+              <div
+                class="p-6 border border-gray-800 rounded-xl hover:border-blue-600/50 transition-colors bg-surface/50"
+              >
+                <div class="flex items-center gap-4 mb-3">
+                  <i data-lucide="droplets" class="text-blue-500"></i>
+                  <h4 class="font-bold">Sylhet Flood Response</h4>
+                </div>
+                <p class="text-sm text-gray-500">
+                  Rapid fundraising and direct supply lines to flood-affected
+                  rural families.
+                </p>
+              </div>
+            </div>
+
+            <a
+              href="https://rural-peace.onrender.com"
+              target="_blank"
+              class="inline-block mt-4 text-white border-b border-red-600 pb-1 hover:text-red-500 transition-colors"
+            >
+              Access Organization Portal ->
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Journalism (Terminal Style) -->
+    <section
+      id="journalism"
+      class="py-24 bg-[#0a0a0a] border-y border-gray-800 relative"
+    >
+      <!-- Decoration Lines -->
+      <div
+        class="absolute top-0 left-10 w-px h-full bg-gray-900 hidden md:block"
+      ></div>
+      <div
+        class="absolute top-0 right-10 w-px h-full bg-gray-900 hidden md:block"
+      ></div>
+
+      <div class="max-w-7xl mx-auto px-6 relative z-10">
+        <!-- Terminal Header -->
+        <div
+          class="flex justify-between items-end mb-12 border-b-2 border-neon pb-4"
+        >
+          <h2
+            class="text-6xl md:text-8xl font-bold tracking-tighter text-white"
+          >
+            THE DAILY
+            <span
+              class="text-transparent bg-clip-text bg-gradient-to-r from-neon to-blue-600"
+              >ORIGIN</span
+            >
+          </h2>
+          <div class="text-right hidden md:block">
+            <p class="font-mono text-xs text-neon mb-1">LIVE FEED /// GLOBAL</p>
+            <p class="font-mono text-xs text-gray-500">
+              London • Dhaka • New York
+            </p>
+          </div>
+        </div>
+
+        <!-- News Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+          <!-- English Edition -->
+          <div class="group cursor-pointer">
+            <div
+              class="h-64 w-full bg-gray-900 mb-6 overflow-hidden relative border border-gray-800"
+            >
+              <!-- Abstract Graphic -->
+              <div
+                class="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-blue-900/40 via-transparent to-transparent"
+              ></div>
+              <div
+                class="absolute bottom-4 left-4 font-mono text-xs bg-neon text-black px-2 py-1"
+              >
+                VOL. 01
+              </div>
+            </div>
+            <h3
+              class="text-3xl font-bold mb-3 group-hover:text-neon transition-colors"
+            >
+              Global Perspectives on Modern Economy.
+            </h3>
+            <p
+              class="text-gray-400 font-mono text-sm border-l-2 border-gray-800 pl-4 mb-6"
+            >
+              Unbiased reporting on politics, science, and economics.
+              Data-driven insights for the international observer.
+            </p>
+            <a
+              href="https://en.thedailyorigin.net"
+              class="font-mono text-xs uppercase tracking-widest text-white hover:text-neon"
+              >[ Read_Terminal_EN ]</a
+            >
+          </div>
+
+          <!-- Bangla Edition -->
+          <div class="group cursor-pointer">
+            <div
+              class="h-64 w-full bg-gray-900 mb-6 overflow-hidden relative border border-gray-800"
+            >
+              <div
+                class="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-green-900/40 via-transparent to-transparent"
+              ></div>
+              <div
+                class="absolute bottom-4 left-4 font-mono text-xs bg-green-500 text-black px-2 py-1"
+              >
+                ISSUE 01
+              </div>
+            </div>
+            <h3
+              class="text-3xl font-bold mb-3 group-hover:text-green-500 transition-colors"
+            >
+              বাংলার মাটি ও মানুষের কথা।
+            </h3>
+            <p
+              class="text-gray-400 font-mono text-sm border-l-2 border-gray-800 pl-4 mb-6"
+            >
+              Deep cultural stories tailored for the Bengali demographic. Local
+              perspectives, global standards.
+            </p>
+            <a
+              href="https://bn.thedailyorigin.net"
+              class="font-mono text-xs uppercase tracking-widest text-white hover:text-green-500"
+              >[ Read_Terminal_BN ]</a
+            >
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Books (Floating Gravity) -->
+    <section id="books" class="py-40 relative overflow-hidden">
+      <div class="max-w-7xl mx-auto px-6">
+        <div class="text-center mb-32">
+          <h2 class="text-4xl font-mono text-gray-500 mb-2">Library_Archive</h2>
+          <p class="text-xl text-white">Philosophy & Memoirs</p>
+        </div>
+
+        <!-- Book 1 -->
+        <div class="flex flex-col md:flex-row items-center gap-16 mb-32">
+          <div class="w-full md:w-1/2 flex justify-center">
+            <div class="relative w-64 aspect-[2/3] perspective-1000">
+              <img
+                src="books/The incidents I faced book cover.png"
+                class="w-full h-full object-cover rounded shadow-[0_20px_50px_rgba(0,0,0,0.5)] transform rotate-y-12 hover:rotate-y-0 transition-transform duration-700 cursor-pointer"
+                onclick="openReader('The Incidents I Faced', 'https://drive.google.com/file/d/1esJJqyLAyZI7afHGsdhPU25j7xG9UkTr/preview')"
+                alt="Book"
+              />
+              <!-- Reflection -->
+              <div
+                class="absolute -bottom-10 left-0 w-full h-full bg-gradient-to-t from-void to-transparent opacity-50 transform scale-y-[-0.2] origin-bottom blur-sm"
+              ></div>
+            </div>
+          </div>
+          <div class="w-full md:w-1/2">
+            <span class="text-neon font-mono text-xs mb-4 block"
+              >/// MEMOIR_2022</span
+            >
+            <h3 class="text-4xl font-bold mb-6">The Incidents I Faced</h3>
+            <p class="text-gray-400 leading-relaxed mb-8">
+              A raw exploration of mental resilience. Mapping the journey
+              through anxiety to radical self-acceptance.
+            </p>
+            <button
+              onclick="openReader('The Incidents I Faced', 'https://drive.google.com/file/d/1esJJqyLAyZI7afHGsdhPU25j7xG9UkTr/preview')"
+              class="px-6 py-3 border border-white text-white hover:bg-white hover:text-black transition-colors rounded-full font-bold text-sm"
+            >
+              Initialize Reading Sequence
+            </button>
+          </div>
+        </div>
+
+        <!-- Book 2 -->
+        <div class="flex flex-col md:flex-row-reverse items-center gap-16">
+          <div class="w-full md:w-1/2 flex justify-center">
+            <div class="relative w-64 aspect-[2/3] perspective-1000">
+              <img
+                src="books/The Experience Book Cover.png"
+                class="w-full h-full object-cover rounded shadow-[0_20px_50px_rgba(0,0,0,0.5)] transform -rotate-y-12 hover:rotate-y-0 transition-transform duration-700 cursor-pointer"
+                onclick="openReader('The Experience', 'https://drive.google.com/file/d/1XZuzMG9U42-La2ghrwulbQX1QN2aXiAL/preview')"
+                alt="Book"
+              />
+            </div>
+          </div>
+          <div class="w-full md:w-1/2">
+            <span class="text-electric font-mono text-xs mb-4 block"
+              >/// PHILOSOPHY_2023</span
+            >
+            <h3 class="text-4xl font-bold mb-6">The Experience</h3>
+            <p class="text-gray-400 leading-relaxed mb-8">
+              Positing that lived experience holds more intrinsic value than
+              theoretical knowledge. A guide to experiential wisdom.
+            </p>
+            <button
+              onclick="openReader('The Experience', 'https://drive.google.com/file/d/1XZuzMG9U42-La2ghrwulbQX1QN2aXiAL/preview')"
+              class="px-6 py-3 border border-white text-white hover:bg-white hover:text-black transition-colors rounded-full font-bold text-sm"
+            >
+              Initialize Reading Sequence
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Vision (Blueprint) -->
+    <section
+      id="vision"
+      class="py-32 bg-[#050505] relative border-t border-gray-900"
+    >
+      <div class="max-w-7xl mx-auto px-6">
+        <h2
+          class="text-6xl md:text-9xl font-bold text-gray-900 absolute top-10 left-0 -z-10 select-none opacity-50"
+        >
+          BLUEPRINT
+        </h2>
+
+        <div class="mb-20 pt-10">
+          <h2 class="text-4xl font-bold text-white mb-6">The Master Plan.</h2>
+          <p class="text-gray-400 max-w-2xl">
+            Architecting the future of Bangladesh through digitization,
+            resilience, and empowerment.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
+          <div
+            class="p-6 bg-gray-900/50 rounded-xl border border-gray-800 hover:border-white transition-colors"
+          >
+            <div class="text-4xl font-bold text-gray-700 mb-4">01</div>
+            <h3 class="text-white font-bold mb-2">Digital Nation</h3>
+            <p class="text-xs text-gray-500">
+              Automating admin flows via GramShilpo.
+            </p>
+          </div>
+          <div
+            class="p-6 bg-gray-900/50 rounded-xl border border-gray-800 hover:border-white transition-colors"
+          >
+            <div class="text-4xl font-bold text-gray-700 mb-4">02</div>
+            <h3 class="text-white font-bold mb-2">Economy</h3>
+            <p class="text-xs text-gray-500">
+              Empowering SMEs with CashShilpo.
+            </p>
+          </div>
+          <div
+            class="p-6 bg-gray-900/50 rounded-xl border border-gray-800 hover:border-white transition-colors"
+          >
+            <div class="text-4xl font-bold text-gray-700 mb-4">03</div>
+            <h3 class="text-white font-bold mb-2">Social Arch</h3>
+            <p class="text-xs text-gray-500">
+              Proactive community building via Rural Peace.
+            </p>
+          </div>
+          <div
+            class="p-6 bg-gray-900/50 rounded-xl border border-gray-800 hover:border-white transition-colors"
+          >
+            <div class="text-4xl font-bold text-gray-700 mb-4">04</div>
+            <h3 class="text-white font-bold mb-2">Academia</h3>
+            <p class="text-xs text-gray-500">
+              Absorbing global best practices.
+            </p>
+          </div>
+          <div
+            class="p-6 bg-gray-900/50 rounded-xl border border-gray-800 hover:border-white transition-colors"
+          >
+            <div class="text-4xl font-bold text-gray-700 mb-4">05</div>
+            <h3 class="text-white font-bold mb-2">Legacy</h3>
+            <p class="text-xs text-gray-500">
+              Leading by example, not just title.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="py-12 border-t border-gray-900 bg-black text-center">
+      <p class="text-gray-600 font-mono text-xs uppercase tracking-widest">
+        © 2024 Shadik Hossain Shakib | System Online
+      </p>
+    </footer>
+
+    <!-- GENERIC IMAGE MODAL -->
+    <div
+      id="imageModal"
+      class="fixed inset-0 z-[100] flex items-center justify-center pointer-events-none opacity-0 modal-bg"
+    >
+      <div
+        class="absolute inset-0 bg-black/90 backdrop-blur-md"
+        onclick="closeAllModals()"
+      ></div>
+      <div
+        class="relative w-full max-w-4xl p-4 z-10 pointer-events-auto transform scale-95 opacity-0 modal-panel"
+      >
+        <button
+          onclick="closeAllModals()"
+          class="absolute -top-12 right-0 text-white hover:text-neon"
+        >
+          <i data-lucide="x"></i>
+        </button>
+        <img
+          id="modalImage"
+          src=""
+          class="w-full h-auto rounded border border-gray-700 shadow-2xl bg-black"
+          alt="Evidence"
+        />
+        <div class="mt-4 text-center">
+          <h3 id="modalTitle" class="text-xl font-bold text-white"></h3>
+          <p id="modalSub" class="text-neon font-mono text-sm"></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- READER MODAL -->
+    <div
+      id="readerModal"
+      class="fixed inset-0 z-[150] bg-black pointer-events-none opacity-0 transition-opacity duration-300 flex flex-col"
+    >
+      <div
+        class="h-14 border-b border-gray-800 flex justify-between items-center px-6 bg-gray-900 text-white z-20"
+      >
+        <div class="flex items-center gap-4">
+          <span class="w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>
+          <span class="font-mono text-xs text-gray-400">READ_MODE_ACTIVE</span>
+          <span class="font-bold text-sm" id="readerTitle">Book Title</span>
+        </div>
+        <button
+          onclick="closeReader()"
+          class="hover:text-neon transition-colors"
+        >
+          <i data-lucide="x"></i>
+        </button>
+      </div>
+      <div class="flex-grow relative bg-black">
+        <iframe id="bookFrame" src="" class="w-full h-full border-0"></iframe>
+      </div>
+    </div>
+
+    <script>
+      lucide.createIcons();
+
+      // Loading Animation
+      const tl = gsap.timeline();
+      tl.to(".loader-bar", {
+        width: "100%",
+        duration: 1.5,
+        ease: "power2.inOut",
+      }).to("#loader", {
+        yPercent: -100,
+        duration: 0.8,
+        ease: "power4.inOut",
+      });
+
+      // Modals
+      const imageModal = document.getElementById("imageModal");
+      const modalPanel = imageModal.querySelector(".modal-panel");
+      const readerModal = document.getElementById("readerModal");
+
+      function openImageModal(src, title, sub) {
+        document.getElementById("modalImage").src = src;
+        document.getElementById("modalTitle").textContent = title;
+        document.getElementById("modalSub").textContent = sub;
+
+        imageModal.classList.remove("pointer-events-none", "opacity-0");
+        modalPanel.classList.remove("scale-95", "opacity-0");
+        modalPanel.classList.add("scale-100", "opacity-100");
+      }
+
+      function closeAllModals() {
+        imageModal.classList.add("pointer-events-none", "opacity-0");
+        modalPanel.classList.add("scale-95", "opacity-0");
+        modalPanel.classList.remove("scale-100", "opacity-100");
+      }
+
+      function openReader(title, link) {
+        document.getElementById("readerTitle").textContent = title;
+        document.getElementById("bookFrame").src = link;
+        readerModal.classList.remove("pointer-events-none", "opacity-0");
+      }
+
+      function closeReader() {
+        readerModal.classList.add("pointer-events-none", "opacity-0");
+        setTimeout(() => (document.getElementById("bookFrame").src = ""), 300);
+      }
+
+      // GSAP Scroll Animations
+      gsap.registerPlugin(ScrollTrigger);
+
+      gsap.utils.toArray(".glass-panel").forEach((panel) => {
+        gsap.from(panel, {
+          scrollTrigger: {
+            trigger: panel,
+            start: "top 85%",
+          },
+          y: 50,
+          opacity: 0,
+          duration: 0.8,
+          ease: "power3.out",
+        });
+      });
+
+      // Navbar Interaction
+      const navItems = document.querySelectorAll(".nav-item");
+      navItems.forEach((item) => {
+        item.addEventListener("mouseenter", () => {
+          gsap.to(item, { scale: 1.1, duration: 0.2 });
+        });
+        item.addEventListener("mouseleave", () => {
+          gsap.to(item, { scale: 1, duration: 0.2 });
+        });
+      });
+    </script>
+  </body>
+</html>
