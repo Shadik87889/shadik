@@ -7,7 +7,11 @@
 
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-
+    <link
+      rel="shortcut icon"
+      href="shadikHyperWeb Favicon.png"
+      type="image/x-icon"
+    />
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -15,7 +19,15 @@
       href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@100..800&family=Oswald:wght@200..700&family=Italiana&display=swap"
       rel="stylesheet"
     />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital@0;1&family=Montserrat:wght@900&display=swap"
+      rel="stylesheet"
+    />
 
+    <link
+      href="https://fonts.googleapis.com/css2?family=Oi&display=swap"
+      rel="stylesheet"
+    />
     <!-- Styles -->
     <style>
       :root {
@@ -36,7 +48,7 @@
         padding: 0;
         overflow-x: hidden;
         width: 100vw;
-        cursor: none; /* Hide default cursor */
+        cursor: none;
       }
 
       h1,
@@ -51,7 +63,7 @@
         font-family: "Italiana", serif;
       }
 
-      /* LENIS */
+      /* LENIS SCROLL */
       html.lenis,
       html.lenis body {
         height: auto;
@@ -59,7 +71,7 @@
       .lenis.lenis-smooth {
         scroll-behavior: auto !important;
       }
-      .lenis.lenis-smooth [data-lenis-prevent] {
+      .lenis.lenis-smooth[data-lenis-prevent] {
         overscroll-behavior: contain;
       }
       .lenis.lenis-stopped {
@@ -96,7 +108,6 @@
         transform: translate(-50%, -50%);
         transition: width 0.3s, height 0.3s, background-color 0.3s;
       }
-
       #cursor::after {
         content: "";
         position: absolute;
@@ -109,13 +120,11 @@
         opacity: 0;
         transition: all 0.3s ease;
       }
-
       #cursor.hovered {
         background: transparent;
         width: 20px;
         height: 20px;
       }
-
       #cursor.hovered::after {
         opacity: 1;
         transform: translate(-50%, -50%) scale(1);
@@ -138,53 +147,6 @@
       .boot-log p {
         margin: 0;
         opacity: 0;
-      }
-
-      /* GLITCH TEXT */
-      .glitch-wrapper {
-        position: relative;
-        display: inline-block;
-      }
-      .glitch-wrapper::before,
-      .glitch-wrapper::after {
-        content: attr(data-text);
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: var(--bg-void);
-      }
-      .glitch-wrapper::before {
-        left: 2px;
-        text-shadow: -1px 0 #ff00c1;
-        clip: rect(44px, 450px, 56px, 0);
-        animation: glitch-anim 5s infinite linear alternate-reverse;
-      }
-      .glitch-wrapper::after {
-        left: -2px;
-        text-shadow: -1px 0 #00fff9;
-        clip: rect(44px, 450px, 56px, 0);
-        animation: glitch-anim2 5s infinite linear alternate-reverse;
-      }
-      @keyframes glitch-anim {
-        0% {
-          clip: rect(42px, 9999px, 44px, 0);
-        }
-        5% {
-          clip: rect(12px, 9999px, 59px, 0);
-        }
-        100% {
-          clip: rect(4px, 9999px, 91px, 0);
-        }
-      }
-      @keyframes glitch-anim2 {
-        0% {
-          clip: rect(65px, 9999px, 100px, 0);
-        }
-        100% {
-          clip: rect(2px, 9999px, 85px, 0);
-        }
       }
 
       /* REVEAL IMAGES (List View) */
@@ -252,17 +214,15 @@
         }
       }
 
-      /* --- NEW DOMINION CARD STYLES --- */
+      /* DOMINION CARD STYLES */
       .project-card {
         will-change: transform;
         box-shadow: 0 -1px 0 rgba(255, 255, 255, 0.05);
         overflow: hidden;
       }
-
       .huge-number {
         font-family: "Oswald", sans-serif;
         font-weight: 700;
-        /* Stroke effect for text */
         -webkit-text-stroke: 1px rgba(255, 255, 255, 0.15);
         color: transparent;
         line-height: 0.8;
@@ -270,14 +230,12 @@
         z-index: 1;
         transition: all 0.8s ease-out;
       }
-
       .card-img-container {
         position: relative;
         overflow: hidden;
-        /* Tech border aesthetic */
         border: 1px solid rgba(255, 255, 255, 0.1);
+        background: #030303;
       }
-
       .card-img-container::before {
         content: "";
         position: absolute;
@@ -285,13 +243,11 @@
         background: linear-gradient(
           180deg,
           rgba(0, 0, 0, 0) 0%,
-          rgba(0, 0, 0, 0.4) 100%
+          rgba(0, 0, 0, 0.6) 100%
         );
-        z-index: 2;
+        z-index: 20;
         pointer-events: none;
       }
-
-      /* Scanline overlay on images */
       .scanlines {
         position: absolute;
         inset: 0;
@@ -301,9 +257,686 @@
           transparent 2px,
           rgba(0, 0, 0, 0.3) 3px
         );
-        z-index: 3;
+        z-index: 21;
         pointer-events: none;
         opacity: 0.5;
+      }
+
+      /* === GAME-CHANGING PREMIUM DOM-BASED AUTO-SCROLLING WEBSITES === */
+      .code-scroller-viewport {
+        position: absolute;
+        inset: -20%;
+        perspective: 2000px;
+        z-index: 1;
+        overflow: hidden;
+        pointer-events: none;
+      }
+      .code-scroller-perspective {
+        width: 100%;
+        height: 100%;
+        transform-style: preserve-3d;
+        transition: transform 1s cubic-bezier(0.19, 1, 0.22, 1), filter 1s ease;
+        filter: grayscale(30%) opacity(0.8) brightness(0.8);
+        display: flex;
+        justify-content: center;
+      }
+      .project-card:hover .code-scroller-perspective {
+        transform: rotateX(5deg) rotateY(0deg) rotateZ(0deg) scale(1) !important;
+        filter: grayscale(0%) opacity(1) brightness(1.1);
+      }
+      .project-card:hover .code-scroller-track {
+        animation-duration: 25s;
+      }
+      .code-scroller-track {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+        animation: scrollerScroll 35s linear infinite;
+        transform-style: preserve-3d;
+        gap: 80px;
+        padding-top: 50px;
+      }
+      @keyframes scrollerScroll {
+        0% {
+          transform: translateY(0%);
+        }
+        100% {
+          transform: translateY(-50%);
+        }
+      }
+
+      /* 3D Track Angles for Dynamic Visuals */
+      .track-ecommerce {
+        transform: rotateX(25deg) rotateY(-20deg) rotateZ(10deg) scale(0.9);
+      }
+      .track-webapp {
+        transform: rotateX(30deg) rotateY(25deg) scale(0.9);
+      }
+      .track-corporate {
+        transform: rotateX(35deg) rotateZ(-15deg) scale(0.95);
+      }
+      .track-interactive {
+        transform: rotateX(-20deg) rotateY(-25deg) rotateZ(10deg) scale(0.9);
+      }
+
+      /* PREMIUM SOLID UI COMPONENTS */
+      .premium-mock-site {
+        width: 900px;
+        height: 1100px;
+        flex-shrink: 0;
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 40px 100px rgba(0, 0, 0, 0.9),
+          0 0 0 1px rgba(255, 255, 255, 0.1),
+          0 20px 50px rgba(204, 255, 0, 0.05);
+        position: relative;
+        font-family: sans-serif;
+        background: #050505;
+      }
+
+      .gloss-overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          125deg,
+          rgba(255, 255, 255, 0.12) 0%,
+          rgba(255, 255, 255, 0) 40%,
+          rgba(255, 255, 255, 0) 100%
+        );
+        pointer-events: none;
+        z-index: 100;
+      }
+
+      .browser-bar {
+        height: 48px;
+        background: #111;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        display: flex;
+        align-items: center;
+        padding: 0 20px;
+        position: relative;
+        z-index: 90;
+      }
+      .browser-dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        margin-right: 8px;
+      }
+      .browser-dot.close {
+        background: #ff5f56;
+      }
+      .browser-dot.min {
+        background: #ffbd2e;
+      }
+      .browser-dot.max {
+        background: #27c93f;
+      }
+      .browser-url {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 350px;
+        height: 24px;
+        background: #000;
+        border-radius: 6px;
+        border: 1px solid rgba(255, 255, 255, 0.05);
+      }
+
+      .ui-text-title {
+        height: 28px;
+        background: white;
+        border-radius: 4px;
+        margin-bottom: 16px;
+      }
+      .ui-text-p {
+        height: 12px;
+        background: rgba(255, 255, 255, 0.4);
+        border-radius: 2px;
+        margin-bottom: 12px;
+        width: 100%;
+      }
+      .ui-text-p.short {
+        width: 70%;
+      }
+      .ui-text-p.medium {
+        width: 85%;
+      }
+
+      /* SITE 1: E-COMMERCE (ACID/LIME) */
+      .site-eco {
+        background: #0a0a0a;
+        padding-top: 48px;
+      }
+      .site-eco .ui-header {
+        height: 80px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 3rem;
+        background: rgba(0, 0, 0, 0.4);
+        backdrop-filter: blur(12px);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        position: absolute;
+        top: 48px;
+        width: 100%;
+        z-index: 10;
+      }
+      .site-eco .ui-logo {
+        width: 140px;
+        height: 28px;
+        background: var(--accent-acid);
+        border-radius: 4px;
+        box-shadow: 0 0 20px rgba(204, 255, 0, 0.4);
+      }
+      .site-eco .ui-nav {
+        display: flex;
+        gap: 2.5rem;
+      }
+      .site-eco .ui-nav-item {
+        width: 70px;
+        height: 12px;
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 2px;
+      }
+      .site-eco .ui-hero {
+        height: 600px;
+        display: flex;
+        align-items: center;
+        padding: 0 4rem;
+        position: relative;
+        overflow: hidden;
+      }
+      .site-eco .ui-hero-bg {
+        position: absolute;
+        inset: 0;
+        background: url("https://images.unsplash.com/photo-1483985988355-763728e1935b?q=80&w=2070&auto=format&fit=crop")
+          center/cover;
+        filter: grayscale(80%) brightness(0.6) contrast(1.2);
+        z-index: 1;
+      }
+      .site-eco .ui-hero-content {
+        width: 60%;
+        z-index: 2;
+        position: relative;
+      }
+      .site-eco .ui-hero-title {
+        height: 80px;
+        width: 90%;
+        background: white;
+        margin-bottom: 1.5rem;
+        border-radius: 6px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      }
+      .site-eco .ui-hero-subtitle {
+        height: 16px;
+        width: 70%;
+        background: rgba(255, 255, 255, 0.7);
+        margin-bottom: 1rem;
+        border-radius: 2px;
+      }
+      .site-eco .ui-hero-subtitle.short {
+        width: 50%;
+        margin-bottom: 3rem;
+      }
+      .site-eco .ui-btn {
+        background: var(--accent-acid);
+        padding: 20px 50px;
+        border-radius: 30px;
+        display: inline-block;
+        box-shadow: 0 15px 40px rgba(204, 255, 0, 0.4);
+        width: 200px;
+        height: 20px;
+      }
+      .site-eco .ui-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 2rem;
+        padding: 4rem;
+        background: #050505;
+        flex-grow: 1;
+        position: relative;
+        z-index: 2;
+      }
+      .site-eco .ui-card {
+        background: #111;
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        border-radius: 12px;
+        padding: 1.5rem;
+        display: flex;
+        flex-direction: column;
+        transition: transform 0.3s;
+      }
+      .site-eco .ui-card-img {
+        height: 220px;
+        background: #222
+          url("https://images.unsplash.com/photo-1523275335684-37898b6baf30?q=80&w=1999&auto=format&fit=crop")
+          center/cover;
+        border-radius: 8px;
+        margin-bottom: 1.5rem;
+        filter: grayscale(50%);
+      }
+      .site-eco .ui-card:nth-child(2) .ui-card-img {
+        background-image: url("https://images.unsplash.com/photo-1505740420928-5e560c06d30e?q=80&w=2070&auto=format&fit=crop");
+      }
+      .site-eco .ui-card:nth-child(3) .ui-card-img {
+        background-image: url("https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=2070&auto=format&fit=crop");
+      }
+      .site-eco .ui-card-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 1.5rem;
+      }
+      .site-eco .ui-price {
+        width: 80px;
+        height: 20px;
+        background: #fff;
+        border-radius: 4px;
+      }
+      .site-eco .ui-add-btn {
+        width: 48px;
+        height: 48px;
+        background: var(--accent-acid);
+        border-radius: 50%;
+        box-shadow: 0 5px 15px rgba(204, 255, 0, 0.3);
+      }
+
+      /* SITE 2: DASHBOARD (CYAN) */
+      .site-dash {
+        background: #030303;
+        display: flex;
+        flex-direction: row;
+        padding-top: 48px;
+      }
+      .site-dash .ui-sidebar {
+        width: 260px;
+        background: rgba(10, 10, 10, 0.9);
+        border-right: 1px solid rgba(0, 240, 255, 0.1);
+        padding: 2.5rem;
+        display: flex;
+        flex-direction: column;
+        gap: 2.5rem;
+      }
+      .site-dash .ui-sidebar-logo {
+        width: 100%;
+        height: 36px;
+        background: var(--accent-cyan);
+        border-radius: 6px;
+        box-shadow: 0 0 20px rgba(0, 240, 255, 0.4);
+        margin-bottom: 1rem;
+      }
+      .site-dash .ui-nav-group {
+        display: flex;
+        flex-direction: column;
+        gap: 1.2rem;
+      }
+      .site-dash .ui-nav-link {
+        height: 16px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 4px;
+        width: 100%;
+      }
+      .site-dash .ui-nav-link.active {
+        background: var(--accent-cyan);
+        box-shadow: 0 0 15px rgba(0, 240, 255, 0.5);
+        width: 85%;
+      }
+      .site-dash .ui-main {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        padding: 2.5rem;
+        gap: 2.5rem;
+        background: radial-gradient(
+          circle at top right,
+          rgba(0, 240, 255, 0.05) 0%,
+          transparent 50%
+        );
+      }
+      .site-dash .ui-topbar {
+        height: 70px;
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        border-radius: 12px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 2rem;
+        backdrop-filter: blur(10px);
+      }
+      .site-dash .ui-search {
+        width: 350px;
+        height: 32px;
+        background: rgba(0, 0, 0, 0.5);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 16px;
+      }
+      .site-dash .ui-profile {
+        width: 48px;
+        height: 48px;
+        background: #333;
+        border-radius: 50%;
+      }
+      .site-dash .ui-stats {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1.5rem;
+      }
+      .site-dash .ui-stat-card {
+        background: rgba(10, 10, 10, 0.8);
+        border: 1px solid rgba(0, 240, 255, 0.1);
+        border-radius: 12px;
+        padding: 1.5rem;
+        border-top: 2px solid var(--accent-cyan);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      }
+      .site-dash .ui-stat-value {
+        height: 36px;
+        background: #fff;
+        width: 80%;
+        border-radius: 6px;
+        margin: 1.5rem 0;
+      }
+      .site-dash .ui-stat-trend {
+        height: 12px;
+        background: var(--accent-cyan);
+        width: 40%;
+        border-radius: 2px;
+        box-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
+      }
+      .site-dash .ui-chart-panel {
+        flex: 1;
+        background: rgba(10, 10, 10, 0.6);
+        border: 1px solid rgba(0, 240, 255, 0.1);
+        border-radius: 12px;
+        padding: 2.5rem;
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        overflow: hidden;
+        backdrop-filter: blur(10px);
+      }
+      .site-dash .ui-chart-grid {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+            rgba(0, 240, 255, 0.05) 1px,
+            transparent 1px
+          ),
+          linear-gradient(90deg, rgba(0, 240, 255, 0.05) 1px, transparent 1px);
+        background-size: 50px 50px;
+      }
+      .site-dash .ui-chart-vector {
+        margin-top: auto;
+        width: 100%;
+        height: 250px;
+        position: relative;
+        z-index: 2;
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+      }
+      .site-dash .ui-chart-bar {
+        width: 6%;
+        background: linear-gradient(
+          to top,
+          rgba(0, 240, 255, 0.2),
+          var(--accent-cyan)
+        );
+        border-radius: 6px 6px 0 0;
+        box-shadow: 0 -5px 25px rgba(0, 240, 255, 0.4);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-bottom: none;
+      }
+
+      /* SITE 3: CORPORATE (BRUTALIST LIGHT MODE) */
+      .site-corp {
+        background: #f4f4f5;
+        color: #000;
+        padding-top: 48px;
+      }
+      .site-corp .ui-header {
+        height: 100px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 4rem;
+        border-bottom: 2px solid #000;
+        background: #fff;
+      }
+      .site-corp .ui-logo {
+        width: 220px;
+        height: 36px;
+        background: #000;
+      }
+      .site-corp .ui-nav {
+        display: flex;
+        gap: 3rem;
+      }
+      .site-corp .ui-nav-item {
+        width: 90px;
+        height: 14px;
+        background: #000;
+      }
+      .site-corp .ui-hero {
+        height: 600px;
+        display: flex;
+        padding: 4rem;
+        position: relative;
+        border-bottom: 2px solid #000;
+        background: #fff;
+      }
+      .site-corp .ui-hero-text {
+        width: 55%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        z-index: 2;
+      }
+      .site-corp .ui-hero-massive {
+        height: 110px;
+        width: 100%;
+        background: #000;
+        margin-bottom: 1rem;
+      }
+      .site-corp .ui-hero-p {
+        height: 16px;
+        background: #666;
+        width: 100%;
+        margin-bottom: 16px;
+      }
+      .site-corp .ui-hero-img {
+        position: absolute;
+        right: 4rem;
+        top: 4rem;
+        width: 40%;
+        height: 500px;
+        background: #e0e0e0;
+        border: 2px solid #000;
+        box-shadow: -20px 20px 0 #000;
+        overflow: hidden;
+      }
+      .site-corp .ui-hero-img-inner {
+        width: 100%;
+        height: 100%;
+        background: url("https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2070&auto=format&fit=crop")
+          center/cover;
+        filter: grayscale(100%) contrast(1.2);
+      }
+      .site-corp .ui-content {
+        padding: 4rem;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 4rem;
+        background: #f4f4f5;
+      }
+      .site-corp .ui-article {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+      }
+      .site-corp .ui-article-img {
+        height: 300px;
+        background: #000;
+        width: 100%;
+        border: 2px solid #000;
+        box-shadow: 10px 10px 0 rgba(0, 0, 0, 0.1);
+      }
+
+      /* SITE 4: INTERACTIVE (RED / GLASSMORPHISM) */
+      .site-int {
+        background: #050000;
+        position: relative;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+        padding-top: 48px;
+      }
+      .site-int .ui-glow-orb {
+        position: absolute;
+        top: 40%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 600px;
+        height: 600px;
+        background: radial-gradient(
+          circle,
+          var(--accent-alert) 0%,
+          transparent 70%
+        );
+        filter: blur(80px);
+        opacity: 0.6;
+        pointer-events: none;
+        animation: pulseOrb 4s infinite alternate;
+      }
+      @keyframes pulseOrb {
+        0% {
+          transform: translate(-50%, -50%) scale(1);
+          opacity: 0.4;
+        }
+        100% {
+          transform: translate(-50%, -50%) scale(1.2);
+          opacity: 0.7;
+        }
+      }
+      .site-int .ui-orbital {
+        position: absolute;
+        top: 40%;
+        left: 50%;
+        transform: translate(-50%, -50%) rotateX(60deg);
+        width: 900px;
+        height: 900px;
+        border: 2px solid rgba(255, 51, 51, 0.4);
+        border-radius: 50%;
+        pointer-events: none;
+        box-shadow: inset 0 0 50px rgba(255, 51, 51, 0.2),
+          0 0 50px rgba(255, 51, 51, 0.2);
+      }
+      .site-int .ui-orbital-2 {
+        position: absolute;
+        top: 40%;
+        left: 50%;
+        transform: translate(-50%, -50%) rotateX(70deg) rotateZ(45deg);
+        width: 700px;
+        height: 700px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 50%;
+        pointer-events: none;
+      }
+      .site-int .ui-top-nav {
+        position: absolute;
+        top: 90px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 70%;
+        height: 70px;
+        background: rgba(20, 0, 0, 0.4);
+        backdrop-filter: blur(30px);
+        border: 1px solid rgba(255, 51, 51, 0.3);
+        border-radius: 35px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 5rem;
+        z-index: 10;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+      }
+      .site-int .ui-nav-pill {
+        width: 90px;
+        height: 14px;
+        background: rgba(255, 255, 255, 0.6);
+        border-radius: 7px;
+      }
+      .site-int .ui-glass-card {
+        position: relative;
+        z-index: 10;
+        width: 65%;
+        background: linear-gradient(
+          135deg,
+          rgba(30, 0, 0, 0.6) 0%,
+          rgba(10, 0, 0, 0.8) 100%
+        );
+        backdrop-filter: blur(40px);
+        border: 1px solid rgba(255, 51, 51, 0.4);
+        border-top: 1px solid rgba(255, 255, 255, 0.2);
+        border-left: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 30px;
+        padding: 5rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        box-shadow: 0 40px 80px rgba(0, 0, 0, 0.9),
+          inset 0 0 60px rgba(255, 51, 51, 0.15);
+        margin-top: 200px;
+      }
+      .site-int .ui-3d-logo {
+        width: 160px;
+        height: 160px;
+        border: 4px solid var(--accent-alert);
+        transform: rotate(45deg);
+        box-shadow: 0 0 60px rgba(255, 51, 51, 0.6),
+          inset 0 0 30px rgba(255, 51, 51, 0.4);
+        margin-bottom: 4rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(255, 51, 51, 0.1);
+        backdrop-filter: blur(10px);
+      }
+      .site-int .ui-3d-logo-inner {
+        width: 60px;
+        height: 60px;
+        background: #fff;
+        transform: rotate(45deg);
+        box-shadow: 0 0 20px #fff;
+      }
+      .site-int .ui-glass-title {
+        width: 85%;
+        height: 48px;
+        background: #fff;
+        border-radius: 6px;
+        margin-bottom: 2rem;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+      }
+      .site-int .ui-glass-p {
+        width: 65%;
+        height: 16px;
+        background: rgba(255, 255, 255, 0.5);
+        border-radius: 4px;
+        margin-bottom: 4rem;
+      }
+      .site-int .ui-glass-btn {
+        width: 240px;
+        height: 60px;
+        background: var(--accent-alert);
+        border-radius: 30px;
+        box-shadow: 0 0 40px rgba(255, 51, 51, 0.6);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid rgba(255, 255, 255, 0.2);
       }
 
       .tech-panel {
@@ -313,8 +946,6 @@
         border: 1px solid rgba(255, 255, 255, 0.1);
         position: relative;
       }
-
-      /* Corner decorations for panels */
       .tech-panel::before {
         content: "";
         position: absolute;
@@ -335,7 +966,6 @@
         border-bottom: 2px solid var(--accent-acid);
         border-right: 2px solid var(--accent-acid);
       }
-
       .tech-crosshair {
         position: absolute;
         width: 20px;
@@ -360,19 +990,11 @@
         height: 100%;
         width: 2px;
       }
-
-      /* Image interaction */
       .project-card:hover .huge-number {
         opacity: 0.8;
         transform: translateX(20px);
         -webkit-text-stroke: 1px rgba(255, 255, 255, 0.3);
       }
-
-      .project-card:hover .project-img {
-        transform: scale(1.05);
-        filter: grayscale(0%) contrast(1.1);
-      }
-
       .animated-line {
         height: 1px;
         background: linear-gradient(
@@ -388,7 +1010,7 @@
         width: 100%;
       }
 
-      /* PORTAL OVERLAY (New) */
+      /* PORTAL OVERLAY */
       #portal-overlay {
         position: fixed;
         inset: 0;
@@ -407,7 +1029,6 @@
         opacity: 1;
         pointer-events: auto;
       }
-
       #portal-frame {
         width: 95%;
         height: 90%;
@@ -423,8 +1044,6 @@
       #portal-overlay.active #portal-frame {
         transform: scale(1) translateY(0);
       }
-
-      /* Portal Corner Accents */
       .portal-corner {
         position: absolute;
         width: 20px;
@@ -458,7 +1077,6 @@
         border-top: none;
       }
 
-      /* Specific Layout adjustments */
       .grid-stack {
         display: grid;
         grid-template-columns: 1fr;
@@ -468,7 +1086,6 @@
           grid-template-columns: 45% 55%;
         }
       }
-
       .tag-chip {
         border: 1px solid rgba(255, 255, 255, 0.2);
         padding: 4px 12px;
@@ -483,7 +1100,7 @@
         border-color: var(--accent-acid);
       }
 
-      /* --- NEW EGO STYLES --- */
+      /* EGO STYLES */
       .scanner-line {
         position: absolute;
         top: 0;
@@ -496,7 +1113,6 @@
         opacity: 0.6;
         z-index: 5;
       }
-
       @keyframes scan {
         0%,
         100% {
@@ -513,19 +1129,16 @@
           opacity: 1;
         }
       }
-
       .holo-card {
         transform-style: preserve-3d;
         transform: perspective(1000px);
       }
-
       .ego-bg-text {
         -webkit-text-stroke: 1px rgba(255, 255, 255, 0.03);
         color: transparent;
         pointer-events: none;
         z-index: 0;
       }
-
       .corner-brackets {
         position: absolute;
         width: 20px;
@@ -533,7 +1146,6 @@
         border: 2px solid var(--accent-acid);
         transition: all 0.3s ease;
       }
-
       .cb-tl {
         top: 0;
         left: 0;
@@ -558,7 +1170,6 @@
         border-left: none;
         border-top: none;
       }
-
       .holo-card:hover .cb-tl {
         transform: translate(-5px, -5px);
       }
@@ -572,7 +1183,7 @@
         transform: translate(5px, 5px);
       }
 
-      /* --- PRICING & CONTACT --- */
+      /* PRICING & CONTACT */
       .price-card {
         border: 1px solid rgba(255, 255, 255, 0.1);
         background: linear-gradient(
@@ -591,7 +1202,6 @@
           rgba(0, 0, 0, 0) 100%
         );
       }
-
       .form-input {
         background: transparent;
         border: none;
@@ -609,6 +1219,73 @@
       }
       .form-input::placeholder {
         color: rgba(255, 255, 255, 0.3);
+      }
+
+      /* MENU LINK HOVER FX */
+      .menu-link {
+        position: relative;
+        display: inline-block;
+      }
+      .menu-link::after {
+        content: "";
+        position: absolute;
+        width: 100%;
+        height: 2px;
+        bottom: 0;
+        left: 0;
+        background-color: var(--accent-acid);
+        transform: scaleX(0);
+        transform-origin: bottom right;
+        transition: transform 0.3s ease-out;
+      }
+      .menu-link:hover::after {
+        transform: scaleX(1);
+        transform-origin: bottom left;
+      }
+
+      /* ADVANCED MENU STYLES */
+      .menu-link-wrapper {
+        overflow: hidden;
+        display: block;
+      }
+      .menu-link-text {
+        display: block;
+        transform: translateY(110%);
+        will-change: transform;
+      }
+      #menu-toggle.active .line-1 {
+        transform: translateY(4px) rotate(45deg);
+      }
+      #menu-toggle.active .line-2 {
+        transform: translateY(-4px) rotate(-45deg);
+      }
+
+      /* PREMIUM MATRIX HOVER ROWS */
+      .matrix-row {
+        position: relative;
+        overflow: hidden;
+      }
+      .matrix-row::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 4px;
+        height: 100%;
+        background-color: var(--row-accent);
+        transform: scaleY(0);
+        transform-origin: bottom;
+        transition: transform 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+        z-index: 10;
+      }
+      .matrix-row:hover::before {
+        transform: scaleY(1);
+        transform-origin: top;
+      }
+      .matrix-row:hover .huge-matrix-number {
+        color: var(--row-accent);
+        opacity: 0.15;
+        transform: scale(1.1) translateX(-5%);
       }
     </style>
   </head>
@@ -662,7 +1339,6 @@
         <div class="portal-corner pc-bl"></div>
         <div class="portal-corner pc-br"></div>
 
-        <!-- Browser Header -->
         <div
           class="h-10 bg-[#0a0a0a] border-b border-white/10 flex items-center px-4 justify-between shrink-0"
         >
@@ -682,10 +1358,7 @@
             >
           </div>
           <div class="w-10"></div>
-          <!-- Spacer for balance -->
         </div>
-
-        <!-- Iframe Content -->
         <iframe
           id="portal-iframe"
           src=""
@@ -695,138 +1368,447 @@
       </div>
     </div>
 
-    <!-- NAVIGATION -->
-    <nav
-      class="fixed top-0 left-0 w-full px-6 py-6 flex justify-between items-center z-50 bg-[#050505]/80 backdrop-blur-sm border-b border-white/5"
+    <!-- ADVANCED FULLSCREEN MENU -->
+    <div
+      id="advanced-menu"
+      class="fixed inset-0 z-[90] pointer-events-none flex"
     >
-      <div class="flex items-center gap-2 hover-trigger cursor-none">
-        <div class="w-2 h-2 bg-[var(--accent-acid)] animate-pulse"></div>
-        <span class="font-bold tracking-widest text-sm">SH.</span>
-      </div>
-
+      <!-- Background panels for staggered GSAP reveal -->
       <div
-        class="hidden md:flex gap-8 text-[10px] font-bold tracking-widest uppercase"
+        class="menu-bg absolute inset-0 bg-[#030303] origin-top scale-y-0"
+      ></div>
+      <div
+        class="menu-bg absolute inset-0 bg-[#0a0a0a] origin-top scale-y-0 flex items-center justify-center overflow-hidden border-b border-[var(--accent-acid)]"
       >
-        <a
-          href="#dominions-stack"
-          class="hover:text-[var(--accent-acid)] transition-colors hover-trigger"
-          >[01] Dominions</a
+        <!-- Decorative Grid -->
+        <div
+          class="absolute inset-0 opacity-10 bg-[linear-gradient(rgba(204,255,0,0.1)_1px,transparent_1px),linear-gradient(90deg,rgba(204,255,0,0.1)_1px,transparent_1px)] bg-[size:40px_40px]"
+        ></div>
+
+        <div
+          class="container mx-auto px-6 md:px-12 w-full h-full flex flex-col md:flex-row items-center justify-center md:justify-between relative z-10 menu-inner opacity-0"
         >
-        <a
-          href="#ego"
-          class="hover:text-[var(--accent-acid)] transition-colors hover-trigger"
-          >[02] Ego</a
-        >
-        <a
-          href="#pricing"
-          class="hover:text-[var(--accent-acid)] transition-colors hover-trigger"
-          >[03] Protocols</a
-        >
-        <a
-          href="#contact"
-          class="hover:text-[var(--accent-acid)] transition-colors hover-trigger"
-          >[04] Transmission</a
-        >
+          <!-- Links Column -->
+          <div
+            class="flex flex-col gap-4 md:gap-8 w-full md:w-auto text-left mt-20 md:mt-0 z-20"
+          >
+            <span
+              class="font-mono text-[10px] text-[var(--accent-acid)] tracking-[0.3em] uppercase mb-2 md:mb-4 opacity-0 menu-item-stagger block"
+              >Navigate_System</span
+            >
+
+            <a
+              href="#hero-pin"
+              class="group relative inline-block w-max menu-item hover-trigger"
+            >
+              <div class="menu-link-wrapper">
+                <span
+                  class="menu-link-text display-font text-5xl md:text-8xl tracking-tighter text-white transition-all duration-500 group-hover:text-[var(--accent-acid)] group-hover:italic pr-8"
+                >
+                  00. INIT
+                </span>
+              </div>
+              <div
+                class="absolute top-1/2 -translate-y-1/2 left-0 w-full h-4 bg-[var(--accent-acid)] scale-x-0 origin-left group-hover:scale-x-100 transition-transform duration-500 ease-out mix-blend-exclusion pointer-events-none"
+              ></div>
+            </a>
+
+            <a
+              href="#dominions-stack"
+              class="group relative inline-block w-max menu-item hover-trigger"
+            >
+              <div class="menu-link-wrapper">
+                <span
+                  class="menu-link-text display-font text-5xl md:text-8xl tracking-tighter text-white transition-all duration-500 group-hover:text-[var(--accent-acid)] group-hover:italic pr-8"
+                >
+                  01. EXPERTISE
+                </span>
+              </div>
+              <div
+                class="absolute top-1/2 -translate-y-1/2 left-0 w-full h-4 bg-[var(--accent-acid)] scale-x-0 origin-left group-hover:scale-x-100 transition-transform duration-500 ease-out mix-blend-exclusion pointer-events-none"
+              ></div>
+            </a>
+
+            <a
+              href="#ego"
+              class="group relative inline-block w-max menu-item hover-trigger"
+            >
+              <div class="menu-link-wrapper">
+                <span
+                  class="menu-link-text display-font text-5xl md:text-8xl tracking-tighter text-white transition-all duration-500 group-hover:text-[var(--accent-acid)] group-hover:italic pr-8"
+                >
+                  02. ABOUT ME
+                </span>
+              </div>
+              <div
+                class="absolute top-1/2 -translate-y-1/2 left-0 w-full h-4 bg-[var(--accent-acid)] scale-x-0 origin-left group-hover:scale-x-100 transition-transform duration-500 ease-out mix-blend-exclusion pointer-events-none"
+              ></div>
+            </a>
+
+            <a
+              href="#pricing"
+              class="group relative inline-block w-max menu-item hover-trigger"
+            >
+              <div class="menu-link-wrapper">
+                <span
+                  class="menu-link-text display-font text-5xl md:text-8xl tracking-tighter text-white transition-all duration-500 group-hover:text-[var(--accent-acid)] group-hover:italic pr-8"
+                >
+                  03. PACKAGES
+                </span>
+              </div>
+              <div
+                class="absolute top-1/2 -translate-y-1/2 left-0 w-full h-4 bg-[var(--accent-acid)] scale-x-0 origin-left group-hover:scale-x-100 transition-transform duration-500 ease-out mix-blend-exclusion pointer-events-none"
+              ></div>
+            </a>
+
+            <a
+              href="#contact"
+              class="group relative inline-block w-max menu-item hover-trigger"
+            >
+              <div class="menu-link-wrapper">
+                <span
+                  class="menu-link-text display-font text-5xl md:text-8xl tracking-tighter text-white transition-all duration-500 group-hover:text-[var(--accent-acid)] group-hover:italic pr-8"
+                >
+                  04. CONTACT
+                </span>
+              </div>
+              <div
+                class="absolute top-1/2 -translate-y-1/2 left-0 w-full h-4 bg-[var(--accent-acid)] scale-x-0 origin-left group-hover:scale-x-100 transition-transform duration-500 ease-out mix-blend-exclusion pointer-events-none"
+              ></div>
+            </a>
+          </div>
+
+          <!-- Info Column -->
+          <div
+            class="hidden md:flex flex-col justify-end h-full py-32 border-l border-white/10 pl-12 text-white/50 font-mono text-xs max-w-sm z-20"
+          >
+            <div
+              class="menu-item-stagger opacity-0 transform translate-x-10 mb-8"
+            >
+              <img
+                src="https://i.postimg.cc/yddXd3db/Chat-GPT-Image-Apr-19-2026-08-20-37-PM.png"
+                class="w-32 opacity-20 filter invert mb-6"
+                alt="Logo"
+              />
+              <p class="mb-4 text-white">
+                I create premium websites that captivate your audience.
+                Combining beautiful design with smart technology to tell your
+                brand's story.
+              </p>
+              <p class="text-[var(--accent-acid)] uppercase tracking-widest">
+                // Available for work
+              </p>
+            </div>
+
+            <div
+              class="menu-item-stagger opacity-0 transform translate-x-10 flex flex-col gap-4"
+            >
+              <a
+                href="#"
+                class="hover:text-white transition-colors hover-trigger flex items-center gap-2 group"
+                ><span
+                  class="w-2 h-[1px] bg-[var(--accent-acid)] group-hover:w-4 transition-all"
+                ></span>
+                X / TWITTER</a
+              >
+              <a
+                href="#"
+                class="hover:text-white transition-colors hover-trigger flex items-center gap-2 group"
+                ><span
+                  class="w-2 h-[1px] bg-[var(--accent-acid)] group-hover:w-4 transition-all"
+                ></span>
+                INSTAGRAM</a
+              >
+              <a
+                href="#"
+                class="hover:text-white transition-colors hover-trigger flex items-center gap-2 group"
+                ><span
+                  class="w-2 h-[1px] bg-[var(--accent-acid)] group-hover:w-4 transition-all"
+                ></span>
+                LINKEDIN</a
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- NAVIGATION (SMART HEADROOM SCROLL) -->
+    <nav
+      id="main-nav"
+      class="fixed top-0 left-0 w-full z-[100] transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] pointer-events-none"
+    >
+      <!-- Dynamic Blur Background (Activates on scroll) -->
+      <div
+        id="nav-bg"
+        class="nav-hide absolute inset-0 bg-[#030303]/85 backdrop-blur-xl border-b border-white/5 opacity-0 transition-all duration-500 pointer-events-none"
+      >
+        <!-- Animated cyber line -->
+        <div
+          id="nav-line"
+          class="absolute bottom-0 left-0 h-[1px] w-0 bg-gradient-to-r from-transparent via-[var(--accent-acid)] to-transparent opacity-50 transition-all duration-1000 ease-out"
+        ></div>
       </div>
 
-      <div class="flex items-center gap-4 hover-trigger cursor-none">
-        <span
-          class="text-[10px] font-mono text-[var(--accent-acid)] border border-[var(--accent-acid)] px-2 py-1 rounded-sm"
-          >SYS.ONLINE</span
+      <!-- Nav Content Wrapper -->
+      <div
+        id="nav-inner"
+        class="px-4 md:px-8 py-6 flex justify-between items-center w-full relative z-10 transition-all duration-500"
+      >
+        <!-- Left: Stacked Typography Logo (Stupendous Edition) -->
+        <div
+          class="nav-hide pointer-events-auto hover-trigger cursor-none select-none flex flex-col relative group z-50"
         >
+          <!-- Top micro-tag with glowing pulse -->
+          <div
+            class="flex items-center gap-2 mb-1 ml-1 transform transition-transform duration-500 group-hover:translate-x-2"
+          >
+            <div
+              class="w-1.5 h-1.5 bg-[var(--accent-acid)] shadow-[0_0_8px_var(--accent-acid)] animate-pulse"
+            ></div>
+            <span
+              class="text-[0.55rem] tracking-[0.5em] font-mono text-[var(--accent-acid)] uppercase opacity-80"
+            >
+              Visual_Architect
+            </span>
+          </div>
+
+          <div class="relative flex flex-col drop-shadow-2xl">
+            <!-- First Name: Solid & Sleek -->
+            <span
+              class="block display-font text-3xl md:text-5xl font-black tracking-tighter leading-[0.85] text-white relative z-10 transition-transform duration-500 group-hover:skew-x-[-8deg] group-hover:scale-105 origin-left"
+            >
+              SHADIK
+            </span>
+
+            <!-- Last Name: Cyber/Outline with RGB Glitch Hover -->
+            <span
+              class="block display-font text-3xl md:text-5xl font-black tracking-tighter leading-[0.85] text-transparent relative z-10 transition-all duration-500 group-hover:skew-x-[8deg] group-hover:scale-105 origin-left mt-[-2px]"
+              style="-webkit-text-stroke: 1px rgba(255, 255, 255, 0.9);"
+            >
+              HOSSAIN
+            </span>
+          </div>
+        </div>
+
+        <!-- Center: Geometric Monogram -->
+        <div
+          class="nav-hide hidden md:flex absolute left-1/2 -translate-x-1/2 items-center justify-center pointer-events-auto hover-trigger cursor-none select-none"
+        >
+          <div class="flex items-center justify-center p-4">
+            <img
+              src="https://i.postimg.cc/yddXd3db/Chat-GPT-Image-Apr-19-2026-08-20-37-PM.png"
+              alt="Logo"
+              class="w-24 sm:w-32 md:w-40 h-auto object-contain"
+            />
+          </div>
+        </div>
+
+        <!-- Right: Buttons -->
+        <div class="flex items-center gap-3 pointer-events-auto">
+          <button
+            class="nav-hide bg-[var(--accent-acid)] hover:bg-white text-black px-4 py-2.5 rounded-md font-bold font-mono text-sm flex items-center gap-2 transition-colors cursor-none hover-trigger shadow-lg"
+          >
+            <svg
+              class="w-4 h-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
+              ></path>
+            </svg>
+            STORE
+          </button>
+          <button
+            id="menu-toggle"
+            class="bg-white hover:bg-gray-200 text-black p-2.5 rounded-md cursor-none hover-trigger transition-all duration-300 flex flex-col gap-1.5 w-11 h-11 items-center justify-center shadow-lg relative z-[101]"
+          >
+            <div
+              class="line-1 w-5 h-0.5 bg-black transition-transform duration-300 origin-center"
+            ></div>
+            <div
+              class="line-2 w-5 h-0.5 bg-black transition-transform duration-300 origin-center"
+            ></div>
+          </button>
+        </div>
       </div>
     </nav>
 
     <main>
-      <!-- SECTION 1: HERO -->
+      <!-- SECTION 1: HERO TO SIGNATURE (PINNED GSAP SEQUENCE) -->
       <section
-        class="h-screen w-full relative flex flex-col justify-center items-center overflow-hidden border-b border-white/5"
+        id="hero-pin"
+        class="h-screen w-full relative bg-[#030303] overflow-hidden border-b border-white/5"
       >
-        <!-- Hero Background -->
-        <div class="absolute inset-0 z-0 opacity-40">
-          <img
-            src="https://images.unsplash.com/photo-1478760329108-5c3ed9d495a0?q=80&w=2574&auto=format&fit=crop"
-            class="w-full h-full object-cover grayscale contrast-125"
-            alt="Empire Background"
-          />
+        <!-- Large Parallax Background Text (Hidden initially, fades in during scroll) -->
+        <!-- Using clamp() for mobile responsiveness -->
+        <div
+          id="sig-text-wrap"
+          class="absolute inset-0 flex flex-col justify-center gap-8 md:gap-16 opacity-0 z-0 select-none pointer-events-none"
+        >
           <div
-            class="absolute inset-0 bg-gradient-to-b from-black/80 via-black/20 to-[#030303]"
-          ></div>
-          <div class="scanlines"></div>
+            id="sig-text-1"
+            class="display-font text-[clamp(3rem,10vw,12rem)] text-[var(--accent-acid)]/10 whitespace-nowrap leading-none tracking-tighter mix-blend-screen"
+          >
+            PREMIUM DIGITAL EXPERIENCES /// PREMIUM DIGITAL EXPERIENCES ///
+          </div>
+          <div
+            id="sig-text-2"
+            class="display-font text-[clamp(3rem,10vw,12rem)] text-white/10 whitespace-nowrap leading-none tracking-tighter mix-blend-screen"
+          >
+            CRAFTED WITH PASSION /// CRAFTED WITH PASSION ///
+          </div>
         </div>
 
-        <!-- Decorative Grid -->
+        <!-- Centered Video Wrapper -->
         <div
-          class="absolute inset-0 z-0 pointer-events-none"
-          style="
-            background-image: linear-gradient(
-                rgba(255, 255, 255, 0.03) 1px,
-                transparent 1px
-              ),
-              linear-gradient(
-                90deg,
-                rgba(255, 255, 255, 0.03) 1px,
-                transparent 1px
-              );
-            background-size: 50px 50px;
-          "
-        ></div>
-
-        <div class="relative z-10 w-full px-4 text-center">
-          <div class="overflow-hidden mb-2">
-            <p
-              class="text-[var(--accent-acid)] font-mono text-[10px] tracking-[0.3em] reveal-text translate-y-full"
+          id="hero-vid-wrapper"
+          class="absolute inset-0 flex items-center justify-center z-10 pointer-events-none"
+        >
+          <!-- The container that starts full screen and shrinks to a portrait box -->
+          <div
+            id="hero-vid-container"
+            class="w-full h-full relative pointer-events-auto overflow-hidden shadow-2xl"
+          >
+            <video
+              autoplay
+              loop
+              muted
+              playsinline
+              class="w-full h-full object-cover object-[60FGF%_center] md:object-center grayscale contrast-125"
             >
-              > ARCHITECT_PROTOCOL_INIT_v2.0
-            </p>
+              <source src="Guy_winking_with_202604191823-ezremove.mp4" />
+            </video>
+
+            <!-- Secondary Flat Tint (fades in as video shrinks to match reference image) -->
+            <div
+              class="absolute inset-0 bg-black/40 opacity-0"
+              id="hero-vid-overlay-2"
+            ></div>
+            <div class="scanlines opacity-50"></div>
           </div>
+        </div>
 
-          <div class="flex flex-col items-center justify-center relative">
-            <!-- Glitch Header -->
-            <h1
-              class="display-font text-[16vw] leading-[0.8] font-bold text-white mix-blend-difference reveal-text translate-y-full glitch-wrapper z-20"
-              data-text="QUANTUM"
-            >
-              QUANTUM
-            </h1>
-
-            <!-- Sub decorative text behind -->
-            <span
-              class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[20vw] text-white/5 font-bold z-0 pointer-events-none display-font whitespace-nowrap blur-sm"
-              >EMPIRE</span
-            >
-          </div>
-
-          <div class="mt-16 flex justify-center">
-            <button
-              class="relative px-8 py-4 text-xs font-mono tracking-widest transition-all hover-trigger group overflow-hidden"
-            >
-              <div
-                class="absolute inset-0 border border-white/20 group-hover:border-[var(--accent-acid)] transition-colors"
-              ></div>
-              <div
-                class="absolute inset-0 bg-[var(--accent-acid)] translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out"
-              ></div>
-              <span
-                class="relative z-10 group-hover:text-black transition-colors"
-                >INITIATE SEQUENCE</span
+        <!-- Masterpiece Hero Overlay Content -->
+        <div
+          id="hero-content"
+          class="absolute inset-0 z-20 pointer-events-none flex items-center justify-center"
+        >
+          <div
+            class="flex flex-col items-center justify-center text-center w-full relative z-10 px-4 mt-8 md:mt-16"
+          >
+            <!-- Advanced Button -->
+            <div class="pointer-events-auto">
+              <a
+                href="#dominions-stack"
+                class="group relative flex items-center justify-center gap-4 px-8 py-5 bg-transparent cursor-none hover-trigger"
               >
-            </button>
+                <!-- Background & Border Lines -->
+                <div
+                  class="absolute inset-0 border border-white/20 bg-black/60 backdrop-blur-md transition-all duration-500 group-hover:border-[var(--accent-acid)] group-hover:bg-[var(--accent-acid)]/10 group-hover:shadow-[0_0_40px_rgba(204,255,0,0.3)]"
+                ></div>
+
+                <!-- Animated scanning lines -->
+                <div
+                  class="absolute top-0 left-0 h-[2px] w-0 bg-[var(--accent-acid)] group-hover:w-full transition-all duration-700 ease-in-out"
+                ></div>
+                <div
+                  class="absolute bottom-0 right-0 h-[2px] w-0 bg-[var(--accent-cyan)] group-hover:w-full transition-all duration-700 ease-in-out"
+                ></div>
+                <div
+                  class="absolute top-0 left-0 w-[2px] h-0 bg-[var(--accent-acid)] group-hover:h-full transition-all duration-700 ease-in-out delay-100"
+                ></div>
+                <div
+                  class="absolute bottom-0 right-0 w-[2px] h-0 bg-[var(--accent-cyan)] group-hover:h-full transition-all duration-700 ease-in-out delay-100"
+                ></div>
+
+                <!-- Corner Brackets -->
+                <div
+                  class="absolute -top-2 -left-2 w-4 h-4 border-t-2 border-l-2 border-[var(--accent-acid)] opacity-50 transition-all duration-300 group-hover:opacity-100 group-hover:-translate-x-1 group-hover:-translate-y-1 group-hover:scale-125"
+                ></div>
+                <div
+                  class="absolute -bottom-2 -right-2 w-4 h-4 border-b-2 border-r-2 border-[var(--accent-cyan)] opacity-50 transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-1 group-hover:translate-y-1 group-hover:scale-125"
+                ></div>
+
+                <!-- Button Content -->
+                <div class="relative flex items-center gap-3 z-10">
+                  <div
+                    class="w-2 h-2 rounded-full bg-[var(--accent-alert)] animate-ping"
+                  ></div>
+                  <span
+                    class="font-mono text-[11px] md:text-sm font-bold tracking-[0.2em] md:tracking-[0.4em] text-white uppercase group-hover:text-[var(--accent-acid)] transition-colors"
+                  >
+                    START PROJECT
+                  </span>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="1.5"
+                    stroke="currentColor"
+                    class="w-5 h-5 text-white group-hover:text-[var(--accent-cyan)] transition-colors transform group-hover:translate-x-2"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3"
+                    />
+                  </svg>
+                </div>
+              </a>
+            </div>
           </div>
         </div>
 
         <div
-          class="absolute bottom-8 left-8 font-mono text-[9px] text-white/40 hidden md:block border-l border-[var(--accent-acid)] pl-3"
+          class="absolute inset-0 z-30 pointer-events-none flex items-center justify-center"
+        >
+          <svg
+            viewBox="0 0 1000 600"
+            class="w-full h-full max-w-[900px] scale-110 md:scale-100"
+            preserveAspectRatio="xMidYMid meet"
+          >
+            <path
+              id="signature-path"
+              d="M 690 60 
+L 300 540 
+L 460 260 
+L 340 580 
+L 520 320 
+L 480 460 
+C 680 220, 860 140, 820 280 
+C 780 420, 350 480, 60 420 
+C -20 380, 30 330, 200 310 
+L 940 180"
+              fill="none"
+              stroke="var(--accent-acid)"
+              stroke-width="12"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              style="filter: drop-shadow(0px 0px 10px rgba(204, 255, 0, 0.4));"
+            />
+          </svg>
+        </div>
+
+        <div
+          id="hero-coord"
+          class="absolute bottom-8 left-8 font-mono text-[9px] text-white/40 hidden md:block border-l border-[var(--accent-acid)] pl-3 z-20"
         >
           COORD: 34.0522° N, 118.2437° W <br />
           SECURE CONNECTION // ENCRYPTED
         </div>
 
         <div
-          class="absolute bottom-8 right-8 font-mono text-[9px] text-white/40 hidden md:block text-right border-r border-[var(--accent-acid)] pr-3"
+          id="hero-status"
+          class="absolute bottom-8 right-8 font-mono text-[9px] text-[var(--accent-acid)] hidden md:block text-right border-r border-[var(--accent-acid)] pr-3 z-20"
         >
-          SCROLL VELOCITY: NULL <br />
-          AWAITING INPUT
+          SCROLL VELOCITY: ACTIVE <br />
+          INITIATING OVERRIDE
         </div>
       </section>
 
@@ -834,14 +1816,14 @@
       <div class="marquee-container border-y border-black relative z-20">
         <div class="marquee-wrapper">
           <div class="marquee-content">
-            SHADIK HOSSAIN /// EMPIRE BUILDER /// VISUAL ENGINEER /// NO
-            COMPROMISE /// SHADIK HOSSAIN /// EMPIRE BUILDER /// VISUAL ENGINEER
-            /// NO COMPROMISE ///
+            SHADIK HOSSAIN /// UI/UX DESIGNER /// CREATIVE DEVELOPER /// PREMIUM
+            EXPERIENCES /// SHADIK HOSSAIN /// UI/UX DESIGNER /// CREATIVE
+            DEVELOPER /// PREMIUM EXPERIENCES ///
           </div>
           <div class="marquee-content">
-            SHADIK HOSSAIN /// EMPIRE BUILDER /// VISUAL ENGINEER /// NO
-            COMPROMISE /// SHADIK HOSSAIN /// EMPIRE BUILDER /// VISUAL ENGINEER
-            /// NO COMPROMISE ///
+            SHADIK HOSSAIN /// UI/UX DESIGNER /// CREATIVE DEVELOPER /// PREMIUM
+            EXPERIENCES /// SHADIK HOSSAIN /// UI/UX DESIGNER /// CREATIVE
+            DEVELOPER /// PREMIUM EXPERIENCES ///
           </div>
         </div>
       </div>
@@ -870,15 +1852,15 @@
               <h2
                 class="display-font text-6xl md:text-9xl text-white leading-none"
               >
-                DOMINIONS
+                EXPERTISE
               </h2>
             </div>
             <p
               class="text-xs font-mono text-white/50 max-w-xs text-left leading-loose uppercase border-t border-white/10 pt-4"
             >
-              // Deployment Status: Active <br />
-              // Render Quality: Maximum <br />
-              The work that defines the era.
+              // Service Offerings <br />
+              // Premium Quality <br />
+              What I can build for you.
             </p>
           </div>
         </div>
@@ -896,36 +1878,36 @@
           <div
             class="grid-stack w-full h-full max-w-[1800px] mx-auto relative z-10"
           >
-            <!-- Image Section -->
+            <!-- High-Fidelity UI Section -->
             <div
               class="relative w-full h-[50vh] md:h-full border-b md:border-b-0 md:border-r border-white/5 bg-black"
             >
               <div class="card-img-container w-full h-full">
-                <div class="absolute top-4 left-4 z-20 flex gap-2">
+                <div class="absolute top-4 left-4 z-30 flex gap-2">
                   <span
                     class="bg-black/80 text-white text-[10px] px-2 py-1 font-mono border border-white/10"
-                    >FIG. A</span
+                    >FIG. A / COMMERCE_UI</span
                   >
                 </div>
-                <!-- Tech crosshair center -->
+
                 <div
-                  class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 border border-white/20 rounded-full z-20 opacity-0 group-hover:opacity-100 transition-all duration-500 scale-50 group-hover:scale-100 flex items-center justify-center"
+                  class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 border border-white/20 rounded-full z-30 opacity-0 group-hover:opacity-100 transition-all duration-500 scale-50 group-hover:scale-100 flex items-center justify-center pointer-events-none"
                 >
                   <div class="w-1 h-1 bg-[var(--accent-acid)]"></div>
                 </div>
 
                 <img
-                  src="https://images.unsplash.com/photo-1483985988355-763728e1935b?q=80&w=2070&auto=format&fit=crop"
-                  class="project-img w-full h-full object-cover grayscale opacity-60 transition-all duration-700 ease-out"
-                  alt="Fashion"
+                  src="https://i.postimg.cc/mrymCkQk/original-45dbe8021eb8072e0477b602773e7d19.webp"
+                  class="project-img absolute inset-0 w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-[opacity,filter] duration-700 ease-out"
+                  alt="E-Commerce Preview"
                 />
+
                 <div class="scanlines"></div>
               </div>
             </div>
 
             <!-- Text Section (HUD Style) -->
-            <div class="relative p-6 md:p-16 flex flex-col justify-center">
-              <!-- Top Tech Deco -->
+            <div class="relative p-6 md:p-16 flex flex-col justify-center z-30">
               <div
                 class="absolute top-12 left-16 w-12 h-12 border-t border-l border-white/20 hidden md:block"
               ></div>
@@ -934,7 +1916,7 @@
                 <div class="flex justify-between items-center mb-6">
                   <span
                     class="font-mono text-[10px] text-[var(--accent-acid)] tracking-widest border border-[var(--accent-acid)] px-2 py-0.5"
-                    >E-COMMERCE // V.1.0</span
+                    >ONLINE STORES</span
                   >
                   <div class="flex gap-1">
                     <div class="w-1 h-1 bg-white/50 rounded-full"></div>
@@ -946,7 +1928,7 @@
                 <h3
                   class="display-font text-6xl md:text-8xl text-white mb-4 leading-[0.9]"
                 >
-                  LUMINA
+                  E-COMMERCE
                 </h3>
 
                 <div class="animated-line mb-6"></div>
@@ -954,9 +1936,9 @@
                 <p
                   class="text-white/70 text-sm md:text-base font-light leading-relaxed font-mono mb-8"
                 >
-                  We stripped away the noise to let the product breathe. Pure
-                  visual hierarchy with micro-interactions that feel like silk.
-                  A fully immersive shopping experience.
+                  I design beautiful, high-converting online stores. Clean
+                  layouts, smooth shopping experiences, and stunning product
+                  displays that drive sales and keep customers coming back.
                 </p>
 
                 <div class="flex flex-wrap gap-3 mb-10">
@@ -966,7 +1948,7 @@
                 </div>
 
                 <a
-                  href="#"
+                  href="#contact"
                   class="inline-flex items-center gap-4 hover-trigger group/link"
                 >
                   <div
@@ -989,7 +1971,7 @@
                   </div>
                   <span
                     class="text-sm font-mono tracking-widest uppercase border-b border-transparent group-hover/link:border-[var(--accent-acid)] transition-all"
-                    >Execute Project</span
+                    >Start Project</span
                   >
                 </a>
               </div>
@@ -1011,9 +1993,8 @@
           >
             <!-- Text Section -->
             <div
-              class="relative p-6 md:p-16 flex flex-col justify-center order-2 md:order-1 items-end"
+              class="relative p-6 md:p-16 flex flex-col justify-center order-2 md:order-1 items-end z-30"
             >
-              <!-- Tech Deco -->
               <div
                 class="absolute bottom-12 right-16 w-12 h-12 border-b border-r border-white/20 hidden md:block"
               ></div>
@@ -1022,7 +2003,7 @@
                 <div class="flex justify-between items-center mb-6">
                   <span
                     class="font-mono text-[10px] text-[var(--accent-cyan)] tracking-widest border border-[var(--accent-cyan)] px-2 py-0.5"
-                    >FINTECH // V.3.2</span
+                    >DASHBOARDS & TOOLS</span
                   >
                   <div class="h-[1px] w-12 bg-white/20"></div>
                 </div>
@@ -1030,7 +2011,7 @@
                 <h3
                   class="display-font text-6xl md:text-8xl text-white mb-4 leading-[0.9]"
                 >
-                  ASCEND
+                  WEB APPS
                 </h3>
 
                 <div
@@ -1040,24 +2021,24 @@
                 <p
                   class="text-white/70 text-sm md:text-base font-light leading-relaxed font-mono mb-8"
                 >
-                  Fintech reimagined. We injected motion into data, making every
-                  chart feel like a living organism. Real-time WebGL
-                  visualizations for the modern stock market.
+                  Complex data made simple. I create intuitive dashboards and
+                  web applications that are easy for anyone to use, without
+                  sacrificing power, speed, or visual beauty.
                 </p>
 
                 <div class="flex flex-wrap gap-3 mb-10">
                   <span
                     class="tag-chip text-white hover:bg-[var(--accent-cyan)] hover:border-[var(--accent-cyan)]"
-                    >WebGL</span
+                    >Vanilla JS / Firebase</span
                   >
                   <span
                     class="tag-chip text-white hover:bg-[var(--accent-cyan)] hover:border-[var(--accent-cyan)]"
-                    >Real-time Data</span
+                    >User Interfaces</span
                   >
                 </div>
 
                 <a
-                  href="#"
+                  href="#contact"
                   class="inline-flex items-center gap-4 hover-trigger group/link"
                 >
                   <div
@@ -1080,40 +2061,37 @@
                   </div>
                   <span
                     class="text-sm font-mono tracking-widest uppercase border-b border-transparent group-hover/link:border-[var(--accent-cyan)] transition-all"
-                    >Execute Project</span
+                    >Start Project</span
                   >
                 </a>
               </div>
             </div>
 
-            <!-- Image Section -->
+            <!-- High-Fidelity UI Section -->
             <div
               class="relative w-full h-[50vh] md:h-full border-b md:border-b-0 md:border-l border-white/5 bg-black order-1 md:order-2"
             >
               <div class="card-img-container w-full h-full">
-                <div class="absolute bottom-4 right-4 z-20 flex gap-2">
+                <div class="absolute bottom-4 right-4 z-30 flex gap-2">
                   <span
                     class="bg-black/80 text-white text-[10px] px-2 py-1 font-mono border border-white/10"
-                    >FIG. B</span
+                    >FIG. B / DASHBOARD_UI</span
                   >
                 </div>
-                <img
-                  src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=2070&auto=format&fit=crop"
-                  class="project-img w-full h-full object-cover grayscale opacity-60 transition-all duration-700 ease-out"
-                  alt="Finance"
-                />
-                <div class="scanlines"></div>
 
-                <!-- Overlay Data Grid -->
-                <div
-                  class="absolute inset-0 z-10 opacity-20 bg-[linear-gradient(rgba(0,240,255,0.1)_1px,transparent_1px),linear-gradient(90deg,rgba(0,240,255,0.1)_1px,transparent_1px)] bg-[size:20px_20px]"
-                ></div>
+                <img
+                  src="https://i.postimg.cc/wBQwLMhH/8ffec814ff93ca9c0f8c61f4439289bf.webp"
+                  class="project-img absolute inset-0 w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-[opacity,filter] duration-700 ease-out"
+                  alt="Web App Preview"
+                />
+
+                <div class="scanlines"></div>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- Project 03: Oasis -->
+        <!-- Project 03: Corporate -->
         <div
           class="sticky top-0 h-screen w-full bg-[#0a0a0a] border-t border-white/5 flex items-center justify-center overflow-hidden project-card group z-30"
         >
@@ -1125,43 +2103,45 @@
           <div
             class="grid-stack w-full h-full max-w-[1800px] mx-auto relative z-10"
           >
-            <!-- Image Section -->
+            <!-- High-Fidelity UI Section -->
             <div
               class="relative w-full h-[50vh] md:h-full border-b md:border-b-0 md:border-r border-white/5 bg-black"
             >
               <div class="card-img-container w-full h-full">
-                <div class="absolute top-4 right-4 z-20">
+                <div class="absolute top-4 right-4 z-30">
                   <span
                     class="bg-black/80 text-white text-[10px] px-2 py-1 font-mono border border-white/10"
-                    >ARCH.ISO</span
+                    >ARCH.ISO / CORP_UI</span
                   >
                 </div>
+
                 <img
-                  src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=2070&auto=format&fit=crop"
-                  class="project-img w-full h-full object-cover grayscale opacity-60 transition-all duration-700 ease-out"
-                  alt="Architecture"
+                  src="https://i.postimg.cc/YSzdY01j/original-8bf21875bb304b0b4582e6cfaa0c486d.webp"
+                  class="project-img absolute inset-0 w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-[opacity,filter] duration-700 ease-out"
+                  alt="Corporate Preview"
                 />
+
                 <div class="scanlines"></div>
               </div>
             </div>
 
             <!-- Text Section -->
-            <div class="relative p-6 md:p-16 flex flex-col justify-center">
+            <div class="relative p-6 md:p-16 flex flex-col justify-center z-30">
               <div class="tech-panel p-8 md:p-12 max-w-xl">
                 <div class="flex justify-between items-center mb-6">
                   <span
                     class="font-mono text-[10px] text-white tracking-widest border border-white/20 px-2 py-0.5"
-                    >ARCHITECTURE</span
+                    >PORTFOLIOS & BRANDS</span
                   >
                   <span class="font-mono text-[10px] text-white/40"
-                    >DXB // UAE</span
+                    >GLOBAL</span
                   >
                 </div>
 
                 <h3
                   class="display-font text-6xl md:text-8xl text-white mb-4 leading-[0.9]"
                 >
-                  OASIS
+                  CORPORATE
                 </h3>
 
                 <div
@@ -1171,18 +2151,18 @@
                 <p
                   class="text-white/70 text-sm md:text-base font-light leading-relaxed font-mono mb-8"
                 >
-                  Digital architecture. A portfolio for a leading Dubai firm
-                  where Brutalism meets digital fluidity. Structure becomes art
-                  through scroll interaction.
+                  Professional websites for businesses and creators. Show off
+                  your brand with premium designs, modern layouts, and a
+                  polished look that instantly builds trust with your visitors.
                 </p>
 
                 <div class="flex flex-wrap gap-3 mb-10">
-                  <span class="tag-chip text-white">Motion</span>
-                  <span class="tag-chip text-white">3D Modeling</span>
+                  <span class="tag-chip text-white">Web Design</span>
+                  <span class="tag-chip text-white">Animations</span>
                 </div>
 
                 <a
-                  href="#"
+                  href="#contact"
                   class="inline-flex items-center gap-4 hover-trigger group/link"
                 >
                   <div
@@ -1204,8 +2184,8 @@
                     </svg>
                   </div>
                   <span
-                    class="text-sm font-mono tracking-widest uppercase border-b border-transparent group-hover/link:border-white transition-all"
-                    >Execute Project</span
+                    class="text-sm font-mono tracking-widest uppercase border-b border-white transition-all"
+                    >Start Project</span
                   >
                 </a>
               </div>
@@ -1227,13 +2207,13 @@
           >
             <!-- Text Section -->
             <div
-              class="relative p-6 md:p-16 flex flex-col justify-center order-2 md:order-1 items-end"
+              class="relative p-6 md:p-16 flex flex-col justify-center order-2 md:order-1 items-end z-30"
             >
               <div class="tech-panel p-8 md:p-12 max-w-xl w-full">
                 <div class="flex justify-between items-center mb-6">
                   <span
                     class="font-mono text-[10px] text-[var(--accent-alert)] tracking-widest border border-[var(--accent-alert)] px-2 py-0.5"
-                    >SECURITY // CLASSIFIED</span
+                    >CREATIVE CAMPAIGNS</span
                   >
                   <div
                     class="w-2 h-2 rounded-full bg-[var(--accent-alert)] animate-pulse"
@@ -1243,7 +2223,7 @@
                 <h3
                   class="display-font text-6xl md:text-8xl text-white mb-4 leading-[0.9]"
                 >
-                  NEXUS
+                  INTERACTIVE
                 </h3>
 
                 <div
@@ -1253,23 +2233,24 @@
                 <p
                   class="text-white/70 text-sm md:text-base font-light leading-relaxed font-mono mb-8"
                 >
-                  AI-driven cyber security interface. Complex data visualization
-                  meeting military-grade aesthetics. Dark mode dashboard design.
+                  Stand out from the crowd. I build highly interactive, visual
+                  websites with immersive graphics and unique animations that
+                  leave a lasting impression on your audience.
                 </p>
 
                 <div class="flex flex-wrap gap-3 mb-10">
                   <span
                     class="tag-chip text-white hover:bg-[var(--accent-alert)] hover:border-[var(--accent-alert)]"
-                    >Dashboard</span
+                    >3D Graphics</span
                   >
                   <span
                     class="tag-chip text-white hover:bg-[var(--accent-alert)] hover:border-[var(--accent-alert)]"
-                    >AI Integration</span
+                    >WebGL / Three.js</span
                   >
                 </div>
 
                 <a
-                  href="#"
+                  href="#contact"
                   class="inline-flex items-center gap-4 hover-trigger group/link"
                 >
                   <div
@@ -1292,33 +2273,31 @@
                   </div>
                   <span
                     class="text-sm font-mono tracking-widest uppercase border-b border-transparent group-hover/link:border-[var(--accent-alert)] transition-all"
-                    >Execute Project</span
+                    >Start Project</span
                   >
                 </a>
               </div>
             </div>
 
-            <!-- Image Section -->
+            <!-- High-Fidelity UI Section -->
             <div
               class="relative w-full h-[50vh] md:h-full border-b md:border-b-0 md:border-l border-white/5 bg-black order-1 md:order-2"
             >
               <div class="card-img-container w-full h-full">
-                <div class="absolute bottom-4 left-4 z-20">
+                <div class="absolute bottom-4 left-4 z-30">
                   <span
                     class="bg-black/80 text-white text-[10px] px-2 py-1 font-mono border border-white/10"
-                    >SYS_ADMIN</span
+                    >SYS_ADMIN / WGL_UI</span
                   >
                 </div>
+
                 <img
-                  src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=2670&auto=format&fit=crop"
-                  class="project-img w-full h-full object-cover grayscale opacity-60 transition-all duration-700 ease-out"
-                  alt="Cyber"
+                  src="https://i.postimg.cc/YSzdY019/d43ad1fb95964cffaa808bf7a0364307.webp"
+                  class="project-img absolute inset-0 w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-[opacity,filter] duration-700 ease-out"
+                  alt="Interactive Preview"
                 />
+
                 <div class="scanlines"></div>
-                <!-- Hexagon Grid Overlay -->
-                <div
-                  class="absolute inset-0 z-10 opacity-10 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjIiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0iTTEwIDBMMjAgNS43N3YxMS41NUwxMCAyMkwwIDE3LjMyVjUuNzd6IiBmaWxsPSJub25lIiBzdHJva2U9IndoaXRlIi8+PC9zdmc+')]"
-                ></div>
               </div>
             </div>
           </div>
@@ -1359,10 +2338,10 @@
                 <h2
                   class="display-font text-5xl md:text-8xl font-bold leading-[0.9] mb-8"
                 >
-                  I DON'T BUILD <br />
+                  I DESIGN <br />
                   <span
                     class="text-transparent bg-clip-text bg-gradient-to-r from-white via-gray-400 to-white"
-                    >WEBSITES.</span
+                    >EXPERIENCES.</span
                   >
                 </h2>
               </div>
@@ -1371,11 +2350,13 @@
                 <p
                   class="font-mono text-sm md:text-base text-gray-400 leading-relaxed max-w-md"
                 >
-                  I build empires of pixel and code. Controlling visual chaos to
-                  create a singular, piercing narrative.
+                  I create premium websites that captivate your audience and
+                  grow your business. Combining beautiful design with smart
+                  technology to tell your brand's story perfectly.
                   <br /><br />
-                  <span class="text-white">Physics-based animations</span> that
-                  make the user feel the weight of digital objects.
+                  <span class="text-white">Smooth animations</span> and
+                  intuitive layouts that make every click feel natural and
+                  engaging.
                 </p>
 
                 <!-- NEW BUTTON ADDED HERE -->
@@ -1389,8 +2370,7 @@
                     ></div>
                     <span
                       class="font-mono text-[10px] text-[var(--accent-acid)] tracking-widest uppercase group-hover:text-white transition-colors"
-                    >
-                      [ KNOW_SHADIK ]
+                      >[ KNOW_SHADIK ]
                     </span>
                   </a>
                 </div>
@@ -1494,6 +2474,7 @@
         </div>
       </div>
       <!-- End of Dominions Stack -->
+
       <!-- SECTION 4: OBSESSIONS (Inventory) -->
       <section id="obsessions" class="py-32 w-full bg-[#050505] relative z-20">
         <div
@@ -1502,17 +2483,17 @@
           <div>
             <span
               class="font-mono text-[10px] text-[var(--accent-acid)] block mb-4 tracking-[0.3em] uppercase"
-              >Sector_03 // Inventory</span
+              >Sector_03 // Portfolio</span
             >
             <h2 class="display-font text-6xl md:text-8xl text-white">
-              OBSESSIONS
+              FEATURED WORKS
             </h2>
           </div>
           <div
             class="text-left md:text-right font-mono text-[10px] text-gray-400 max-w-xs md:border-r md:border-white/20 md:pr-4 pl-4 border-l border-white/20 md:border-l-0 md:pl-0"
           >
-            FULL DIRECTORY.<br />
-            ACCESS GRANTED.
+            A SELECTION OF MY BEST PROJECTS.<br />
+            CLICK TO EXPLORE.
           </div>
         </div>
 
@@ -1693,8 +2674,229 @@
         </div>
       </section>
 
-      <!-- SECTION 5: PRICING (Protocols) -->
-      <!-- Updated to be Sticky, mimicking the Nexus card behavior -->
+      <!-- SECTION 5: MY SKILLS (DATA MATRIX REDUX) -->
+      <section
+        id="skills"
+        class="py-32 w-full bg-[#050505] relative z-20 border-b border-white/5"
+      >
+        <!-- Subtle Grid Overlay -->
+        <div
+          class="absolute inset-0 z-0 opacity-[0.03] bg-[linear-gradient(rgba(255,255,255,1)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,1)_1px,transparent_1px)] bg-[size:50px_50px] pointer-events-none"
+        ></div>
+
+        <div class="container mx-auto px-6 md:px-12 relative z-10">
+          <!-- Matrix Header -->
+          <div
+            class="flex flex-col md:flex-row justify-between items-start md:items-end mb-24 border-b border-white/10 pb-12 gap-8"
+          >
+            <div>
+              <span
+                class="font-mono text-[10px] text-[var(--accent-acid)] block mb-4 tracking-[0.3em] uppercase"
+                >Sector_05 // Capabilities</span
+              >
+              <h2
+                class="display-font text-6xl md:text-8xl lg:text-9xl text-white leading-none tracking-tighter"
+              >
+                MY SKILLS
+              </h2>
+            </div>
+            <div class="max-w-md text-left md:text-right">
+              <p
+                class="font-mono text-xs md:text-sm text-gray-400 leading-relaxed border-l md:border-l-0 md:border-r border-[var(--accent-acid)] pl-4 md:pl-0 md:pr-4"
+              >
+                A comprehensive breakdown of my technical arsenal. I deploy
+                modern, robust tools and proven strategies to engineer
+                experiences that dominate the digital space.
+              </p>
+            </div>
+          </div>
+
+          <!-- High-End Interactive Matrix Rows -->
+          <div class="flex flex-col border-t border-white/10">
+            <!-- ROW 01: UI/UX DESIGN -->
+            <div
+              class="matrix-row group flex flex-col md:flex-row justify-between items-start md:items-center py-12 md:py-16 border-b border-white/10 hover:bg-white/[0.02] transition-colors duration-500 px-4 md:px-8 hover-trigger cursor-none"
+              style="--row-accent: var(--accent-acid);"
+            >
+              <!-- Left: Title & Number -->
+              <div
+                class="flex items-start md:items-center gap-6 md:gap-12 md:w-[40%] z-20 mb-8 md:mb-0"
+              >
+                <span
+                  class="font-mono text-xs md:text-sm text-[var(--row-accent)] opacity-40 group-hover:opacity-100 transition-opacity mt-2 md:mt-0"
+                  >01</span
+                >
+                <h3
+                  class="display-font text-5xl md:text-6xl text-white group-hover:text-[var(--row-accent)] transition-colors tracking-tight leading-[0.9]"
+                >
+                  UI / UX <br class="hidden md:block" />DESIGN
+                </h3>
+              </div>
+
+              <!-- Center: Data & Capabilities -->
+              <div
+                class="md:w-[40%] z-20 mb-8 md:mb-0 pl-0 md:pl-12 md:border-l border-white/10 group-hover:border-[var(--row-accent)]/30 transition-colors"
+              >
+                <p class="font-mono text-xs text-gray-400 mb-6 max-w-sm">
+                  Crafting intuitive, psychological, and stunning interfaces
+                  heavily focused on user engagement and retention.
+                </p>
+                <ul class="space-y-4 font-mono text-[11px] text-white/80">
+                  <li class="flex items-center gap-3">
+                    <span
+                      class="w-1.5 h-1.5 bg-[var(--row-accent)] shadow-[0_0_8px_var(--row-accent)]"
+                    ></span>
+                    Code-Driven UI Prototyping
+                  </li>
+                  <li class="flex items-center gap-3">
+                    <span
+                      class="w-1.5 h-1.5 bg-[var(--row-accent)] shadow-[0_0_8px_var(--row-accent)]"
+                    ></span>
+                    Mobile-First Architectural Design
+                  </li>
+                  <li class="flex items-center gap-3">
+                    <span
+                      class="w-1.5 h-1.5 bg-[var(--row-accent)] shadow-[0_0_8px_var(--row-accent)]"
+                    ></span>
+                    Wireframing & User Journey Mapping
+                  </li>
+                </ul>
+              </div>
+
+              <!-- Right: Giant Number Decor -->
+              <div
+                class="md:w-[20%] flex justify-end z-20 overflow-hidden relative h-full"
+              >
+                <div
+                  class="huge-matrix-number text-[8rem] md:text-[10rem] leading-none display-font text-white/[0.03] transition-all duration-700 ease-out pointer-events-none transform md:absolute right-0 top-1/2 md:-translate-y-1/2"
+                >
+                  98%
+                </div>
+              </div>
+            </div>
+
+            <!-- ROW 02: DEVELOPMENT -->
+            <div
+              class="matrix-row group flex flex-col md:flex-row justify-between items-start md:items-center py-12 md:py-16 border-b border-white/10 hover:bg-white/[0.02] transition-colors duration-500 px-4 md:px-8 hover-trigger cursor-none"
+              style="--row-accent: var(--accent-cyan);"
+            >
+              <div
+                class="flex items-start md:items-center gap-6 md:gap-12 md:w-[40%] z-20 mb-8 md:mb-0"
+              >
+                <span
+                  class="font-mono text-xs md:text-sm text-[var(--row-accent)] opacity-40 group-hover:opacity-100 transition-opacity mt-2 md:mt-0"
+                  >02</span
+                >
+                <h3
+                  class="display-font text-5xl md:text-6xl text-white group-hover:text-[var(--row-accent)] transition-colors tracking-tight leading-[0.9]"
+                >
+                  FRONTEND <br class="hidden md:block" />DEV
+                </h3>
+              </div>
+
+              <div
+                class="md:w-[40%] z-20 mb-8 md:mb-0 pl-0 md:pl-12 md:border-l border-white/10 group-hover:border-[var(--row-accent)]/30 transition-colors"
+              >
+                <p class="font-mono text-xs text-gray-400 mb-6 max-w-sm">
+                  Translating high-end designs into clean, scalable, and
+                  buttery-smooth interactive code.
+                </p>
+                <ul class="space-y-4 font-mono text-[11px] text-white/80">
+                  <li class="flex items-center gap-3">
+                    <span
+                      class="w-1.5 h-1.5 bg-[var(--row-accent)] shadow-[0_0_8px_var(--row-accent)]"
+                    ></span>
+                    Vanilla JS, HTML5 & Tailwind
+                  </li>
+                  <li class="flex items-center gap-3">
+                    <span
+                      class="w-1.5 h-1.5 bg-[var(--row-accent)] shadow-[0_0_8px_var(--row-accent)]"
+                    ></span>
+                    Advanced GSAP & ScrollTrigger
+                  </li>
+                  <li class="flex items-center gap-3">
+                    <span
+                      class="w-1.5 h-1.5 bg-[var(--row-accent)] shadow-[0_0_8px_var(--row-accent)]"
+                    ></span>
+                    WebGL, Three.js & Firebase Backend
+                  </li>
+                </ul>
+              </div>
+
+              <div
+                class="md:w-[20%] flex justify-end z-20 overflow-hidden relative h-full"
+              >
+                <div
+                  class="huge-matrix-number text-[8rem] md:text-[10rem] leading-none display-font text-white/[0.03] transition-all duration-700 ease-out pointer-events-none transform md:absolute right-0 top-1/2 md:-translate-y-1/2"
+                >
+                  95%
+                </div>
+              </div>
+            </div>
+
+            <!-- ROW 03: BRAND STRATEGY -->
+            <div
+              class="matrix-row group flex flex-col md:flex-row justify-between items-start md:items-center py-12 md:py-16 border-b border-white/10 hover:bg-white/[0.02] transition-colors duration-500 px-4 md:px-8 hover-trigger cursor-none"
+              style="--row-accent: var(--accent-alert);"
+            >
+              <div
+                class="flex items-start md:items-center gap-6 md:gap-12 md:w-[40%] z-20 mb-8 md:mb-0"
+              >
+                <span
+                  class="font-mono text-xs md:text-sm text-[var(--row-accent)] opacity-40 group-hover:opacity-100 transition-opacity mt-2 md:mt-0"
+                  >03</span
+                >
+                <h3
+                  class="display-font text-5xl md:text-6xl text-white group-hover:text-[var(--row-accent)] transition-colors tracking-tight leading-[0.9]"
+                >
+                  BRAND <br class="hidden md:block" />STRATEGY
+                </h3>
+              </div>
+
+              <div
+                class="md:w-[40%] z-20 mb-8 md:mb-0 pl-0 md:pl-12 md:border-l border-white/10 group-hover:border-[var(--row-accent)]/30 transition-colors"
+              >
+                <p class="font-mono text-xs text-gray-400 mb-6 max-w-sm">
+                  Positioning brands for absolute market dominance with
+                  conversion-focused, psychological marketing principles.
+                </p>
+                <ul class="space-y-4 font-mono text-[11px] text-white/80">
+                  <li class="flex items-center gap-3">
+                    <span
+                      class="w-1.5 h-1.5 bg-[var(--row-accent)] shadow-[0_0_8px_var(--row-accent)]"
+                    ></span>
+                    Identity & Visual Storytelling
+                  </li>
+                  <li class="flex items-center gap-3">
+                    <span
+                      class="w-1.5 h-1.5 bg-[var(--row-accent)] shadow-[0_0_8px_var(--row-accent)]"
+                    ></span>
+                    SEO & Technical Optimization
+                  </li>
+                  <li class="flex items-center gap-3">
+                    <span
+                      class="w-1.5 h-1.5 bg-[var(--row-accent)] shadow-[0_0_8px_var(--row-accent)]"
+                    ></span>
+                    Conversion Rate Optimization (CRO)
+                  </li>
+                </ul>
+              </div>
+
+              <div
+                class="md:w-[20%] flex justify-end z-20 overflow-hidden relative h-full"
+              >
+                <div
+                  class="huge-matrix-number text-[8rem] md:text-[10rem] leading-none display-font text-white/[0.03] transition-all duration-700 ease-out pointer-events-none transform md:absolute right-0 top-1/2 md:-translate-y-1/2"
+                >
+                  90%
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 6: PRICING (Protocols) -->
       <section
         id="pricing"
         class="min-h-screen w-full bg-[#030303] z-10 border-b border-white/5 flex flex-col justify-center py-24 relative"
@@ -1709,24 +2911,24 @@
                 <div class="w-1.5 h-1.5 bg-white"></div>
                 <span
                   class="text-white/60 text-xs tracking-[0.4em] uppercase font-mono"
-                  >Sector_04 // Clearance</span
+                  >Sector_06 // Pricing</span
                 >
               </div>
               <h2
                 class="display-font text-5xl md:text-7xl text-white leading-none uppercase"
               >
-                Engagement <br />
+                Project <br />
                 <span
                   class="text-transparent bg-clip-text bg-gradient-to-r from-[var(--accent-acid)] to-white"
-                  >Protocols</span
+                  >Packages</span
                 >
               </h2>
             </div>
             <p
               class="font-mono text-xs text-white/50 max-w-sm text-left leading-relaxed"
             >
-              SELECT YOUR CONFIGURATION. <br />
-              SCALABLE ARCHITECTURE FOR DIGITAL DOMINANCE.
+              SELECT THE RIGHT FIT FOR YOUR NEEDS. <br />
+              TRANSPARENT PRICING FOR PREMIUM SERVICES.
             </p>
           </div>
 
@@ -1758,15 +2960,18 @@
               <div>
                 <span
                   class="font-mono text-[10px] border border-white/20 px-2 py-1 text-white/60"
-                  >PROTOCOL: SCOUT</span
+                  >PACKAGE: ESSENTIAL</span
                 >
-                <h3 class="display-font text-4xl mt-6 mb-2 text-white">MVP</h3>
+                <h3 class="display-font text-4xl mt-6 mb-2 text-white">
+                  LANDING
+                </h3>
                 <p class="font-mono text-xs text-gray-500 mb-8 h-10">
-                  Rapid deployment for proof of concept or portfolio sites.
+                  High-impact single page to establish a premium digital
+                  presence quickly.
                 </p>
 
                 <div class="text-3xl font-bold font-mono text-white mb-8">
-                  $2,500<span class="text-xs font-normal text-gray-500"
+                  $1,500<span class="text-xs font-normal text-gray-500"
                     >/STARTING</span
                   >
                 </div>
@@ -1775,25 +2980,25 @@
                   <li
                     class="flex items-center gap-3 text-xs font-mono text-gray-300"
                   >
-                    <span class="text-[var(--accent-acid)]">></span> Single Page
-                    Application
+                    <span class="text-[var(--accent-acid)]">></span> Premium
+                    Single Page
                   </li>
                   <li
                     class="flex items-center gap-3 text-xs font-mono text-gray-300"
                   >
-                    <span class="text-[var(--accent-acid)]">></span> Basic
+                    <span class="text-[var(--accent-acid)]">></span> Fluid GSAP
                     Animations
                   </li>
                   <li
                     class="flex items-center gap-3 text-xs font-mono text-gray-300"
                   >
-                    <span class="text-[var(--accent-acid)]">></span> CMS
-                    Integration
+                    <span class="text-[var(--accent-acid)]">></span>
+                    High-Conversion UI
                   </li>
                   <li
                     class="flex items-center gap-3 text-xs font-mono text-gray-500 line-through decoration-white/30"
                   >
-                    <span>></span> 3D WebGL Assets
+                    <span>></span> Complex CMS / Backend
                   </li>
                 </ul>
               </div>
@@ -1802,7 +3007,7 @@
                 href="#contact"
                 class="w-full py-4 border border-white/20 text-center font-mono text-xs hover:bg-white hover:text-black transition-colors uppercase tracking-widest"
               >
-                Initialize
+                Choose Essential
               </a>
             </div>
 
@@ -1832,17 +3037,18 @@
               <div>
                 <span
                   class="font-mono text-[10px] border border-[var(--accent-acid)] px-2 py-1 text-[var(--accent-acid)] bg-[var(--accent-acid)]/10"
-                  >PROTOCOL: VANGUARD</span
+                  >PACKAGE: PROFESSIONAL</span
                 >
                 <h3 class="display-font text-4xl mt-6 mb-2 text-white">
-                  SYSTEM
+                  BUSINESS
                 </h3>
                 <p class="font-mono text-xs text-gray-500 mb-8 h-10">
-                  Full-scale corporate identity or complex e-commerce solution.
+                  Comprehensive multi-page platform with CMS and advanced scroll
+                  dynamics.
                 </p>
 
                 <div class="text-3xl font-bold font-mono text-white mb-8">
-                  $5,000<span class="text-xs font-normal text-gray-500"
+                  $3,500<span class="text-xs font-normal text-gray-500"
                     >/STARTING</span
                   >
                 </div>
@@ -1863,14 +3069,14 @@
                   <li
                     class="flex items-center gap-3 text-xs font-mono text-white"
                   >
-                    <span class="text-[var(--accent-acid)]">></span> SEO
-                    Optimization
+                    <span class="text-[var(--accent-acid)]">></span> CMS &
+                    Firebase DB
                   </li>
                   <li
                     class="flex items-center gap-3 text-xs font-mono text-white"
                   >
-                    <span class="text-[var(--accent-acid)]">></span> Analytics
-                    Dashboard
+                    <span class="text-[var(--accent-acid)]">></span> Technical
+                    SEO Mastery
                   </li>
                 </ul>
               </div>
@@ -1879,7 +3085,7 @@
                 href="#contact"
                 class="w-full py-4 bg-[var(--accent-acid)] text-black text-center font-mono text-xs font-bold hover:bg-white transition-colors uppercase tracking-widest"
               >
-                Initialize
+                Choose Professional
               </a>
             </div>
 
@@ -1909,13 +3115,14 @@
               <div>
                 <span
                   class="font-mono text-[10px] border border-white/20 px-2 py-1 text-white/60"
-                  >PROTOCOL: EMPIRE</span
+                  >PACKAGE: IMMERSIVE</span
                 >
                 <h3 class="display-font text-4xl mt-6 mb-2 text-white">
-                  WORLD
+                  BESPOKE
                 </h3>
                 <p class="font-mono text-xs text-gray-500 mb-8 h-10">
-                  Immersive WebGL experiences and 3D environments.
+                  Award-winning level experiences with 3D graphics and complex
+                  web apps.
                 </p>
 
                 <div class="text-3xl font-bold font-mono text-white mb-8">
@@ -1928,26 +3135,26 @@
                   <li
                     class="flex items-center gap-3 text-xs font-mono text-gray-300"
                   >
-                    <span class="text-[var(--accent-acid)]">></span> WebGL /
-                    Three.js
+                    <span class="text-[var(--accent-acid)]">></span> WebGL & 3D
+                    Environments
                   </li>
                   <li
                     class="flex items-center gap-3 text-xs font-mono text-gray-300"
                   >
-                    <span class="text-[var(--accent-acid)]">></span> Custom
-                    Sound Design
+                    <span class="text-[var(--accent-acid)]">></span> Complex Web
+                    Applications
                   </li>
                   <li
                     class="flex items-center gap-3 text-xs font-mono text-gray-300"
                   >
-                    <span class="text-[var(--accent-acid)]">></span>
-                    Experiential Narrative
+                    <span class="text-[var(--accent-acid)]">></span> Bespoke
+                    Audio & Visuals
                   </li>
                   <li
                     class="flex items-center gap-3 text-xs font-mono text-gray-300"
                   >
-                    <span class="text-[var(--accent-acid)]">></span> Full Brand
-                    Overhaul
+                    <span class="text-[var(--accent-acid)]">></span> Brand
+                    Identity Overhaul
                   </li>
                 </ul>
               </div>
@@ -1956,15 +3163,14 @@
                 href="#contact"
                 class="w-full py-4 border border-white/20 text-center font-mono text-xs hover:bg-white hover:text-black transition-colors uppercase tracking-widest"
               >
-                Contact HQ
+                Request Quote
               </a>
             </div>
           </div>
         </div>
       </section>
 
-      <!-- SECTION 6: CONTACT (Transmission) -->
-      <!-- Updated to slide over the sticky Pricing section -->
+      <!-- SECTION 7: CONTACT (Transmission) -->
       <section
         id="contact"
         class="relative min-h-screen bg-[#050505] z-20 flex items-center justify-center py-24"
@@ -1976,16 +3182,16 @@
               <div>
                 <span
                   class="font-mono text-[10px] text-[var(--accent-acid)] block mb-4 tracking-[0.3em] uppercase"
-                  >Sector_05 // Uplink</span
+                  >Sector_07 // Contact</span
                 >
                 <h2
                   class="display-font text-6xl md:text-8xl text-white leading-[0.9] mb-8"
                 >
-                  ESTABLISH <br />
-                  LINK.
+                  LET'S WORK <br />
+                  TOGETHER.
                 </h2>
                 <p class="font-mono text-sm text-gray-400 mb-12">
-                  Ready to build your empire? Transmission lines are open.
+                  Ready to start your next big project? Reach out to me today.
                   Response time: < 24 Hours.
                 </p>
               </div>
@@ -2025,7 +3231,7 @@
                 class="absolute -top-4 -right-4 w-24 h-24 border-t border-r border-[var(--accent-acid)] opacity-50"
               ></div>
 
-              <form class="space-y-12 pt-12">
+              <form id="contact-form" class="space-y-12 pt-12">
                 <div class="group">
                   <label
                     class="font-mono text-xs text-[var(--accent-acid)] mb-2 block"
@@ -2033,6 +3239,8 @@
                   >
                   <input
                     type="text"
+                    name="name"
+                    required
                     placeholder="ENTER NAME OR ALIAS"
                     class="form-input hover-trigger"
                   />
@@ -2045,6 +3253,8 @@
                   >
                   <input
                     type="email"
+                    name="email"
+                    required
                     placeholder="ENTER EMAIL ADDRESS"
                     class="form-input hover-trigger"
                   />
@@ -2056,47 +3266,66 @@
                     >> OBJECTIVE</label
                   >
                   <select
+                    name="package"
+                    required
                     class="form-input hover-trigger bg-transparent cursor-none"
                   >
-                    <option class="bg-black text-gray-500"
-                      >SELECT PROTOCOL</option
+                    <option
+                      class="bg-black text-gray-500"
+                      value=""
+                      disabled
+                      selected
+                      >SELECT PACKAGE</option
                     >
-                    <option class="bg-black text-white"
-                      >PROTOCOL: SCOUT (MVP)</option
+                    <option class="bg-black text-white" value="Starter"
+                      >PACKAGE: STARTER (BASIC)</option
                     >
-                    <option class="bg-black text-white"
-                      >PROTOCOL: VANGUARD (SYSTEM)</option
+                    <option class="bg-black text-white" value="Pro"
+                      >PACKAGE: PRO (ADVANCED)</option
                     >
-                    <option class="bg-black text-white"
-                      >PROTOCOL: EMPIRE (WORLD)</option
+                    <option class="bg-black text-white" value="Premium"
+                      >PACKAGE: PREMIUM (CUSTOM)</option
                     >
-                    <option class="bg-black text-white">OTHER INQUIRY</option>
+                    <option class="bg-black text-white" value="Other"
+                      >OTHER INQUIRY</option
+                    >
                   </select>
                 </div>
 
                 <div class="group">
                   <label
                     class="font-mono text-xs text-[var(--accent-acid)] mb-2 block"
-                    >> TRANSMISSION</label
+                    >> MESSAGE</label
                   >
                   <textarea
                     rows="4"
-                    placeholder="DESCRIBE YOUR MISSION PARAMETERS"
+                    name="message"
+                    required
+                    placeholder="TELL ME ABOUT YOUR PROJECT"
                     class="form-input hover-trigger"
                   ></textarea>
                 </div>
 
-                <button
-                  type="button"
-                  class="group relative px-12 py-6 bg-white text-black font-bold font-mono text-sm tracking-widest hover:bg-[var(--accent-acid)] transition-colors w-full md:w-auto hover-trigger overflow-hidden"
-                >
-                  <span class="relative z-10 group-hover:text-black"
-                    >TRANSMIT SIGNAL</span
+                <div class="flex flex-col md:flex-row items-center gap-6">
+                  <button
+                    type="submit"
+                    id="submit-btn"
+                    class="group relative px-12 py-6 bg-white text-black font-bold font-mono text-sm tracking-widest hover:bg-[var(--accent-acid)] transition-colors w-full md:w-auto hover-trigger overflow-hidden"
                   >
+                    <span
+                      id="submit-text"
+                      class="relative z-10 group-hover:text-black"
+                      >SEND MESSAGE</span
+                    >
+                    <div
+                      class="absolute inset-0 bg-[var(--accent-acid)] transform scale-x-0 origin-left group-hover:scale-x-100 transition-transform duration-300 ease-out z-0"
+                    ></div>
+                  </button>
                   <div
-                    class="absolute inset-0 bg-[var(--accent-acid)] transform scale-x-0 origin-left group-hover:scale-x-100 transition-transform duration-300 ease-out z-0"
+                    id="form-status"
+                    class="font-mono text-xs tracking-widest uppercase opacity-0 transition-opacity duration-300"
                   ></div>
-                </button>
+                </div>
               </form>
             </div>
           </div>
@@ -2108,13 +3337,97 @@
         class="py-8 px-6 md:px-12 bg-black border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-4 relative z-20"
       >
         <p class="font-mono text-[10px] text-gray-600">
-          SYSTEM STATUS: NORMAL // V.2.0.4
+          SYSTEM STATUS: NORMAL // V.2.0.5
         </p>
         <p class="font-mono text-[10px] text-gray-600">
           © 2025 SHADIK HOSSAIN. ALL RIGHTS RESERVED.
         </p>
       </footer>
     </main>
+
+    <!-- WHATSAPP SECURE COMM-LINK (HUD STYLE) -->
+    <a
+      href="https://wa.me/8801750087889"
+      target="_blank"
+      rel="noopener noreferrer"
+      id="whatsapp-comm-link"
+      class="fixed bottom-6 right-6 md:bottom-8 md:right-8 z-[100] group flex items-end gap-0 hover:gap-3 hover-trigger cursor-none opacity-0 invisible"
+    >
+      <!-- Expanded Data Terminal -->
+      <div
+        class="flex flex-col items-end opacity-0 w-0 overflow-hidden group-hover:w-[150px] group-hover:opacity-100 transition-all duration-500 ease-[cubic-bezier(0.19,1,0.22,1)] pointer-events-none mb-1"
+      >
+        <div
+          class="bg-black/80 backdrop-blur-md border border-[#25D366]/50 p-2.5 w-full relative shadow-[0_0_15px_rgba(37,211,102,0.1)]"
+        >
+          <!-- Decor Brackets -->
+          <div
+            class="absolute -top-[1px] -left-[1px] w-1.5 h-1.5 border-t border-l border-[#25D366]"
+          ></div>
+          <div
+            class="absolute -bottom-[1px] -right-[1px] w-1.5 h-1.5 border-b border-r border-[#25D366]"
+          ></div>
+
+          <div class="flex items-center gap-2 mb-1">
+            <div
+              class="w-1.5 h-1.5 bg-[#25D366] rounded-full animate-pulse shadow-[0_0_5px_#25D366]"
+            ></div>
+            <span
+              class="font-mono text-[7px] text-[#25D366] tracking-[0.3em] uppercase"
+              >Encrypted_Link</span
+            >
+          </div>
+          <p
+            class="font-mono text-[10px] text-white uppercase tracking-widest whitespace-nowrap"
+          >
+            INITIATE CHAT
+          </p>
+        </div>
+      </div>
+
+      <!-- Main Trigger Icon -->
+      <div
+        class="relative w-12 h-12 md:w-14 md:h-14 bg-black/80 backdrop-blur-md border border-[#25D366]/40 flex items-center justify-center transition-all duration-500 overflow-hidden shadow-[0_0_15px_rgba(37,211,102,0.2)] shrink-0 group-hover:-translate-y-1 group-hover:shadow-[0_0_25px_rgba(37,211,102,0.4)] group-hover:border-[#25D366]"
+      >
+        <!-- Constant Pulse Indicator -->
+        <div
+          class="absolute inset-0 bg-[#25D366]/20 animate-ping rounded-full scale-50 group-hover:scale-100 transition-transform duration-500"
+        ></div>
+
+        <!-- Target Reticle Decoration -->
+        <div
+          class="absolute top-1 left-1 w-1.5 h-1.5 border-t border-l border-[#25D366]/50 group-hover:border-[#25D366] transition-colors"
+        ></div>
+        <div
+          class="absolute top-1 right-1 w-1.5 h-1.5 border-t border-r border-[#25D366]/50 group-hover:border-[#25D366] transition-colors"
+        ></div>
+        <div
+          class="absolute bottom-1 left-1 w-1.5 h-1.5 border-b border-l border-[#25D366]/50 group-hover:border-[#25D366] transition-colors"
+        ></div>
+        <div
+          class="absolute bottom-1 right-1 w-1.5 h-1.5 border-b border-r border-[#25D366]/50 group-hover:border-[#25D366] transition-colors"
+        ></div>
+
+        <!-- Scanning Line on Hover -->
+        <div
+          class="absolute top-0 left-0 w-full h-[1px] bg-[#25D366] opacity-0 group-hover:opacity-100 group-hover:animate-[scan_2s_ease-in-out_infinite] z-20 shadow-[0_0_8px_#25D366]"
+        ></div>
+
+        <!-- WhatsApp SVG (Always Green & Glowing) -->
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          fill="currentColor"
+          class="text-[#25D366] relative z-10 drop-shadow-[0_0_8px_rgba(37,211,102,0.5)] transition-transform duration-300 group-hover:scale-110"
+          viewBox="0 0 16 16"
+        >
+          <path
+            d="M13.601 2.326A7.85 7.85 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.9 7.9 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.9 7.9 0 0 0 13.6 2.326zM7.994 14.521a6.6 6.6 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.56 6.56 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592m3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.73.73 0 0 0-.529.247c-.182.198-.691.677-.691 1.654s.71 1.916.81 2.049c.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232"
+          />
+        </svg>
+      </div>
+    </a>
 
     <!-- Dependencies -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
@@ -2126,24 +3439,26 @@
 
       document.addEventListener("DOMContentLoaded", () => {
         // --- 1. BOOT SEQUENCE ---
-        const tl = gsap.timeline();
+        const tlBoot = gsap.timeline();
         const logs = document.querySelectorAll(".boot-log p");
 
         logs.forEach((log, index) => {
-          tl.to(log, { opacity: 1, duration: 0.1, delay: 0.1 });
+          tlBoot.to(log, { opacity: 1, duration: 0.1, delay: 0.1 });
         });
 
-        tl.to(".loader", {
-          yPercent: -100,
-          duration: 0.8,
-          ease: "expo.inOut",
-          delay: 0.5,
-        }).to(".reveal-text", {
-          y: 0,
-          duration: 1,
-          stagger: 0.1,
-          ease: "power4.out",
-        });
+        tlBoot
+          .to(".loader", {
+            yPercent: -100,
+            duration: 0.8,
+            ease: "expo.inOut",
+            delay: 0.5,
+          })
+          .to(".reveal-text", {
+            y: 0,
+            duration: 1,
+            stagger: 0.1,
+            ease: "power4.out",
+          });
 
         // --- 2. LENIS SCROLL ---
         const lenis = new Lenis({
@@ -2161,7 +3476,6 @@
 
         // --- 3. CURSOR LOGIC ---
         const cursor = document.getElementById("cursor");
-
         const xTo = gsap.quickSetter(cursor, "x", "px");
         const yTo = gsap.quickSetter(cursor, "y", "px");
 
@@ -2182,27 +3496,221 @@
           }
         });
 
-        // --- 4. SCROLL ANIMATIONS ---
+        // --- ADVANCED MENU TOGGLE (GSAP TIMELINE) ---
+        const menuToggle = document.getElementById("menu-toggle");
+        const advancedMenu = document.getElementById("advanced-menu");
+        const menuLinks = document.querySelectorAll(
+          "#advanced-menu .menu-item",
+        );
 
-        // Sticky Images Parallax (Dominions)
-        const projects = document.querySelectorAll(".project-card");
-        projects.forEach((card) => {
-          // Parallax the image inside container
-          const img = card.querySelector(".project-img");
-          if (img) {
-            gsap.to(img, {
-              scrollTrigger: {
-                trigger: card,
-                start: "top top",
-                end: "bottom top",
-                scrub: true,
-              },
-              scale: 1.1,
-              y: 50,
-            });
+        let isMenuOpen = false;
+
+        const tlMenu = gsap.timeline({ paused: true });
+
+        tlMenu
+          .set(advancedMenu, { pointerEvents: "auto" })
+          .to(
+            ".nav-hide",
+            {
+              opacity: 0,
+              y: -10,
+              pointerEvents: "none",
+              duration: 0.4,
+              ease: "power2.inOut",
+            },
+            0,
+          )
+          .to(
+            ".menu-bg",
+            {
+              scaleY: 1,
+              duration: 0.8,
+              ease: "expo.inOut",
+              stagger: 0.1,
+            },
+            0,
+          )
+          .to(".menu-inner", { opacity: 1, duration: 0.1 }, "-=0.3")
+          .to(
+            ".menu-item-stagger",
+            {
+              opacity: 1,
+              x: 0,
+              duration: 0.6,
+              stagger: 0.1,
+              ease: "power3.out",
+            },
+            "-=0.2",
+          )
+          .to(
+            ".menu-link-text",
+            {
+              y: 0,
+              duration: 0.8,
+              ease: "expo.out",
+              stagger: 0.05,
+            },
+            "-=0.6",
+          );
+
+        menuToggle.addEventListener("click", () => {
+          isMenuOpen = !isMenuOpen;
+
+          if (isMenuOpen) {
+            menuToggle.classList.add("active");
+            tlMenu.timeScale(1).play();
+            if (typeof lenis !== "undefined") lenis.stop();
+          } else {
+            menuToggle.classList.remove("active");
+            tlMenu.timeScale(1.5).reverse();
+            if (typeof lenis !== "undefined") lenis.start();
+          }
+        });
+
+        menuLinks.forEach((link) => {
+          link.addEventListener("click", () => {
+            if (isMenuOpen) {
+              isMenuOpen = false;
+              menuToggle.classList.remove("active");
+              tlMenu.timeScale(1.5).reverse();
+              if (typeof lenis !== "undefined") lenis.start();
+            }
+          });
+        });
+
+        // --- 4. PREMIUM DYNAMIC NAV BAR (SMART SCROLL) ---
+        const mainNav = document.getElementById("main-nav");
+        const navBg = document.getElementById("nav-bg");
+        const navInner = document.getElementById("nav-inner");
+        const navLine = document.getElementById("nav-line");
+        let lastScrollY = window.scrollY;
+
+        window.addEventListener("scroll", () => {
+          const currentScrollY = window.scrollY;
+
+          // A. Glassmorphism & Shrink on scroll
+          if (currentScrollY > 50) {
+            navBg.classList.remove("opacity-0", "pointer-events-none");
+            navBg.classList.add("opacity-100", "pointer-events-auto");
+            navInner.classList.remove("py-6");
+            navInner.classList.add("py-3");
+            if (navLine) navLine.style.width = "100%";
+          } else {
+            navBg.classList.remove("opacity-100", "pointer-events-auto");
+            navBg.classList.add("opacity-0", "pointer-events-none");
+            navInner.classList.remove("py-3");
+            navInner.classList.add("py-6");
+            if (navLine) navLine.style.width = "0%";
           }
 
-          // Fade the Tech Panel on scroll
+          // B. Hide on Scroll Down, Show on Scroll Up (Headroom Effect)
+          if (
+            currentScrollY > 200 &&
+            currentScrollY > lastScrollY &&
+            !isMenuOpen
+          ) {
+            // Scrolling down & past threshold
+            mainNav.style.transform = "translateY(-100%)";
+          } else {
+            // Scrolling up or at top
+            mainNav.style.transform = "translateY(0)";
+          }
+
+          lastScrollY = currentScrollY;
+        });
+
+        // --- 5. SIGNATURE SCROLL ANIMATIONS (LANDO NORRIS STYLE - FULLY RESPONSIVE) ---
+        const heroPin = document.getElementById("hero-pin");
+        const sigPath = document.getElementById("signature-path");
+
+        if (heroPin && sigPath) {
+          // Setup the SVG signature path for drawing
+          const pathLength = sigPath.getTotalLength();
+          sigPath.style.strokeDasharray = pathLength;
+          sigPath.style.strokeDashoffset = pathLength;
+
+          // The master timeline for the Hero Pin
+          const tlSig = gsap.timeline({
+            scrollTrigger: {
+              trigger: "#hero-pin",
+              start: "top top",
+              end: "+=250%", // Lasts exactly 2.5 screen heights of scroll distance
+              pin: true,
+              scrub: 1, // Smooth kinetic scrubbing
+            },
+          });
+
+          // Phase 1: Hide Hero Overlay Content quickly
+          tlSig.to(
+            ["#hero-content", "#hero-coord", "#hero-status"],
+            { opacity: 0, y: -20, duration: 0.5 },
+            0,
+          );
+
+          // Phase 2: Fade in the flat tint on the video for text contrast
+          tlSig.to("#hero-vid-overlay-2", { opacity: 1, duration: 0.5 }, 0);
+
+          // Phase 3: Shrink the Video to the center using clamp for bulletproof mobile responsiveness
+          tlSig.to(
+            "#hero-vid-container",
+            {
+              width: "clamp(280px, 85vw, 450px)",
+              height: "clamp(400px, 60vh, 600px)",
+              duration: 1.5,
+              ease: "power3.inOut", // Beautiful, smooth scaling curve
+            },
+            0,
+          );
+
+          // Phase 4: Show & Move the Background Text
+          tlSig.to("#sig-text-wrap", { opacity: 1, duration: 0.5 }, 0.5);
+          tlSig.fromTo(
+            "#sig-text-1",
+            { x: "5vw" },
+            { x: "-20vw", duration: 2.5 },
+            0,
+          );
+          tlSig.fromTo(
+            "#sig-text-2",
+            { x: "-15vw" },
+            { x: "20vw", duration: 2.5 },
+            0,
+          );
+
+          // Phase 5: Draw the dynamic Signature
+          tlSig.to(
+            sigPath,
+            {
+              strokeDashoffset: 0,
+              duration: 2,
+              ease: "power2.inOut", // Natural pen-stroke acceleration/deceleration
+            },
+            0.5,
+          );
+        }
+
+        // --- 6. DOMINIONS SCROLL ANIMATIONS ---
+        const projects = document.querySelectorAll(".project-card");
+        projects.forEach((card) => {
+          const img = card.querySelector(".project-img");
+          if (img) {
+            // Re-linked and enhanced cinematic scaling effect
+            gsap.fromTo(
+              img,
+              { scale: 1 },
+              {
+                scale: 1.15,
+                yPercent: 5,
+                scrollTrigger: {
+                  trigger: card,
+                  start: "top top", // Fixed: Only start the scale when the card locks into the sticky pin
+                  end: "bottom top",
+                  scrub: 1.5,
+                },
+              },
+            );
+          }
+
           const panel = card.querySelector(".tech-panel");
           if (panel) {
             gsap.to(panel, {
@@ -2218,91 +3726,83 @@
           }
         });
 
-        // EGO SECTION ANIMATIONS
+        // --- 7. EGO SECTION ANIMATIONS ---
         const egoSection = document.getElementById("ego");
         const egoText = egoSection.querySelector(".ego-bg-text");
         const holoCard = egoSection.querySelector(".holo-card");
 
-        // Background Text Parallax
-        gsap.to(egoText, {
-          scrollTrigger: {
-            trigger: egoSection,
-            start: "top bottom",
-            end: "bottom top",
-            scrub: 1,
-          },
-          x: -100, // Moves text left slightly on scroll
-        });
-
-        // 3D Tilt Effect on Card (Mouse movement)
-        egoSection.addEventListener("mousemove", (e) => {
-          const {
-            left,
-            top,
-            width,
-            height,
-          } = egoSection.getBoundingClientRect();
-          const x = (e.clientX - left) / width - 0.5;
-          const y = (e.clientY - top) / height - 0.5;
-
-          gsap.to(holoCard, {
-            rotationY: x * 20, // Rotate Y axis based on X position
-            rotationX: -y * 20, // Rotate X axis based on Y position
-            transformPerspective: 1000,
-            duration: 0.5,
-            ease: "power2.out",
+        if (egoText) {
+          gsap.to(egoText, {
+            scrollTrigger: {
+              trigger: egoSection,
+              start: "top bottom",
+              end: "bottom top",
+              scrub: 1,
+            },
+            x: -100,
           });
-        });
+        }
 
-        // Reset card on mouse leave
-        egoSection.addEventListener("mouseleave", () => {
-          gsap.to(holoCard, {
-            rotationY: 0,
-            rotationX: 0,
-            duration: 0.8,
-            ease: "power2.out",
+        if (egoSection && holoCard) {
+          egoSection.addEventListener("mousemove", (e) => {
+            const {
+              left,
+              top,
+              width,
+              height,
+            } = egoSection.getBoundingClientRect();
+            const x = (e.clientX - left) / width - 0.5;
+            const y = (e.clientY - top) / height - 0.5;
+
+            gsap.to(holoCard, {
+              rotationY: x * 20,
+              rotationX: -y * 20,
+              transformPerspective: 1000,
+              duration: 0.5,
+              ease: "power2.out",
+            });
           });
-        });
 
-        // List View (Obsessions)
+          egoSection.addEventListener("mouseleave", () => {
+            gsap.to(holoCard, {
+              rotationY: 0,
+              rotationX: 0,
+              duration: 0.8,
+              ease: "power2.out",
+            });
+          });
+        }
+
+        // --- 8. OBSESSIONS & PRICING REVEALS ---
         gsap.utils.toArray(".product-row").forEach((row) => {
           gsap.from(row, {
             y: 50,
             opacity: 0,
             duration: 0.8,
-            scrollTrigger: {
-              trigger: row,
-              start: "top 95%",
-            },
+            scrollTrigger: { trigger: row, start: "top 95%" },
           });
         });
 
-        // Pricing Cards Reveal
         gsap.utils.toArray(".price-card").forEach((card, i) => {
           gsap.from(card, {
             y: 100,
             opacity: 0,
             duration: 1,
             delay: i * 0.2,
-            scrollTrigger: {
-              trigger: "#pricing",
-              start: "top 60%",
-            },
+            scrollTrigger: { trigger: "#pricing", start: "top 60%" },
           });
         });
 
-        // --- 5. PORTAL LOGIC (New) ---
+        // --- 9. PORTAL LOGIC ---
         const portalOverlay = document.getElementById("portal-overlay");
         const portalIframe = document.getElementById("portal-iframe");
         const portalTitle = document.getElementById("portal-title");
         const closePortalBtn = document.getElementById("close-portal");
         const productRows = document.querySelectorAll(".product-row");
 
-        // Open Portal
         productRows.forEach((row) => {
           row.addEventListener("click", (e) => {
-            e.preventDefault(); // Stop default navigation
-
+            e.preventDefault();
             const targetUrl = row.getAttribute("href");
             const projectName = row.querySelector("h3").innerText;
 
@@ -2310,23 +3810,19 @@
               portalIframe.src = targetUrl;
               portalTitle.innerText = `LIVE_PREVIEW // ${projectName}`;
               portalOverlay.classList.add("active");
-              document.body.style.overflow = "hidden"; // Lock scroll
+              document.body.style.overflow = "hidden";
             }
           });
         });
 
-        // Close Portal
         closePortalBtn.addEventListener("click", () => {
           portalOverlay.classList.remove("active");
-          document.body.style.overflow = ""; // Unlock scroll
-
-          // Clear iframe after transition to stop sound/video
+          document.body.style.overflow = "";
           setTimeout(() => {
             portalIframe.src = "";
           }, 500);
         });
 
-        // Close on escape key
         document.addEventListener("keydown", (e) => {
           if (
             e.key === "Escape" &&
@@ -2335,6 +3831,98 @@
             closePortalBtn.click();
           }
         });
+
+        // --- 10. WEB3FORMS CONTACT TRANSMISSION LOGIC ---
+        const contactForm = document.getElementById("contact-form");
+        const submitBtn = document.getElementById("submit-btn");
+        const submitText = document.getElementById("submit-text");
+        const formStatus = document.getElementById("form-status");
+
+        if (contactForm) {
+          contactForm.addEventListener("submit", async function (e) {
+            e.preventDefault();
+
+            // 1. Initiate UI Loading State
+            submitText.innerText = "TRANSMITTING...";
+            submitBtn.style.pointerEvents = "none";
+            formStatus.className =
+              "font-mono text-xs tracking-widest uppercase text-gray-400";
+            formStatus.innerText = "> ESTABLISHING SECURE CONNECTION...";
+            formStatus.style.opacity = "1";
+
+            // 2. Gather Data
+            const formData = new FormData(contactForm);
+
+            // *** IMPORTANT: REPLACE WITH YOUR KEY FROM WEB3FORMS.COM ***
+            formData.append(
+              "access_key",
+              "4128dcbf-1faa-4fae-8f19-8933a0d50bb5",
+            );
+            formData.append("subject", "QUANTUM SYSTEM // New Project Inquiry");
+            formData.append("from_name", "System Terminal");
+
+            try {
+              // 3. Transmit Data
+              const response = await fetch("https://api.web3forms.com/submit", {
+                method: "POST",
+                body: formData,
+              });
+
+              const data = await response.json();
+
+              if (data.success) {
+                // Success UI State
+                submitText.innerText = "TRANSMITTED";
+                formStatus.className =
+                  "font-mono text-xs tracking-widest uppercase text-[var(--accent-acid)]";
+                formStatus.innerText = "> TRANSMISSION SUCCESSFUL.";
+                contactForm.reset();
+              } else {
+                // API Error UI State
+                submitText.innerText = "ERROR";
+                formStatus.className =
+                  "font-mono text-xs tracking-widest uppercase text-[var(--accent-alert)]";
+                formStatus.innerText = "> ERROR: " + data.message;
+              }
+            } catch (error) {
+              // Network Error UI State
+              submitText.innerText = "SYSTEM FAIL";
+              formStatus.className =
+                "font-mono text-xs tracking-widest uppercase text-[var(--accent-alert)]";
+              formStatus.innerText = "> TRANSMISSION FAILED. CHECK UPLINK.";
+            } finally {
+              // Reset Button after 4 seconds
+              setTimeout(() => {
+                submitText.innerText = "SEND MESSAGE";
+                submitBtn.style.pointerEvents = "auto";
+
+                // Fade out status message
+                formStatus.style.opacity = "0";
+              }, 4000);
+            }
+          });
+        }
+
+        // --- 11. WHATSAPP COMM-LINK GSAP LOGIC ---
+        const waLink = document.getElementById("whatsapp-comm-link");
+        if (waLink) {
+          gsap.fromTo(
+            waLink,
+            { autoAlpha: 0, y: 50, scale: 0.5 },
+            {
+              autoAlpha: 1,
+              y: 0,
+              scale: 1,
+              duration: 1.5,
+              ease: "elastic.out(1, 0.5)",
+              scrollTrigger: {
+                trigger: "#dominions-stack",
+                start: "top 85%", // Hides in hero, pops up when entering main content
+                toggleActions: "play none none reverse", // Hides again if they scroll back up
+              },
+            },
+          );
+        }
       });
     </script>
   </body>
