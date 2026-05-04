@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ShadikHyperWeb - Client Tracker</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      :root {
+        --bg-color: #f5f5f7;
+        --card-bg: #ffffff;
+        --text-main: #1d1d1f;
+        --border-color: rgba(0, 0, 0, 0.06);
+      }
+      body {
+        font-family: "Inter", sans-serif;
+        background-color: var(--bg-color);
+        color: var(--text-main);
+        background-image: linear-gradient(
+            var(--border-color) 1px,
+            transparent 1px
+          ),
+          linear-gradient(90deg, var(--border-color) 1px, transparent 1px);
+        background-size: 40px 40px;
+        background-position: center top;
+      }
+      .bento-card {
+        background: var(--card-bg);
+        border-radius: 24px;
+        border: 1px solid var(--border-color);
+        box-shadow: 0px 4px 24px rgba(0, 0, 0, 0.02);
+        transition: all 0.4s ease;
+      }
+      .progress-track {
+        background: #e8e8ed;
+        border-radius: 999px;
+        height: 6px;
+        width: 100%;
+        overflow: hidden;
+      }
+      .progress-fill {
+        background: #0066cc;
+        height: 100%;
+        border-radius: 999px;
+        width: 0%;
+        transition: width 1.5s cubic-bezier(0.65, 0, 0.35, 1);
+      }
+      .live-dot {
+        width: 8px;
+        height: 8px;
+        background-color: #34c759;
+        border-radius: 50%;
+        animation: pulse-green 2s infinite;
+      }
+      @keyframes pulse-green {
+        0%,
+        100% {
+          transform: scale(0.95);
+          box-shadow: 0 0 0 0 rgba(52, 199, 89, 0.4);
+        }
+        50% {
+          transform: scale(1);
+          box-shadow: 0 0 0 6px rgba(52, 199, 89, 0);
+        }
+      }
+      .dark-card {
+        background: #0a0a0a;
+        color: #ffffff;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+      .timeline-container::before {
+        content: "";
+        position: absolute;
+        top: 24px;
+        bottom: 24px;
+        left: 23px;
+        width: 2px;
+        background: #e8e8ed;
+        z-index: 0;
+      }
+
+      /* Premium Loading Animations */
+      #loader {
+        transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+      @keyframes sweep-bar {
+        0% {
+          transform: translateX(-100%);
+        }
+        100% {
+          transform: translateX(200%);
+        }
+      }
+      .animate-sweep {
+        animation: sweep-bar 2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+      }
+      .ring-spin-slow {
+        animation: spin 10s linear infinite;
+      }
+      .ring-spin-reverse {
+        animation: spin 7s linear infinite reverse;
+      }
+    </style>
+  </head>
+  <body class="min-h-screen p-4 md:p-8 lg:p-12 flex justify-center relative">
+    <!-- SPECTACULAR LOADING SCREEN -->
+    <div
+      id="loader"
+      class="fixed inset-0 bg-[#050505] z-50 flex flex-col items-center justify-center overflow-hidden"
+    >
+      <!-- Ambient Backlight -->
+      <div
+        class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-blue-600/20 rounded-full blur-[100px] pointer-events-none"
+      ></div>
+
+      <!-- Center Logo & Rings -->
+      <div class="relative flex items-center justify-center mb-12">
+        <div
+          class="absolute inset-[-40px] rounded-[36px] border border-blue-500/20 ring-spin-slow"
+        ></div>
+        <div
+          class="absolute inset-[-20px] rounded-[28px] border border-cyan-400/10 ring-spin-reverse"
+        ></div>
+
+        <div
+          class="bg-[#0a0a0a] p-5 rounded-2xl shadow-[0_0_40px_rgba(0,0,0,0.8)] relative overflow-hidden border border-gray-800 z-10 backdrop-blur-xl"
+        >
+          <div
+            class="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-transparent"
+          ></div>
+          <img
+            src="https://i.postimg.cc/yddXd3db/Chat-GPT-Image-Apr-19-2026-08-20-37-PM.png"
+            alt="ShadikHyperWeb Logo"
+            class="h-20 w-auto object-contain relative z-10 drop-shadow-[0_0_15px_rgba(255,255,255,0.1)]"
+          />
+        </div>
+      </div>
+
+      <!-- Dynamic Loading Status UI -->
+      <div
+        id="loader-ui"
+        class="w-72 max-w-[80vw] flex flex-col items-center gap-5 relative z-10"
+      >
+        <div
+          class="w-full h-1 bg-white/10 rounded-full overflow-hidden shadow-inner"
+        >
+          <div
+            class="w-1/2 h-full bg-gradient-to-r from-blue-600 via-cyan-400 to-blue-600 rounded-full animate-sweep shadow-[0_0_10px_rgba(34,211,238,0.5)]"
+          ></div>
+        </div>
+        <!-- This text will update dynamically to show you exactly where the code is -->
+        <p
+          id="loader-status-text"
+          class="text-[10px] font-bold text-gray-400 tracking-[0.2em] uppercase animate-pulse drop-shadow-md text-center"
+        >
+          Initializing Engine...
+        </p>
+      </div>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div
+      class="max-w-[1200px] w-full hidden opacity-0 transition-opacity duration-1000"
+      id="main-content"
+    >
+      <div class="flex items-center gap-4 mb-10 border-b border-gray-200 pb-6">
+        <div
+          class="bg-[#0a0a0a] p-2.5 rounded-xl shadow-lg border border-gray-800 flex items-center justify-center relative overflow-hidden group"
+        >
+          <div
+            class="absolute inset-0 bg-gradient-to-tr from-blue-600/20 to-transparent opacity-50 group-hover:opacity-100 transition duration-500"
+          ></div>
+          <img
+            src="https://i.postimg.cc/yddXd3db/Chat-GPT-Image-Apr-19-2026-08-20-37-PM.png"
+            alt="ShadikHyperWeb Logo"
+            class="h-10 w-auto object-contain relative z-10 drop-shadow-md"
+          />
+        </div>
+        <div>
+          <h1
+            class="text-2xl font-extrabold tracking-tighter text-black leading-none"
+          >
+            Shadik<span class="text-blue-600">Hyper</span>Web
+          </h1>
+          <p
+            class="text-xs font-semibold text-gray-500 uppercase tracking-widest mt-1"
+          >
+            Live Project Tracker
+          </p>
+        </div>
+      </div>
+
+      <header
+        class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8"
+      >
+        <div>
+          <div class="flex items-center gap-3 mb-2">
+            <div
+              class="px-3 py-1 bg-white border border-gray-200 rounded-full text-[11px] font-bold tracking-wider text-gray-500 uppercase flex items-center gap-2 shadow-sm"
+            >
+              <i class="ph ph-buildings text-sm"></i> Client:
+              <span id="client-name" class="text-black">...</span>
+            </div>
+            <div
+              class="px-3 py-1 bg-white border border-gray-200 rounded-full text-[11px] font-bold tracking-wider text-gray-900 uppercase flex items-center gap-2 shadow-sm"
+            >
+              <div class="live-dot"></div>
+              Live Sync Active
+            </div>
+          </div>
+          <h2
+            class="text-4xl font-bold tracking-tight text-[#1D1D1F]"
+            id="project-name"
+          >
+            ...
+          </h2>
+        </div>
+      </header>
+
+      <main class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <div class="lg:col-span-7 flex flex-col gap-6">
+          <div
+            class="bento-card dark-card p-8 relative overflow-hidden group shadow-2xl"
+          >
+            <div
+              class="absolute -right-20 -top-20 w-64 h-64 bg-blue-500 opacity-10 rounded-full blur-3xl group-hover:scale-110 transition-transform duration-700"
+            ></div>
+            <div class="mb-10 relative z-10">
+              <p
+                class="text-blue-400 text-xs font-bold uppercase tracking-widest mb-3 flex items-center gap-2"
+              >
+                <i class="ph ph-terminal-window text-lg"></i> Developer's
+                Current Focus
+              </p>
+              <h3
+                class="text-3xl font-bold tracking-tight text-white"
+                id="current-focus-title"
+              >
+                ...
+              </h3>
+            </div>
+            <div
+              class="bg-white/[0.03] border border-white/10 rounded-xl p-5 relative z-10 backdrop-blur-sm"
+            >
+              <div class="flex items-center gap-3 mb-2">
+                <span
+                  class="w-2 h-2 bg-green-400 rounded-full animate-pulse shadow-[0_0_8px_rgba(74,222,128,0.5)]"
+                ></span>
+                <span
+                  class="text-xs font-bold text-gray-400 uppercase tracking-widest"
+                  >Live Terminal Log</span
+                >
+              </div>
+              <p
+                id="live-activity-text"
+                class="text-lg font-medium text-emerald-400 font-mono mt-2 h-7 transition-opacity duration-300"
+              ></p>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <div
+              class="bento-card p-6 flex flex-col justify-between h-48 border-t-4 border-t-blue-500"
+            >
+              <div>
+                <h3
+                  class="text-sm font-bold text-gray-500 uppercase tracking-wider flex items-center gap-2"
+                >
+                  <i class="ph ph-chart-pie-slice text-xl"></i> Total Completion
+                </h3>
+              </div>
+              <div>
+                <div class="flex justify-between items-end mb-3">
+                  <span
+                    class="text-5xl font-extrabold tracking-tighter"
+                    id="progress-text"
+                    >0%</span
+                  >
+                </div>
+                <div class="progress-track">
+                  <div class="progress-fill" id="main-progress"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="bento-card p-6 flex flex-col justify-between h-48">
+              <div>
+                <h3
+                  class="text-sm font-bold text-gray-500 uppercase tracking-wider flex items-center gap-2"
+                >
+                  <i class="ph ph-calendar-check text-xl"></i> Estimated
+                  Delivery
+                </h3>
+              </div>
+              <div>
+                <p
+                  class="text-2xl font-bold tracking-tight text-black mb-1"
+                  id="eta-text"
+                >
+                  TBD
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="lg:col-span-5 bento-card p-8 flex flex-col">
+          <div
+            class="flex justify-between items-center mb-8 pb-4 border-b border-gray-100"
+          >
+            <h2
+              class="text-xl font-bold tracking-tight flex items-center gap-2"
+            >
+              <i class="ph ph-map-trifold text-blue-600"></i> Architecture Map
+            </h2>
+          </div>
+          <div
+            class="relative timeline-container flex-1 overflow-y-auto pr-2"
+            id="timeline"
+          ></div>
+        </div>
+      </main>
+    </div>
+
+    <!-- Firebase SDK (Module) -->
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+      import {
+        getFirestore,
+        doc,
+        onSnapshot,
+      } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+
+      // Connecting UI Element for debug info
+      const statusText = document.getElementById("loader-status-text");
+      const loaderUi = document.getElementById("loader-ui");
+
+      try {
+        statusText.innerText = "Connecting to Firebase...";
+
+        const firebaseConfig = {
+          apiKey: "AIzaSyDLip1JbemlO2OOqI_P9KfWSLVhvgixUmY",
+          authDomain: "shadikwebhyper.firebaseapp.com",
+          projectId: "shadikwebhyper",
+          storageBucket: "shadikwebhyper.firebasestorage.app",
+          messagingSenderId: "93254122264",
+          appId: "1:93254122264:web:181405dce44e473f4a7c6d",
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Get ID from URL, but if it fails, absolute fallback to your screenshot ID
+        const urlParams = new URLSearchParams(window.location.search);
+        const projectId = urlParams.get("id") || "4Es4aFhIk42PqSHR3TJC";
+
+        statusText.innerText = `Fetching Project ID: ${projectId}`;
+
+        let liveLogsArray = [];
+        let logInterval;
+
+        function startTypewriter() {
+          clearInterval(logInterval);
+          if (!liveLogsArray || liveLogsArray.length === 0) return;
+
+          let i = 0;
+          const el = document.getElementById("live-activity-text");
+          el.innerText = liveLogsArray[0];
+
+          logInterval = setInterval(() => {
+            i = (i + 1) % liveLogsArray.length;
+            el.style.opacity = "0";
+            setTimeout(() => {
+              el.innerText = liveLogsArray[i];
+              el.style.opacity = "1";
+            }, 300);
+          }, 3500);
+        }
+
+        // Bulletproof Snapshot Listener
+        onSnapshot(
+          doc(db, "projects", projectId),
+          (docSnap) => {
+            if (docSnap.exists()) {
+              statusText.innerText = "Data Acquired. Rendering...";
+              const data = docSnap.data();
+
+              // Safe Parsing for missing fields (like projectName in your DB)
+              document.getElementById("client-name").innerText =
+                data.clientName || "Valued Client";
+              document.getElementById("project-name").innerText =
+                data.projectName || "Project Configuration";
+              document.getElementById("eta-text").innerText = data.eta || "TBD";
+              document.getElementById("current-focus-title").innerText =
+                data.currentFocus || "Awaiting Orders...";
+
+              // Progress Math
+              const progressNum = parseInt(data.progress) || 0;
+              document.getElementById("progress-text").innerText =
+                progressNum + "%";
+              setTimeout(() => {
+                document.getElementById("main-progress").style.width =
+                  progressNum + "%";
+              }, 100);
+
+              // Logs
+              liveLogsArray =
+                data.logs && data.logs.length > 0
+                  ? data.logs
+                  : ["System standby..."];
+              startTypewriter();
+
+              // Roadmap (Safe fallback if missing)
+              renderTimeline(data.roadmap || []);
+
+              // Hide Loader Smoothly
+              const loaderEl = document.getElementById("loader");
+              loaderEl.style.opacity = "0";
+              setTimeout(() => {
+                loaderEl.style.display = "none";
+                const main = document.getElementById("main-content");
+                main.classList.remove("hidden");
+                setTimeout(() => main.classList.remove("opacity-0"), 50);
+              }, 600);
+            } else {
+              // Fired if Document ID doesn't actually exist
+              loaderUi.innerHTML = `
+                  <div class="bg-red-900/40 border border-red-500/30 p-5 rounded-2xl text-center backdrop-blur-md">
+                      <i class="ph-fill ph-warning-circle text-4xl text-red-500 mb-2"></i>
+                      <h3 class="text-white font-bold tracking-widest uppercase mb-1">Project Not Found</h3>
+                      <p class="text-xs text-gray-300">ID: ${projectId} does not exist.</p>
+                  </div>`;
+            }
+          },
+          (error) => {
+            // THIS FIRES IF FIREBASE SECURITY RULES BLOCK YOU
+            console.error("Firebase Auth/Rule Error:", error);
+            loaderUi.innerHTML = `
+                  <div class="bg-red-900/40 border border-red-500/30 p-5 rounded-2xl text-center backdrop-blur-md max-w-sm">
+                      <i class="ph-fill ph-shield-warning text-4xl text-red-500 mb-2"></i>
+                      <h3 class="text-white font-bold tracking-widest uppercase mb-1">Connection Blocked</h3>
+                      <p class="text-xs text-gray-300 mb-3">${error.message}</p>
+                      <p class="text-[10px] text-gray-400 bg-black/40 p-2 rounded">Fix: Go to Firebase > Firestore Database > Rules and set "allow read: if true;"</p>
+                  </div>`;
+          },
+        );
+      } catch (err) {
+        // Absolute fallback script error
+        statusText.innerText = "Script Error: " + err.message;
+        statusText.classList.add("text-red-500");
+      }
+
+      function renderTimeline(roadmap) {
+        let html = "";
+        if (!roadmap || roadmap.length === 0) {
+          html = `<div class="text-center py-10 opacity-50"><i class="ph ph-list-dashes text-3xl mb-2 block"></i><p class="text-sm italic font-medium">No phases mapping deployed.</p></div>`;
+        } else {
+          roadmap.forEach((item) => {
+            let iconBox,
+              contentStyle,
+              badge = "";
+            let title = item.title || "Untitled Phase";
+            let desc = item.desc || "";
+
+            if (item.status === "done") {
+              iconBox = `<div class="w-12 h-12 rounded-full bg-blue-600 text-white flex items-center justify-center relative z-10 shrink-0 border-4 border-[#F5F5F7] shadow-sm"><i class="ph ph-check text-xl font-bold"></i></div>`;
+              contentStyle = `opacity: 0.7;`;
+            } else if (item.status === "current") {
+              iconBox = `<div class="w-12 h-12 rounded-full bg-white text-black flex items-center justify-center relative z-10 shrink-0 border-4 border-black shadow-[0_0_0_4px_rgba(0,0,0,0.05)]"><div class="w-3 h-3 bg-blue-600 rounded-full animate-pulse"></div></div>`;
+              contentStyle = `background: white; border: 1px solid #E8E8ED; padding: 16px; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.04);`;
+              badge = `<div class="mt-4 bg-blue-50 border border-blue-100 rounded-lg p-3 flex items-center gap-3"><i class="ph ph-spinner-gap animate-spin text-blue-600"></i><span class="text-xs font-bold text-blue-900 uppercase tracking-wide">Currently Working</span></div>`;
+            } else {
+              iconBox = `<div class="w-12 h-12 rounded-full bg-gray-50 text-gray-400 flex items-center justify-center relative z-10 shrink-0 border-4 border-[#E8E8ED]"><i class="ph ph-lock-key text-xl"></i></div>`;
+              contentStyle = `opacity: 0.5;`;
+            }
+
+            html += `
+                        <div class="flex gap-6 mb-8 relative">
+                            ${iconBox}
+                            <div class="flex-1 pt-1 transition-all" style="${contentStyle}">
+                                <h3 class="text-base font-bold text-[#1D1D1F]">${title}</h3>
+                                ${
+                                  desc
+                                    ? `<p class="text-sm text-[#86868B] mt-1 font-medium">${desc}</p>`
+                                    : ""
+                                }
+                                ${badge}
+                            </div>
+                        </div>`;
+          });
+        }
+        document.getElementById("timeline").innerHTML = html;
+      }
+    </script>
+  </body>
+</html>

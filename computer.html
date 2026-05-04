@@ -1,0 +1,1036 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Nexus | Number System Explorer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Inter:wght@300;400;600;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --neon-cyan: #06b6d4;
+        --neon-purple: #a855f7;
+        --bg-dark: #0f172a;
+      }
+      body {
+        font-family: "Inter", sans-serif;
+        background-color: var(--bg-dark);
+        background-image: radial-gradient(
+            at 0% 0%,
+            hsla(253, 16%, 7%, 1) 0,
+            transparent 50%
+          ),
+          radial-gradient(
+            at 50% 0%,
+            hsla(225, 39%, 30%, 0.1) 0,
+            transparent 50%
+          ),
+          radial-gradient(
+            at 100% 0%,
+            hsla(339, 49%, 30%, 0.1) 0,
+            transparent 50%
+          );
+        color: #f8fafc;
+        overflow-x: hidden;
+      }
+      .font-mono {
+        font-family: "Fira Code", monospace;
+      }
+
+      /* Glassmorphism utilities */
+      .glass-panel {
+        background: rgba(255, 255, 255, 0.03);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+      }
+
+      /* LED Bit styling */
+      .led-bit {
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      .led-bit.active {
+        background-color: var(--neon-cyan);
+        box-shadow: 0 0 15px var(--neon-cyan),
+          inset 0 0 10px rgba(255, 255, 255, 0.5);
+        border-color: #fff;
+      }
+      .led-bit.inactive {
+        background-color: #1e293b;
+        box-shadow: inset 0 4px 6px rgba(0, 0, 0, 0.5);
+        border-color: #334155;
+      }
+
+      /* Custom Scrollbar */
+      ::-webkit-scrollbar {
+        width: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #0f172a;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #334155;
+        border-radius: 4px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #475569;
+      }
+
+      /* Animations */
+      @keyframes shake {
+        0%,
+        100% {
+          transform: translateX(0);
+        }
+        25% {
+          transform: translateX(-5px);
+        }
+        50% {
+          transform: translateX(5px);
+        }
+        75% {
+          transform: translateX(-5px);
+        }
+      }
+      .shake-error {
+        animation: shake 0.4s ease-in-out;
+        border-color: #ef4444 !important;
+      }
+
+      @keyframes pulse-glow {
+        0%,
+        100% {
+          box-shadow: 0 0 15px var(--neon-purple);
+        }
+        50% {
+          box-shadow: 0 0 30px var(--neon-purple),
+            0 0 10px rgba(255, 255, 255, 0.5);
+        }
+      }
+      .glow-active {
+        animation: pulse-glow 2s infinite;
+        border-color: var(--neon-purple);
+      }
+
+      /* Input styling */
+      input:focus {
+        outline: none;
+        border-color: var(--neon-cyan);
+        box-shadow: 0 0 10px rgba(6, 182, 212, 0.2);
+      }
+
+      .tab-content {
+        display: none;
+      }
+      .tab-content.active {
+        display: block;
+        animation: fadeIn 0.4s ease-out;
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+    </style>
+  </head>
+  <body class="min-h-screen flex flex-col">
+    <!-- Navigation Header -->
+    <header class="glass-panel border-b border-slate-800 sticky top-0 z-50">
+      <div
+        class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between"
+      >
+        <div class="flex items-center gap-3">
+          <div
+            class="w-8 h-8 rounded bg-gradient-to-br from-cyan-400 to-blue-600 flex items-center justify-center shadow-[0_0_15px_rgba(6,182,212,0.5)]"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="text-white w-5 h-5"
+            >
+              <rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect>
+              <rect x="9" y="9" width="6" height="6"></rect>
+              <line x1="9" y1="1" x2="9" y2="4"></line>
+              <line x1="15" y1="1" x2="15" y2="4"></line>
+              <line x1="9" y1="20" x2="9" y2="23"></line>
+              <line x1="15" y1="20" x2="15" y2="23"></line>
+              <line x1="20" y1="9" x2="23" y2="9"></line>
+              <line x1="20" y1="14" x2="23" y2="14"></line>
+              <line x1="1" y1="9" x2="4" y2="9"></line>
+              <line x1="1" y1="14" x2="4" y2="14"></line>
+            </svg>
+          </div>
+          <h1
+            class="text-xl font-bold tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-400"
+          >
+            NEXUS
+          </h1>
+        </div>
+        <nav
+          class="flex gap-2 bg-slate-900/50 p-1 rounded-lg border border-slate-700/50"
+        >
+          <button
+            onclick="switchTab('sandbox')"
+            id="nav-sandbox"
+            class="px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 bg-slate-800 text-cyan-400 shadow-[0_0_10px_rgba(6,182,212,0.2)]"
+          >
+            Sandbox
+          </button>
+          <button
+            onclick="switchTab('game')"
+            id="nav-game"
+            class="px-4 py-2 rounded-md text-sm font-medium text-slate-400 hover:text-slate-200 transition-all duration-200 hover:bg-slate-800"
+          >
+            Decrypter Challenge
+          </button>
+        </nav>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main
+      class="flex-grow max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8 flex flex-col gap-8"
+    >
+      <!-- ================= SANDBOX TAB ================= -->
+      <div id="tab-sandbox" class="tab-content active space-y-8">
+        <div class="text-center space-y-2 mb-8">
+          <h2 class="text-3xl font-bold text-white">
+            Interactive Bit Explorer
+          </h2>
+          <p class="text-slate-400 max-w-2xl mx-auto">
+            Toggle the 8-bit LEDs below to visually understand how computers
+            construct numbers using base-2 mathematics.
+          </p>
+        </div>
+
+        <!-- LED Interactive Board -->
+        <div
+          class="glass-panel rounded-2xl p-6 md:p-10 flex flex-col items-center gap-8 relative overflow-hidden"
+        >
+          <div
+            class="absolute -top-24 -left-24 w-48 h-48 bg-cyan-500/10 rounded-full blur-3xl"
+          ></div>
+          <div
+            class="absolute -bottom-24 -right-24 w-48 h-48 bg-purple-500/10 rounded-full blur-3xl"
+          ></div>
+
+          <div
+            class="flex flex-col md:flex-row items-center gap-4 w-full justify-between"
+          >
+            <div
+              class="flex justify-center w-full gap-2 md:gap-4 z-10"
+              id="led-container"
+            >
+              <!-- LEDs injected via JS -->
+            </div>
+          </div>
+
+          <!-- Math Breakdown Engine -->
+          <div
+            class="w-full bg-slate-900/80 rounded-xl p-6 border border-slate-700/50 font-mono text-sm md:text-base z-10"
+          >
+            <div class="flex items-center gap-2 mb-4 text-cyan-400">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="w-4 h-4"
+              >
+                <rect x="4" y="2" width="16" height="20" rx="2" ry="2"></rect>
+                <line x1="8" y1="6" x2="16" y2="6"></line>
+                <line x1="16" y1="14" x2="16" y2="18"></line>
+                <line x1="16" y1="10" x2="16" y2="10"></line>
+                <line x1="12" y1="10" x2="12" y2="10"></line>
+                <line x1="8" y1="10" x2="8" y2="10"></line>
+                <line x1="12" y1="14" x2="12" y2="14"></line>
+                <line x1="8" y1="14" x2="8" y2="14"></line>
+                <line x1="12" y1="18" x2="12" y2="18"></line>
+                <line x1="8" y1="18" x2="8" y2="18"></line>
+              </svg>
+              <span class="font-semibold uppercase tracking-wider text-xs"
+                >Live Calculation Breakdown</span
+              >
+            </div>
+            <div
+              id="math-breakdown"
+              class="flex flex-wrap gap-y-4 gap-x-2 text-slate-300 leading-loose items-center min-h-[3rem]"
+            >
+              Click a bit to see the magic happen...
+            </div>
+            <div
+              class="mt-4 pt-4 border-t border-slate-700/50 flex justify-between items-center text-xl font-bold"
+            >
+              <span class="text-slate-400">Result (Base 10)</span>
+              <span id="math-total" class="text-purple-400 text-3xl">0</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Omni Converter -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <!-- Decimal Card -->
+          <div
+            class="glass-panel rounded-xl p-5 border-t-4 border-t-blue-500 relative group transition-all hover:-translate-y-1"
+          >
+            <label
+              class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2"
+              >Decimal (Base 10)</label
+            >
+            <input
+              type="text"
+              id="in-dec"
+              class="w-full bg-slate-900/50 border border-slate-700 rounded-lg px-4 py-3 text-xl font-mono text-white transition-colors"
+              placeholder="0"
+              oninput="handleInput('dec')"
+            />
+            <div
+              class="absolute top-4 right-4 text-slate-600 group-hover:text-blue-500 transition-colors"
+            >
+              DEC
+            </div>
+          </div>
+          <!-- Binary Card -->
+          <div
+            class="glass-panel rounded-xl p-5 border-t-4 border-t-cyan-500 relative group transition-all hover:-translate-y-1"
+          >
+            <label
+              class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2"
+              >Binary (Base 2)</label
+            >
+            <input
+              type="text"
+              id="in-bin"
+              class="w-full bg-slate-900/50 border border-slate-700 rounded-lg px-4 py-3 text-xl font-mono text-white transition-colors"
+              placeholder="00000000"
+              oninput="handleInput('bin')"
+            />
+            <div
+              class="absolute top-4 right-4 text-slate-600 group-hover:text-cyan-500 transition-colors"
+            >
+              BIN
+            </div>
+          </div>
+          <!-- Hex Card -->
+          <div
+            class="glass-panel rounded-xl p-5 border-t-4 border-t-purple-500 relative group transition-all hover:-translate-y-1"
+          >
+            <label
+              class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2"
+              >Hexadecimal (Base 16)</label
+            >
+            <input
+              type="text"
+              id="in-hex"
+              class="w-full bg-slate-900/50 border border-slate-700 rounded-lg px-4 py-3 text-xl font-mono text-white transition-colors uppercase"
+              placeholder="00"
+              oninput="handleInput('hex')"
+            />
+            <div
+              class="absolute top-4 right-4 text-slate-600 group-hover:text-purple-500 transition-colors"
+            >
+              HEX
+            </div>
+          </div>
+          <!-- Octal Card -->
+          <div
+            class="glass-panel rounded-xl p-5 border-t-4 border-t-green-500 relative group transition-all hover:-translate-y-1"
+          >
+            <label
+              class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2"
+              >Octal (Base 8)</label
+            >
+            <input
+              type="text"
+              id="in-oct"
+              class="w-full bg-slate-900/50 border border-slate-700 rounded-lg px-4 py-3 text-xl font-mono text-white transition-colors"
+              placeholder="0"
+              oninput="handleInput('oct')"
+            />
+            <div
+              class="absolute top-4 right-4 text-slate-600 group-hover:text-green-500 transition-colors"
+            >
+              OCT
+            </div>
+          </div>
+        </div>
+
+        <!-- Cheat Sheet Reference -->
+        <div class="glass-panel rounded-xl p-6 mt-8">
+          <h3
+            class="text-lg font-semibold text-white mb-4 flex items-center gap-2"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="w-5 h-5 text-purple-400"
+            >
+              <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+              <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+            </svg>
+            Quick Reference Dictionary
+          </h3>
+          <div
+            class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-8 gap-2 text-center font-mono text-sm"
+          >
+            <!-- Injected via JS to keep HTML clean -->
+            <div id="cheat-sheet-grid" class="contents"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= GAME TAB ================= -->
+      <div
+        id="tab-game"
+        class="tab-content h-full flex flex-col justify-center items-center py-10"
+      >
+        <div
+          class="glass-panel rounded-2xl p-8 max-w-2xl w-full border border-purple-500/30 relative overflow-hidden"
+        >
+          <!-- Decorative background elements -->
+          <div
+            class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMiIgY3k9IjIiIHI9IjEiIGZpbGw9InJnYmEoMjU1LDI1NSwyNTUsMC4wNSkiLz48L3N2Zz4=')] opacity-50"
+          ></div>
+          <div
+            class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-purple-500 to-transparent opacity-50"
+          ></div>
+
+          <div class="relative z-10 flex flex-col items-center">
+            <div
+              class="w-16 h-16 rounded-full bg-purple-500/20 flex items-center justify-center mb-4 border border-purple-500/50 shadow-[0_0_20px_rgba(168,85,247,0.4)]"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="w-8 h-8 text-purple-400"
+              >
+                <polyline points="4 17 10 11 4 5"></polyline>
+                <line x1="12" y1="19" x2="20" y2="19"></line>
+              </svg>
+            </div>
+            <h2 class="text-3xl font-bold text-white mb-2 font-mono">
+              System Decrypter
+            </h2>
+            <p class="text-slate-400 text-center mb-8">
+              Incoming encrypted packets detected. Convert the bases correctly
+              before the firewall collapses.
+            </p>
+
+            <!-- Game State: Start Screen -->
+            <div
+              id="game-start-screen"
+              class="flex flex-col items-center w-full"
+            >
+              <div class="flex gap-4 mb-8 w-full justify-center">
+                <label class="flex items-center gap-2 cursor-pointer group">
+                  <input
+                    type="radio"
+                    name="difficulty"
+                    value="easy"
+                    checked
+                    class="hidden peer"
+                  />
+                  <span
+                    class="px-4 py-2 rounded bg-slate-800 border border-slate-700 text-slate-400 peer-checked:bg-green-500/20 peer-checked:border-green-500 peer-checked:text-green-400 transition-all"
+                    >Easy (Bin ↔ Dec)</span
+                  >
+                </label>
+                <label class="flex items-center gap-2 cursor-pointer group">
+                  <input
+                    type="radio"
+                    name="difficulty"
+                    value="hard"
+                    class="hidden peer"
+                  />
+                  <span
+                    class="px-4 py-2 rounded bg-slate-800 border border-slate-700 text-slate-400 peer-checked:bg-red-500/20 peer-checked:border-red-500 peer-checked:text-red-400 transition-all"
+                    >Hard (Hex ↔ Bin)</span
+                  >
+                </label>
+              </div>
+              <button
+                onclick="startGame()"
+                class="px-8 py-3 bg-purple-600 hover:bg-purple-500 text-white font-bold rounded-lg transition-all shadow-[0_0_15px_rgba(168,85,247,0.4)] hover:shadow-[0_0_25px_rgba(168,85,247,0.6)] flex items-center gap-2"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="w-5 h-5"
+                >
+                  <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                </svg>
+                INITIALIZE SEQUENCE
+              </button>
+            </div>
+
+            <!-- Game State: Active Playing -->
+            <div
+              id="game-active-screen"
+              class="hidden w-full flex-col items-center"
+            >
+              <div class="flex justify-between w-full mb-6 font-mono">
+                <div
+                  class="bg-slate-800 px-4 py-2 rounded border border-slate-700"
+                >
+                  <span class="text-slate-400 text-sm">SCORE:</span>
+                  <span id="game-score" class="text-cyan-400 font-bold text-xl"
+                    >0</span
+                  >
+                </div>
+                <div
+                  class="bg-slate-800 px-4 py-2 rounded border border-slate-700 flex items-center gap-2"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="w-4 h-4 text-red-400"
+                  >
+                    <line x1="10" y1="2" x2="14" y2="2"></line>
+                    <line x1="12" y1="14" x2="15" y2="11"></line>
+                    <circle cx="12" cy="14" r="8"></circle>
+                  </svg>
+                  <span id="game-time" class="text-red-400 font-bold text-xl"
+                    >30</span
+                  ><span class="text-slate-400 text-sm">s</span>
+                </div>
+              </div>
+
+              <div
+                class="bg-slate-900 w-full py-10 rounded-xl border border-slate-700 mb-6 flex flex-col items-center justify-center text-center"
+              >
+                <span
+                  class="text-slate-500 font-mono text-sm uppercase tracking-widest mb-2"
+                  id="game-instruction"
+                  >Convert to Binary</span
+                >
+                <div
+                  class="text-5xl font-mono font-bold text-white tracking-wider drop-shadow-[0_0_10px_rgba(255,255,255,0.3)]"
+                  id="game-target"
+                >
+                  255
+                </div>
+                <span
+                  class="text-slate-600 font-mono text-xs mt-2"
+                  id="game-source-base"
+                  >(Base 10)</span
+                >
+              </div>
+
+              <div class="w-full relative">
+                <input
+                  type="text"
+                  id="game-input"
+                  class="w-full bg-slate-900 border-2 border-purple-500 rounded-lg px-6 py-4 text-2xl font-mono text-center text-white focus:outline-none focus:shadow-[0_0_15px_rgba(168,85,247,0.3)] transition-all uppercase placeholder-slate-700"
+                  placeholder="ENTER RESULT..."
+                  autocomplete="off"
+                />
+                <div
+                  id="game-feedback"
+                  class="absolute -bottom-8 left-0 w-full text-center font-mono font-bold text-sm opacity-0 transition-opacity"
+                >
+                  Correct!
+                </div>
+              </div>
+            </div>
+
+            <!-- Game State: End Screen -->
+            <div
+              id="game-end-screen"
+              class="hidden w-full flex-col items-center"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="w-16 h-16 text-green-400 mb-4 drop-shadow-[0_0_10px_rgba(74,222,128,0.5)]"
+              >
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                <path d="m9 12 2 2 4-4"></path>
+              </svg>
+              <h3 class="text-2xl font-bold text-white mb-2">
+                Simulation Complete
+              </h3>
+              <p class="text-slate-400 mb-6">
+                Final Score:
+                <span
+                  id="game-final-score"
+                  class="text-cyan-400 font-bold text-2xl ml-2"
+                  >0</span
+                >
+              </p>
+              <button
+                onclick="resetGameUI()"
+                class="px-6 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded transition-colors"
+              >
+                Return to Menu
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <footer
+      class="border-t border-slate-800 py-6 text-center text-slate-500 text-sm mt-auto"
+    >
+      <p>
+        Nexus Number System Simulator &copy; 2026. Designed for advanced
+        interactive learning.
+      </p>
+    </footer>
+
+    <script>
+      // ================= STATE & CONSTANTS =================
+      const NUM_BITS = 8;
+      let currentDecimalValue = 0;
+
+      // UI Elements
+      const ledContainer = document.getElementById("led-container");
+      const breakdownEl = document.getElementById("math-breakdown");
+      const breakdownTotalEl = document.getElementById("math-total");
+
+      const inputs = {
+        dec: document.getElementById("in-dec"),
+        bin: document.getElementById("in-bin"),
+        hex: document.getElementById("in-hex"),
+        oct: document.getElementById("in-oct"),
+      };
+
+      // ================= TAB NAVIGATION =================
+      function switchTab(tabId) {
+        document
+          .querySelectorAll(".tab-content")
+          .forEach((el) => el.classList.remove("active"));
+        document.getElementById(`tab-${tabId}`).classList.add("active");
+
+        // Update nav styling
+        document.getElementById("nav-sandbox").className =
+          tabId === "sandbox"
+            ? "px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 bg-slate-800 text-cyan-400 shadow-[0_0_10px_rgba(6,182,212,0.2)]"
+            : "px-4 py-2 rounded-md text-sm font-medium text-slate-400 hover:text-slate-200 transition-all duration-200 hover:bg-slate-800";
+
+        document.getElementById("nav-game").className =
+          tabId === "game"
+            ? "px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 bg-slate-800 text-purple-400 shadow-[0_0_10px_rgba(168,85,247,0.2)]"
+            : "px-4 py-2 rounded-md text-sm font-medium text-slate-400 hover:text-slate-200 transition-all duration-200 hover:bg-slate-800";
+      }
+
+      // ================= SANDBOX LOGIC =================
+
+      // Build the 8-bit LED Board
+      function initSandbox() {
+        ledContainer.innerHTML = "";
+        for (let i = NUM_BITS - 1; i >= 0; i--) {
+          const bitValue = Math.pow(2, i);
+
+          const bitGroup = document.createElement("div");
+          bitGroup.className = "flex flex-col items-center gap-2";
+
+          // Power of 2 Label
+          const labelTop = document.createElement("span");
+          labelTop.className =
+            "text-[10px] md:text-xs text-slate-500 font-mono";
+          labelTop.innerHTML = `2<sup>${i}</sup>`;
+
+          // LED Element
+          const led = document.createElement("div");
+          led.className =
+            "led-bit inactive w-8 h-10 md:w-12 md:h-16 rounded-md cursor-pointer border-2 flex items-center justify-center group relative";
+          led.dataset.bitIndex = i;
+          led.dataset.active = "false";
+          led.onclick = () => toggleBit(i);
+
+          // Bit State Text (0 or 1) inside LED
+          const bitText = document.createElement("span");
+          bitText.className =
+            "text-white/50 group-hover:text-white transition-colors font-mono font-bold select-none";
+          bitText.innerText = "0";
+          led.appendChild(bitText);
+
+          // Decimal Value Label below
+          const labelBottom = document.createElement("span");
+          labelBottom.className =
+            "text-xs md:text-sm font-bold text-slate-400 font-mono";
+          labelBottom.innerText = bitValue;
+
+          bitGroup.appendChild(labelTop);
+          bitGroup.appendChild(led);
+          bitGroup.appendChild(labelBottom);
+          ledContainer.appendChild(bitGroup);
+        }
+
+        generateCheatSheet();
+        updateAllFromDecimal(0); // Start at 0
+      }
+
+      // Toggle a specific bit
+      function toggleBit(index) {
+        const leds = document.querySelectorAll(".led-bit");
+        const targetLed = Array.from(leds).find(
+          (el) => parseInt(el.dataset.bitIndex) === index,
+        );
+
+        const isActive = targetLed.dataset.active === "true";
+        targetLed.dataset.active = isActive ? "false" : "true";
+
+        // Re-calculate decimal value from bits
+        let newDecimal = 0;
+        leds.forEach((led) => {
+          if (led.dataset.active === "true") {
+            newDecimal += Math.pow(2, parseInt(led.dataset.bitIndex));
+          }
+        });
+
+        updateAllFromDecimal(newDecimal);
+      }
+
+      // Omni-Input Handler
+      function handleInput(base) {
+        const val = inputs[base].value.trim();
+        let decimalVal = 0;
+        let isValid = true;
+
+        if (val === "") {
+          updateAllFromDecimal(0);
+          return;
+        }
+
+        try {
+          switch (base) {
+            case "dec":
+              if (!/^\d+$/.test(val)) throw new Error();
+              decimalVal = parseInt(val, 10);
+              break;
+            case "bin":
+              if (!/^[01]+$/.test(val)) throw new Error();
+              decimalVal = parseInt(val, 2);
+              break;
+            case "hex":
+              if (!/^[0-9A-Fa-f]+$/.test(val)) throw new Error();
+              decimalVal = parseInt(val, 16);
+              break;
+            case "oct":
+              if (!/^[0-7]+$/.test(val)) throw new Error();
+              decimalVal = parseInt(val, 8);
+              break;
+          }
+
+          // Limit to 32-bit max for safety/display, but primarily 8-bit for LEDs
+          if (decimalVal > 4294967295) throw new Error("Number too large");
+
+          inputs[base].classList.remove("shake-error", "text-red-400");
+          updateAllFromDecimal(decimalVal, base);
+        } catch (e) {
+          // Invalid input visual feedback
+          inputs[base].classList.add("shake-error", "text-red-400");
+          setTimeout(() => inputs[base].classList.remove("shake-error"), 400);
+        }
+      }
+
+      // Central state updater
+      function updateAllFromDecimal(decValue, skipInput = null) {
+        currentDecimalValue = decValue;
+
+        // Update Inputs
+        if (skipInput !== "dec") inputs.dec.value = decValue;
+        if (skipInput !== "bin") inputs.bin.value = decValue.toString(2);
+        if (skipInput !== "hex")
+          inputs.hex.value = decValue.toString(16).toUpperCase();
+        if (skipInput !== "oct") inputs.oct.value = decValue.toString(8);
+
+        // Ensure valid styles
+        Object.values(inputs).forEach((input) =>
+          input.classList.remove("text-red-400"),
+        );
+
+        updateLEDUI(decValue);
+        generateMathBreakdown(decValue);
+      }
+
+      // Update physical LED board based on decimal value
+      function updateLEDUI(decValue) {
+        const binaryStr = decValue.toString(2).padStart(NUM_BITS, "0");
+        const leds = document.querySelectorAll(".led-bit");
+
+        // Only map the lowest 8 bits to the LEDs for visual clarity if number is huge
+        const visualBits = binaryStr.slice(-NUM_BITS).padStart(NUM_BITS, "0");
+
+        leds.forEach((led) => {
+          const bitIndex = parseInt(led.dataset.bitIndex);
+          const strIndex = NUM_BITS - 1 - bitIndex; // Map index 7 to char[0]
+
+          const bitChar = visualBits[strIndex] || "0";
+          const isActive = bitChar === "1";
+
+          led.dataset.active = isActive;
+          led.className = `led-bit w-8 h-10 md:w-12 md:h-16 rounded-md cursor-pointer border-2 flex items-center justify-center group relative ${
+            isActive ? "active" : "inactive"
+          }`;
+          led.querySelector("span").innerText = bitChar;
+        });
+
+        // Warning if number exceeds 8-bit visualizer
+        if (decValue > 255) {
+          breakdownTotalEl.innerHTML = `<span class="text-red-400 text-sm mr-2 font-normal">(Exceeds 8-bit view)</span> ${decValue}`;
+        } else {
+          breakdownTotalEl.innerText = decValue;
+        }
+      }
+
+      // Generate the beautiful math explanation formula
+      function generateMathBreakdown(decValue) {
+        if (decValue === 0) {
+          breakdownEl.innerHTML =
+            '<span class="text-slate-500 italic">All bits are zero. Total is 0.</span>';
+          return;
+        }
+
+        const binaryStr = decValue.toString(2);
+        let html = [];
+
+        for (let i = 0; i < binaryStr.length; i++) {
+          const bit = binaryStr[i];
+          if (bit === "1") {
+            const power = binaryStr.length - 1 - i;
+            const value = Math.pow(2, power);
+
+            html.push(`
+                        <div class="flex items-center gap-1 bg-slate-800/50 border border-slate-700 px-3 py-1.5 rounded-md animate-[fadeIn_0.3s_ease-out]">
+                            <span class="text-cyan-400 font-bold">1</span>
+                            <span class="text-slate-500 text-xs">×</span>
+                            <span class="text-slate-300">2<sup class="text-[10px]">${power}</sup></span>
+                            <span class="text-slate-500 text-xs">=</span>
+                            <span class="text-purple-400 font-bold">${value}</span>
+                        </div>
+                    `);
+          }
+        }
+
+        // Join with plus signs
+        breakdownEl.innerHTML = html.join(
+          '<span class="text-slate-600 font-bold px-1">+</span>',
+        );
+      }
+
+      // Generate Hex/Dec cheat sheet dynamically
+      function generateCheatSheet() {
+        const grid = document.getElementById("cheat-sheet-grid");
+        let html = "";
+        for (let i = 0; i <= 15; i++) {
+          html += `
+                    <div class="bg-slate-800/50 rounded p-2 border border-slate-700/50 hover:border-slate-500 transition-colors">
+                        <div class="text-slate-400 text-xs">DEC ${i}</div>
+                        <div class="text-purple-400 font-bold text-lg">HEX ${i
+                          .toString(16)
+                          .toUpperCase()}</div>
+                    </div>
+                `;
+        }
+        grid.innerHTML = html;
+      }
+
+      // ================= GAME LOGIC =================
+      let gameTimer;
+      let gameTimeLeft = 30;
+      let gameScore = 0;
+      let currentQuestion = {};
+      let gameActive = false;
+
+      const elScreenStart = document.getElementById("game-start-screen");
+      const elScreenActive = document.getElementById("game-active-screen");
+      const elScreenEnd = document.getElementById("game-end-screen");
+      const elGameInput = document.getElementById("game-input");
+      const elGameFeedback = document.getElementById("game-feedback");
+
+      function startGame() {
+        gameTimeLeft = 30;
+        gameScore = 0;
+        gameActive = true;
+
+        document.getElementById("game-time").innerText = gameTimeLeft;
+        document.getElementById("game-score").innerText = gameScore;
+
+        elScreenStart.classList.add("hidden");
+        elScreenEnd.classList.add("hidden");
+        elScreenActive.classList.replace("hidden", "flex");
+
+        elGameInput.value = "";
+        elGameInput.focus();
+
+        generateQuestion();
+
+        gameTimer = setInterval(() => {
+          gameTimeLeft--;
+          document.getElementById("game-time").innerText = gameTimeLeft;
+
+          if (gameTimeLeft <= 10) {
+            document
+              .getElementById("game-time")
+              .parentElement.classList.add("animate-pulse", "border-red-500");
+          }
+
+          if (gameTimeLeft <= 0) endGame();
+        }, 1000);
+      }
+
+      function generateQuestion() {
+        const difficulty = document.querySelector(
+          'input[name="difficulty"]:checked',
+        ).value;
+        let sourceBase, targetBase, targetLabel, value;
+
+        if (difficulty === "easy") {
+          // Easy: Decimal to Binary (1 to 15)
+          value = Math.floor(Math.random() * 15) + 1;
+          sourceBase = 10;
+          targetBase = 2;
+          targetLabel = "Binary";
+          document.getElementById("game-target").innerText = value;
+          document.getElementById("game-source-base").innerText = "(Base 10)";
+        } else {
+          // Hard: Hex to Binary (1 to 255)
+          value = Math.floor(Math.random() * 254) + 1;
+          sourceBase = 16;
+          targetBase = 2;
+          targetLabel = "Binary";
+          document.getElementById("game-target").innerText = value
+            .toString(16)
+            .toUpperCase();
+          document.getElementById("game-source-base").innerText = "(Base 16)";
+        }
+
+        document.getElementById(
+          "game-instruction",
+        ).innerText = `Convert to ${targetLabel}`;
+        currentQuestion = { value, targetBase };
+      }
+
+      // Handle Game Input (Enter Key)
+      elGameInput.addEventListener("keydown", (e) => {
+        if (!gameActive) return;
+        if (e.key === "Enter") checkAnswer();
+      });
+
+      function checkAnswer() {
+        const userStr = elGameInput.value.trim().toLowerCase();
+        const correctStr = currentQuestion.value.toString(
+          currentQuestion.targetBase,
+        );
+
+        if (userStr === correctStr) {
+          // Correct
+          gameScore += 10;
+          document.getElementById("game-score").innerText = gameScore;
+
+          showFeedback("ACCESS GRANTED", "text-green-400");
+          elGameInput.classList.add("border-green-500");
+          elGameInput.value = "";
+
+          // Add time bonus
+          gameTimeLeft += 2;
+          document.getElementById("game-time").innerText = gameTimeLeft;
+
+          setTimeout(() => {
+            elGameInput.classList.remove("border-green-500");
+            generateQuestion();
+          }, 300);
+        } else {
+          // Incorrect
+          showFeedback("ACCESS DENIED", "text-red-400");
+          elGameInput.classList.add("shake-error", "border-red-500");
+          setTimeout(() => {
+            elGameInput.classList.remove("shake-error", "border-red-500");
+            elGameInput.value = "";
+          }, 400);
+        }
+      }
+
+      function showFeedback(text, colorClass) {
+        elGameFeedback.innerText = text;
+        elGameFeedback.className = `absolute -bottom-8 left-0 w-full text-center font-mono font-bold text-sm transition-all duration-300 ${colorClass} opacity-100 translate-y-0`;
+
+        setTimeout(() => {
+          elGameFeedback.classList.remove("opacity-100");
+          elGameFeedback.classList.add("opacity-0", "translate-y-2");
+        }, 1000);
+      }
+
+      function endGame() {
+        clearInterval(gameTimer);
+        gameActive = false;
+        document
+          .getElementById("game-time")
+          .parentElement.classList.remove("animate-pulse", "border-red-500");
+
+        elScreenActive.classList.replace("flex", "hidden");
+        elScreenEnd.classList.replace("hidden", "flex");
+
+        document.getElementById("game-final-score").innerText = gameScore;
+      }
+
+      function resetGameUI() {
+        elScreenEnd.classList.replace("flex", "hidden");
+        elScreenStart.classList.replace("hidden", "flex");
+      }
+
+      // ================= INITIALIZATION =================
+      window.onload = () => {
+        initSandbox();
+      };
+    </script>
+  </body>
+</html>

@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ShadikHyperWeb - Premium Admin Console</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      :root {
+        --bg-base: #000000;
+        --border-subtle: rgba(255, 255, 255, 0.08);
+        --text-main: #ededed;
+        --text-muted: #a1a1aa;
+      }
+      body {
+        font-family: "Inter", sans-serif;
+        background-color: var(--bg-base);
+        color: var(--text-main);
+        overflow-x: hidden;
+      }
+
+      .premium-panel {
+        background: rgba(10, 10, 10, 0.8);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid var(--border-subtle);
+        border-radius: 16px;
+        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+      }
+      .project-card {
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid var(--border-subtle);
+        border-radius: 16px;
+        transition: all 0.3s ease;
+      }
+      .project-card:hover {
+        background: rgba(255, 255, 255, 0.04);
+        border-color: rgba(56, 189, 248, 0.4);
+        transform: translateY(-2px);
+      }
+
+      .input-premium {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid var(--border-subtle);
+        color: white;
+        border-radius: 8px;
+        padding: 10px 14px;
+        width: 100%;
+        font-size: 0.875rem;
+        outline: none;
+        transition: all 0.2s;
+      }
+      .input-premium:focus {
+        background: rgba(255, 255, 255, 0.06);
+        border-color: rgba(56, 189, 248, 0.5);
+      }
+
+      .btn-primary {
+        background: #ffffff;
+        color: #000000;
+        padding: 10px 20px;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+      }
+      .btn-primary:hover {
+        background: #e5e5e5;
+        transform: scale(0.98);
+      }
+
+      label {
+        font-size: 0.65rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--text-muted);
+        margin-bottom: 6px;
+        display: block;
+      }
+      .ambient-glow {
+        position: fixed;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 80vw;
+        height: 50vh;
+        background: radial-gradient(
+          circle,
+          rgba(56, 189, 248, 0.05) 0%,
+          rgba(0, 0, 0, 0) 70%
+        );
+        filter: blur(80px);
+        z-index: -1;
+        pointer-events: none;
+      }
+
+      /* Custom Scrollbar */
+      ::-webkit-scrollbar {
+        width: 6px;
+      }
+      ::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+      }
+
+      /* Strict screen hiding */
+      .screen-hidden {
+        display: none !important;
+      }
+      .screen-visible-flex {
+        display: flex !important;
+      }
+      .screen-visible-block {
+        display: block !important;
+      }
+    </style>
+  </head>
+  <body
+    class="min-h-screen flex items-center justify-center p-4 md:p-8 relative"
+  >
+    <div class="ambient-glow"></div>
+
+    <!-- Toast Notification -->
+    <div
+      id="toast"
+      class="fixed top-6 right-6 premium-panel px-6 py-3 border-l-4 border-l-emerald-500 translate-x-[150%] transition-transform duration-300 z-50 flex items-center gap-3"
+    >
+      <i class="ph-fill ph-check-circle text-emerald-500 text-xl"></i>
+      <span id="toast-msg" class="text-sm font-semibold"
+        >Action successful!</span
+      >
+    </div>
+
+    <!-- 1. AUTH SCREEN -->
+    <div
+      id="login-screen"
+      class="premium-panel p-8 w-full max-w-sm z-10 screen-visible-block"
+    >
+      <div class="text-center mb-8 flex flex-col items-center">
+        <div
+          class="w-12 h-12 rounded-full bg-blue-600 flex items-center justify-center mb-4 shadow-[0_0_20px_rgba(37,99,235,0.4)]"
+        >
+          <i class="ph-fill ph-lightning text-2xl text-white"></i>
+        </div>
+        <h1 class="text-xl font-bold tracking-tight">System Admin</h1>
+        <p class="text-[13px] text-zinc-400 mt-2">ShadikHyperWeb Access</p>
+      </div>
+      <div class="space-y-4">
+        <div>
+          <label>Email</label
+          ><input
+            type="email"
+            id="email"
+            class="input-premium"
+            placeholder="admin@domain.com"
+          />
+        </div>
+        <div>
+          <label>Password</label
+          ><input
+            type="password"
+            id="password"
+            class="input-premium"
+            placeholder="••••••••"
+          />
+        </div>
+        <button id="login-btn" class="btn-primary w-full mt-4">
+          Login Securely
+        </button>
+        <div
+          id="auth-error"
+          class="bg-red-500/10 border border-red-500/20 text-red-400 text-xs p-3 rounded-lg hidden mt-2"
+        ></div>
+      </div>
+    </div>
+
+    <!-- 2. PROJECT LIST DASHBOARD -->
+    <div
+      id="dashboard-screen"
+      class="w-full max-w-[1100px] screen-hidden flex-col gap-6 z-10"
+    >
+      <header class="flex justify-between items-center premium-panel px-6 py-4">
+        <div class="flex items-center gap-4">
+          <div
+            class="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center"
+          >
+            <i class="ph-fill ph-lightning text-white text-xl"></i>
+          </div>
+          <div>
+            <h1 class="text-lg font-bold text-white tracking-tight">
+              Active Projects
+            </h1>
+            <p class="text-xs text-zinc-400 mt-0.5">
+              Manage your client portals.
+            </p>
+          </div>
+        </div>
+        <div class="flex items-center gap-3">
+          <button id="create-new-btn" class="btn-primary text-sm !py-2">
+            <i class="ph ph-plus-circle text-lg"></i> New Project
+          </button>
+          <button
+            id="logout-btn"
+            class="text-xs font-bold text-zinc-400 hover:text-white px-3 py-2 border border-white/10 rounded-md transition-colors hover:bg-white/5"
+          >
+            <i class="ph ph-sign-out"></i> Logout
+          </button>
+        </div>
+      </header>
+      <div
+        id="project-list"
+        class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+      ></div>
+    </div>
+
+    <!-- 3. PROJECT EDITOR SCREEN -->
+    <div
+      id="editor-screen"
+      class="w-full max-w-[1100px] screen-hidden flex-col gap-6 z-10"
+    >
+      <header class="flex justify-between items-center premium-panel px-6 py-4">
+        <div class="flex items-center gap-4">
+          <button
+            id="back-btn"
+            class="w-8 h-8 flex items-center justify-center rounded-lg bg-white/5 hover:bg-white/10 transition-colors border border-white/10"
+          >
+            <i class="ph ph-arrow-left text-white"></i>
+          </button>
+          <div>
+            <h1
+              class="text-sm font-bold text-white tracking-tight flex items-center gap-2"
+            >
+              Editing:
+              <span id="header-project-name" class="text-blue-400"
+                >Loading...</span
+              >
+            </h1>
+            <p class="text-xs text-green-400 mt-0.5 flex items-center gap-1">
+              <span
+                class="w-2 h-2 bg-green-400 rounded-full animate-pulse"
+              ></span>
+              Database Connected
+            </p>
+          </div>
+        </div>
+        <button
+          id="copy-link-editor-btn"
+          class="text-xs font-bold text-white bg-white/10 hover:bg-white/20 px-4 py-2 border border-white/10 rounded-md transition-colors flex items-center gap-2"
+        >
+          <i class="ph ph-link"></i> Copy Client Link
+        </button>
+      </header>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        <!-- Left Col: Core Params -->
+        <div class="lg:col-span-7 flex flex-col gap-6">
+          <div class="premium-panel p-6">
+            <h2
+              class="text-sm font-bold border-b border-white/10 pb-4 mb-5 text-blue-400 flex items-center gap-2"
+            >
+              <i class="ph ph-sliders text-lg"></i> Core Details
+            </h2>
+            <div class="space-y-5">
+              <div class="grid grid-cols-2 gap-4">
+                <div>
+                  <label>Project Name</label
+                  ><input
+                    type="text"
+                    id="cfg-project-name"
+                    class="input-premium"
+                  />
+                </div>
+                <div>
+                  <label>Client Name</label
+                  ><input
+                    type="text"
+                    id="cfg-client-name"
+                    class="input-premium"
+                  />
+                </div>
+              </div>
+              <div class="grid grid-cols-2 gap-4">
+                <div>
+                  <label>Progress (%)</label
+                  ><input
+                    type="number"
+                    id="cfg-progress"
+                    min="0"
+                    max="100"
+                    class="input-premium"
+                  />
+                </div>
+                <div>
+                  <label>Delivery ETA</label
+                  ><input
+                    type="text"
+                    id="cfg-eta"
+                    class="input-premium"
+                    placeholder="e.g. Dec 10, 2026"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="premium-panel p-6">
+            <h2
+              class="text-sm font-bold border-b border-white/10 pb-4 mb-5 text-blue-400 flex items-center gap-2"
+            >
+              <i class="ph ph-terminal-window text-lg"></i> Terminal View
+            </h2>
+            <div class="space-y-5">
+              <div>
+                <label>Current Focus</label
+                ><input type="text" id="cfg-focus" class="input-premium" />
+              </div>
+              <div>
+                <label>Live Logs (Comma Separated)</label
+                ><textarea
+                  id="cfg-logs"
+                  rows="3"
+                  class="input-premium resize-none"
+                ></textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Col: Map -->
+        <div class="lg:col-span-5 premium-panel p-6 flex flex-col h-[645px]">
+          <div
+            class="flex justify-between items-center border-b border-white/10 pb-4 mb-4 shrink-0"
+          >
+            <h2 class="text-sm font-bold text-blue-400 flex items-center gap-2">
+              <i class="ph ph-map-trifold text-lg"></i> Roadmap
+            </h2>
+            <button
+              id="add-phase-btn"
+              class="text-xs font-bold text-black bg-white px-3 py-1.5 rounded-md hover:bg-gray-200"
+            >
+              + Add Node
+            </button>
+          </div>
+
+          <div
+            id="roadmap-builder"
+            class="space-y-3 flex-1 overflow-y-auto pr-2 pb-2"
+          ></div>
+
+          <div class="pt-4 border-t border-white/10 mt-2 shrink-0">
+            <button
+              id="save-btn"
+              class="btn-primary w-full py-3 bg-blue-600 text-white hover:bg-blue-500 border-none shadow-lg shadow-blue-900/20"
+            >
+              <i class="ph ph-rocket-launch text-lg"></i> Save & Sync to Client
+              TV
+            </button>
+            <div
+              id="save-error"
+              class="bg-red-500/10 border border-red-500/20 text-red-400 text-xs p-2 rounded-lg hidden mt-3 text-center"
+            ></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Firebase SDK (Module) -->
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+      import {
+        getFirestore,
+        collection,
+        doc,
+        getDoc,
+        getDocs,
+        addDoc,
+        setDoc,
+        deleteDoc,
+        serverTimestamp,
+      } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+      import {
+        getAuth,
+        signInWithEmailAndPassword,
+        onAuthStateChanged,
+        signOut,
+      } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
+
+      const firebaseConfig = {
+        apiKey: "AIzaSyDLip1JbemlO2OOqI_P9KfWSLVhvgixUmY",
+        authDomain: "shadikwebhyper.firebaseapp.com",
+        projectId: "shadikwebhyper",
+        storageBucket: "shadikwebhyper.firebasestorage.app",
+        messagingSenderId: "93254122264",
+        appId: "1:93254122264:web:181405dce44e473f4a7c6d",
+      };
+
+      const app = initializeApp(firebaseConfig);
+      const auth = getAuth(app);
+      const db = getFirestore(app);
+
+      let currentProjectId = null;
+      let currentRoadmap = [];
+
+      // Strict UI Flow logic
+      function showUI(screen) {
+        document.getElementById("login-screen").className =
+          "premium-panel p-8 w-full max-w-sm z-10 screen-hidden";
+        document.getElementById("dashboard-screen").className =
+          "w-full max-w-[1100px] flex-col gap-6 z-10 screen-hidden";
+        document.getElementById("editor-screen").className =
+          "w-full max-w-[1100px] flex-col gap-6 z-10 screen-hidden";
+
+        if (screen === "login")
+          document
+            .getElementById("login-screen")
+            .classList.replace("screen-hidden", "screen-visible-block");
+        if (screen === "dashboard")
+          document
+            .getElementById("dashboard-screen")
+            .classList.replace("screen-hidden", "screen-visible-flex");
+        if (screen === "editor")
+          document
+            .getElementById("editor-screen")
+            .classList.replace("screen-hidden", "screen-visible-flex");
+      }
+
+      function showToast(message) {
+        document.getElementById("toast-msg").innerText = message;
+        const toast = document.getElementById("toast");
+        toast.classList.remove("translate-x-[150%]");
+        setTimeout(() => toast.classList.add("translate-x-[150%]"), 3000);
+      }
+
+      window.copyToClipboard = (id) => {
+        const baseUrl = window.location.href.substring(
+          0,
+          window.location.href.lastIndexOf("/"),
+        );
+        const link = `${baseUrl}/progress-tracking.html?id=${id}`;
+        navigator.clipboard
+          .writeText(link)
+          .then(() => showToast("Client Link Copied!"));
+      };
+
+      // Auth Logic
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+          showUI("dashboard");
+          loadAllProjects();
+        } else {
+          showUI("login");
+        }
+      });
+
+      document
+        .getElementById("login-btn")
+        .addEventListener("click", async () => {
+          const btn = document.getElementById("login-btn");
+          const errBox = document.getElementById("auth-error");
+
+          btn.innerHTML = `<i class="ph ph-spinner animate-spin"></i> Checking...`;
+          errBox.classList.add("hidden");
+
+          try {
+            await signInWithEmailAndPassword(
+              auth,
+              document.getElementById("email").value,
+              document.getElementById("password").value,
+            );
+            btn.innerHTML = `Login Securely`;
+          } catch (err) {
+            btn.innerHTML = `Login Securely`;
+            errBox.innerText = "Firebase Auth Error: " + err.message;
+            errBox.classList.remove("hidden");
+          }
+        });
+
+      document
+        .getElementById("logout-btn")
+        .addEventListener("click", () => signOut(auth));
+
+      // Load Projects
+      async function loadAllProjects() {
+        const projectsContainer = document.getElementById("project-list");
+        projectsContainer.innerHTML = `<p class="text-zinc-500 col-span-3 text-center py-10">Syncing with Firebase...</p>`;
+
+        try {
+          const querySnapshot = await getDocs(collection(db, "projects"));
+          projectsContainer.innerHTML = "";
+
+          if (querySnapshot.empty) {
+            projectsContainer.innerHTML = `<div class="col-span-3 premium-panel p-10 text-center border-dashed"><i class="ph ph-folder-open text-4xl text-zinc-600 mb-2"></i><p class="text-zinc-400 font-medium">No projects found. Create one above.</p></div>`;
+            return;
+          }
+
+          querySnapshot.forEach((docSnap) => {
+            const p = docSnap.data();
+            projectsContainer.innerHTML += `
+                    <div class="project-card p-6 flex flex-col justify-between h-full relative group overflow-hidden">
+                        <div class="relative z-10">
+                            <div class="flex justify-between items-start mb-4">
+                                <span class="bg-white/5 border border-white/10 text-zinc-300 text-[10px] uppercase tracking-widest px-2.5 py-1 rounded-full flex items-center gap-1.5"><div class="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></div> Live</span>
+                                <button onclick="deleteProject('${
+                                  docSnap.id
+                                }')" class="text-zinc-500 hover:text-red-400 transition-colors"><i class="ph ph-trash text-lg"></i></button>
+                            </div>
+                            <h3 class="text-xl font-bold text-white mb-1 truncate">${
+                              p.projectName || "Untitled Project"
+                            }</h3>
+                            <p class="text-sm text-zinc-400 font-medium mb-6"><i class="ph ph-user text-zinc-500"></i> ${
+                              p.clientName || "No Client Set"
+                            }</p>
+                            <div class="mb-6">
+                                <div class="flex justify-between text-xs font-bold text-zinc-500 mb-2"><span>Completion</span><span class="text-white">${
+                                  p.progress || 0
+                                }%</span></div>
+                                <div class="w-full bg-white/5 h-1.5 rounded-full overflow-hidden"><div class="bg-blue-500 h-full rounded-full" style="width: ${
+                                  p.progress || 0
+                                }%"></div></div>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-3 relative z-10">
+                            <button onclick="openEditor('${
+                              docSnap.id
+                            }')" class="bg-white/10 hover:bg-white/20 text-white text-xs font-bold py-2.5 rounded-lg border border-white/5 flex justify-center gap-2 transition-colors"><i class="ph ph-pencil-simple"></i> Edit</button>
+                            <button onclick="copyToClipboard('${
+                              docSnap.id
+                            }')" class="bg-blue-600/20 hover:bg-blue-600/40 text-blue-400 text-xs font-bold py-2.5 rounded-lg border border-blue-500/30 flex justify-center gap-2 transition-colors"><i class="ph ph-link"></i> Link</button>
+                        </div>
+                    </div>`;
+          });
+        } catch (err) {
+          projectsContainer.innerHTML = `<p class="text-red-400 col-span-3 text-center py-10">Database Error: ${err.message}</p>`;
+        }
+      }
+
+      window.deleteProject = async (id) => {
+        if (
+          confirm(
+            "Delete this tracking project? Client link will break permanently.",
+          )
+        ) {
+          await deleteDoc(doc(db, "projects", id));
+          showToast("Project Deleted");
+          loadAllProjects();
+        }
+      };
+
+      document
+        .getElementById("create-new-btn")
+        .addEventListener("click", async () => {
+          const btn = document.getElementById("create-new-btn");
+          btn.innerHTML = `<i class="ph ph-spinner animate-spin"></i> Creating...`;
+          try {
+            const newDocRef = await addDoc(collection(db, "projects"), {
+              projectName: "New Project Instance",
+              clientName: "",
+              progress: 0,
+              createdAt: serverTimestamp(),
+              roadmap: [
+                {
+                  title: "Initial Setup",
+                  desc: "Setting up environment",
+                  status: "current",
+                },
+              ],
+            });
+            btn.innerHTML = `<i class="ph ph-plus-circle text-lg"></i> New Project`;
+            openEditor(newDocRef.id);
+          } catch (error) {
+            alert("Creation failed: " + error.message);
+            btn.innerHTML = `<i class="ph ph-plus-circle text-lg"></i> New Project`;
+          }
+        });
+
+      // Editor Logic
+      window.openEditor = async (id) => {
+        currentProjectId = id;
+        showUI("editor");
+        document.getElementById("header-project-name").innerText =
+          "Fetching Data...";
+
+        const docSnap = await getDoc(doc(db, "projects", id));
+        if (docSnap.exists()) {
+          const data = docSnap.data();
+          document.getElementById("header-project-name").innerText =
+            data.projectName || id;
+          document.getElementById("cfg-project-name").value =
+            data.projectName || "";
+          document.getElementById("cfg-client-name").value =
+            data.clientName || "";
+          document.getElementById("cfg-progress").value = data.progress || 0;
+          document.getElementById("cfg-eta").value = data.eta || "";
+          document.getElementById("cfg-focus").value = data.currentFocus || "";
+          document.getElementById("cfg-logs").value = (data.logs || []).join(
+            ", ",
+          );
+          currentRoadmap = data.roadmap || [];
+          renderRoadmapBuilder();
+        }
+      };
+
+      document.getElementById("back-btn").addEventListener("click", () => {
+        showUI("dashboard");
+        loadAllProjects();
+      });
+
+      document
+        .getElementById("copy-link-editor-btn")
+        .addEventListener("click", () => copyToClipboard(currentProjectId));
+
+      function captureUnsavedText() {
+        const titles = document.querySelectorAll(".roadmap-title"),
+          descs = document.querySelectorAll(".roadmap-desc"),
+          statuses = document.querySelectorAll(".roadmap-status");
+        let tempArray = [];
+        for (let i = 0; i < titles.length; i++)
+          tempArray.push({
+            title: titles[i].value,
+            desc: descs[i].value,
+            status: statuses[i].value,
+          });
+        return tempArray;
+      }
+
+      function renderRoadmapBuilder() {
+        const container = document.getElementById("roadmap-builder");
+        container.innerHTML = "";
+        currentRoadmap.forEach((phase, index) => {
+          container.innerHTML += `
+                <div class="bg-white/[0.02] p-3 rounded-lg border border-white/10 relative group hover:border-white/20 transition-colors">
+                    <div class="flex justify-between items-center mb-2 px-1">
+                        <span class="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">Node ${
+                          index + 1
+                        }</span>
+                        <button onclick="removePhase(${index})" class="text-zinc-600 hover:text-red-400 cursor-pointer"><i class="ph ph-trash text-base"></i></button>
+                    </div>
+                    <div class="grid grid-cols-3 gap-2 mb-2">
+                        <input type="text" value="${
+                          phase.title
+                        }" class="input-premium col-span-2 !py-2 !px-3 !text-sm bg-black/50 roadmap-title" placeholder="Phase Title">
+                        <select class="input-premium col-span-1 !py-2 !px-2 !text-[12px] bg-black/50 roadmap-status">
+                            <option value="done" ${
+                              phase.status === "done" ? "selected" : ""
+                            }>Completed</option>
+                            <option value="current" ${
+                              phase.status === "current" ? "selected" : ""
+                            }>Active</option>
+                            <option value="pending" ${
+                              phase.status === "pending" ? "selected" : ""
+                            }>Pending</option>
+                        </select>
+                    </div>
+                    <input type="text" value="${
+                      phase.desc
+                    }" class="input-premium w-full !py-2 !px-3 !text-sm bg-black/50 roadmap-desc" placeholder="Description...">
+                </div>`;
+        });
+      }
+
+      document.getElementById("add-phase-btn").addEventListener("click", () => {
+        currentRoadmap = captureUnsavedText();
+        currentRoadmap.push({ title: "", desc: "", status: "pending" });
+        renderRoadmapBuilder();
+        setTimeout(() => {
+          const scrollBox = document.getElementById("roadmap-builder");
+          scrollBox.scrollTop = scrollBox.scrollHeight;
+        }, 50);
+      });
+      window.removePhase = (idx) => {
+        currentRoadmap = captureUnsavedText();
+        currentRoadmap.splice(idx, 1);
+        renderRoadmapBuilder();
+      };
+
+      document
+        .getElementById("save-btn")
+        .addEventListener("click", async () => {
+          if (!currentProjectId) return;
+          const btn = document.getElementById("save-btn");
+          const errBox = document.getElementById("save-error");
+
+          btn.innerHTML = `<i class="ph ph-spinner animate-spin text-lg"></i> Syncing to Cloud...`;
+          errBox.classList.add("hidden");
+
+          const updatedRoadmap = captureUnsavedText();
+          updatedRoadmap.forEach((phase) => {
+            if (phase.title.trim() === "") phase.title = "Untitled Phase";
+          });
+
+          const payload = {
+            projectName: document.getElementById("cfg-project-name").value,
+            clientName: document.getElementById("cfg-client-name").value,
+            progress:
+              parseInt(document.getElementById("cfg-progress").value) || 0,
+            eta: document.getElementById("cfg-eta").value,
+            currentFocus: document.getElementById("cfg-focus").value,
+            logs: document
+              .getElementById("cfg-logs")
+              .value.split(",")
+              .map((l) => l.trim())
+              .filter((l) => l !== ""),
+            roadmap: updatedRoadmap,
+            lastUpdated: serverTimestamp(),
+          };
+
+          try {
+            await setDoc(doc(db, "projects", currentProjectId), payload, {
+              merge: true,
+            });
+            document.getElementById("header-project-name").innerText =
+              payload.projectName;
+            btn.innerHTML = `<i class="ph ph-rocket-launch text-lg"></i> Save & Sync to Client TV`;
+            showToast("Successfully Synced!");
+          } catch (err) {
+            btn.innerHTML = `<i class="ph ph-warning text-lg"></i> Sync Failed`;
+            errBox.innerText = "Firestore Error: " + err.message;
+            errBox.classList.remove("hidden");
+          }
+        });
+    </script>
+  </body>
+</html>
