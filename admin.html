@@ -784,19 +784,17 @@
 
           showToast(`Sending to ${tokens.length} devices via Render...`);
 
-          // Call your custom, free Render Webhook
-          const response = await fetch(
-            "https://YOUR_FREE_RENDER_APP_URL.onrender.com/send-push",
-            {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({
-                tokens: tokens,
-                title: title,
-                body: body,
-              }),
-            },
-          );
+          // UPDATED: Use a relative path! Since admin.html and server.js are now on the same Render URL
+          // we don't need the full address. This bypasses any CORS issues automatically!
+          const response = await fetch("/send-push", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              tokens: tokens,
+              title: title,
+              body: body,
+            }),
+          });
 
           if (response.ok) {
             showToast("Push Notification Sent!");
@@ -811,7 +809,7 @@
           titleInput.value = "";
           bodyInput.value = "";
           showToast(
-            `Prepared ${tokens.length} tokens. Connect Render backend!`,
+            `Prepared ${tokens.length} tokens. Check console for errors!`,
           );
         }
       }
