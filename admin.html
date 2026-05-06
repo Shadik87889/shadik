@@ -339,10 +339,62 @@
               </div>
             </div>
           </div>
+
+          <!-- NEW: NOTIFICATION CENTER -->
+          <div
+            class="premium-panel p-6 border border-indigo-500/30 shadow-[0_0_15px_rgba(79,70,229,0.1)] relative overflow-hidden group"
+          >
+            <div
+              class="absolute -right-20 -top-20 w-48 h-48 bg-indigo-500 opacity-10 rounded-full blur-3xl pointer-events-none group-hover:scale-110 transition-transform duration-700"
+            ></div>
+            <h2
+              class="text-sm font-bold border-b border-white/10 pb-4 mb-5 text-indigo-400 flex items-center gap-2 relative z-10"
+            >
+              <i class="ph ph-broadcast text-lg"></i> Push Notification Center
+            </h2>
+            <div class="space-y-4 relative z-10">
+              <div>
+                <label class="text-indigo-200/70">Alert Title</label>
+                <input
+                  type="text"
+                  id="notif-title"
+                  class="input-premium border-indigo-500/20 focus:border-indigo-400/50"
+                  placeholder="e.g., Phase 1 Completed"
+                />
+              </div>
+              <div>
+                <label class="text-indigo-200/70">Alert Message</label>
+                <textarea
+                  id="notif-body"
+                  rows="2"
+                  class="input-premium border-indigo-500/20 focus:border-indigo-400/50 resize-none"
+                  placeholder="e.g., The homepage design is ready for your review."
+                ></textarea>
+              </div>
+              <div class="flex gap-3 pt-2">
+                <button
+                  id="send-target-notif-btn"
+                  class="flex-1 bg-indigo-600/20 hover:bg-indigo-600/40 text-indigo-300 text-xs font-bold py-2.5 rounded-lg border border-indigo-500/30 transition-colors flex items-center justify-center gap-2"
+                >
+                  <i class="ph-fill ph-paper-plane-right"></i> Send to Client
+                  Only
+                </button>
+                <button
+                  id="send-global-notif-btn"
+                  class="flex-1 bg-purple-600/20 hover:bg-purple-600/40 text-purple-300 text-xs font-bold py-2.5 rounded-lg border border-purple-500/30 transition-colors flex items-center justify-center gap-2"
+                >
+                  <i class="ph-fill ph-globe-hemisphere-west"></i> Broadcast
+                  Global
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
 
         <!-- Right Col: Map -->
-        <div class="lg:col-span-5 premium-panel p-6 flex flex-col h-[645px]">
+        <div
+          class="lg:col-span-5 premium-panel p-6 flex flex-col h-full min-h-[645px]"
+        >
           <div
             class="flex justify-between items-center border-b border-white/10 pb-4 mb-4 shrink-0"
           >
@@ -682,11 +734,95 @@
           scrollBox.scrollTop = scrollBox.scrollHeight;
         }, 50);
       });
+
       window.removePhase = (idx) => {
         currentRoadmap = captureUnsavedText();
         currentRoadmap.splice(idx, 1);
         renderRoadmapBuilder();
       };
+
+      // --- PUSH NOTIFICATION SYSTEM (Bypassing Firebase Blaze) ---
+      async function triggerPushNotification(targetType) {
+        const titleInput = document.getElementById("notif-title");
+        const bodyInput = document.getElementById("notif-body");
+        const title = titleInput.value.trim();
+        const body = bodyInput.value.trim();
+
+        if (!title || !body) {
+          showToast("Please enter both a title and message.");
+          return;
+        }
+
+        showToast("Fetching subscriber tokens...");
+        let tokens = [];
+
+        try {
+          if (targetType === "client") {
+            // TARGETED: Fetch tokens ONLY from this specific project's sub-collection
+            const subsRef = collection(
+              db,
+              "projects",
+              currentProjectId,
+              "subscribers",
+            );
+            const snap = await getDocs(subsRef);
+            snap.forEach((doc) => tokens.push(doc.data().token));
+          } else if (targetType === "global") {
+            // GLOBAL: Iterate over ALL projects and gather EVERY token
+            const allProjectsSnap = await getDocs(collection(db, "projects"));
+            for (const p of allProjectsSnap.docs) {
+              const subsRef = collection(db, "projects", p.id, "subscribers");
+              const subSnap = await getDocs(subsRef);
+              subSnap.forEach((doc) => tokens.push(doc.data().token));
+            }
+          }
+
+          if (tokens.length === 0) {
+            showToast("No active subscribers found.");
+            return;
+          }
+
+          showToast(`Sending to ${tokens.length} devices via Render...`);
+
+          // Call your custom, free Render Webhook
+          const response = await fetch(
+            "https://YOUR_FREE_RENDER_APP_URL.onrender.com/send-push",
+            {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                tokens: tokens,
+                title: title,
+                body: body,
+              }),
+            },
+          );
+
+          if (response.ok) {
+            showToast("Push Notification Sent!");
+            titleInput.value = "";
+            bodyInput.value = "";
+          } else {
+            throw new Error("Render server rejected the request.");
+          }
+        } catch (err) {
+          console.error(err);
+          // Failsafe UI clear for when the backend isn't linked yet
+          titleInput.value = "";
+          bodyInput.value = "";
+          showToast(
+            `Prepared ${tokens.length} tokens. Connect Render backend!`,
+          );
+        }
+      }
+
+      document
+        .getElementById("send-target-notif-btn")
+        .addEventListener("click", () => triggerPushNotification("client"));
+      document
+        .getElementById("send-global-notif-btn")
+        .addEventListener("click", () => triggerPushNotification("global"));
+      // ------------------------------------------------------------
 
       document
         .getElementById("save-btn")

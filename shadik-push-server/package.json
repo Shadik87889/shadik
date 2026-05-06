@@ -1,0 +1,14 @@
+{
+  "name": "shadik-push-server",
+  "version": "1.0.0",
+  "description": "Free Firebase Push Notification Server for ShadikHyperWeb",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.6",
+    "express": "^4.22.1",
+    "firebase-admin": "^12.7.0"
+  }
+}
