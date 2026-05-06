@@ -7,8 +7,11 @@ const app = express();
 // Allow your admin panel to talk to this server
 app.use(cors({ origin: "*" }));
 app.use(express.json());
+
 // Serve all static HTML/CSS/JS files in this folder
-app.use(express.static(__dirname));
+// Setting extensions to ['html'] allows accessing URLs like /business instead of /business.html
+app.use(express.static(__dirname, { extensions: ["html"] }));
+
 // Initialize Firebase Admin securely via Environment Variables
 // (You will set FIREBASE_SERVICE_ACCOUNT in Render.com's dashboard later)
 try {
