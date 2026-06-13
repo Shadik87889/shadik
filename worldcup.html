@@ -1,0 +1,1529 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <title>Shadik FIFA World Cup - Luxury Live Sports</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- FontAwesome -->
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="shortcut icon"
+      href="shadikHyperWeb Favicon.png"
+      type="image/x-icon"
+    />
+    <!-- Google Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- HLS.js for Live Streaming -->
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: { sans: ["Inter", "sans-serif"] },
+            colors: {
+              dark: {
+                base: "#030305",
+                sidebar: "#000000",
+                card: "#0a0a0c",
+                text: "#8E939D",
+              },
+              wc: {
+                coral: "#FF3366",
+                turquoise: "#00E5FF",
+                purple: "#8A2BE2",
+                lime: "#CCFF00",
+              },
+            },
+          },
+        },
+      };
+    </script>
+
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+        background-color: #030305;
+        color: white;
+        overflow: hidden;
+        -webkit-user-select: none;
+        user-select: none;
+        touch-action: pan-x pan-y;
+      }
+
+      ::-webkit-scrollbar {
+        display: none;
+      }
+      * {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+
+      .text-gradient-wc {
+        background: linear-gradient(
+          90deg,
+          #ff3366,
+          #8a2be2,
+          #00e5ff,
+          #ccff00,
+          #ff3366
+        );
+        background-size: 400% auto;
+        color: transparent;
+        -webkit-background-clip: text;
+        background-clip: text;
+        animation: textShine 8s linear infinite;
+        display: inline-block;
+        padding-right: 8px;
+      }
+      @keyframes textShine {
+        0% {
+          background-position: 0% center;
+        }
+        100% {
+          background-position: -400% center;
+        }
+      }
+
+      .animated-border {
+        background: linear-gradient(
+          45deg,
+          #ff3366,
+          #8a2be2,
+          #00e5ff,
+          #ccff00,
+          #ff3366
+        );
+        background-size: 300% 300%;
+        animation: borderShift 4s ease infinite;
+      }
+      @keyframes borderShift {
+        0% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+        100% {
+          background-position: 0% 50%;
+        }
+      }
+
+      /* --- HOME CARDS --- */
+      .game-card {
+        transition: width 0.5s cubic-bezier(0.34, 1.56, 0.64, 1),
+          height 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), transform 0.4s ease;
+        transform-origin: center bottom;
+      }
+      .game-card.inactive {
+        width: 100px;
+        height: 140px;
+        z-index: 10;
+        transform: translateY(0);
+      }
+      .game-card.inactive:hover {
+        transform: translateY(-2px);
+        z-index: 15;
+      }
+      .game-card.active {
+        width: 180px;
+        height: 180px;
+        transform: translateY(-8px);
+        z-index: 30;
+        box-shadow: 0 15px 30px -10px rgba(0, 0, 0, 0.9),
+          0 0 25px rgba(0, 229, 255, 0.2);
+      }
+
+      @media (min-width: 768px) {
+        .game-card.inactive {
+          width: 150px;
+          height: 220px;
+        }
+        .game-card.inactive:hover {
+          transform: translateY(-8px);
+        }
+        .game-card.active {
+          width: 290px;
+          height: 290px;
+          transform: translateY(-16px);
+          box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.9),
+            0 0 45px rgba(0, 229, 255, 0.25);
+        }
+      }
+
+      .card-border {
+        opacity: 0;
+        transition: opacity 0.4s ease;
+      }
+      .game-card.active .card-border {
+        opacity: 1;
+      }
+      .card-img {
+        filter: grayscale(80%) brightness(0.5);
+        transition: all 0.5s ease;
+        padding: 15px;
+      }
+      .game-card.inactive:hover .card-img {
+        filter: grayscale(20%) brightness(0.9);
+        scale: 1.05;
+      }
+      .game-card.active .card-img {
+        filter: grayscale(0%) brightness(1);
+        scale: 1.1;
+        padding: 25px;
+      }
+
+      @media (max-width: 767px) {
+        .card-img {
+          padding: 8px;
+        }
+        .game-card.active .card-img {
+          padding: 16px;
+        }
+      }
+
+      .active-ui {
+        opacity: 0;
+        transition: opacity 0.4s ease;
+        pointer-events: none;
+      }
+      .game-card.active .active-ui {
+        opacity: 1;
+        transition-delay: 0.2s;
+        pointer-events: auto;
+      }
+
+      .hero-transition {
+        transition: opacity 0.4s ease,
+          transform 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+      }
+      .hero-exit {
+        opacity: 0;
+        transform: translateY(15px);
+        filter: blur(4px);
+        pointer-events: none;
+        position: absolute;
+      }
+      .hero-enter {
+        opacity: 1;
+        transform: translateY(0);
+        filter: blur(0);
+        pointer-events: auto;
+        position: relative;
+      }
+
+      /* --- APP VIEW TRANSITIONS --- */
+      .app-view {
+        transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1),
+          opacity 0.5s ease;
+      }
+      #view-home.hidden-state {
+        transform: scale(0.95);
+        opacity: 0;
+        pointer-events: none;
+        z-index: 0;
+      }
+      #view-home.active-state {
+        transform: scale(1);
+        opacity: 1;
+        pointer-events: auto;
+        z-index: 20;
+      }
+      #view-player.hidden-state {
+        transform: translateX(100%);
+        opacity: 0;
+        pointer-events: none;
+        z-index: 0;
+      }
+      #view-player.active-state {
+        transform: translateX(0);
+        opacity: 1;
+        pointer-events: auto;
+        z-index: 30;
+      }
+
+      /* --- CUSTOM FIFA VIDEO CONTROLS --- */
+      #video-container {
+        cursor: none;
+      }
+      #video-container.controls-active {
+        cursor: default;
+      }
+
+      #video-container:-webkit-full-screen {
+        width: 100vw;
+        height: 100vh;
+        border-radius: 0;
+      }
+      #video-container:fullscreen {
+        width: 100vw;
+        height: 100vh;
+        border-radius: 0;
+      }
+
+      #video-container:-webkit-full-screen .control-fade {
+        padding-bottom: 24px;
+      }
+      #video-container:fullscreen .control-fade {
+        padding-bottom: 24px;
+      }
+
+      .control-fade {
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        pointer-events: none;
+      }
+      #video-container.controls-active .control-fade {
+        opacity: 1;
+        pointer-events: auto;
+      }
+
+      /* Premium FIFA Theme Range Slider */
+      input[type="range"] {
+        -webkit-appearance: none;
+        width: 100%;
+        background: transparent;
+        cursor: pointer;
+      }
+      input[type="range"]:focus {
+        outline: none;
+      }
+      input[type="range"]::-webkit-slider-runnable-track {
+        width: 100%;
+        height: 6px;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 3px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+      }
+      /* Football Thumb */
+      input[type="range"].fifa-scrubber::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        height: 20px;
+        width: 20px;
+        border-radius: 50%;
+        background-color: #fff;
+        background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="%23ffffff" d="M256 512c141.4 0 256-114.6 256-256S397.4 0 256 0 0 114.6 0 256s114.6 256 256 256z"/><path fill="%231a2235" d="M156.4 125.7l-47.5 81.3 46 88.5h91l46.2-88.5-47.6-81.3h-88.1zm178.2 26.6l38.2 24.3-17.6 65.6-58.4-18.4 37.8-71.5zM128 176.6l-38.2-24.3L107.4 86.7l58.4 18.4-37.8 71.5zm195.4 125l51.5 68.2-56 55.4-80-28.4-38.3-80.4 122.8-14.8zm-134.8 0l-51.5 68.2 56 55.4 80-28.4 38.3-80.4-122.8-14.8z"/></svg>');
+        background-size: cover;
+        margin-top: -7px;
+        box-shadow: 0 0 15px rgba(0, 229, 255, 0.8),
+          0 0 5px rgba(255, 51, 102, 0.8);
+        transition: transform 0.1s;
+      }
+      input[type="range"].fifa-scrubber:hover::-webkit-slider-thumb {
+        transform: scale(1.2);
+      }
+
+      input[type="range"].vol-scrubber::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        height: 12px;
+        width: 12px;
+        border-radius: 50%;
+        background-color: #fff;
+        margin-top: -3px;
+      }
+    </style>
+  </head>
+
+  <body
+    class="h-[100dvh] w-screen flex flex-col md:flex-row bg-dark-base overflow-hidden relative"
+  >
+    <!-- WELCOME MODAL (CLEAN & PREMIUM) -->
+    <div
+      id="welcome-modal"
+      class="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm transition-opacity duration-500"
+    >
+      <div
+        class="relative w-[90%] max-w-[360px] bg-[#111827] border border-white/10 rounded-2xl p-6 text-center shadow-2xl transform transition-transform duration-500"
+      >
+        <img
+          src="https://i.postimg.cc/jqN39zcL/Gemini-Generated-Image-ep4d03ep4d03ep4d-(1).png"
+          alt="Shadik Hossain"
+          class="w-20 h-20 rounded-full mx-auto object-cover mb-4 shadow-md"
+        />
+
+        <h2 class="text-xl font-bold text-white mb-2">Ad-Free Live Sports</h2>
+
+        <p class="text-white/60 text-sm leading-relaxed mb-6">
+          Enjoy uninterrupted streaming.<br />Developed by
+          <span class="text-white font-semibold">Shadik Hossain</span>.
+        </p>
+
+        <div class="flex flex-col gap-3">
+          <button
+            onclick="document.getElementById('welcome-modal').style.opacity='0'; setTimeout(()=>document.getElementById('welcome-modal').style.display='none', 500);"
+            class="w-full bg-white text-black font-bold py-3 px-6 rounded-xl transition-all duration-300 text-sm shadow-md hover:bg-gray-200"
+          >
+            Start Watching
+          </button>
+          <a
+            href="https://shadik.onrender.com/business"
+            target="_blank"
+            class="w-full bg-white/5 border border-white/10 hover:bg-white/10 text-white font-medium py-3 px-6 rounded-xl transition-all duration-300 text-sm"
+          >
+            View Portfolio
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- DUAL BACKGROUND LAYER -->
+    <div class="absolute inset-0 z-0 bg-dark-base pointer-events-none">
+      <img
+        id="bg-layer-0"
+        class="absolute inset-0 w-full h-full object-cover object-[center_30%] mix-blend-luminosity transition-opacity duration-[1200ms] ease-in-out opacity-30"
+      />
+      <img
+        id="bg-layer-1"
+        class="absolute inset-0 w-full h-full object-cover object-[center_30%] mix-blend-luminosity transition-opacity duration-[1200ms] ease-in-out opacity-0"
+      />
+
+      <div
+        class="absolute inset-0 bg-gradient-to-r from-[#000000] via-[#000000]/85 to-transparent w-[90%] md:w-[80%] z-10"
+      ></div>
+      <div
+        class="absolute inset-0 bg-gradient-to-t from-[#000000] via-[#000000]/95 to-transparent h-[70%] mt-auto z-10"
+      ></div>
+
+      <div
+        class="absolute top-[-10%] right-[-10%] w-[400px] md:w-[600px] h-[400px] md:h-[600px] bg-wc-purple/15 blur-[120px] md:blur-[160px] rounded-full z-10"
+      ></div>
+      <div
+        class="absolute bottom-[10%] right-[10%] w-[250px] md:w-[400px] h-[250px] md:h-[400px] bg-wc-turquoise/10 blur-[100px] md:blur-[140px] rounded-full z-10"
+      ></div>
+    </div>
+
+    <!-- SIDEBAR / BOTTOM NAV -->
+    <aside
+      class="order-2 md:order-1 w-full h-[70px] md:h-full md:w-[76px] bg-dark-sidebar/80 md:bg-dark-sidebar flex flex-row md:flex-col items-center justify-around md:justify-start py-0 md:py-8 z-50 border-t md:border-t-0 md:border-r border-white/[0.04] flex-shrink-0 shadow-[0_-5px_20px_rgba(0,0,0,0.6)] md:shadow-[5px_0_20px_rgba(0,0,0,0.8)] relative backdrop-blur-2xl md:backdrop-blur-none"
+    >
+      <!-- Official FIFA 2026 Logo (Desktop) -->
+      <a
+        href="https://shadik.onrender.com/business"
+        target="_blank"
+        class="hidden md:flex cursor-pointer mb-14 hover:scale-110 transition-transform duration-300 items-center justify-center bg-white/5 rounded-full w-12 h-12 shadow-[0_0_15px_rgba(255,255,255,0.1)] p-2 border border-white/10"
+      >
+        <img
+          src="https://upload.wikimedia.org/wikipedia/en/1/17/2026_FIFA_World_Cup_emblem.svg"
+          alt="FIFA 26"
+          class="w-full h-full object-contain drop-shadow-md"
+        />
+      </a>
+
+      <nav
+        id="sidebar-nav"
+        class="flex flex-row md:flex-col gap-1 md:gap-9 w-full justify-around md:justify-start items-center relative z-10 h-full md:h-auto px-2 md:px-0"
+      ></nav>
+
+      <!-- User Profile Avatar (Desktop) -->
+      <a
+        href="https://shadik.onrender.com/business"
+        target="_blank"
+        class="hidden md:block mt-auto relative group z-10 cursor-pointer hover:scale-110 transition-transform duration-300"
+      >
+        <div
+          class="absolute inset-[-4px] rounded-full blur-[8px] opacity-0 group-hover:opacity-100 transition-opacity animated-border z-0"
+        ></div>
+        <img
+          src="https://i.postimg.cc/yddXd3db/Chat-GPT-Image-Apr-19-2026-08-20-37-PM.png"
+          alt="Profile"
+          class="w-[38px] h-[38px] rounded-full border-[2px] border-dark-card relative z-10 object-cover bg-dark-card"
+        />
+      </a>
+    </aside>
+
+    <!-- MAIN CONTENT AREA -->
+    <main
+      class="order-1 md:order-2 flex-1 min-w-0 h-full relative z-20 overflow-hidden"
+    >
+      <!-- ========================================== -->
+      <!-- VIEW 1: LUXURY HOME INTERFACE              -->
+      <!-- ========================================== -->
+      <div
+        id="view-home"
+        class="app-view active-state absolute inset-0 w-full h-full flex flex-col px-5 sm:px-8 md:px-12 pt-6 md:pt-10 pb-2 md:pb-0 overflow-y-auto md:overflow-hidden no-scrollbar"
+      >
+        <header
+          class="flex flex-col md:flex-row justify-between items-start md:items-center w-full md:pr-6 gap-4 md:gap-0 relative z-30 shrink-0"
+        >
+          <div class="flex justify-between items-center w-full md:w-auto">
+            <div class="flex items-center gap-3 md:gap-4">
+              <!-- Official FIFA 2026 Logo (Mobile) -->
+              <a
+                href="https://shadik.onrender.com/business"
+                target="_blank"
+                class="md:hidden flex items-center justify-center bg-white/5 rounded-full w-8 h-8 shadow-[0_0_10px_rgba(255,255,255,0.1)] p-1.5 border border-white/10 mr-1"
+              >
+                <img
+                  src="https://upload.wikimedia.org/wikipedia/en/1/17/2026_FIFA_World_Cup_emblem.svg"
+                  alt="FIFA 26"
+                  class="w-full h-full object-contain"
+                />
+              </a>
+              <h2
+                class="text-[12px] md:text-[11px] font-bold tracking-[0.2em] md:tracking-[0.25em] text-dark-text uppercase"
+              >
+                Live Channels
+              </h2>
+              <span
+                id="game-counter"
+                class="text-[12px] font-bold text-dark-text/40"
+              ></span>
+            </div>
+
+            <!-- Mobile Avatar -->
+            <a
+              href="https://shadik.onrender.com/business"
+              target="_blank"
+              class="md:hidden relative group cursor-pointer z-10"
+            >
+              <div
+                class="absolute inset-[-2px] rounded-full blur-[4px] animated-border opacity-70 z-0"
+              ></div>
+              <img
+                src="https://i.postimg.cc/yddXd3db/Chat-GPT-Image-Apr-19-2026-08-20-37-PM.png"
+                alt="Profile"
+                class="w-[32px] h-[32px] rounded-full border-[1.5px] border-dark-card relative z-10 object-cover bg-dark-card"
+              />
+            </a>
+          </div>
+
+          <div
+            class="bg-white/[0.04] border border-white/5 backdrop-blur-xl focus-within:border-wc-turquoise/60 focus-within:bg-white/[0.08] flex items-center px-4 py-3 md:py-2.5 rounded-xl md:rounded-md w-full md:w-[300px] transition-all duration-300"
+          >
+            <input
+              id="search-input"
+              type="text"
+              placeholder="Search live sports..."
+              class="bg-transparent border-none outline-none text-[13px] text-white placeholder:text-dark-text/60 w-full"
+            />
+            <i
+              class="fa-solid fa-magnifying-glass text-dark-text text-[13px] ml-2"
+            ></i>
+          </div>
+        </header>
+
+        <div
+          class="flex-1 flex flex-col justify-center mt-6 md:mt-4 relative z-20 shrink-0 min-h-[160px]"
+        >
+          <div id="hero-content" class="hero-transition hero-enter w-full">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+
+        <div class="w-full relative mt-auto z-30 shrink-0">
+          <div
+            id="carousel-track"
+            class="flex flex-nowrap items-end gap-[12px] md:gap-[20px] w-full overflow-x-auto pt-6 pb-4 md:pt-16 md:pb-12 scroll-smooth relative pointer-events-auto"
+          >
+            <!-- Cards populated by JS -->
+          </div>
+        </div>
+      </div>
+
+      <!-- ========================================== -->
+      <!-- VIEW 2: YOUTUBE-LIKE DEDICATED PLAYER      -->
+      <!-- Split-pane desktop architecture ensures no overlapping -->
+      <!-- ========================================== -->
+      <div
+        id="view-player"
+        class="app-view hidden-state absolute inset-0 w-full h-full bg-dark-base flex flex-col overflow-hidden"
+      >
+        <div
+          class="hidden md:flex w-full items-center justify-between px-8 py-6 shrink-0 z-40"
+        >
+          <button
+            onclick="goHome()"
+            class="flex items-center gap-3 text-dark-text hover:text-white transition-colors duration-300 group"
+          >
+            <div
+              class="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center group-hover:bg-white/20 transition-all"
+            >
+              <i class="fa-solid fa-arrow-left"></i>
+            </div>
+            <span class="text-[11px] font-bold tracking-[0.2em] uppercase"
+              >Back to Home</span
+            >
+          </button>
+        </div>
+
+        <!-- Main Scroll Container: Mobile entire page scrolls, Desktop split-pane -->
+        <div
+          class="w-full h-full flex flex-col lg:flex-row max-w-[1600px] mx-auto overflow-y-auto lg:overflow-hidden pb-[70px] lg:pb-0 relative"
+        >
+          <!-- LEFT COLUMN -->
+          <!-- Mobile: uses `contents` so the sticky child adheres to the parent scrollbar -->
+          <!-- Desktop: standard flex column, overflow hidden so it locks in place -->
+          <div
+            class="contents lg:flex flex-col w-full lg:w-[65%] xl:w-[70%] shrink-0 lg:h-full lg:overflow-y-auto no-scrollbar lg:pr-8 lg:pl-8"
+          >
+            <!-- STICKY VIDEO WRAPPER -->
+            <!-- Sticks perfectly to the top of the viewport on mobile while scrolling -->
+            <div
+              class="sticky top-0 lg:relative z-50 bg-dark-base w-full pt-0 shrink-0"
+            >
+              <!-- Removed overflow-hidden here on mobile so Quality Dropdown won't cut off -->
+              <div
+                id="video-container"
+                class="relative w-full aspect-video bg-black lg:rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.8)] border-b lg:border border-white/10 lg:overflow-hidden group controls-active"
+              >
+                <!-- Mobile Back Button -->
+                <button
+                  onclick="goHome(event)"
+                  class="md:hidden absolute top-4 left-4 w-10 h-10 bg-black/40 backdrop-blur-md rounded-full text-white flex items-center justify-center z-[60] border border-white/10 shadow-lg control-fade"
+                >
+                  <i class="fa-solid fa-arrow-left"></i>
+                </button>
+
+                <video
+                  id="hls-player"
+                  class="w-full h-full object-contain"
+                  playsinline
+                  webkit-playsinline
+                ></video>
+
+                <!-- Custom Control Overlay -->
+                <div
+                  class="control-fade absolute inset-0 bg-gradient-to-t from-black/95 via-transparent to-black/30 flex flex-col justify-end px-4 py-3 z-40"
+                >
+                  <!-- Smart Quality Dropdown (Positioned dynamically above gear) -->
+                  <div
+                    id="quality-menu"
+                    class="hidden absolute bottom-[60px] right-4 bg-[#111827]/95 backdrop-blur-md border border-white/10 rounded-lg py-1 flex-col z-[100] min-w-[120px] shadow-[0_0_30px_rgba(0,0,0,0.8)] max-h-[160px] overflow-y-auto no-scrollbar origin-bottom transition-all"
+                  >
+                    <!-- Populated dynamically -->
+                  </div>
+
+                  <!-- FIFA Theme Scrubber -->
+                  <div class="w-full flex items-center mb-2">
+                    <input
+                      type="range"
+                      id="progress-bar"
+                      class="fifa-scrubber"
+                      value="100"
+                      min="0"
+                      max="100"
+                      step="0.1"
+                    />
+                  </div>
+
+                  <div class="flex items-center justify-between w-full">
+                    <div class="flex items-center gap-4">
+                      <button
+                        id="play-pause-btn"
+                        class="text-white hover:text-wc-turquoise transition-colors w-6 h-6 flex items-center justify-center"
+                      >
+                        <i class="fa-solid fa-play text-lg"></i>
+                      </button>
+
+                      <div
+                        class="flex items-center gap-2 group/vol hidden sm:flex"
+                      >
+                        <i
+                          class="fa-solid fa-volume-high text-white text-sm"
+                        ></i>
+                        <input
+                          type="range"
+                          id="volume-bar"
+                          class="vol-scrubber w-0 group-hover/vol:w-16 transition-all duration-300 opacity-0 group-hover/vol:opacity-100"
+                          min="0"
+                          max="1"
+                          step="0.05"
+                          value="1"
+                        />
+                      </div>
+
+                      <div class="flex items-center gap-1.5 ml-2">
+                        <div
+                          class="w-2 h-2 rounded-full bg-red-500 animate-pulse"
+                        ></div>
+                        <span
+                          class="text-white text-[11px] font-bold tracking-[0.1em] uppercase drop-shadow-md"
+                          >Live</span
+                        >
+                        <span
+                          id="time-display"
+                          class="text-white/60 text-[10px] ml-1"
+                        ></span>
+                      </div>
+                    </div>
+
+                    <div class="flex items-center gap-4 relative">
+                      <button
+                        id="quality-btn"
+                        class="text-white hover:text-wc-turquoise transition-colors w-6 h-6 flex items-center justify-center relative"
+                      >
+                        <i class="fa-solid fa-gear"></i>
+                      </button>
+
+                      <button
+                        id="fullscreen-btn"
+                        class="text-white hover:text-wc-turquoise transition-colors w-6 h-6 flex items-center justify-center"
+                      >
+                        <i class="fa-solid fa-expand"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <div
+                  id="video-loader"
+                  class="absolute inset-0 bg-dark-base/80 backdrop-blur-md flex flex-col items-center justify-center z-30 transition-opacity duration-500 pointer-events-none"
+                >
+                  <div
+                    class="w-10 h-10 md:w-12 md:h-12 border-[3px] border-wc-turquoise/20 border-t-wc-turquoise rounded-full animate-spin shadow-[0_0_20px_rgba(0,229,255,0.5)]"
+                  ></div>
+                  <span
+                    class="text-white/80 text-[10px] font-black tracking-[0.4em] uppercase mt-4 animate-pulse"
+                    >Connecting...</span
+                  >
+                </div>
+              </div>
+            </div>
+
+            <!-- Video Details -->
+            <div class="p-5 md:p-0 md:pt-6 flex flex-col w-full shrink-0">
+              <h1
+                id="player-title"
+                class="text-2xl sm:text-3xl md:text-4xl font-black uppercase text-white leading-tight tracking-tight drop-shadow-md"
+              ></h1>
+              <div
+                class="flex flex-wrap items-center gap-4 mt-3 border-b border-white/10 pb-6"
+              >
+                <span
+                  class="bg-red-600/20 text-red-500 border border-red-500/50 px-3 py-1 rounded text-[10px] font-black tracking-[0.2em] uppercase"
+                  >● Live Broadcast</span
+                >
+                <span
+                  id="player-category"
+                  class="bg-white/5 text-white/70 px-3 py-1 rounded text-[10px] font-bold tracking-[0.15em] uppercase"
+                ></span>
+              </div>
+            </div>
+          </div>
+
+          <!-- RIGHT COLUMN: Up Next (Scrolls natively on mobile, independently on desktop) -->
+          <div
+            class="w-full lg:w-[35%] xl:w-[30%] flex flex-col px-5 md:px-0 lg:pr-8 lg:h-full lg:overflow-y-auto no-scrollbar pb-10"
+          >
+            <h3
+              class="text-white/50 tracking-[0.2em] text-[10px] font-bold uppercase mb-4 pl-1"
+            >
+              Up Next / Live Channels
+            </h3>
+            <div id="related-list" class="flex flex-col gap-3">
+              <!-- Populated by JS -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Anti-Inspection & DevTools Blocker -->
+    <script>
+      document.addEventListener("contextmenu", (event) =>
+        event.preventDefault(),
+      );
+      document.onkeydown = function (e) {
+        if (e.keyCode == 123) {
+          return false;
+        } // F12
+        if (e.ctrlKey && e.shiftKey && e.keyCode == "I".charCodeAt(0)) {
+          return false;
+        } // Ctrl+Shift+I
+        if (e.ctrlKey && e.shiftKey && e.keyCode == "C".charCodeAt(0)) {
+          return false;
+        } // Ctrl+Shift+C
+        if (e.ctrlKey && e.shiftKey && e.keyCode == "J".charCodeAt(0)) {
+          return false;
+        } // Ctrl+Shift+J
+        if (e.ctrlKey && e.keyCode == "U".charCodeAt(0)) {
+          return false;
+        } // Ctrl+U
+        if (e.ctrlKey && e.keyCode == "S".charCodeAt(0)) {
+          return false;
+        } // Ctrl+S
+      };
+    </script>
+
+    <!-- Core Logic -->
+    <script>
+      // The 5 Exact Background URLs Provided
+      const bg1 =
+        "https://static0.givemesportimages.com/wordpress/wp-content/uploads/2024/06/epl_brazil-players-right-now-1.jpg?w=1600&h=900&fit=crop";
+      const bg2 =
+        "https://www.aljazeera.com/wp-content/uploads/2026/06/2026-06-10T032949Z_625495551_MT1USATODAY29163931_RTRMADP_3_SOCCER-INTERNATIONAL-MENS-FRIENDLY-ICELAND-AT-ARGENTINA-1781073543.jpg?resize=770%2C513&quality=80";
+      const bg3 =
+        "https://e0.365dm.com/25/12/1600x900/skysports-world-cup-trophy_7105535.jpg?20251209123529";
+      const bg4 =
+        "https://www.gpb.org/sites/default/files/styles/flexheight/public/npr_story_images/2022/12/19/gettyimages-1450300260-795d2b484bf61d411ad5f6ed16f6ba1cef4391a6_0.jpg?itok=YEEmrCxs";
+      const bg5 =
+        "https://imgresizer.tntsports.io/unsafe/2560x1440/filters:format(jpeg)/origin-imgresizer.tntsports.io/2025/03/11/image-2c33751b-72bd-4b98-9cc2-8873bbd18247-85-2560-1440.jpeg";
+
+      // Exact Array. ALL titles end with <span class="text-gradient-wc">
+      const channelsData = [
+        {
+          id: "cazebr",
+          title: 'CAZÉ TV <span class="text-gradient-wc">BRASIL</span>',
+          cleanTitle: "CAZÉ TV BRASIL",
+          searchTerms: "caze tv brasil fifa world cup",
+          stats: [
+            { label: "CATEGORY", value: "FIFA World Cup" },
+            { label: "LANGUAGE", value: "PT-BR" },
+            { label: "STATUS", value: "LIVE", highlight: true },
+          ],
+          category: "FIFA World Cup",
+          logo:
+            "https://stream.codecloud.bd/uploads/logos/logo_6a2a39c4ac184.png",
+          bg: bg1,
+          url:
+            "https://dfr80qz435crc.cloudfront.net/MNOP/Amagi/Caze/Caze_TV_BR/1080p-vtt/index.m3u8",
+        },
+        {
+          id: "fifaplus_es",
+          title: 'FIFA+ <span class="text-gradient-wc">SPAIN</span>',
+          cleanTitle: "FIFA+ SPAIN",
+          searchTerms: "fifa plus spain espanol",
+          stats: [
+            { label: "CATEGORY", value: "FIFA World Cup" },
+            { label: "LANGUAGE", value: "ES" },
+            { label: "STATUS", value: "LIVE" },
+          ],
+          category: "FIFA World Cup",
+          logo:
+            "https://stream.codecloud.bd/uploads/logos/logo_6a2a3add7c408.png",
+          bg: bg2,
+          url:
+            "https://d63fabad.wurl.com/master/f36d25e7e52f1ba8d7e56eb859c636563214f541/UmFrdXRlblRWLWVzX0ZJRkFQbHVzU3BhbmlzaF9ITFM/playlist.m3u8",
+        },
+        {
+          id: "cazeserver2",
+          title: 'CAZÉ TV SERVER <span class="text-gradient-wc">2</span>',
+          cleanTitle: "CAZÉ TV SERVER 2",
+          searchTerms: "caze tv server 2 fifa world cup",
+          stats: [
+            { label: "CATEGORY", value: "FIFA World Cup" },
+            { label: "LANGUAGE", value: "PT-BR" },
+            { label: "STATUS", value: "LIVE", highlight: true },
+          ],
+          category: "FIFA World Cup",
+          logo:
+            "https://stream.codecloud.bd/uploads/logos/logo_6a2a3938aca1c.png",
+          bg: bg3,
+          url:
+            "https://dfr80qz435crc.cloudfront.net/MNOP/Amagi/Caze/Caze_TV_BR/Caze_TV.m3u8",
+        },
+        {
+          id: "espn2",
+          title: 'ESPN <span class="text-gradient-wc">2</span>',
+          cleanTitle: "ESPN 2",
+          searchTerms: "espn 2 fifa world cup sports",
+          stats: [
+            { label: "CATEGORY", value: "FIFA World Cup" },
+            { label: "STATUS", value: "LIVE", highlight: true },
+          ],
+          category: "FIFA World Cup",
+          logo:
+            "https://stream.codecloud.bd/uploads/logos/logo_6a2a3b50397da.jpg",
+          bg: bg4,
+          url:
+            "https://tv.topmediatv.net:25463/live/TopMediaWeb/bOteTR8ED1/108.m3u8",
+        },
+        {
+          id: "fifaplus_en",
+          title: 'FIFA+ <span class="text-gradient-wc">ENGLISH</span>',
+          cleanTitle: "FIFA+ ENGLISH",
+          searchTerms: "fifa plus english sports global",
+          stats: [
+            { label: "CATEGORY", value: "FIFA World Cup" },
+            { label: "LANGUAGE", value: "EN" },
+            { label: "STATUS", value: "LIVE" },
+          ],
+          category: "FIFA World Cup",
+          logo:
+            "https://stream.codecloud.bd/uploads/logos/logo_6a2a3a4c03f4a.png",
+          bg: bg5,
+          url:
+            "https://a62dad94.wurl.com/master/f36d25e7e52f1ba8d7e56eb859c636563214f541/UmFrdXRlblRWLWV1X0ZJRkFQbHVzRW5nbGlzaF9ITFM/playlist.m3u8",
+        },
+        {
+          id: "fifaplus_br",
+          title: 'FIFA+ <span class="text-gradient-wc">BRAZIL</span>',
+          cleanTitle: "FIFA+ BRAZIL",
+          searchTerms: "fifa plus brazil brasil",
+          stats: [
+            { label: "CATEGORY", value: "FIFA World Cup" },
+            { label: "LANGUAGE", value: "PT-BR" },
+            { label: "STATUS", value: "LIVE" },
+          ],
+          category: "FIFA World Cup",
+          logo:
+            "https://stream.codecloud.bd/uploads/logos/logo_6a2a3b125db37.png",
+          bg: bg1,
+          url:
+            "https://e3be9ac5.wurl.com/master/f36d25e7e52f1ba8d7e56eb859c636563214f541/TEctYnJfRklGQVBsdXNQb3J0dWd1ZXNlX0hMUw/playlist.m3u8",
+        },
+        {
+          id: "fifaplus_fr",
+          title: 'FIFA PLUS <span class="text-gradient-wc">FRANCE</span>',
+          cleanTitle: "FIFA PLUS FRANCE",
+          searchTerms: "fifa plus france sports",
+          stats: [
+            { label: "CATEGORY", value: "FIFA World Cup" },
+            { label: "LANGUAGE", value: "FR" },
+            { label: "STATUS", value: "LIVE" },
+          ],
+          category: "FIFA World Cup",
+          logo:
+            "https://i.ibb.co.com/vnbkF0r/fifa-world-cup-2026-logo-png-seeklogo-665644.png",
+          bg: bg2,
+          url:
+            "https://37b4c228.wurl.com/master/f36d25e7e52f1ba8d7e56eb859c636563214f541/UmFrdXRlblRWLWZyX0ZJRkFQbHVzRnJlbmNoX0hMUw/playlist.m3u8",
+        },
+        {
+          id: "foxsports2",
+          title: 'FOX SPORTS <span class="text-gradient-wc">2</span>',
+          cleanTitle: "FOX SPORTS 2",
+          searchTerms: "fox sports 2 fifa",
+          stats: [
+            { label: "CATEGORY", value: "Sports" },
+            { label: "EVENT", value: "FIFA", highlight: true },
+          ],
+          category: "Sports",
+          logo: "https://imglink.cc/cdn/o5BoWU_BEz.png",
+          bg: bg3,
+          url:
+            "https://tvsen7.aynaott.com/foxsports2/index.m3u8?e=1779283790&u=78be6644-0a65-48ec-81a4-089ac65a2619&token=cbb7f40b4af7be51a91e0629a5ac7238",
+        },
+        {
+          id: "tycsports",
+          title: 'TYC SPORTS <span class="text-gradient-wc">ARGENTINA</span>',
+          cleanTitle: "TYC SPORTS ARGENTINA",
+          searchTerms: "tyc sports argentina",
+          stats: [
+            { label: "CATEGORY", value: "Sports" },
+            { label: "COUNTRY", value: "Argentina", highlight: true },
+          ],
+          category: "Sports",
+          logo: "https://imglink.cc/cdn/1oSRQnyUqK.jpg",
+          bg: bg4,
+          url:
+            "https://amg26268-amg26268c14-freelivesports-emea-10267.playouts.now.amagi.tv/ts-us-e2-n2/playlist/amg26268-sportsstudio-tycsports-freelivesportsemea/playlist.m3u8",
+        },
+        {
+          id: "bein1",
+          title: 'BEIN SPORTS <span class="text-gradient-wc">1</span>',
+          cleanTitle: "BEIN SPORTS 1",
+          searchTerms: "bein sports 1",
+          stats: [
+            { label: "CATEGORY", value: "Sports" },
+            { label: "QUALITY", value: "HD", highlight: true },
+          ],
+          category: "Sports",
+          logo: "https://imglink.cc/cdn/kIiut6WBq0.jpg",
+          bg: bg5,
+          url: "https://andro.226503.xyz/checklist/androstreamlivebs1.m3u8",
+        },
+        {
+          id: "starsports1",
+          title: 'STAR SPORTS <span class="text-gradient-wc">1</span>',
+          cleanTitle: "STAR SPORTS 1",
+          searchTerms: "star sports 1 cricket",
+          stats: [
+            { label: "CATEGORY", value: "Sports" },
+            { label: "STATUS", value: "LIVE" },
+          ],
+          category: "Cricket",
+          logo: "https://imglink.cc/cdn/va7WOdXDQC.jpg",
+          bg: bg1,
+          url: "https://tvsen7.aynaott.com/sspts1/tracks-v1a1/mono.ts.m3u8",
+        },
+        {
+          id: "ptvsports",
+          title: 'PTV <span class="text-gradient-wc">SPORTS</span>',
+          cleanTitle: "PTV SPORTS",
+          searchTerms: "ptv sports pakistan fifa",
+          stats: [
+            { label: "CATEGORY", value: "Pakistan" },
+            { label: "STATUS", value: "LIVE", highlight: true },
+          ],
+          category: "Sports PK",
+          logo:
+            "https://stream.codecloud.bd/uploads/logos/logo_6a2a3bdf4d3da.jpg",
+          bg: bg2,
+          url:
+            "https://tvsen5.aynaott.com/PtvSports/index.m3u8?e=1779283784&u=78be6644-0a65-48ec-81a4-089ac65a2619&token=db1789e36c278bf538489fac263e0ffb",
+        },
+        {
+          id: "asports",
+          title: 'A <span class="text-gradient-wc">SPORTS</span>',
+          cleanTitle: "A SPORTS",
+          searchTerms: "asports pakistan sports",
+          stats: [
+            { label: "CATEGORY", value: "Sports" },
+            { label: "STATUS", value: "LIVE" },
+          ],
+          category: "Sports PK",
+          logo: "https://imglink.cc/cdn/d4W6mvjalX.png",
+          bg: bg3,
+          url: "https://tvsen6.aynaott.com/asports/index.m3u8",
+        },
+        {
+          id: "beinxtra",
+          title: 'BEIN SPORTS <span class="text-gradient-wc">XTRA</span>',
+          cleanTitle: "BEIN SPORTS XTRA",
+          searchTerms: "bein sports xtra",
+          stats: [
+            { label: "CATEGORY", value: "Sports" },
+            { label: "QUALITY", value: "1080p", highlight: true },
+            { label: "STATUS", value: "LIVE" },
+          ],
+          category: "Sports",
+          logo:
+            "https://stream.codecloud.bd/uploads/logos/logo_6a2a39fb56eec.jpeg",
+          bg: bg4,
+          url:
+            "https://amg01334-amg01334c2-freelivesports-emea-6791.playouts.now.amagi.tv/playlist/amg01334-beinxtra-beinxtrausapp-freelivesportsemea/playlist.m3u8",
+        },
+      ];
+
+      // --- DOM VARIABLES ---
+      let activeId = null;
+      let activeBgIndex = 0;
+      let heroTimeout = null;
+      let hlsInstance = null;
+      let hideControlsTimeout = null;
+
+      const viewHome = document.getElementById("view-home");
+      const viewPlayer = document.getElementById("view-player");
+      const track = document.getElementById("carousel-track");
+      const heroContent = document.getElementById("hero-content");
+      const searchInput = document.getElementById("search-input");
+      const counter = document.getElementById("game-counter");
+      const bgLayers = [
+        document.getElementById("bg-layer-0"),
+        document.getElementById("bg-layer-1"),
+      ];
+
+      const videoElement = document.getElementById("hls-player");
+      const videoContainer = document.getElementById("video-container");
+      const videoLoader = document.getElementById("video-loader");
+      const playPauseBtn = document.getElementById("play-pause-btn");
+      const progressBar = document.getElementById("progress-bar");
+      const volumeBar = document.getElementById("volume-bar");
+      const timeDisplay = document.getElementById("time-display");
+      const fullscreenBtn = document.getElementById("fullscreen-btn");
+      const qualityBtn = document.getElementById("quality-btn");
+      const qualityMenu = document.getElementById("quality-menu");
+
+      // --- 1. RENDER HOME CAROUSEL ---
+      function renderCarousel(query = "") {
+        const filtered = channelsData.filter((g) =>
+          g.searchTerms.includes(query.toLowerCase()),
+        );
+        counter.innerText = filtered.length;
+        if (filtered.length === 0) {
+          track.innerHTML = `<div class="text-wc-coral font-bold mt-10 w-full text-center tracking-widest uppercase">No Channels Found</div>`;
+          return;
+        }
+        track.innerHTML = filtered
+          .map(
+            (ch) => `
+                <div id="card-${ch.id}" class="game-card inactive relative flex-shrink-0 cursor-pointer group" onclick="selectChannelHome('${ch.id}')">
+                    <div class="card-border absolute inset-0 rounded-[1.25rem] animated-border"></div>
+                    <div class="absolute inset-[3px] bg-[#111827] rounded-[calc(1.25rem-3px)] overflow-hidden flex items-center justify-center">
+                        <img src="${ch.logo}" class="card-img w-full h-full object-contain" onerror="this.src='https://placehold.co/200x200/111827/6b7280?text=TV'">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent active-ui opacity-90 pointer-events-none"></div>
+                        <div class="absolute bottom-2 md:bottom-3 left-0 right-0 flex justify-center items-end active-ui">
+                            <span class="text-[9px] md:text-[10px] font-black tracking-[0.2em] text-wc-lime drop-shadow-[0_0_8px_rgba(204,255,0,0.8)] animate-pulse">● LIVE</span>
+                        </div>
+                    </div>
+                </div>
+            `,
+          )
+          .join("");
+        track.innerHTML += `<div class="w-[20px] md:w-[40px] flex-shrink-0 opacity-0 pointer-events-none">.</div>`;
+        if (!filtered.find((g) => g.id === activeId))
+          selectChannelHome(filtered[0].id);
+        else
+          document
+            .getElementById(`card-${activeId}`)
+            .classList.replace("inactive", "active");
+      }
+
+      // --- 2. HOME CHANNEL SELECTION ---
+      window.selectChannelHome = function (id) {
+        if (activeId === id && heroContent.classList.contains("hero-enter"))
+          return;
+        if (activeId && document.getElementById(`card-${activeId}`)) {
+          document
+            .getElementById(`card-${activeId}`)
+            .classList.replace("active", "inactive");
+        }
+        const newCard = document.getElementById(`card-${id}`);
+        if (newCard) newCard.classList.replace("inactive", "active");
+
+        activeId = id;
+        const channel = channelsData.find((g) => g.id === id);
+
+        setTimeout(() => {
+          if (newCard && track) {
+            const cardWidth = window.innerWidth < 768 ? 180 : 290;
+            const scrollPos =
+              newCard.offsetLeft - track.clientWidth / 2 + cardWidth / 2;
+            track.scrollTo({ left: scrollPos, behavior: "smooth" });
+          }
+        }, 50);
+
+        const nextBgIndex = activeBgIndex === 0 ? 1 : 0;
+        bgLayers[nextBgIndex].src = channel.bg;
+        bgLayers[nextBgIndex].style.opacity = "0.35";
+        bgLayers[activeBgIndex].style.opacity = "0";
+        activeBgIndex = nextBgIndex;
+
+        if (heroTimeout) clearTimeout(heroTimeout);
+        heroContent.classList.replace("hero-enter", "hero-exit");
+
+        heroTimeout = setTimeout(() => {
+          heroContent.innerHTML = `
+                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center w-full md:pr-8 gap-4 md:gap-0">
+                        <div class="flex flex-col w-full md:w-auto">
+                            <h1 class="text-[28px] xs:text-[32px] sm:text-[40px] md:text-5xl lg:text-[64px] font-black text-white mb-3 md:mb-10 leading-[1.05] tracking-tighter drop-shadow-[0_10px_20px_rgba(0,0,0,0.8)] uppercase">
+                                ${channel.title}
+                            </h1>
+                            <div class="flex flex-wrap gap-4 sm:gap-6 md:gap-[80px]">
+                                ${channel.stats
+                                  .map(
+                                    (stat) => `
+                                    <div class="flex flex-col gap-1 md:gap-2">
+                                        <span class="text-[9px] md:text-[11px] font-bold tracking-[0.2em] md:tracking-[0.25em] text-dark-text/70">${
+                                          stat.label
+                                        }</span>
+                                        <span class="text-[18px] xs:text-[20px] sm:text-[24px] md:text-[28px] font-bold tracking-wide ${
+                                          stat.highlight
+                                            ? "text-transparent bg-clip-text bg-gradient-to-r from-wc-turquoise to-white drop-shadow-[0_0_15px_rgba(0,229,255,0.4)]"
+                                            : "text-white"
+                                        }">${stat.value}</span>
+                                    </div>
+                                `,
+                                  )
+                                  .join("")}
+                            </div>
+                        </div>
+
+                        <div class="w-full md:w-auto flex-shrink-0 md:pl-12 pb-2 mt-4 md:mt-0 relative z-30">
+                            <button onclick="openPlayer()" id="home-play-btn" class="group relative flex items-center justify-between md:justify-start gap-4 md:gap-6 w-full md:w-auto pl-6 md:pl-10 pr-2 py-2 rounded-[3rem] transition-all duration-500 hover:-translate-y-1 shadow-[0_15px_30px_rgba(0,0,0,0.6)] md:shadow-[0_20px_40px_rgba(0,0,0,0.8)] outline-none border-none">
+                                <div class="absolute inset-[-2px] rounded-[calc(3rem+2px)] animated-border opacity-80 group-hover:opacity-100 transition-opacity duration-500 -z-10"></div>
+                                <div class="absolute inset-0 bg-dark-base rounded-[3rem] -z-10 transition-colors duration-500 group-hover:bg-[#0a0a0c]"></div>
+                                
+                                <div class="flex flex-col items-start md:items-end text-left md:text-right z-10 pt-0.5 pointer-events-none">
+                                    <span class="text-[9px] font-bold tracking-[0.3em] uppercase leading-none mb-1.5 text-white/50">Live Broadcast</span>
+                                    <span class="text-white font-black text-[14px] md:text-[15px] tracking-[0.2em] uppercase leading-none">Access Stream</span>
+                                </div>
+                                
+                                <div class="relative z-10 w-10 h-10 md:w-12 md:h-12 rounded-full bg-white flex items-center justify-center group-hover:scale-110 group-hover:bg-wc-turquoise transition-all duration-500 pointer-events-none shadow-[0_0_15px_rgba(255,255,255,0.2)] group-hover:shadow-[0_0_25px_rgba(0,229,255,0.6)]">
+                                    <i class="fa-solid fa-play text-dark-base text-[12px] md:text-[14px] ml-1 group-hover:text-black"></i>
+                                </div>
+                            </button>
+                        </div>
+                    </div>
+                `;
+          heroContent.classList.replace("hero-exit", "hero-enter");
+        }, 300);
+      };
+
+      // --- 3. TRANSITION LOGIC ---
+      window.openPlayer = function () {
+        viewHome.classList.replace("active-state", "hidden-state");
+        viewPlayer.classList.replace("hidden-state", "active-state");
+        setNav("live");
+        loadPlayerChannel(activeId);
+      };
+
+      window.goHome = function (e) {
+        if (e) e.stopPropagation();
+        if (hlsInstance) {
+          hlsInstance.destroy();
+          hlsInstance = null;
+        }
+        videoElement.pause();
+        videoElement.removeAttribute("src");
+        videoElement.load();
+        viewPlayer.classList.replace("active-state", "hidden-state");
+        viewHome.classList.replace("hidden-state", "active-state");
+        setNav("home");
+      };
+
+      // --- 4. PLAYER & RELATED LIST LOGIC ---
+      window.loadPlayerChannel = function (id) {
+        activeId = id;
+        const channel = channelsData.find((g) => g.id === id);
+
+        // Update Info (Using channel.title for the animated text!)
+        document.getElementById("player-title").innerHTML = channel.title;
+        document.getElementById("player-category").innerText = channel.category;
+
+        videoLoader.classList.remove("opacity-0", "pointer-events-none");
+        playPauseBtn.innerHTML = '<i class="fa-solid fa-pause text-lg"></i>';
+        qualityMenu.classList.add("hidden");
+        qualityMenu.innerHTML = "";
+        qualityBtn.style.display = "flex";
+        updateProgressTrack(100);
+
+        if (hlsInstance) {
+          hlsInstance.destroy();
+        }
+
+        if (Hls.isSupported()) {
+          hlsInstance = new Hls({
+            enableWorker: true,
+            lowLatencyMode: true,
+            backBufferLength: 90,
+          });
+
+          hlsInstance.loadSource(channel.url);
+          hlsInstance.attachMedia(videoElement);
+
+          hlsInstance.on(Hls.Events.MANIFEST_PARSED, function (event, data) {
+            videoElement.play().catch(() => {});
+            videoLoader.classList.add("opacity-0", "pointer-events-none");
+            buildQualityMenu(data.levels);
+            resetControlsTimeout();
+          });
+
+          hlsInstance.on(Hls.Events.ERROR, function (event, data) {
+            if (data.fatal) {
+              switch (data.type) {
+                case Hls.ErrorTypes.NETWORK_ERROR:
+                  hlsInstance.startLoad();
+                  break;
+                case Hls.ErrorTypes.MEDIA_ERROR:
+                  hlsInstance.recoverMediaError();
+                  break;
+                default:
+                  hlsInstance.destroy();
+                  videoLoader.classList.remove(
+                    "opacity-0",
+                    "pointer-events-none",
+                  );
+                  videoLoader.innerHTML = `<span class="text-wc-coral text-[10px] md:text-xs font-bold tracking-[0.2em] uppercase mt-5">Stream Offline</span>`;
+                  break;
+              }
+            }
+          });
+        } else if (videoElement.canPlayType("application/vnd.apple.mpegurl")) {
+          videoElement.src = channel.url;
+          videoElement.addEventListener(
+            "loadedmetadata",
+            function () {
+              videoElement.play().catch(() => {});
+              videoLoader.classList.add("opacity-0", "pointer-events-none");
+              resetControlsTimeout();
+            },
+            { once: true },
+          );
+        }
+
+        const relatedList = document.getElementById("related-list");
+        relatedList.innerHTML = channelsData
+          .map((ch) => {
+            const isActive = ch.id === id;
+            return `
+                <div onclick="loadPlayerChannel('${
+                  ch.id
+                }')" class="flex gap-4 p-2.5 rounded-xl cursor-pointer transition-all duration-300 group ${
+              isActive
+                ? "bg-dark-card border border-white/10"
+                : "hover:bg-white/5 border border-transparent"
+            }">
+                    <div class="w-28 md:w-32 aspect-video bg-[#0a0a0c] rounded-lg overflow-hidden relative border ${
+                      isActive
+                        ? "border-wc-coral shadow-[0_0_15px_rgba(255,51,102,0.3)]"
+                        : "border-white/5"
+                    } shrink-0 flex items-center justify-center">
+                        <img src="${
+                          ch.logo
+                        }" class="w-full h-full object-contain p-2 ${
+              !isActive ? "group-hover:scale-110" : ""
+            } transition-transform duration-500 bg-[#0a0a0c]">
+                        ${
+                          isActive
+                            ? `
+                            <div class="absolute bottom-1 right-1 bg-wc-coral text-white text-[8px] font-black px-1.5 py-0.5 rounded flex items-center gap-1 uppercase shadow-[0_0_10px_rgba(255,51,102,0.8)]">
+                                <div class="w-1 h-1 bg-white rounded-full animate-ping"></div> PLAYING
+                            </div>
+                        `
+                            : `
+                            <span class="absolute bottom-1 right-1 bg-red-600 text-white text-[8px] font-bold px-1.5 py-0.5 rounded uppercase shadow-md">LIVE</span>
+                        `
+                        }
+                    </div>
+                    <div class="flex flex-col justify-center min-w-0 pr-2">
+                        <h4 class="${
+                          isActive ? "text-wc-coral" : "text-white"
+                        } font-bold text-xs md:text-sm leading-tight truncate group-hover:text-wc-turquoise transition-colors duration-300">${
+              ch.cleanTitle
+            }</h4>
+                        <p class="text-dark-text text-[9px] md:text-[10px] tracking-widest mt-1.5 uppercase">${
+                          ch.category
+                        }</p>
+                    </div>
+                </div>
+                `;
+          })
+          .join("");
+
+        if (window.innerWidth < 1024)
+          window.scrollTo({ top: 0, behavior: "smooth" });
+      };
+
+      // --- 5. CUSTOM VIDEO CONTROLS & SMART AUTO-HIDE LOGIC ---
+      function resetControlsTimeout() {
+        videoContainer.classList.add("controls-active");
+        clearTimeout(hideControlsTimeout);
+
+        if (!videoElement.paused) {
+          hideControlsTimeout = setTimeout(() => {
+            videoContainer.classList.remove("controls-active");
+            qualityMenu.classList.add("hidden");
+          }, 3000);
+        }
+      }
+
+      videoContainer.addEventListener("mousemove", () => {
+        if (window.innerWidth >= 1024) resetControlsTimeout();
+      });
+
+      videoElement.addEventListener("click", (e) => {
+        if (window.innerWidth < 1024) {
+          if (videoContainer.classList.contains("controls-active")) {
+            videoContainer.classList.remove("controls-active");
+            qualityMenu.classList.add("hidden");
+            clearTimeout(hideControlsTimeout);
+          } else {
+            resetControlsTimeout();
+          }
+        } else {
+          if (videoElement.paused) videoElement.play();
+          else videoElement.pause();
+          resetControlsTimeout();
+        }
+      });
+
+      function updateProgressTrack(val) {
+        progressBar.style.background = `linear-gradient(to right, #FF3366 0%, #8A2BE2 ${
+          val * 0.33
+        }%, #00E5FF ${
+          val * 0.66
+        }%, #CCFF00 ${val}%, rgba(255,255,255,0.1) ${val}%, rgba(255,255,255,0.1) 100%)`;
+      }
+
+      videoElement.addEventListener("timeupdate", () => {
+        if (videoElement.duration && videoElement.duration !== Infinity) {
+          const percent =
+            (videoElement.currentTime / videoElement.duration) * 100;
+          progressBar.value = percent;
+          updateProgressTrack(percent);
+
+          let mins = Math.floor(videoElement.currentTime / 60);
+          let secs = Math.floor(videoElement.currentTime % 60);
+          timeDisplay.innerText = `${mins}:${secs < 10 ? "0" : ""}${secs}`;
+        } else {
+          progressBar.value = 100;
+          updateProgressTrack(100);
+        }
+      });
+
+      progressBar.addEventListener("input", (e) => {
+        if (videoElement.duration && videoElement.duration !== Infinity) {
+          const time = (e.target.value / 100) * videoElement.duration;
+          videoElement.currentTime = time;
+          updateProgressTrack(e.target.value);
+        }
+        resetControlsTimeout();
+      });
+
+      playPauseBtn.addEventListener("click", () => {
+        if (videoElement.paused) videoElement.play();
+        else videoElement.pause();
+        resetControlsTimeout();
+      });
+
+      videoElement.addEventListener("play", () => {
+        playPauseBtn.innerHTML = '<i class="fa-solid fa-pause text-lg"></i>';
+        resetControlsTimeout();
+      });
+      videoElement.addEventListener("pause", () => {
+        playPauseBtn.innerHTML = '<i class="fa-solid fa-play text-lg"></i>';
+        clearTimeout(hideControlsTimeout);
+        videoContainer.classList.add("controls-active");
+      });
+
+      volumeBar.addEventListener("input", (e) => {
+        videoElement.volume = e.target.value;
+        resetControlsTimeout();
+      });
+
+      fullscreenBtn.addEventListener("click", async () => {
+        if (!document.fullscreenElement) {
+          if (videoContainer.requestFullscreen)
+            await videoContainer.requestFullscreen();
+          else if (videoContainer.webkitRequestFullscreen)
+            videoContainer.webkitRequestFullscreen();
+
+          try {
+            if (screen.orientation && screen.orientation.lock)
+              await screen.orientation.lock("landscape");
+          } catch (e) {}
+          fullscreenBtn.innerHTML = '<i class="fa-solid fa-compress"></i>';
+        } else {
+          if (document.exitFullscreen) document.exitFullscreen();
+          else if (document.webkitExitFullscreen)
+            document.webkitExitFullscreen();
+
+          try {
+            if (screen.orientation && screen.orientation.unlock)
+              screen.orientation.unlock();
+          } catch (e) {}
+          fullscreenBtn.innerHTML = '<i class="fa-solid fa-expand"></i>';
+        }
+      });
+
+      document.addEventListener("fullscreenchange", () => {
+        if (!document.fullscreenElement) {
+          fullscreenBtn.innerHTML = '<i class="fa-solid fa-expand"></i>';
+          try {
+            screen.orientation.unlock();
+          } catch (e) {}
+        }
+      });
+
+      qualityBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        qualityMenu.classList.toggle("hidden");
+        resetControlsTimeout();
+      });
+
+      function buildQualityMenu(levels) {
+        if (!levels || levels.length <= 1) {
+          qualityBtn.style.display = "none";
+          qualityMenu.innerHTML = "";
+          return;
+        }
+        qualityBtn.style.display = "flex";
+        qualityMenu.innerHTML = `<button onclick="setQuality(-1)" class="text-[11px] font-bold tracking-wider text-white hover:text-wc-turquoise hover:bg-white/10 text-left px-4 py-2 w-full transition-colors border-b border-white/5">AUTO</button>`;
+        levels.forEach((level, index) => {
+          if (level.height) {
+            qualityMenu.innerHTML += `<button onclick="setQuality(${index})" class="text-[11px] font-bold tracking-wider text-white hover:text-wc-turquoise hover:bg-white/10 text-left px-4 py-2 w-full transition-colors">${level.height}p</button>`;
+          }
+        });
+      }
+
+      window.setQuality = function (levelIndex) {
+        if (hlsInstance) hlsInstance.currentLevel = levelIndex;
+        qualityMenu.classList.add("hidden");
+      };
+
+      // --- 6. SEARCH & NAV ---
+      searchInput.addEventListener("input", (e) => {
+        renderCarousel(e.target.value);
+      });
+
+      const icons = [
+        { icon: "fa-house", id: "home", active: true },
+        { icon: "fa-tv", id: "live" },
+        { icon: "fa-layer-group", id: "library" },
+        { icon: "fa-gear", id: "settings" },
+      ];
+
+      document.getElementById("sidebar-nav").innerHTML = icons
+        .map(
+          (item) => `
+            <button class="relative w-12 md:w-full h-full md:h-auto flex items-center justify-center transition-all duration-300 group ${
+              item.active ? "text-white" : "text-dark-text hover:text-white"
+            }" id="nav-${item.id}" onclick="handleNavClick('${item.id}')">
+                <div class="hidden md:block absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-6 rounded-r-md animated-border nav-indicator-desktop ${
+                  item.active ? "opacity-100" : "opacity-0"
+                } transition-opacity duration-300 shadow-[0_0_15px_rgba(0,229,255,0.8)]"></div>
+                <div class="block md:hidden absolute top-0 left-1/2 -translate-x-1/2 w-6 h-[3px] rounded-b-md animated-border nav-indicator-mobile ${
+                  item.active ? "opacity-100" : "opacity-0"
+                } transition-opacity duration-300 shadow-[0_0_15px_rgba(0,229,255,0.8)]"></div>
+                <i class="fa-solid ${
+                  item.icon
+                } text-[20px] transition-transform duration-300 ${
+            item.active
+              ? "scale-110 drop-shadow-[0_0_10px_rgba(255,255,255,0.5)]"
+              : "group-hover:scale-110"
+          }"></i>
+            </button>
+        `,
+        )
+        .join("");
+
+      window.setNav = function (id) {
+        document.querySelectorAll("#sidebar-nav button").forEach((btn) => {
+          btn.classList.replace("text-white", "text-dark-text");
+          btn
+            .querySelector("i")
+            .classList.remove(
+              "scale-110",
+              "drop-shadow-[0_0_10px_rgba(255,255,255,0.5)]",
+            );
+          const indDesk = btn.querySelector(".nav-indicator-desktop");
+          const indMob = btn.querySelector(".nav-indicator-mobile");
+          if (indDesk) indDesk.classList.replace("opacity-100", "opacity-0");
+          if (indMob) indMob.classList.replace("opacity-100", "opacity-0");
+        });
+        const active = document.getElementById(`nav-${id}`);
+        if (active) {
+          active.classList.replace("text-dark-text", "text-white");
+          active
+            .querySelector("i")
+            .classList.add(
+              "scale-110",
+              "drop-shadow-[0_0_10px_rgba(255,255,255,0.5)]",
+            );
+          const activeIndDesk = active.querySelector(".nav-indicator-desktop");
+          const activeIndMob = active.querySelector(".nav-indicator-mobile");
+          if (activeIndDesk)
+            activeIndDesk.classList.replace("opacity-0", "opacity-100");
+          if (activeIndMob)
+            activeIndMob.classList.replace("opacity-0", "opacity-100");
+        }
+      };
+
+      window.handleNavClick = function (id) {
+        if (id === "home") goHome();
+        else if (id === "live") openPlayer();
+        else setNav(id);
+      };
+
+      // --- INIT ---
+      bgLayers[0].src = channelsData[0].bg;
+      renderCarousel();
+      // selectChannelHome("cazebr");
+
+      window.addEventListener("resize", () => {
+        const card = document.getElementById(`card-${activeId}`);
+        if (card && track && viewHome.classList.contains("active-state")) {
+          const cardWidth = window.innerWidth < 768 ? 180 : 290;
+          track.scrollLeft =
+            card.offsetLeft - track.clientWidth / 2 + cardWidth / 2;
+        }
+      });
+    </script>
+  </body>
+</html>

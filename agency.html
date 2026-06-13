@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>The Lost Vault of the Ancients</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lato:wght@300;400&display=swap");
+
+      :root {
+        --bg-color: #0a0a0c;
+        --text-color: #e0d6c8;
+        --gold: #d4af37;
+        --gold-glow: rgba(212, 175, 55, 0.5);
+        --error: #8b0000;
+      }
+
+      body,
+      html {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        background-color: var(--bg-color);
+        color: var(--text-color);
+        font-family: "Lato", sans-serif;
+        overflow: hidden;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        transition: background 2s ease;
+      }
+
+      h1,
+      h2 {
+        font-family: "Cinzel", serif;
+        color: var(--gold);
+        text-align: center;
+        letter-spacing: 2px;
+        text-shadow: 0 0 10px var(--gold-glow);
+      }
+
+      .container {
+        width: 90%;
+        max-width: 600px;
+        background: rgba(20, 20, 22, 0.9);
+        padding: 40px;
+        border-radius: 10px;
+        border: 1px solid rgba(212, 175, 55, 0.2);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+        position: relative;
+        z-index: 10;
+      }
+
+      .phase {
+        display: none;
+        opacity: 0;
+        transform: scale(0.95);
+        transition: opacity 1s ease, transform 1s ease;
+        text-align: center;
+      }
+
+      .phase.active {
+        display: block;
+        opacity: 1;
+        transform: scale(1);
+      }
+
+      .story-text {
+        font-size: 1.1rem;
+        line-height: 1.6;
+        margin-bottom: 30px;
+        color: #b0a89a;
+      }
+
+      /* Input Styles */
+      input[type="text"] {
+        width: 80%;
+        padding: 15px;
+        background: rgba(0, 0, 0, 0.5);
+        border: 1px solid var(--gold);
+        color: var(--gold);
+        font-size: 1.2rem;
+        text-align: center;
+        border-radius: 5px;
+        outline: none;
+        text-transform: uppercase;
+        font-family: "Cinzel", serif;
+        transition: box-shadow 0.3s;
+      }
+
+      input[type="text"]:focus {
+        box-shadow: 0 0 15px var(--gold-glow);
+      }
+
+      button {
+        margin-top: 20px;
+        padding: 12px 30px;
+        background: transparent;
+        border: 2px solid var(--gold);
+        color: var(--gold);
+        font-family: "Cinzel", serif;
+        font-size: 1.1rem;
+        cursor: pointer;
+        border-radius: 5px;
+        transition: all 0.3s ease;
+      }
+
+      button:hover {
+        background: var(--gold);
+        color: var(--bg-color);
+        box-shadow: 0 0 20px var(--gold-glow);
+      }
+
+      /* Shake animation for wrong answer */
+      @keyframes shake {
+        0%,
+        100% {
+          transform: translateX(0);
+        }
+        20%,
+        60% {
+          transform: translateX(-10px);
+        }
+        40%,
+        80% {
+          transform: translateX(10px);
+        }
+      }
+      .error {
+        animation: shake 0.5s;
+        border-color: var(--error) !important;
+        color: var(--error) !important;
+      }
+
+      /* --- STAGE 2: FLASHLIGHT STYLES --- */
+      #flashlight-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 1);
+        z-index: 50;
+        display: none;
+        cursor: crosshair;
+      }
+      #hidden-sun {
+        position: absolute;
+        width: 40px;
+        height: 40px;
+        background: radial-gradient(circle, var(--gold) 0%, transparent 70%);
+        border-radius: 50%;
+        cursor: pointer;
+        opacity: 0; /* Hidden until light shines on it */
+        transition: opacity 0.2s;
+        box-shadow: 0 0 20px var(--gold);
+      }
+
+      /* --- STAGE 3: SLIDER STYLES --- */
+      .slider-container {
+        margin: 20px 0;
+      }
+      .slider-label {
+        color: var(--gold);
+        font-family: "Cinzel", serif;
+        margin-bottom: 5px;
+        display: block;
+      }
+      input[type="range"] {
+        -webkit-appearance: none;
+        width: 100%;
+        height: 8px;
+        background: #333;
+        border-radius: 5px;
+        outline: none;
+      }
+      input[type="range"]::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        width: 25px;
+        height: 25px;
+        background: var(--gold);
+        border-radius: 50%;
+        cursor: pointer;
+        box-shadow: 0 0 10px var(--gold-glow);
+      }
+
+      /* --- FINALE STYLES --- */
+      body.victory {
+        background: radial-gradient(circle at center, #4a3b00 0%, #0a0a0c 100%);
+      }
+      .victory-icon {
+        font-size: 80px;
+        margin-bottom: 20px;
+        animation: float 3s ease-in-out infinite;
+      }
+      @keyframes float {
+        0%,
+        100% {
+          transform: translateY(0);
+          text-shadow: 0 0 20px var(--gold);
+        }
+        50% {
+          transform: translateY(-15px);
+          text-shadow: 0 20px 40px var(--gold);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- STAGE 2: FLASHLIGHT OVERLAY (Hidden initially) -->
+    <div id="flashlight-overlay">
+      <div id="hidden-sun"></div>
+    </div>
+
+    <div class="container" id="main-box">
+      <!-- STAGE 1: THE RIDDLE -->
+      <div id="phase-1" class="phase active">
+        <h2>Stage I: The Guardian's Mind</h2>
+        <p class="story-text">
+          "To enter the ancient vault, you must prove your wisdom to the unseen
+          guardian. Solve this riddle to open the outer gate:"<br /><br />
+          <em
+            >I have cities, but no houses.<br />
+            I have forests, but no trees.<br />
+            I have rivers, but no water.<br />
+            What am I?</em
+          >
+        </p>
+        <input
+          type="text"
+          id="riddle-answer"
+          placeholder="Enter your answer"
+          autocomplete="off"
+        />
+        <br />
+        <button onclick="checkPhase1()">Speak the Answer</button>
+      </div>
+
+      <!-- STAGE 2: THE DARKNESS -->
+      <div id="phase-2" class="phase">
+        <h2>Stage II: The Chamber of Shadows</h2>
+        <p class="story-text">
+          "The gate opens, but the chamber inside is pitch black. <br /><br />
+          Use your torch (your cursor/finger) to search the darkness. Find the
+          Golden Sun to proceed."
+        </p>
+        <button onclick="startFlashlight()">Enter the Darkness</button>
+      </div>
+
+      <!-- STAGE 3: THE BALANCE -->
+      <div id="phase-3" class="phase">
+        <h2>Stage III: The Scales of Harmony</h2>
+        <p class="story-text">
+          "You stand before the final vault door. It is held shut by three
+          massive stone pillars.<br /><br />
+          The mechanism requires <strong>Perfect Equality</strong>. The pillars
+          must share the burden equally, and their combined height must equal
+          exactly <strong>150</strong>."
+        </p>
+
+        <div class="slider-container">
+          <span class="slider-label"
+            >Pillar of Earth: <span id="val1">0</span></span
+          >
+          <input
+            type="range"
+            id="slider1"
+            min="0"
+            max="100"
+            value="0"
+            oninput="checkBalance()"
+          />
+        </div>
+        <div class="slider-container">
+          <span class="slider-label"
+            >Pillar of Water: <span id="val2">0</span></span
+          >
+          <input
+            type="range"
+            id="slider2"
+            min="0"
+            max="100"
+            value="0"
+            oninput="checkBalance()"
+          />
+        </div>
+        <div class="slider-container">
+          <span class="slider-label"
+            >Pillar of Fire: <span id="val3">0</span></span
+          >
+          <input
+            type="range"
+            id="slider3"
+            min="0"
+            max="100"
+            value="0"
+            oninput="checkBalance()"
+          />
+        </div>
+        <p
+          id="balance-status"
+          style="color: var(--error); margin-top: 15px; font-weight: bold;"
+        ></p>
+      </div>
+
+      <!-- FINALE: THE TREASURE -->
+      <div id="phase-finale" class="phase">
+        <div class="victory-icon">🏆</div>
+        <h1 style="font-size: 2.5rem;">The Vault is Open</h1>
+        <p
+          class="story-text"
+          style="color: var(--text-color); font-size: 1.2rem;"
+        >
+          Your intuition, observation, and logic have guided you through the
+          darkness.<br /><br />
+          The ancient treasure is yours. You have accomplished the great
+          mission!
+        </p>
+      </div>
+    </div>
+
+    <script>
+      // Audio Engine for satisfying sounds
+      const AudioContext = window.AudioContext || window.webkitAudioContext;
+      let audioCtx;
+
+      function playSound(type, frequency, duration) {
+        if (!audioCtx) audioCtx = new AudioContext();
+        const oscillator = audioCtx.createOscillator();
+        const gainNode = audioCtx.createGain();
+
+        oscillator.type = type;
+        oscillator.frequency.setValueAtTime(frequency, audioCtx.currentTime);
+
+        gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(
+          0.001,
+          audioCtx.currentTime + duration,
+        );
+
+        oscillator.connect(gainNode);
+        gainNode.connect(audioCtx.destination);
+
+        oscillator.start();
+        oscillator.stop(audioCtx.currentTime + duration);
+      }
+
+      // Play epic chord for the finale
+      function playVictoryFanfare() {
+        if (!audioCtx) audioCtx = new AudioContext();
+        const notes = [261.63, 329.63, 392.0, 523.25]; // C Major Chord
+        notes.forEach((freq, i) => {
+          setTimeout(() => {
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = "sine";
+            osc.frequency.value = freq;
+            gain.gain.setValueAtTime(0, audioCtx.currentTime);
+            gain.gain.linearRampToValueAtTime(0.2, audioCtx.currentTime + 0.5);
+            gain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 4);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start();
+            osc.stop(audioCtx.currentTime + 4);
+          }, i * 200);
+        });
+      }
+
+      function switchPhase(hideId, showId) {
+        playSound("triangle", 600, 0.2); // Success chime
+        const hideEl = document.getElementById(hideId);
+        const showEl = document.getElementById(showId);
+
+        hideEl.style.opacity = "0";
+        setTimeout(() => {
+          hideEl.classList.remove("active");
+          showEl.classList.add("active");
+          setTimeout(() => (showEl.style.opacity = "1"), 50);
+        }, 500);
+      }
+
+      // --- STAGE 1 LOGIC ---
+      function checkPhase1() {
+        const input = document.getElementById("riddle-answer");
+        // Clean up the answer (remove spaces, make lowercase)
+        const answer = input.value.trim().toLowerCase();
+
+        // Initialize audio on first click
+        if (!audioCtx) audioCtx = new AudioContext();
+
+        if (answer === "map" || answer === "a map") {
+          switchPhase("phase-1", "phase-2");
+        } else {
+          // Wrong answer
+          playSound("sawtooth", 150, 0.3);
+          input.classList.add("error");
+          setTimeout(() => input.classList.remove("error"), 500);
+          input.value = "";
+        }
+      }
+
+      // Allow pressing Enter for Stage 1
+      document
+        .getElementById("riddle-answer")
+        .addEventListener("keypress", function (e) {
+          if (e.key === "Enter") checkPhase1();
+        });
+
+      // --- STAGE 2 LOGIC (FLASHLIGHT) ---
+      const overlay = document.getElementById("flashlight-overlay");
+      const sun = document.getElementById("hidden-sun");
+      const mainBox = document.getElementById("main-box");
+
+      function startFlashlight() {
+        playSound("triangle", 400, 0.2);
+        mainBox.style.display = "none"; // Hide the central box
+        overlay.style.display = "block";
+
+        // Place the sun in a random location
+        const randomX =
+          Math.floor(Math.random() * (window.innerWidth - 100)) + 50;
+        const randomY =
+          Math.floor(Math.random() * (window.innerHeight - 100)) + 50;
+        sun.style.left = randomX + "px";
+        sun.style.top = randomY + "px";
+
+        // Flashlight effect
+        function updateLight(x, y) {
+          overlay.style.background = `radial-gradient(circle at ${x}px ${y}px, transparent 40px, rgba(0,0,0,0.98) 150px)`;
+
+          // Calculate distance from light to sun to make it visible
+          const dx = x - (randomX + 20);
+          const dy = y - (randomY + 20);
+          const distance = Math.sqrt(dx * dx + dy * dy);
+
+          if (distance < 100) {
+            sun.style.opacity = 1 - distance / 100;
+          } else {
+            sun.style.opacity = 0;
+          }
+        }
+
+        // Mouse for Desktop
+        overlay.addEventListener("mousemove", (e) =>
+          updateLight(e.clientX, e.clientY),
+        );
+
+        // Touch for Mobile
+        overlay.addEventListener("touchmove", (e) => {
+          const touch = e.touches[0];
+          updateLight(touch.clientX, touch.clientY);
+        });
+      }
+
+      sun.addEventListener("click", () => {
+        overlay.style.display = "none"; // Hide darkness
+        mainBox.style.display = "block"; // Bring back main UI
+        switchPhase("phase-2", "phase-3");
+      });
+
+      // --- STAGE 3 LOGIC (SLIDERS) ---
+      function checkBalance() {
+        const v1 = parseInt(document.getElementById("slider1").value);
+        const v2 = parseInt(document.getElementById("slider2").value);
+        const v3 = parseInt(document.getElementById("slider3").value);
+
+        // Update UI text
+        document.getElementById("val1").innerText = v1;
+        document.getElementById("val2").innerText = v2;
+        document.getElementById("val3").innerText = v3;
+
+        // Play a soft tick sound when sliding
+        if (Math.random() > 0.7) playSound("square", 800 + v1 * 2, 0.02);
+
+        const total = v1 + v2 + v3;
+        const status = document.getElementById("balance-status");
+
+        if (total !== 150) {
+          status.innerText = `Current Total: ${total} (Needs 150)`;
+          status.style.color = "var(--error)";
+        } else if (v1 !== v2 || v2 !== v3) {
+          status.innerText = "Total is 150, but pillars are NOT equal!";
+          status.style.color = "var(--gold)";
+        } else {
+          // VICTORY CONDITION MET! (All are 50, Total is 150)
+          status.innerText = "PERFECT HARMONY ACHIEVED.";
+          status.style.color = "#00ff00";
+          document.getElementById("slider1").disabled = true;
+          document.getElementById("slider2").disabled = true;
+          document.getElementById("slider3").disabled = true;
+
+          setTimeout(() => triggerFinale(), 1000);
+        }
+      }
+
+      // --- THE FINALE ---
+      function triggerFinale() {
+        document.body.classList.add("victory");
+        playVictoryFanfare();
+
+        // Change UI container to look majestic
+        mainBox.style.background = "rgba(20, 15, 0, 0.9)";
+        mainBox.style.borderColor = "var(--gold)";
+        mainBox.style.boxShadow = "0 0 50px var(--gold-glow)";
+
+        switchPhase("phase-3", "phase-finale");
+      }
+    </script>
+  </body>
+</html>
