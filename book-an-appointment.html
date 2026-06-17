@@ -243,6 +243,25 @@
           transform: translateY(0);
         }
       }
+
+      /* Premium Custom Time Input UI Fixes */
+      .time-input-premium::-webkit-calendar-picker-indicator {
+        display: none !important;
+        -webkit-appearance: none;
+      }
+      .time-input-premium::-webkit-datetime-edit-ampm-field,
+      .time-input-premium::-webkit-datetime-edit-hour-field,
+      .time-input-premium::-webkit-datetime-edit-minute-field {
+        background: transparent;
+        padding: 0 4px;
+        border-radius: 4px;
+      }
+      .time-input-premium:focus::-webkit-datetime-edit-ampm-field,
+      .time-input-premium:focus::-webkit-datetime-edit-hour-field,
+      .time-input-premium:focus::-webkit-datetime-edit-minute-field {
+        background-color: #10b981;
+        color: #ffffff;
+      }
     </style>
   </head>
   <body class="min-h-screen">
@@ -775,7 +794,7 @@
 
         times.forEach((t) => {
           const lbl = document.createElement("label");
-          lbl.className = "cursor-pointer block";
+          lbl.className = "cursor-pointer block h-full";
 
           const inp = document.createElement("input");
           inp.type = "radio";
@@ -789,12 +808,116 @@
 
           const div = document.createElement("div");
           div.className =
-            "time-btn py-4 text-center text-sm font-medium bg-white text-ink";
+            "time-btn h-full w-full py-4 flex items-center justify-center text-center text-sm font-medium bg-white text-ink";
           div.textContent = t;
 
           lbl.appendChild(inp);
           lbl.appendChild(div);
           timeContainer.appendChild(lbl);
+        });
+
+        // --- CUSTOM TIME PREMIUM UI ---
+        const customWrapper = document.createElement("div");
+        customWrapper.className =
+          "col-span-2 sm:col-span-2 relative h-full flex mt-1 sm:mt-0";
+        customWrapper.innerHTML = `
+          <!-- Minimalist Trigger Button -->
+          <div id="ct-btn" class="w-full h-full py-4 text-center text-sm font-semibold border-2 border-dashed border-inkLight/40 text-inkLight hover:text-brand hover:border-brand hover:bg-brand/5 transition-all cursor-pointer flex items-center justify-center gap-2 bg-transparent select-none">
+            <i data-lucide="clock" class="w-4 h-4"></i> Custom Time
+          </div>
+
+          <!-- Active Input Form -->
+          <div id="ct-form" class="hidden w-full h-full flex items-stretch border-2 border-brand bg-white text-ink transition-all shadow-md overflow-hidden">
+            <input type="time" id="ct-input" class="flex-grow w-full outline-none bg-transparent px-2 text-base font-extrabold text-center cursor-text time-input-premium tracking-widest" required />
+            <button type="button" id="ct-submit" class="bg-brand text-white w-12 hover:bg-brandDark transition-colors flex items-center justify-center shrink-0">
+              <i data-lucide="check" class="w-5 h-5"></i>
+            </button>
+            <button type="button" id="ct-cancel" class="bg-paper text-inkLight w-10 hover:text-ink hover:bg-gray-200 transition-colors flex items-center justify-center border-l border-gridLine shrink-0">
+              <i data-lucide="x" class="w-4 h-4"></i>
+            </button>
+          </div>
+        `;
+        timeContainer.appendChild(customWrapper);
+
+        const ctBtn = customWrapper.querySelector("#ct-btn");
+        const ctForm = customWrapper.querySelector("#ct-form");
+        const ctInput = customWrapper.querySelector("#ct-input");
+        const ctSubmit = customWrapper.querySelector("#ct-submit");
+        const ctCancel = customWrapper.querySelector("#ct-cancel");
+
+        lucide.createIcons({ root: customWrapper });
+
+        ctBtn.addEventListener("click", () => {
+          // Clear standard radios
+          document
+            .querySelectorAll(".time-hidden")
+            .forEach((r) => (r.checked = false));
+
+          ctBtn.classList.add("hidden");
+          ctForm.classList.remove("hidden");
+          ctInput.focus();
+
+          // Try to open native picker automatically if supported
+          try {
+            ctInput.showPicker();
+          } catch (e) {}
+        });
+
+        ctCancel.addEventListener("click", () => {
+          ctForm.classList.add("hidden");
+          ctBtn.classList.remove("hidden");
+          ctInput.value = "";
+
+          // Reset styling
+          ctBtn.className =
+            "w-full h-full py-4 text-center text-sm font-semibold border-2 border-dashed border-inkLight/40 text-inkLight hover:text-brand hover:border-brand hover:bg-brand/5 transition-all cursor-pointer flex items-center justify-center gap-2 bg-transparent select-none";
+          ctBtn.innerHTML = `<i data-lucide="clock" class="w-4 h-4"></i> Custom Time`;
+          lucide.createIcons({ root: customWrapper });
+
+          state.time = null;
+          updateSystem();
+        });
+
+        ctSubmit.addEventListener("click", () => {
+          if (!ctInput.value) {
+            ctInput.focus();
+            return;
+          }
+
+          let [hh, mm] = ctInput.value.split(":");
+          let h = parseInt(hh, 10);
+          let ampm = h >= 12 ? "PM" : "AM";
+          h = h % 12 || 12;
+          let displayH = h < 10 ? "0" + h : h;
+          let customTimeStr = `${displayH}:${mm} ${ampm}`;
+
+          ctForm.classList.add("hidden");
+          ctBtn.classList.remove("hidden");
+
+          // Morph button into active selected state
+          ctBtn.className =
+            "w-full h-full py-4 text-center text-sm font-extrabold bg-brand text-white border-2 border-brand transition-all cursor-pointer flex items-center justify-center gap-2 shadow-md";
+          ctBtn.innerHTML = `<i data-lucide="check-circle" class="w-4 h-4"></i> ${customTimeStr}`;
+
+          lucide.createIcons({ root: customWrapper });
+
+          state.time = customTimeStr;
+          updateSystem();
+        });
+
+        // Sync with standard slots: deselect custom if a standard slot is clicked
+        document.querySelectorAll(".time-hidden").forEach((inp) => {
+          inp.addEventListener("change", () => {
+            if (inp.checked) {
+              ctInput.value = "";
+              ctForm.classList.add("hidden");
+              ctBtn.classList.remove("hidden");
+              ctBtn.className =
+                "w-full h-full py-4 text-center text-sm font-semibold border-2 border-dashed border-inkLight/40 text-inkLight hover:text-brand hover:border-brand hover:bg-brand/5 transition-all cursor-pointer flex items-center justify-center gap-2 bg-transparent select-none";
+              ctBtn.innerHTML = `<i data-lucide="clock" class="w-4 h-4"></i> Custom Time`;
+              lucide.createIcons({ root: customWrapper });
+            }
+          });
         });
       }
 
