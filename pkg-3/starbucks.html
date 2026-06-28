@@ -1,0 +1,1448 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <title>Starbucks | The Premium Roastery Experience</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Oswald:ital,wght@0,300;0,500;0,700;1,500&family=Outfit:wght@300;400;600&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      /* =========================================================
+           CSS Variables & Reset
+           ========================================================= */
+      :root {
+        --sb-green: #006241;
+        --sb-light-green: #1e3932;
+        --sb-dark: #0b0b0b;
+        --sb-espresso: #1a1412;
+        --sb-light: #f2f0eb;
+        --sb-gold: #cba258;
+        --sb-matcha: #8db255;
+        --sb-caramel: #d4a373;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      /* Smooth Scroll Setup */
+      html.lenis,
+      html.lenis body {
+        height: auto;
+        width: 100vw;
+        overflow-x: hidden;
+      }
+      .lenis.lenis-smooth {
+        scroll-behavior: auto !important;
+      }
+      .lenis.lenis-smooth [data-lenis-prevent] {
+        overscroll-behavior: contain;
+      }
+      .lenis.lenis-stopped {
+        overflow: hidden;
+      }
+      .lenis.lenis-scrolling iframe {
+        pointer-events: none;
+      }
+
+      body {
+        font-family: "Outfit", sans-serif;
+        background-color: var(--sb-dark);
+        color: var(--sb-light);
+        overflow-x: hidden;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      h1,
+      h2,
+      h3,
+      h4,
+      .impact-text {
+        font-family: "Oswald", sans-serif;
+        text-transform: uppercase;
+        line-height: 1;
+      }
+
+      /* Premium Grain Overlay */
+      .noise-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        pointer-events: none;
+        z-index: 9999;
+        opacity: 0.04;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+      }
+
+      /* =========================================================
+           Custom Cursor (Premium feel)
+           ========================================================= */
+      @media (pointer: fine) {
+        body {
+          cursor: none;
+        }
+        .cursor-dot {
+          width: 6px;
+          height: 6px;
+          background: var(--sb-gold);
+          border-radius: 50%;
+          position: fixed;
+          top: 0;
+          left: 0;
+          pointer-events: none;
+          z-index: 10001;
+          transform: translate(-50%, -50%);
+        }
+        .cursor-ring {
+          width: 40px;
+          height: 40px;
+          border: 1px solid rgba(203, 162, 88, 0.5);
+          border-radius: 50%;
+          position: fixed;
+          top: 0;
+          left: 0;
+          pointer-events: none;
+          z-index: 10000;
+          transform: translate(-50%, -50%);
+          transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+            height 0.3s cubic-bezier(0.16, 1, 0.3, 1), background 0.3s,
+            border 0.3s;
+          backdrop-filter: blur(2px);
+        }
+      }
+      @media (pointer: coarse), (hover: none) {
+        .cursor-dot,
+        .cursor-ring {
+          display: none !important;
+        }
+      }
+
+      /* =========================================================
+           Preloader
+           ========================================================= */
+      #preloader {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: var(--sb-espresso);
+        z-index: 10000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .loader-wrapper {
+        position: relative;
+      }
+      .loader-text {
+        font-size: clamp(3rem, 10vw, 8rem);
+        color: transparent;
+        -webkit-text-stroke: 1px rgba(255, 255, 255, 0.2);
+        position: relative;
+      }
+      .loader-fill {
+        position: absolute;
+        top: 0;
+        left: 0;
+        color: var(--sb-gold);
+        -webkit-text-stroke: 0px;
+        white-space: nowrap;
+        overflow: hidden;
+        width: 0%;
+      }
+
+      /* =========================================================
+           Section 1: Hero (UPGRADED PREMIUM)
+           ========================================================= */
+      #hero {
+        height: 100vh;
+        width: 100vw;
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        background: var(--sb-dark);
+      }
+
+      /* Fine Gold Frame */
+      .hero-frame {
+        position: absolute;
+        top: 2vw;
+        left: 2vw;
+        right: 2vw;
+        bottom: 2vw;
+        border: 1px solid rgba(203, 162, 88, 0.3);
+        border-radius: 20px;
+        z-index: 4;
+        pointer-events: none;
+      }
+
+      /* Dark Vignette Overlay to make text pop */
+      .hero-bg-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: radial-gradient(
+          circle at center,
+          rgba(11, 11, 11, 0.2) 0%,
+          rgba(11, 11, 11, 0.9) 100%
+        );
+        z-index: 1;
+        pointer-events: none;
+      }
+
+      .hero-img {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        opacity: 0.8;
+        transform: scale(1.1);
+        z-index: 0;
+      }
+
+      .hero-content {
+        position: relative;
+        z-index: 3;
+        text-align: center;
+        width: 100%;
+        padding: 0 5vw;
+      }
+
+      .hero-badge {
+        color: var(--sb-gold);
+        font-family: "Outfit", sans-serif;
+        font-size: clamp(0.7rem, 1vw, 1rem);
+        letter-spacing: 6px;
+        text-transform: uppercase;
+        margin-bottom: 3vh;
+        display: block;
+      }
+
+      .hero-title-1 {
+        font-size: clamp(4.5rem, 15vw, 18rem);
+        font-weight: 700;
+        color: var(--sb-light);
+        display: block;
+        margin-bottom: -4vh;
+        opacity: 0.95;
+      }
+
+      .hero-title-2 {
+        font-size: clamp(3.5rem, 12vw, 12rem);
+        font-weight: 500;
+        font-style: italic;
+        color: transparent;
+        -webkit-text-stroke: 2px var(--sb-gold);
+        display: block;
+        position: relative;
+        z-index: 2;
+      }
+
+      .hero-subtitle {
+        font-family: "Outfit", sans-serif;
+        font-size: clamp(1rem, 1.2vw, 1.2rem);
+        color: rgba(255, 255, 255, 0.7);
+        max-width: 500px;
+        margin: 4vh auto 0;
+        font-weight: 300;
+        line-height: 1.6;
+      }
+
+      .scroll-indicator {
+        position: absolute;
+        bottom: 5vh;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 26px;
+        height: 40px;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        border-radius: 20px;
+        display: flex;
+        justify-content: center;
+        z-index: 5;
+      }
+      .scroll-dot {
+        width: 4px;
+        height: 4px;
+        background: var(--sb-gold);
+        border-radius: 50%;
+        margin-top: 8px;
+        animation: bounce 2s infinite;
+      }
+      @keyframes bounce {
+        0%,
+        100% {
+          transform: translateY(0);
+          opacity: 1;
+        }
+        50% {
+          transform: translateY(15px);
+          opacity: 0;
+        }
+      }
+
+      /* =========================================================
+           Section 2: Premium Marquee
+           ========================================================= */
+      #marquee-section {
+        padding: 3vh 0;
+        background: var(--sb-green);
+        color: var(--sb-light);
+        border-top: 1px solid rgba(255, 255, 255, 0.05);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        overflow: hidden;
+        position: relative;
+        z-index: 10;
+      }
+      .marquee-inner {
+        display: flex;
+        width: fit-content;
+        font-size: clamp(2rem, 5vw, 4rem);
+        white-space: nowrap;
+        font-family: "Oswald", sans-serif;
+        font-weight: 300;
+      }
+      .marquee-inner span {
+        padding: 0 3vw;
+        display: flex;
+        align-items: center;
+        gap: 3vw;
+      }
+      .star-icon {
+        color: var(--sb-gold);
+        font-size: clamp(1rem, 3vw, 2rem);
+      }
+
+      /* =========================================================
+           Section 3: The Craft (Horizontal Scroll)
+           ========================================================= */
+      #craft {
+        height: 100vh;
+        width: 100vw;
+        overflow: hidden;
+        background: var(--sb-light-green);
+        position: relative;
+      }
+      .craft-container {
+        display: flex;
+        height: 100%;
+        width: 300vw;
+      }
+      .c-panel {
+        width: 100vw;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 10vw;
+        position: relative;
+      }
+
+      .c-text {
+        width: 40%;
+        z-index: 3;
+      }
+      .c-text h4 {
+        font-size: clamp(1.2rem, 2vw, 2rem);
+        color: var(--sb-gold);
+        letter-spacing: 5px;
+        margin-bottom: 20px;
+      }
+      .c-text h2 {
+        font-size: clamp(4rem, 8vw, 10rem);
+        color: var(--sb-light);
+        margin-bottom: 20px;
+      }
+      .c-text p {
+        font-size: clamp(1rem, 1.2vw, 1.2rem);
+        line-height: 1.6;
+        color: rgba(255, 255, 255, 0.7);
+        font-family: "Outfit";
+        font-weight: 300;
+      }
+
+      /* Fixed Parallax Wrapper */
+      .c-img-wrapper {
+        width: 45%;
+        height: 60vh;
+        overflow: hidden;
+        border-radius: 20px;
+        position: relative;
+        box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
+      }
+      .c-img-wrapper img {
+        width: 100%;
+        height: 120%;
+        object-fit: cover;
+        position: absolute;
+        top: 0;
+        left: 0;
+      }
+
+      /* =========================================================
+           Section 4: Signature Drinks
+           ========================================================= */
+      #drinks {
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        overflow: hidden;
+        transition: background-color 0.5s ease;
+        background: var(--sb-espresso);
+      }
+      .drinks-bg-text {
+        position: absolute;
+        font-size: clamp(8rem, 25vw, 35rem);
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        opacity: 0.03;
+        white-space: nowrap;
+        pointer-events: none;
+      }
+
+      .drink-slides {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+      }
+      .drink-slide {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        opacity: 0;
+        visibility: hidden;
+      }
+      .drink-slide.active {
+        opacity: 1;
+        visibility: visible;
+      }
+
+      .drink-img {
+        height: 50vh;
+        width: auto;
+        max-width: 80vw;
+        object-fit: contain;
+        filter: drop-shadow(0 40px 30px rgba(0, 0, 0, 0.6));
+        margin-bottom: 30px;
+      }
+      .drink-info {
+        text-align: center;
+        color: var(--sb-light);
+        z-index: 5;
+      }
+      .drink-info h2 {
+        font-size: clamp(3rem, 8vw, 8rem);
+        margin-bottom: 10px;
+      }
+      .drink-info p {
+        font-family: "Outfit";
+        font-weight: 300;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+      }
+
+      /* =========================================================
+           Section 5: Sustainability (GAP FIXED)
+           ========================================================= */
+      #sustainability {
+        min-height: 100vh;
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 10vh 5vw;
+        background: #000;
+      }
+
+      /* FIX: Height increased and Top pulled up so it NEVER exposes the background when scrubbed */
+      .sus-bg {
+        position: absolute;
+        top: -15%;
+        left: 0;
+        width: 100%;
+        height: 130%;
+        object-fit: cover;
+        opacity: 0.4;
+        filter: saturate(0.5);
+      }
+
+      .glass-card {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        padding: 6vw 8vw;
+        border-radius: 30px;
+        text-align: center;
+        z-index: 3;
+        max-width: 800px;
+      }
+      .glass-card h2 {
+        font-size: clamp(3rem, 7vw, 7rem);
+        color: var(--sb-light);
+      }
+      .glass-card span {
+        color: var(--sb-matcha);
+      }
+      .glass-card p {
+        margin-top: 30px;
+        font-size: clamp(1rem, 1.3vw, 1.3rem);
+        color: #ccc;
+        line-height: 1.6;
+        font-family: "Outfit";
+        font-weight: 300;
+      }
+
+      .leaf {
+        position: absolute;
+        width: clamp(40px, 8vw, 100px);
+        height: auto;
+        opacity: 0.6;
+        z-index: 2;
+        pointer-events: none;
+        filter: drop-shadow(0 10px 10px rgba(0, 0, 0, 0.5));
+      }
+
+      /* =========================================================
+           Section 6: Rewards / App
+           ========================================================= */
+      #rewards {
+        min-height: 100vh;
+        background: var(--sb-dark);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 10vw;
+        position: relative;
+        overflow: hidden;
+        border-top: 1px solid rgba(255, 255, 255, 0.05);
+      }
+
+      .rewards-text {
+        z-index: 3;
+        width: 45%;
+      }
+      .rewards-text h4 {
+        color: var(--sb-gold);
+        letter-spacing: 4px;
+        margin-bottom: 20px;
+      }
+      .rewards-text h2 {
+        font-size: clamp(3.5rem, 8vw, 8rem);
+        color: var(--sb-light);
+        margin-bottom: 30px;
+      }
+
+      .magnetic-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px 50px;
+        font-size: clamp(1rem, 1.2vw, 1.2rem);
+        font-family: "Outfit", sans-serif;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        background: transparent;
+        color: var(--sb-light);
+        border: 1px solid var(--sb-gold);
+        border-radius: 50px;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+        transition: color 0.4s;
+      }
+      .magnetic-btn::before {
+        content: "";
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: var(--sb-gold);
+        transition: top 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        z-index: -1;
+      }
+      .magnetic-btn:hover {
+        color: var(--sb-dark);
+        border-color: transparent;
+      }
+      .magnetic-btn:hover::before {
+        top: 0;
+      }
+
+      .phone-container {
+        width: 45%;
+        height: 70vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        perspective: 1000px;
+        z-index: 2;
+      }
+      .phone-mockup {
+        width: clamp(250px, 25vw, 350px);
+        height: clamp(520px, 52vw, 720px);
+        border: 8px solid #222;
+        border-radius: 40px;
+        background: var(--sb-light-green);
+        box-shadow: 0 40px 80px rgba(0, 0, 0, 0.8),
+          inset 0 0 20px rgba(0, 0, 0, 0.5);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding-top: 40px;
+        position: relative;
+        overflow: hidden;
+      }
+      .phone-mockup::after {
+        content: "";
+        position: absolute;
+        top: 15px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 30%;
+        height: 25px;
+        background: #222;
+        border-radius: 20px;
+      }
+      .star-svg {
+        width: 80px;
+        height: 80px;
+        fill: var(--sb-gold);
+        margin-top: 50px;
+      }
+
+      .floating-star {
+        position: absolute;
+        width: 30px;
+        height: 30px;
+        fill: var(--sb-gold);
+        filter: drop-shadow(0 0 10px rgba(203, 162, 88, 0.5));
+        pointer-events: none;
+      }
+
+      /* =========================================================
+           Section 7: Footer
+           ========================================================= */
+      #footer {
+        height: auto;
+        min-height: 70vh;
+        background: var(--sb-green);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-end;
+        padding-bottom: 5vh;
+        position: relative;
+        overflow: hidden;
+        border-top-left-radius: 50px;
+        border-top-right-radius: 50px;
+        margin-top: -50px;
+        z-index: 10;
+      }
+      .footer-logo {
+        position: absolute;
+        top: -10vh;
+        width: 120vw;
+        height: auto;
+        opacity: 0.05;
+        pointer-events: none;
+      }
+      .footer-huge-text {
+        font-size: clamp(6rem, 20vw, 30rem);
+        color: var(--sb-light);
+        font-family: "Oswald", sans-serif;
+        line-height: 0.8;
+        margin-top: auto;
+        opacity: 0.9;
+        text-align: center;
+      }
+      .footer-links {
+        display: flex;
+        gap: 4vw;
+        color: rgba(255, 255, 255, 0.7);
+        font-weight: 300;
+        font-size: clamp(0.9rem, 1vw, 1.2rem);
+        z-index: 2;
+        margin-top: 10vh;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        border-top: 1px solid rgba(255, 255, 255, 0.2);
+        padding-top: 3vh;
+        width: 90%;
+        justify-content: center;
+      }
+      .footer-links span {
+        cursor: pointer;
+        transition: color 0.3s;
+      }
+      .footer-links span:hover {
+        color: var(--sb-gold);
+      }
+
+      /* =========================================================
+           Mobile Responsiveness
+           ========================================================= */
+      @media (max-width: 768px) {
+        #marquee-section {
+          transform: none;
+          padding: 2vh 0;
+        }
+        .c-panel {
+          flex-direction: column;
+          justify-content: center;
+          text-align: center;
+          gap: 5vh;
+          padding: 0 5vw;
+        }
+        .c-text,
+        .c-img-wrapper {
+          width: 100%;
+        }
+        .c-text h2 {
+          margin-bottom: 10px;
+        }
+        .c-img-wrapper {
+          height: 40vh;
+        }
+        .drink-img {
+          height: 40vh;
+        }
+        .glass-card {
+          padding: 10vw 5vw;
+          border-radius: 20px;
+        }
+        #rewards {
+          flex-direction: column;
+          text-align: center;
+          gap: 10vh;
+          padding: 15vh 5vw;
+        }
+        .rewards-text,
+        .phone-container {
+          width: 100%;
+        }
+        .footer-links {
+          flex-direction: column;
+          align-items: center;
+          gap: 20px;
+        }
+        #footer {
+          border-top-left-radius: 30px;
+          border-top-right-radius: 30px;
+        }
+        .hero-title-1 {
+          margin-bottom: -2vh;
+        }
+        .hero-frame {
+          top: 4vw;
+          left: 4vw;
+          right: 4vw;
+          bottom: 4vw;
+          border-width: 1px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Premium Noise Overlay -->
+    <div class="noise-overlay"></div>
+
+    <!-- Custom Cursor -->
+    <div class="cursor-dot" id="cursor-dot"></div>
+    <div class="cursor-ring" id="cursor-ring"></div>
+
+    <!-- Preloader -->
+    <div id="preloader">
+      <div class="loader-wrapper">
+        <h1 class="loader-text impact-text">
+          ROASTING<span class="loader-fill impact-text">ROASTING</span>
+        </h1>
+      </div>
+    </div>
+
+    <main>
+      <!-- Hero Section (UPGRADED) -->
+      <section id="hero">
+        <div class="hero-frame"></div>
+        <div class="hero-bg-overlay"></div>
+        <!-- Moody Premium Coffee Pour Image -->
+        <img
+          src="https://images.unsplash.com/photo-1497935586351-b67a49e012bf?auto=format&fit=crop&w=2000&q=80"
+          alt="Espresso Pour"
+          class="hero-img"
+        />
+
+        <div class="hero-content">
+          <span class="hero-badge">Starbucks Reserve</span>
+          <h1 class="hero-title-1">AWAKEN</h1>
+          <h2 class="hero-title-2">YOUR SENSES</h2>
+          <p class="hero-subtitle">
+            The apex of coffee craft. Ethically sourced, masterfully roasted,
+            and exclusively designed to elevate your daily ritual.
+          </p>
+        </div>
+
+        <div class="scroll-indicator">
+          <div class="scroll-dot"></div>
+        </div>
+      </section>
+
+      <!-- Marquee Section -->
+      <section id="marquee-section">
+        <div class="marquee-inner">
+          <span><span class="star-icon">★</span> EXPERTLY CRAFTED</span>
+          <span><span class="star-icon">★</span> THE RESERVE ROASTERY</span>
+          <span><span class="star-icon">★</span> PLANET POSITIVE</span>
+          <span><span class="star-icon">★</span> EXPERTLY CRAFTED</span>
+          <span><span class="star-icon">★</span> THE RESERVE ROASTERY</span>
+        </div>
+      </section>
+
+      <!-- Horizontal Scroll: The Craft -->
+      <section id="craft">
+        <div class="craft-container">
+          <div class="c-panel">
+            <div class="c-text">
+              <h4>01 / SOURCING</h4>
+              <h2>ETHICALLY<br />GROWN</h2>
+              <p>
+                Our journey begins at high altitudes, partnering directly with
+                farmers who nurture every coffee cherry with meticulous care and
+                respect for the earth.
+              </p>
+            </div>
+            <div class="c-img-wrapper">
+              <img
+                src="https://images.unsplash.com/photo-1524350876685-274059332603?auto=format&fit=crop&w=1000&q=80"
+                alt="Coffee Farm"
+                class="parallax-img"
+              />
+            </div>
+          </div>
+          <div class="c-panel">
+            <div class="c-text">
+              <h4>02 / ROASTING</h4>
+              <h2>MASTER<br />ROASTERS</h2>
+              <p>
+                We coax out the hidden flavors of every bean. Our master
+                roasters rely on senses, intuition, and decades of experience to
+                achieve the perfect crack.
+              </p>
+            </div>
+            <div class="c-img-wrapper">
+              <img
+                src="https://images.unsplash.com/photo-1611162458324-aae1eb4129a4?auto=format&fit=crop&w=1000&q=80"
+                alt="Coffee Beans"
+                class="parallax-img"
+              />
+            </div>
+          </div>
+          <div class="c-panel">
+            <div class="c-text">
+              <h4>03 / BREWING</h4>
+              <h2>ART OF<br />THE POUR</h2>
+              <p>
+                Handcrafted by passionate baristas. Every pour, every steam,
+                every drop is an expression of art designed exclusively to
+                elevate your daily ritual.
+              </p>
+            </div>
+            <div class="c-img-wrapper">
+              <img
+                src="https://images.unsplash.com/photo-1541167760496-1628856ab772?auto=format&fit=crop&w=1000&q=80"
+                alt="Barista Pouring"
+                class="parallax-img"
+              />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Dynamic Drinks Section -->
+      <section id="drinks">
+        <div class="drinks-bg-text">SIGNATURE</div>
+        <div class="drink-slides">
+          <!-- Slide 1: Nitro -->
+          <div
+            class="drink-slide active"
+            data-color="#1a1412"
+            data-text="NITRO"
+          >
+            <img
+              src="https://images.unsplash.com/photo-1559525839-b184a4d698c7?auto=format&fit=crop&w=800&q=80"
+              alt="Nitro Cold Brew"
+              class="drink-img"
+              style="border-radius: 30px;"
+            />
+            <div class="drink-info">
+              <h2 style="color: var(--sb-gold);">NITRO COLD BREW</h2>
+              <p>Velvety smooth. Sweet without sugar.</p>
+            </div>
+          </div>
+          <!-- Slide 2: Matcha -->
+          <div class="drink-slide" data-color="#1e3932" data-text="MATCHA">
+            <img
+              src="https://images.unsplash.com/photo-1773753631276-730d89af5978?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+              alt="Matcha Latte"
+              class="drink-img"
+              style="border-radius: 30px;"
+            />
+            <div class="drink-info">
+              <h2 style="color: var(--sb-matcha);">ICED MATCHA LATTE</h2>
+              <p>Earthy, vibrant, and perfectly balanced.</p>
+            </div>
+          </div>
+          <!-- Slide 3: Macchiato -->
+          <div class="drink-slide" data-color="#3b2818" data-text="CARAMEL">
+            <img
+              src="https://images.unsplash.com/photo-1578314675249-a6910f80cc4e?auto=format&fit=crop&w=800&q=80"
+              alt="Caramel Macchiato"
+              class="drink-img"
+              style="border-radius: 30px;"
+            />
+            <div class="drink-info">
+              <h2 style="color: var(--sb-caramel);">CARAMEL MACCHIATO</h2>
+              <p>Rich espresso, milk, and caramel drizzle.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Sustainability Section -->
+      <section id="sustainability">
+        <img
+          src="https://images.unsplash.com/photo-1511497584788-876760111969?auto=format&fit=crop&w=2000&q=80"
+          alt="Deep Forest"
+          class="sus-bg"
+        />
+        <div class="glass-card">
+          <h2>BECOMING<br /><span>RESOURCE</span> POSITIVE</h2>
+          <p>
+            We are dedicated to giving back more than we take from the planet.
+            Striving to store more carbon than we emit, eliminate waste, and
+            conserve and replenish more freshwater than we use.
+          </p>
+        </div>
+        <!-- Leaves generated via JS -->
+      </section>
+
+      <!-- Rewards & App Section -->
+      <section id="rewards">
+        <div class="rewards-text">
+          <h4>STARBUCKS REWARDS</h4>
+          <h2>TURN SIP INTO<br />REWARDS.</h2>
+          <button class="magnetic-btn">Join Now</button>
+        </div>
+        <div class="phone-container">
+          <div class="phone-mockup">
+            <h3
+              style="
+                color: var(--sb-gold);
+                font-family: 'Oswald';
+                font-size: 2rem;
+              "
+            >
+              REWARDS
+            </h3>
+            <svg class="star-svg" viewBox="0 0 24 24">
+              <path
+                d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
+              />
+            </svg>
+            <div
+              style="
+                margin-top: auto;
+                width: 100%;
+                height: 50%;
+                background: #111;
+                border-top-left-radius: 30px;
+                border-top-right-radius: 30px;
+                padding: 20px;
+                display: flex;
+                flex-direction: column;
+                gap: 15px;
+              "
+            >
+              <div
+                style="
+                  width: 100%;
+                  height: 20px;
+                  background: #333;
+                  border-radius: 10px;
+                "
+              ></div>
+              <div
+                style="
+                  width: 80%;
+                  height: 20px;
+                  background: #333;
+                  border-radius: 10px;
+                "
+              ></div>
+              <div
+                style="
+                  width: 60%;
+                  height: 20px;
+                  background: #333;
+                  border-radius: 10px;
+                "
+              ></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Footer -->
+      <section id="footer">
+        <svg
+          class="footer-logo"
+          viewBox="0 0 100 100"
+          preserveAspectRatio="xMidYMid slice"
+        >
+          <circle
+            cx="50"
+            cy="50"
+            r="45"
+            fill="none"
+            stroke="var(--sb-light)"
+            stroke-width="2"
+          />
+          <circle
+            cx="50"
+            cy="50"
+            r="35"
+            fill="none"
+            stroke="var(--sb-light)"
+            stroke-width="1"
+            stroke-dasharray="2 2"
+          />
+        </svg>
+        <h1 class="footer-huge-text">STARBUCKS</h1>
+        <div class="footer-links">
+          <span>Privacy Notice</span>
+          <span>Terms of Use</span>
+          <span>Cookie Preferences</span>
+          <span>© 2026 Starbucks Coffee Company</span>
+        </div>
+      </section>
+    </main>
+
+    <!-- Scripts -->
+    <script src="https://unpkg.com/@studio-freight/lenis@1.0.34/dist/lenis.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="/lock.js"></script>
+
+    <script>
+      // 1. Initialize Lenis
+      const lenis = new Lenis({
+        duration: 1.8,
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        direction: "vertical",
+        gestureDirection: "vertical",
+        smooth: true,
+        mouseMultiplier: 0.8,
+        smoothTouch: false,
+        touchMultiplier: 2,
+      });
+
+      function raf(time) {
+        lenis.raf(time);
+        requestAnimationFrame(raf);
+      }
+      requestAnimationFrame(raf);
+
+      gsap.registerPlugin(ScrollTrigger);
+
+      // 2. Custom Cursor Logic
+      if (window.matchMedia("(pointer: fine)").matches) {
+        const cursorDot = document.getElementById("cursor-dot");
+        const cursorRing = document.getElementById("cursor-ring");
+
+        let dotX = gsap.quickTo(cursorDot, "x", {
+          duration: 0.1,
+          ease: "power3.out",
+        });
+        let dotY = gsap.quickTo(cursorDot, "y", {
+          duration: 0.1,
+          ease: "power3.out",
+        });
+        let ringX = gsap.quickTo(cursorRing, "x", {
+          duration: 0.4,
+          ease: "power3.out",
+        });
+        let ringY = gsap.quickTo(cursorRing, "y", {
+          duration: 0.4,
+          ease: "power3.out",
+        });
+
+        window.addEventListener("mousemove", (e) => {
+          dotX(e.clientX);
+          dotY(e.clientY);
+          ringX(e.clientX);
+          ringY(e.clientY);
+        });
+
+        document
+          .querySelectorAll("button, a, .footer-links span")
+          .forEach((el) => {
+            el.addEventListener("mouseenter", () => {
+              cursorRing.style.width = "60px";
+              cursorRing.style.height = "60px";
+              cursorRing.style.background = "rgba(203, 162, 88, 0.1)";
+              cursorRing.style.borderColor = "rgba(203, 162, 88, 1)";
+              cursorDot.style.transform = "translate(-50%, -50%) scale(0)";
+            });
+            el.addEventListener("mouseleave", () => {
+              cursorRing.style.width = "40px";
+              cursorRing.style.height = "40px";
+              cursorRing.style.background = "transparent";
+              cursorRing.style.borderColor = "rgba(203, 162, 88, 0.5)";
+              cursorDot.style.transform = "translate(-50%, -50%) scale(1)";
+            });
+          });
+
+        const magBtn = document.querySelector(".magnetic-btn");
+        magBtn.addEventListener("mousemove", function (e) {
+          const rect = this.getBoundingClientRect();
+          const x = e.clientX - rect.left - rect.width / 2;
+          const y = e.clientY - rect.top - rect.height / 2;
+          gsap.to(this, {
+            x: x * 0.3,
+            y: y * 0.3,
+            duration: 0.4,
+            ease: "power2.out",
+          });
+        });
+        magBtn.addEventListener("mouseleave", function () {
+          gsap.to(this, {
+            x: 0,
+            y: 0,
+            duration: 0.7,
+            ease: "elastic.out(1, 0.3)",
+          });
+        });
+      }
+
+      // 3. Preloader & Upgraded Hero Sequence
+      window.addEventListener("load", () => {
+        const tl = gsap.timeline();
+        tl.to(".loader-fill", {
+          width: "100%",
+          duration: 2,
+          ease: "power3.inOut",
+        })
+          .to(
+            ".loader-text",
+            { scale: 1.1, opacity: 0, duration: 0.8, ease: "power2.in" },
+            "+=0.2",
+          )
+          .to(
+            "#preloader",
+            { yPercent: -100, duration: 1.2, ease: "expo.inOut" },
+            "-=0.3",
+          )
+          .from(
+            ".hero-img",
+            { scale: 1.3, duration: 2.5, ease: "power3.out" },
+            "-=1",
+          )
+          .from(
+            ".hero-frame",
+            { scale: 1.05, opacity: 0, duration: 1.5, ease: "power3.out" },
+            "-=1.5",
+          )
+          .from(
+            ".hero-badge",
+            { y: 20, opacity: 0, duration: 1, ease: "power4.out" },
+            "-=1.5",
+          )
+          .from(
+            ".hero-title-1",
+            { y: 80, opacity: 0, skewY: 5, duration: 1.2, ease: "power4.out" },
+            "-=1.3",
+          )
+          .from(
+            ".hero-title-2",
+            { y: 80, opacity: 0, skewY: -5, duration: 1.2, ease: "power4.out" },
+            "-=1.1",
+          )
+          .from(
+            ".hero-subtitle",
+            { y: 20, opacity: 0, duration: 1.2, ease: "power4.out" },
+            "-=0.9",
+          )
+          .from(".scroll-indicator", { opacity: 0, y: 20, duration: 1 }, "-=1");
+      });
+
+      // 4. Hero Parallax Scroll
+      gsap.to(".hero-img", {
+        yPercent: 30,
+        scale: 1,
+        ease: "none",
+        scrollTrigger: {
+          trigger: "#hero",
+          start: "top top",
+          end: "bottom top",
+          scrub: true,
+        },
+      });
+      gsap.to(".hero-content", {
+        yPercent: 60,
+        opacity: 0,
+        ease: "none",
+        scrollTrigger: {
+          trigger: "#hero",
+          start: "top top",
+          end: "bottom top",
+          scrub: true,
+        },
+      });
+
+      // 5. Fixed Marquee Speed (Much slower and smoother)
+      gsap.to(".marquee-inner", {
+        xPercent: -12, // Reduced from -50 to make it slow
+        ease: "none",
+        scrollTrigger: {
+          trigger: "#marquee-section",
+          start: "top bottom",
+          end: "bottom top",
+          scrub: 1.5,
+        },
+      });
+
+      // 6. Horizontal Scroll
+      const craftContainer = document.querySelector(".craft-container");
+      const panels = gsap.utils.toArray(".c-panel");
+
+      let horizontalTween = gsap.to(panels, {
+        xPercent: -100 * (panels.length - 1),
+        ease: "none",
+        scrollTrigger: {
+          trigger: "#craft",
+          pin: true,
+          scrub: 1,
+          snap: 1 / (panels.length - 1),
+          end: () => "+=" + (craftContainer.offsetWidth - window.innerWidth),
+        },
+      });
+
+      // Fixed Internal Parallax
+      panels.forEach((panel) => {
+        const img = panel.querySelector(".parallax-img");
+        gsap.fromTo(
+          img,
+          { yPercent: 0 },
+          {
+            yPercent: -15,
+            ease: "none",
+            scrollTrigger: {
+              trigger: panel,
+              containerAnimation: horizontalTween,
+              start: "left right",
+              end: "right left",
+              scrub: true,
+            },
+          },
+        );
+      });
+
+      // 7. Dynamic Drinks Pin & Color Morphing
+      const drinksSection = document.getElementById("drinks");
+      const slides = gsap.utils.toArray(".drink-slide");
+      const bgText = document.querySelector(".drinks-bg-text");
+
+      let masterDrinksTl = gsap.timeline({
+        scrollTrigger: {
+          trigger: "#drinks",
+          start: "top top",
+          end: "+=300%",
+          pin: true,
+          scrub: 1,
+        },
+      });
+
+      slides.forEach((slide, i) => {
+        if (i > 0) {
+          masterDrinksTl.to(
+            slides[i - 1],
+            { opacity: 0, y: -50, duration: 1 },
+            i * 2,
+          );
+          masterDrinksTl.to(
+            drinksSection,
+            { backgroundColor: slide.dataset.color, duration: 1 },
+            i * 2,
+          );
+          masterDrinksTl.to(
+            bgText,
+            { text: slide.dataset.text, duration: 0.1 },
+            i * 2,
+          );
+          masterDrinksTl.fromTo(
+            slide,
+            { opacity: 0, y: 50, visibility: "hidden" },
+            { opacity: 1, y: 0, visibility: "visible", duration: 1 },
+            i * 2 + 0.5,
+          );
+        }
+
+        gsap.to(slide.querySelector(".drink-img"), {
+          y: -20,
+          rotation: i % 2 === 0 ? 2 : -2,
+          duration: 2,
+          yoyo: true,
+          repeat: -1,
+          ease: "sine.inOut",
+        });
+      });
+
+      // 8. Sustainability Section (GAP FIXED COMPLETELY)
+      // Bounded the fromTo animation perfectly within the newly expanded image boundaries.
+      gsap.fromTo(
+        ".sus-bg",
+        { yPercent: 0 },
+        {
+          yPercent: 12,
+          ease: "none",
+          scrollTrigger: { trigger: "#sustainability", scrub: true },
+        },
+      );
+
+      gsap.from(".glass-card", {
+        y: 100,
+        opacity: 0,
+        backdropFilter: "blur(0px)",
+        duration: 1.5,
+        ease: "power4.out",
+        scrollTrigger: { trigger: "#sustainability", start: "top 60%" },
+      });
+
+      const susSection = document.getElementById("sustainability");
+      const leafSVG = `<svg viewBox="0 0 24 24" fill="var(--sb-matcha)"><path d="M17.5,2C15,2 12.5,3 10.5,5C8.5,7 7.5,9.5 7.5,12C7.5,12.5 7.6,13 7.7,13.5L2.8,18.4L4.2,19.8L9.1,14.9C9.6,15 10.1,15.1 10.6,15.1C13.1,15.1 15.6,14.1 17.6,12.1C21.6,8.1 21.6,2 21.6,2L17.5,2ZM16.2,10.7C14.8,12.1 12.8,12.8 10.8,12.8C10.6,12.8 10.4,12.8 10.2,12.7L15.6,7.3L14.2,5.9L8.8,11.3C8.7,11.1 8.7,10.9 8.7,10.7C8.7,8.7 9.4,6.7 10.8,5.3C12.2,3.9 14.1,3.2 16,3.1C16.8,3.1 17.8,3.2 18.5,3.4C18.3,4.1 18.2,5.1 18.2,5.9C18.2,7.8 17.5,9.7 16.2,10.7Z"/></svg>`;
+
+      for (let i = 0; i < (window.innerWidth > 768 ? 12 : 6); i++) {
+        let leaf = document.createElement("div");
+        leaf.classList.add("leaf");
+        leaf.innerHTML = leafSVG;
+        leaf.style.left = `${Math.random() * 100}vw`;
+        leaf.style.top = `${Math.random() * 100}vh`;
+        leaf.style.transform = `rotate(${Math.random() * 360}deg) scale(${
+          Math.random() * 0.8 + 0.5
+        })`;
+        susSection.appendChild(leaf);
+
+        gsap.to(leaf, {
+          y: -400,
+          x: (Math.random() - 0.5) * 200,
+          rotation: "+=180",
+          opacity: 0,
+          scrollTrigger: {
+            trigger: "#sustainability",
+            start: "top bottom",
+            end: "bottom top",
+            scrub: Math.random() * 2 + 1,
+          },
+        });
+      }
+
+      // 9. App / Rewards
+      gsap.fromTo(
+        ".phone-mockup",
+        { y: 150, rotationX: 25, rotationY: -20, rotationZ: -5, opacity: 0 },
+        {
+          y: 0,
+          rotationX: 0,
+          rotationY: 0,
+          rotationZ: 0,
+          opacity: 1,
+          duration: 1.5,
+          ease: "power3.out",
+          scrollTrigger: { trigger: "#rewards", start: "top 70%" },
+        },
+      );
+
+      const phoneContainer = document.querySelector(".phone-container");
+      const starSVG = `<svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>`;
+      for (let i = 0; i < 5; i++) {
+        let star = document.createElement("div");
+        star.classList.add("floating-star");
+        star.innerHTML = starSVG;
+        star.style.left = `${Math.random() * 80 + 10}%`;
+        star.style.top = `${Math.random() * 80 + 10}%`;
+        phoneContainer.appendChild(star);
+
+        gsap.to(star, {
+          y: -50 - Math.random() * 50,
+          rotation: 180,
+          scale: Math.random() > 0.5 ? 1.2 : 0.8,
+          duration: Math.random() * 2 + 2,
+          yoyo: true,
+          repeat: -1,
+          ease: "sine.inOut",
+          delay: Math.random() * 2,
+        });
+      }
+
+      // 10. Footer Reveal
+      gsap.from(".footer-huge-text", {
+        y: 150,
+        opacity: 0,
+        scale: 0.9,
+        duration: 1.5,
+        ease: "power4.out",
+        scrollTrigger: { trigger: "#footer", start: "top 80%" },
+      });
+
+      gsap.to(".footer-logo", {
+        rotation: 45,
+        ease: "none",
+        scrollTrigger: {
+          trigger: "#footer",
+          start: "top bottom",
+          end: "bottom bottom",
+          scrub: true,
+        },
+      });
+
+      window.addEventListener("resize", () => {
+        ScrollTrigger.refresh();
+      });
+    </script>
+  </body>
+</html>

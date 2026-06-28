@@ -1,0 +1,1183 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <title>McDonald's | Reimagined Premium Experience</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Anton&family=Manrope:wght@300;500;800&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      /* CSS Variables & Reset */
+      :root {
+        --red: #da291c;
+        --yellow: #ffc72c;
+        --dark: #0a0a0a;
+        --light: #f4f4f4;
+        --brown: #3e2723;
+        --green: #2e7d32;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      /* Lenis Required Styles */
+      html.lenis,
+      html.lenis body {
+        height: auto;
+        width: 100vw;
+        overflow-x: hidden;
+      }
+      .lenis.lenis-smooth {
+        scroll-behavior: auto !important;
+      }
+      .lenis.lenis-smooth [data-lenis-prevent] {
+        overscroll-behavior: contain;
+      }
+      .lenis.lenis-stopped {
+        overflow: hidden;
+      }
+      .lenis.lenis-scrolling iframe {
+        pointer-events: none;
+      }
+
+      body {
+        font-family: "Manrope", sans-serif;
+        background-color: var(--dark);
+        color: var(--light);
+        overflow-x: hidden;
+      }
+
+      /* Base Typography using Clamp for fluid responsiveness */
+      h1,
+      h2,
+      h3,
+      h4,
+      .impact-text {
+        font-family: "Anton", sans-serif;
+        text-transform: uppercase;
+        line-height: 1;
+      }
+
+      /* Custom Cursor - Hidden on Touch Devices */
+      @media (pointer: fine) {
+        body {
+          cursor: none;
+        }
+        .cursor-dot {
+          width: 8px;
+          height: 8px;
+          background: var(--yellow);
+          border-radius: 50%;
+          position: fixed;
+          top: 0;
+          left: 0;
+          pointer-events: none;
+          z-index: 9999;
+          transform: translate(-50%, -50%);
+        }
+        .cursor-ring {
+          width: 40px;
+          height: 40px;
+          border: 2px solid var(--red);
+          border-radius: 50%;
+          position: fixed;
+          top: 0;
+          left: 0;
+          pointer-events: none;
+          z-index: 9998;
+          transform: translate(-50%, -50%);
+          transition: width 0.3s, height 0.3s, background 0.3s;
+        }
+      }
+      @media (pointer: coarse), (hover: none) {
+        .cursor-dot,
+        .cursor-ring {
+          display: none !important;
+        }
+      }
+
+      /* Preloader */
+      #preloader {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: var(--red);
+        z-index: 10000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .loader-text {
+        font-size: clamp(3rem, 8vw, 10rem);
+        color: var(--yellow);
+        text-align: center;
+        padding: 0 5vw;
+        clip-path: polygon(0 100%, 100% 100%, 100% 100%, 0 100%);
+      }
+
+      /* Section 1: Hero */
+      #hero {
+        height: 100vh;
+        width: 100vw;
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        background: var(--dark);
+      }
+      .hero-arches {
+        width: 50vw;
+        max-width: 400px;
+        z-index: 2;
+      }
+      .hero-arches path {
+        fill: none;
+        stroke: var(--yellow);
+        stroke-width: 8;
+        stroke-linecap: round;
+      }
+      .hero-bg-text {
+        position: absolute;
+        font-size: clamp(5rem, 22vw, 25rem);
+        color: rgba(255, 255, 255, 0.03);
+        white-space: nowrap;
+        z-index: 1;
+      }
+
+      /* Section 2: Massive Marquee */
+      #marquee-section {
+        padding: 5vh 0;
+        background: var(--yellow);
+        color: var(--dark);
+        overflow: hidden;
+        transform: rotate(-2deg) scale(1.05);
+        z-index: 10;
+        position: relative;
+      }
+      .marquee-inner {
+        display: flex;
+        width: fit-content;
+        font-size: clamp(3rem, 10vw, 8rem);
+        white-space: nowrap;
+        font-family: "Anton", sans-serif;
+      }
+      .marquee-inner span {
+        padding: 0 2vw;
+      }
+
+      /* Section 3: The Icon */
+      #the-icon {
+        min-height: 100vh;
+        position: relative;
+        padding: 15vh 5vw;
+        display: flex;
+        align-items: center;
+      }
+      .icon-container {
+        display: flex;
+        width: 100%;
+        align-items: center;
+        justify-content: space-between;
+        gap: 5vw;
+      }
+      .icon-text {
+        width: 50%;
+        z-index: 2;
+      }
+      .icon-text h2 {
+        font-size: clamp(4rem, 12vw, 15rem);
+        -webkit-text-stroke: 2px var(--light);
+        color: transparent;
+        margin-bottom: 20px;
+      }
+      .icon-text p {
+        font-size: clamp(1rem, 1.5vw, 1.5rem);
+        max-width: 500px;
+        line-height: 1.5;
+        color: #aaa;
+      }
+      .icon-image-wrapper {
+        width: 45%;
+        height: 60vh;
+        position: relative;
+        z-index: 1;
+        border-radius: 30px;
+        overflow: hidden;
+      }
+      .icon-image-wrapper img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        filter: drop-shadow(0 20px 30px rgba(0, 0, 0, 0.8));
+      }
+
+      /* Section 4: Heritage (Horizontal Scroll) */
+      #heritage {
+        height: 100vh;
+        width: 100vw;
+        overflow: hidden;
+        background: var(--red);
+        position: relative;
+      }
+      .horizontal-container {
+        display: flex;
+        height: 100%;
+        width: 400vw;
+      }
+      .h-panel {
+        width: 100vw;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: 0 10vw;
+        position: relative;
+      }
+      .h-panel h2 {
+        font-size: clamp(6rem, 15vw, 20rem);
+        color: var(--yellow);
+        opacity: 0.2;
+        position: absolute;
+        top: 10%;
+        left: 5%;
+      }
+      .h-panel h3 {
+        font-size: clamp(2.5rem, 6vw, 8rem);
+        color: var(--light);
+        z-index: 2;
+      }
+      .h-panel img {
+        position: absolute;
+        right: 10vw;
+        top: 25%;
+        width: 40vw;
+        height: 50vh;
+        object-fit: cover;
+        border-radius: 20px;
+        box-shadow: 20px 20px 0px rgba(0, 0, 0, 0.3);
+      }
+
+      /* Section 5: Fries */
+      #fries {
+        min-height: 100vh;
+        background: var(--dark);
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20vh 5vw;
+      }
+      .fries-bg {
+        position: absolute;
+        font-size: clamp(6rem, 25vw, 30rem);
+        color: var(--yellow);
+        opacity: 0.03;
+        text-align: center;
+        line-height: 0.8;
+      }
+      .floating-fry {
+        position: absolute;
+        background: var(--yellow);
+        border-radius: 5px;
+        box-shadow: inset -5px -5px 15px rgba(218, 41, 28, 0.2);
+      }
+      .fries-text {
+        text-align: center;
+        z-index: 5;
+      }
+      .fries-text h2 {
+        font-size: clamp(3rem, 8vw, 10rem);
+        color: var(--light);
+      }
+      .fries-text .highlight {
+        color: var(--yellow);
+      }
+
+      /* Section 6: Quality Ingredients */
+      #ingredients {
+        min-height: 100vh;
+        background: var(--light);
+        color: var(--dark);
+        display: flex;
+        align-items: center;
+        position: relative;
+        overflow: hidden;
+      }
+      .ing-text {
+        padding: 0 5vw 0 10vw;
+        width: 50%;
+        z-index: 2;
+      }
+      .ing-text h2 {
+        font-size: clamp(3.5rem, 8vw, 10rem);
+      }
+      .ing-text p {
+        font-size: clamp(1rem, 1.2vw, 1.5rem);
+        margin-top: 20px;
+        font-weight: 500;
+      }
+      .ing-image {
+        position: absolute;
+        right: 0;
+        top: 0;
+        width: 50vw;
+        height: 100%;
+      }
+      .ing-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      /* Section 7: McCafé */
+      #mccafe {
+        min-height: 100vh;
+        background: var(--brown);
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        padding: 10vh 5vw;
+      }
+      .coffee-bean {
+        position: absolute;
+        width: 40px;
+        height: 60px;
+        background: #271611;
+        border-radius: 50%;
+        box-shadow: inset 5px 0 10px #000;
+      }
+      .coffee-bean::after {
+        content: "";
+        position: absolute;
+        top: 10%;
+        left: 45%;
+        width: 10%;
+        height: 80%;
+        background: #110a08;
+        border-radius: 50%;
+        transform: rotate(10deg);
+      }
+      .mccafe-content h2 {
+        font-size: clamp(5rem, 15vw, 20rem);
+        color: #d7ccc8;
+        mix-blend-mode: overlay;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 3;
+      }
+      .mccafe-img {
+        width: clamp(250px, 40vw, 600px);
+        height: 60vh;
+        object-fit: cover;
+        border-radius: 200px;
+        z-index: 2;
+        filter: sepia(0.3) brightness(0.9);
+      }
+
+      /* Section 8: Happy Meal */
+      #happy {
+        height: 100vh;
+        background: var(--red);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        overflow: hidden;
+        padding: 0 5vw;
+        text-align: center;
+      }
+      .smile-svg {
+        position: absolute;
+        width: clamp(300px, 60vw, 800px);
+        opacity: 0.1;
+      }
+      .happy-box {
+        z-index: 2;
+      }
+      .happy-box h2 {
+        font-size: clamp(4rem, 10vw, 12rem);
+        color: var(--yellow);
+        text-shadow: 10px 10px 0px rgba(0, 0, 0, 0.2);
+      }
+
+      /* Section 9: Sustainability */
+      #sustainability {
+        height: 100vh;
+        background: var(--green);
+        display: flex;
+        align-items: center;
+        padding: 0 10vw;
+        position: relative;
+        overflow: hidden;
+      }
+      .sus-text {
+        z-index: 2;
+      }
+      .sus-text h2 {
+        font-size: clamp(3.5rem, 8vw, 10rem);
+        color: var(--light);
+      }
+      .sus-leaf {
+        position: absolute;
+        width: 80px;
+        height: 80px;
+        background: #4caf50;
+        border-radius: 0 50px 0 50px;
+        opacity: 0.5;
+      }
+
+      /* Section 10: App & Digital */
+      #app-sec {
+        min-height: 100vh;
+        background: var(--dark);
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+        padding: 10vw;
+        position: relative;
+        overflow: hidden;
+      }
+      .phone-mockup {
+        width: clamp(250px, 25vw, 350px);
+        height: clamp(500px, 50vw, 700px);
+        border: 15px solid #333;
+        border-radius: 40px;
+        background: var(--yellow);
+        position: relative;
+        box-shadow: 0 30px 50px rgba(0, 0, 0, 0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 2;
+      }
+      .phone-mockup::before {
+        content: "M";
+        font-family: "Anton", sans-serif;
+        font-size: clamp(80px, 10vw, 150px);
+        color: var(--red);
+      }
+      .app-text {
+        z-index: 2;
+      }
+      .app-text h2 {
+        font-size: clamp(3.5rem, 8vw, 10rem);
+        color: var(--light);
+      }
+
+      .magnetic-btn {
+        margin-top: 40px;
+        padding: 20px 40px;
+        font-size: clamp(1rem, 1.5vw, 1.5rem);
+        font-family: "Anton", sans-serif;
+        background: var(--red);
+        color: var(--light);
+        border: none;
+        border-radius: 50px;
+        text-transform: uppercase;
+        cursor: pointer;
+        display: inline-block;
+      }
+
+      /* Section 11: Footer */
+      #footer {
+        height: auto;
+        min-height: 60vh;
+        background: var(--dark);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-end;
+        padding-bottom: 5vh;
+        position: relative;
+        clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+        overflow: hidden;
+      }
+      .footer-marquee {
+        font-size: clamp(6rem, 18vw, 25rem);
+        color: var(--yellow);
+        font-family: "Anton", sans-serif;
+        white-space: nowrap;
+        position: absolute;
+        bottom: 15vh;
+      }
+      .footer-links {
+        display: flex;
+        gap: 30px;
+        color: #666;
+        font-weight: 500;
+        font-size: clamp(0.9rem, 1vw, 1.2rem);
+        z-index: 2;
+        margin-top: 40vh;
+      }
+
+      /* =========================================================
+           MOBILE RESPONSIVENESS (Max-width: 768px)
+           ========================================================= */
+      @media (max-width: 768px) {
+        .hero-bg-text {
+          font-size: 35vw;
+        }
+
+        /* Section 3: Icon */
+        #the-icon {
+          padding: 15vh 5vw 5vh;
+        }
+        .icon-container {
+          flex-direction: column;
+          text-align: center;
+          gap: 5vh;
+        }
+        .icon-text,
+        .icon-image-wrapper {
+          width: 100%;
+        }
+        .icon-text p {
+          margin: 0 auto;
+        }
+        .icon-image-wrapper {
+          height: 45vh;
+        }
+
+        /* Section 4: Heritage Panel Layout adjustments */
+        .h-panel {
+          padding: 0 5vw;
+          text-align: center;
+          align-items: center;
+        }
+        .h-panel h2 {
+          top: 5%;
+          width: 100%;
+          left: 0;
+          text-align: center;
+        }
+        .h-panel img {
+          position: relative;
+          top: auto;
+          right: auto;
+          width: 90vw;
+          height: 40vh;
+          margin-top: 5vh;
+        }
+
+        /* Section 6: Ingredients */
+        #ingredients {
+          flex-direction: column;
+          justify-content: center;
+          padding: 10vh 0;
+        }
+        .ing-text {
+          width: 100%;
+          padding: 5vw;
+          text-align: center;
+          margin-bottom: 5vh;
+        }
+        .ing-text p {
+          margin: 15px auto 0;
+        }
+        .ing-image {
+          position: relative;
+          width: 100vw;
+          height: 40vh;
+        }
+
+        /* Section 9: Sustainability */
+        #sustainability {
+          padding: 0 5vw;
+          text-align: center;
+          justify-content: center;
+        }
+
+        /* Section 10: App */
+        #app-sec {
+          flex-direction: column;
+          text-align: center;
+          gap: 10vh;
+          padding: 15vh 5vw;
+        }
+
+        /* Footer */
+        .footer-links {
+          flex-direction: column;
+          gap: 15px;
+          margin-top: 30vh;
+        }
+        .footer-marquee {
+          bottom: 25vh;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Custom Cursors (Hidden via CSS on Mobile) -->
+    <div class="cursor-dot" id="cursor-dot"></div>
+    <div class="cursor-ring" id="cursor-ring"></div>
+
+    <!-- Preloader -->
+    <div id="preloader">
+      <h1 class="loader-text impact-text">OVER 99 BILLION SERVED</h1>
+    </div>
+
+    <main>
+      <section id="hero">
+        <h1 class="hero-bg-text">I'M LOVIN' IT</h1>
+        <svg class="hero-arches" viewBox="0 0 100 100">
+          <path d="M 5,95 Q 15,5 30,5 Q 45,5 50,45 Q 55,5 70,5 Q 85,5 95,95" />
+        </svg>
+      </section>
+
+      <section id="marquee-section">
+        <div class="marquee-inner">
+          <span>REIMAGINING FAST FOOD</span><span>•</span>
+          <span>THE GOLDEN STANDARD</span><span>•</span>
+          <span>REIMAGINING FAST FOOD</span><span>•</span>
+          <span>THE GOLDEN STANDARD</span><span>•</span>
+        </div>
+      </section>
+
+      <section id="the-icon">
+        <div class="icon-container">
+          <div class="icon-text">
+            <h2>THE<br />ICON</h2>
+            <p>
+              Two 100% beef patties, special sauce, lettuce, cheese, pickles,
+              onions on a sesame seed bun. The undisputed heavyweight champion
+              of the world.
+            </p>
+          </div>
+          <div class="icon-image-wrapper">
+            <img
+              src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=1200&q=80"
+              alt="Big Mac Quality"
+            />
+          </div>
+        </div>
+      </section>
+
+      <section id="heritage">
+        <div class="horizontal-container">
+          <div class="h-panel">
+            <h2>1940</h2>
+            <h3>WHERE IT ALL BEGAN</h3>
+            <img
+              src="https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&w=800&q=80"
+              alt="History 1"
+            />
+          </div>
+          <div class="h-panel">
+            <h2>1955</h2>
+            <h3>RAY KROC'S VISION</h3>
+            <img
+              src="https://images.unsplash.com/photo-1514933651103-005eec06c04b?auto=format&fit=crop&w=800&q=80"
+              alt="History 2"
+            />
+          </div>
+          <div class="h-panel">
+            <h2>1968</h2>
+            <h3>BIRTH OF THE BIG MAC</h3>
+            <img
+              src="https://images.unsplash.com/photo-1586190848861-99aa4a171e90?auto=format&fit=crop&w=800&q=80"
+              alt="History 3"
+            />
+          </div>
+          <div class="h-panel">
+            <h2>TODAY</h2>
+            <h3>A GLOBAL PHENOMENON</h3>
+            <img
+              src="https://images.unsplash.com/photo-1606755962773-d324e0a13086?auto=format&fit=crop&w=800&q=80"
+              alt="History 4"
+            />
+          </div>
+        </div>
+      </section>
+
+      <section id="fries">
+        <div class="fries-bg">CRISPY<br />GOLDEN<br />PERFECT</div>
+        <div class="fries-text">
+          <h2>WORLD FAMOUS <br /><span class="highlight">FRIES</span></h2>
+        </div>
+      </section>
+
+      <section id="ingredients">
+        <div class="ing-text">
+          <h2>100% REAL<br />INGREDIENTS.</h2>
+          <p>
+            No artificial flavors, preservatives, or colors from artificial
+            sources. Just pure, unadulterated flavor.
+          </p>
+        </div>
+        <div class="ing-image">
+          <img
+            src="https://images.unsplash.com/photo-1595854341625-f33ee10dbf94?auto=format&fit=crop&w=1200&q=80"
+            alt="Fresh Ingredients"
+          />
+        </div>
+      </section>
+
+      <section id="mccafe">
+        <div class="mccafe-content"><h2>McCafé</h2></div>
+        <img
+          src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=1000&q=80"
+          alt="McCafe Coffee"
+          class="mccafe-img"
+        />
+      </section>
+
+      <section id="happy">
+        <svg class="smile-svg" viewBox="0 0 100 50">
+          <path
+            d="M 10,10 Q 50,60 90,10"
+            fill="none"
+            stroke="var(--yellow)"
+            stroke-width="8"
+            stroke-linecap="round"
+          />
+        </svg>
+        <div class="happy-box">
+          <h2>DELIVERING<br />SMILES</h2>
+        </div>
+      </section>
+
+      <section id="sustainability">
+        <div class="sus-text">
+          <h2>FOR OUR<br />PLANET.</h2>
+          <p
+            style="
+              font-size: clamp(1rem, 1.5vw, 1.5rem);
+              margin-top: 20px;
+              max-width: 600px;
+            "
+          >
+            Committed to 100% renewable, recycled, or certified packaging
+            materials.
+          </p>
+        </div>
+      </section>
+
+      <section id="app-sec">
+        <div class="app-text">
+          <h2>THE FUTURE<br />IN YOUR<br />HANDS.</h2>
+          <button class="magnetic-btn">Download App</button>
+        </div>
+        <div class="phone-mockup"></div>
+      </section>
+
+      <section id="footer">
+        <div class="footer-marquee">
+          I'M LOVIN' IT • I'M LOVIN' IT • I'M LOVIN' IT •
+        </div>
+        <div class="footer-links">
+          <span>Privacy Policy</span>
+          <span>Terms & Conditions</span>
+          <span>© 2026 McDonald's</span>
+        </div>
+      </section>
+    </main>
+
+    <script src="https://unpkg.com/@studio-freight/lenis@1.0.34/dist/lenis.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="/lock.js"></script>
+    <script>
+      // 1. Initialize Lenis (Touch configured for mobile)
+      const lenis = new Lenis({
+        duration: 1.5,
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        direction: "vertical",
+        gestureDirection: "vertical",
+        smooth: true,
+        mouseMultiplier: 1,
+        smoothTouch: false, // Prevents native mobile rubber-banding clashes
+        touchMultiplier: 2,
+      });
+
+      function raf(time) {
+        lenis.raf(time);
+        requestAnimationFrame(raf);
+      }
+      requestAnimationFrame(raf);
+
+      gsap.registerPlugin(ScrollTrigger);
+
+      // 2. Custom Cursor (Only activated if user has a mouse)
+      if (window.matchMedia("(pointer: fine)").matches) {
+        const cursorDot = document.getElementById("cursor-dot");
+        const cursorRing = document.getElementById("cursor-ring");
+
+        let dotX = gsap.quickTo(cursorDot, "x", {
+          duration: 0.1,
+          ease: "power3",
+        });
+        let dotY = gsap.quickTo(cursorDot, "y", {
+          duration: 0.1,
+          ease: "power3",
+        });
+        let ringX = gsap.quickTo(cursorRing, "x", {
+          duration: 0.3,
+          ease: "power3",
+        });
+        let ringY = gsap.quickTo(cursorRing, "y", {
+          duration: 0.3,
+          ease: "power3",
+        });
+
+        window.addEventListener("mousemove", (e) => {
+          dotX(e.clientX);
+          dotY(e.clientY);
+          ringX(e.clientX);
+          ringY(e.clientY);
+        });
+
+        document.querySelectorAll("button, a").forEach((el) => {
+          el.addEventListener("mouseenter", () => {
+            cursorRing.style.width = "60px";
+            cursorRing.style.height = "60px";
+            cursorRing.style.background = "rgba(218, 41, 28, 0.2)";
+          });
+          el.addEventListener("mouseleave", () => {
+            cursorRing.style.width = "40px";
+            cursorRing.style.height = "40px";
+            cursorRing.style.background = "transparent";
+          });
+        });
+
+        const magBtn = document.querySelector(".magnetic-btn");
+        magBtn.addEventListener("mousemove", function (e) {
+          const rect = this.getBoundingClientRect();
+          const x = e.clientX - rect.left - rect.width / 2;
+          const y = e.clientY - rect.top - rect.height / 2;
+          gsap.to(this, {
+            x: x * 0.4,
+            y: y * 0.4,
+            duration: 0.3,
+            ease: "power2.out",
+          });
+        });
+        magBtn.addEventListener("mouseleave", function () {
+          gsap.to(this, {
+            x: 0,
+            y: 0,
+            duration: 0.5,
+            ease: "elastic.out(1, 0.3)",
+          });
+        });
+      }
+
+      // 3. Preloader
+      window.addEventListener("load", () => {
+        const tl = gsap.timeline();
+        tl.fromTo(
+          ".loader-text",
+          { clipPath: "polygon(0 100%, 100% 100%, 100% 100%, 0 100%)", y: 50 },
+          {
+            clipPath: "polygon(0 0%, 100% 0%, 100% 100%, 0 100%)",
+            y: 0,
+            duration: 1.5,
+            ease: "expo.out",
+          },
+        )
+          .to("#preloader", {
+            yPercent: -100,
+            duration: 1.2,
+            ease: "expo.inOut",
+            delay: 0.5,
+          })
+          .from(
+            ".hero-arches",
+            {
+              scale: 0,
+              rotation: 45,
+              opacity: 0,
+              duration: 1.5,
+              ease: "elastic.out(1, 0.5)",
+            },
+            "-=0.5",
+          )
+          .from(".hero-bg-text", { y: 100, opacity: 0, duration: 1 }, "-=1");
+      });
+
+      // 4. Hero Zoom
+      gsap.to(".hero-arches", {
+        scale: window.innerWidth > 768 ? 50 : 20, // Less intense scale on mobile
+        opacity: 0,
+        ease: "power2.in",
+        scrollTrigger: {
+          trigger: "#hero",
+          start: "top top",
+          end: "+=100%",
+          scrub: 1,
+          pin: true,
+        },
+      });
+
+      gsap.to(".hero-bg-text", {
+        xPercent: -50,
+        scrollTrigger: {
+          trigger: "#hero",
+          start: "top top",
+          end: "+=100%",
+          scrub: 1,
+        },
+      });
+
+      // 5. Marquee Scroll
+      gsap.to(".marquee-inner", {
+        xPercent: -50,
+        ease: "none",
+        scrollTrigger: {
+          trigger: "#marquee-section",
+          start: "top bottom",
+          end: "bottom top",
+          scrub: 0.5,
+        },
+      });
+
+      // 6. GSAP MatchMedia for Desktop vs Mobile specific logic
+      let mm = gsap.matchMedia();
+
+      mm.add("(min-width: 769px)", () => {
+        // DESKTOP: Icon Parallax
+        gsap.fromTo(
+          ".icon-image-wrapper",
+          { y: 150 },
+          {
+            y: -150,
+            ease: "none",
+            scrollTrigger: { trigger: "#the-icon", scrub: true },
+          },
+        );
+        // DESKTOP: Ingredients Clip-path Reveal (Side Reveal)
+        gsap.fromTo(
+          ".ing-image",
+          { clipPath: "polygon(100% 0, 100% 0, 100% 100%, 100% 100%)" },
+          {
+            clipPath: "polygon(20% 0, 100% 0, 100% 100%, 0% 100%)",
+            ease: "power3.inOut",
+            scrollTrigger: {
+              trigger: "#ingredients",
+              start: "top 50%",
+              end: "center center",
+              scrub: 1,
+            },
+          },
+        );
+      });
+
+      mm.add("(max-width: 768px)", () => {
+        // MOBILE: Simpler Icon Image Fade/Up
+        gsap.from(".icon-image-wrapper", {
+          y: 50,
+          opacity: 0,
+          duration: 1,
+          scrollTrigger: { trigger: ".icon-image-wrapper", start: "top 80%" },
+        });
+        // MOBILE: Ingredients Clip-path Reveal (Bottom Reveal)
+        gsap.fromTo(
+          ".ing-image",
+          { clipPath: "polygon(0 100%, 100% 100%, 100% 100%, 0 100%)" },
+          {
+            clipPath: "polygon(0 15%, 100% 0, 100% 100%, 0 100%)",
+            ease: "power3.inOut",
+            scrollTrigger: {
+              trigger: "#ingredients",
+              start: "top 70%",
+              end: "center center",
+              scrub: 1,
+            },
+          },
+        );
+      });
+
+      // 7. Text Reveal for Icon Section (Universal)
+      gsap.fromTo(
+        ".icon-text h2",
+        { x: -50, opacity: 0 },
+        {
+          x: 0,
+          opacity: 1,
+          scrollTrigger: {
+            trigger: "#the-icon",
+            start: "top 60%",
+            end: "top 30%",
+            scrub: true,
+          },
+        },
+      );
+
+      // 8. Horizontal Scroll Heritage Section
+      const horizontalSections = gsap.utils.toArray(".h-panel");
+      gsap.to(horizontalSections, {
+        xPercent: -100 * (horizontalSections.length - 1),
+        ease: "none",
+        scrollTrigger: {
+          trigger: "#heritage",
+          pin: true,
+          scrub: 1,
+          snap: 1 / (horizontalSections.length - 1),
+          // Computes the dynamic width flawlessly across all devices
+          end: () =>
+            "+=" +
+            (document.querySelector(".horizontal-container").offsetWidth -
+              window.innerWidth),
+        },
+      });
+
+      // 9. Floating Fries & Elements Generator
+      const friesSection = document.getElementById("fries");
+      const fryCount = window.innerWidth > 768 ? 30 : 15; // Fewer DOM elements on mobile for performance
+      for (let i = 0; i < fryCount; i++) {
+        let fry = document.createElement("div");
+        fry.classList.add("floating-fry");
+        fry.style.width = `${Math.random() * 10 + 10}px`;
+        fry.style.height = `${Math.random() * 80 + 50}px`;
+        fry.style.left = `${Math.random() * 100}vw`;
+        fry.style.top = `${Math.random() * 100}vh`;
+        fry.style.transform = `rotate(${Math.random() * 360}deg)`;
+        friesSection.appendChild(fry);
+
+        gsap.to(fry, {
+          y: -(Math.random() * 500 + 300),
+          rotation: Math.random() * 360,
+          ease: "none",
+          scrollTrigger: {
+            trigger: "#fries",
+            start: "top bottom",
+            end: "bottom top",
+            scrub: Math.random() * 2 + 1,
+          },
+        });
+      }
+      gsap.to(".fries-bg", {
+        y: -150,
+        scrollTrigger: { trigger: "#fries", scrub: true },
+      });
+
+      // 10. McCafé Coffee Beans
+      const mccafeSection = document.getElementById("mccafe");
+      const beanCount = window.innerWidth > 768 ? 15 : 8;
+      for (let i = 0; i < beanCount; i++) {
+        let bean = document.createElement("div");
+        bean.classList.add("coffee-bean");
+        bean.style.left = `${Math.random() * 90}vw`;
+        bean.style.top = `${Math.random() * 90}vh`;
+        bean.style.transform = `rotate(${Math.random() * 360}deg) scale(${
+          Math.random() * 0.8 + 0.5
+        })`;
+        mccafeSection.appendChild(bean);
+
+        gsap.to(bean, {
+          y: -200,
+          rotation: "+=180",
+          ease: "none",
+          scrollTrigger: {
+            trigger: "#mccafe",
+            start: "top bottom",
+            end: "bottom top",
+            scrub: true,
+          },
+        });
+      }
+      gsap.from(".mccafe-img", {
+        scale: 0.8,
+        opacity: 0,
+        rotation: -10,
+        scrollTrigger: {
+          trigger: "#mccafe",
+          start: "top 70%",
+          end: "center center",
+          scrub: 1,
+        },
+      });
+
+      // 11. Happy Meal Bounce
+      gsap.from(".smile-svg", {
+        scale: 0.2,
+        opacity: 0,
+        ease: "elastic.out(1, 0.3)",
+        scrollTrigger: { trigger: "#happy", start: "top 60%" },
+      });
+      gsap.from(".happy-box h2", {
+        y: 50,
+        opacity: 0,
+        rotation: 5,
+        ease: "back.out(2)",
+        duration: 1,
+        scrollTrigger: { trigger: "#happy", start: "top 50%" },
+      });
+
+      // 12. Sustainability Leaves
+      const susSection = document.getElementById("sustainability");
+      const leafCount = window.innerWidth > 768 ? 10 : 5;
+      for (let i = 0; i < leafCount; i++) {
+        let leaf = document.createElement("div");
+        leaf.classList.add("sus-leaf");
+        leaf.style.left = `${Math.random() * 100}vw`;
+        leaf.style.top = `${Math.random() * 100}vh`;
+        susSection.appendChild(leaf);
+
+        gsap.to(leaf, {
+          y: -300,
+          x: Math.random() > 0.5 ? 100 : -100,
+          rotation: 360,
+          scrollTrigger: { trigger: "#sustainability", scrub: 2 },
+        });
+      }
+
+      // 13. App Phone 3D Rotation
+      gsap.fromTo(
+        ".phone-mockup",
+        { y: 200, rotationX: 45, rotationY: -30, scale: 0.8 },
+        {
+          y: 0,
+          rotationX: 0,
+          rotationY: 0,
+          scale: 1,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: "#app-sec",
+            start: "top 85%",
+            end: "center center",
+            scrub: 1,
+          },
+        },
+      );
+
+      // 14. Footer Marquee Infinite Scroll
+      gsap.to(".footer-marquee", {
+        xPercent: -20,
+        ease: "none",
+        scrollTrigger: {
+          trigger: "#footer",
+          start: "top bottom",
+          end: "bottom bottom",
+          scrub: 1,
+        },
+      });
+
+      // Handle Resize calculations cleanly
+      window.addEventListener("resize", () => {
+        ScrollTrigger.refresh();
+      });
+    </script>
+  </body>
+</html>

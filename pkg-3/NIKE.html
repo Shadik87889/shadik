@@ -1,0 +1,1457 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <title>NIKE | Advanced Concept</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@300;500;800;900&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      /* =========================================================
+           CSS Variables & Base
+           ========================================================= */
+      :root {
+        --nk-black: #030303;
+        --nk-white: #f5f5f5;
+        --nk-neon: #ccff00; /* Toxic Volt Green */
+        --nk-grey: #111111;
+        --nk-border: #333333;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      html.lenis,
+      html.lenis body {
+        height: auto;
+        width: 100vw;
+        overflow-x: hidden;
+      }
+      .lenis.lenis-smooth {
+        scroll-behavior: auto !important;
+      }
+      .lenis.lenis-smooth [data-lenis-prevent] {
+        overscroll-behavior: contain;
+      }
+      .lenis.lenis-stopped {
+        overflow: hidden;
+      }
+
+      body {
+        font-family: "Inter", sans-serif;
+        background-color: var(--nk-black);
+        color: var(--nk-white);
+        overflow-x: hidden;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      h1,
+      h2,
+      h3,
+      .anton {
+        font-family: "Anton", sans-serif;
+        text-transform: uppercase;
+        line-height: 0.9;
+      }
+
+      /* Noise Overlay */
+      .noise {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        pointer-events: none;
+        z-index: 9999;
+        opacity: 0.04;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+      }
+
+      /* =========================================================
+           Custom Cursor
+           ========================================================= */
+      @media (pointer: fine) {
+        body {
+          cursor: none;
+        }
+        .cursor-dot {
+          width: 8px;
+          height: 8px;
+          background: var(--nk-neon);
+          border-radius: 50%;
+          position: fixed;
+          top: 0;
+          left: 0;
+          pointer-events: none;
+          z-index: 10001;
+          transform: translate(-50%, -50%);
+          mix-blend-mode: difference;
+        }
+        .cursor-ring {
+          width: 40px;
+          height: 40px;
+          border: 1px solid rgba(204, 255, 0, 0.5);
+          border-radius: 50%;
+          position: fixed;
+          top: 0;
+          left: 0;
+          pointer-events: none;
+          z-index: 10000;
+          transform: translate(-50%, -50%);
+          transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1), height 0.3s,
+            background 0.3s;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-family: "Anton";
+          font-size: 10px;
+          color: transparent;
+        }
+      }
+      @media (pointer: coarse), (hover: none) {
+        .cursor-dot,
+        .cursor-ring {
+          display: none !important;
+        }
+      }
+
+      /* =========================================================
+           Preloader
+           ========================================================= */
+      #preloader {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: var(--nk-black);
+        z-index: 10000;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+      }
+      .counter {
+        font-size: clamp(5rem, 15vw, 15rem);
+        font-family: "Anton";
+        color: var(--nk-white);
+      }
+      .loading-bar-container {
+        width: 300px;
+        height: 2px;
+        background: #222;
+        margin-top: 20px;
+        overflow: hidden;
+      }
+      .loading-bar {
+        width: 0%;
+        height: 100%;
+        background: var(--nk-neon);
+      }
+
+      /* =========================================================
+           Section 1: Interactive 3D Hero (NEW)
+           ========================================================= */
+      #hero {
+        height: 100vh;
+        width: 100vw;
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        background: var(--nk-black);
+      }
+
+      .nav-logo {
+        position: absolute;
+        top: 40px;
+        left: 40px;
+        font-family: "Anton";
+        font-size: 2rem;
+        z-index: 20;
+        color: var(--nk-white);
+      }
+      .nav-right {
+        position: absolute;
+        top: 40px;
+        right: 40px;
+        font-family: "Inter";
+        font-weight: 800;
+        font-size: 0.9rem;
+        letter-spacing: 2px;
+        z-index: 20;
+        color: var(--nk-white);
+        text-transform: uppercase;
+      }
+
+      /* Massive Background Typography */
+      .hero-bg-text {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: clamp(10rem, 30vw, 40rem);
+        font-family: "Anton";
+        color: transparent;
+        -webkit-text-stroke: 2px #222;
+        white-space: nowrap;
+        z-index: 1;
+      }
+
+      /* Hero Image Container */
+      .hero-center-box {
+        position: relative;
+        width: clamp(300px, 40vw, 600px);
+        height: 70vh;
+        z-index: 5;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        perspective: 1000px;
+      }
+
+      /* Floating Shoe */
+      .hero-shoe {
+        width: 130%;
+        height: auto;
+        object-fit: contain;
+        transform: rotate(-15deg);
+        filter: drop-shadow(0 40px 30px rgba(0, 0, 0, 0.8));
+        position: relative;
+        z-index: 2;
+      }
+
+      .hero-title-front {
+        position: absolute;
+        bottom: -5vh;
+        left: -5vw;
+        font-size: clamp(4rem, 8vw, 10rem);
+        color: var(--nk-white);
+        z-index: 10;
+        mix-blend-mode: difference;
+      }
+
+      .hero-tag {
+        position: absolute;
+        top: 10%;
+        right: -10vw;
+        color: var(--nk-neon);
+        font-family: "Inter";
+        font-weight: 800;
+        letter-spacing: 4px;
+        z-index: 10;
+        font-size: 1rem;
+      }
+
+      /* =========================================================
+           Section 2: The HUD Data Terminal (NEW)
+           ========================================================= */
+      #hud-terminal {
+        padding: 15vh 5vw;
+        background: var(--nk-black);
+        border-top: 1px solid var(--nk-border);
+        border-bottom: 1px solid var(--nk-border);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .laser-line {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 2px;
+        background: var(--nk-neon);
+        box-shadow: 0 0 20px var(--nk-neon);
+        opacity: 0.5;
+        z-index: 0;
+      }
+
+      .hud-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 2px;
+        background: var(--nk-border);
+        border: 2px solid var(--nk-border);
+        position: relative;
+        z-index: 2;
+      }
+
+      .hud-cell {
+        background: var(--nk-black);
+        padding: 5vw;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: flex-start;
+      }
+
+      .hud-cell h4 {
+        color: #666;
+        font-family: "Inter";
+        font-weight: 800;
+        font-size: 0.9rem;
+        letter-spacing: 3px;
+        margin-bottom: 20px;
+        text-transform: uppercase;
+      }
+      .hud-cell h2 {
+        font-size: clamp(3rem, 6vw, 8rem);
+        color: var(--nk-neon);
+        font-family: "Anton";
+      }
+      .hud-cell p {
+        font-size: 1rem;
+        color: #888;
+        margin-top: 10px;
+        max-width: 250px;
+        line-height: 1.5;
+      }
+
+      /* =========================================================
+           Section 3: Velocity Scroll Gallery (Fixed & Cleaned)
+           ========================================================= */
+      #velocity-gallery {
+        padding: 20vh 5vw;
+        background: var(--nk-black);
+        display: flex;
+        flex-direction: column;
+        gap: 15vh;
+        overflow: hidden;
+      }
+      .v-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 5vw;
+      }
+      .v-row:nth-child(even) {
+        flex-direction: row-reverse;
+      }
+
+      .v-text {
+        width: 40%;
+      }
+      .v-text h2 {
+        font-size: clamp(3rem, 7vw, 7rem);
+        color: var(--nk-white);
+        line-height: 1;
+      }
+      .v-text p {
+        font-size: clamp(1rem, 1.2vw, 1.5rem);
+        color: #888;
+        margin-top: 20px;
+        max-width: 400px;
+        line-height: 1.6;
+      }
+
+      .v-img-wrapper {
+        width: 55%;
+        height: 70vh;
+        overflow: hidden;
+        position: relative;
+        border-radius: 10px;
+      }
+      .v-img-wrapper img {
+        width: 100%;
+        height: 130%;
+        object-fit: cover;
+        position: absolute;
+        top: -15%;
+        left: 0;
+      }
+
+      /* Wipe reveal overlay */
+      .wipe-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: var(--nk-black);
+        z-index: 2;
+      }
+
+      /* =========================================================
+           Section 4: The Portal Reveal (NEW)
+           ========================================================= */
+      #portal-wrap {
+        height: 100vh;
+        width: 100vw;
+        background: var(--nk-black);
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .portal-bg-text {
+        position: absolute;
+        font-size: clamp(4rem, 10vw, 12rem);
+        font-family: "Anton";
+        color: #222;
+        text-align: center;
+      }
+
+      .portal-content {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: var(--nk-white);
+        color: var(--nk-black);
+        clip-path: circle(0% at 50% 50%); /* Start tiny */
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        z-index: 5;
+      }
+
+      .portal-content img {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        opacity: 0.2;
+      }
+      .portal-content h2 {
+        font-size: clamp(5rem, 15vw, 20rem);
+        z-index: 2;
+        color: var(--nk-black);
+        mix-blend-mode: multiply;
+      }
+      .portal-content p {
+        font-size: clamp(1.2rem, 2vw, 2.5rem);
+        font-weight: 800;
+        letter-spacing: 5px;
+        z-index: 2;
+        color: var(--nk-neon);
+        background: var(--nk-black);
+        padding: 5px 20px;
+      }
+
+      /* =========================================================
+           Section 5: Horizontal Anatomy (Images Fixed)
+           ========================================================= */
+      #anatomy {
+        height: 100vh;
+        width: 100vw;
+        background: var(--nk-grey);
+        overflow: hidden;
+        position: relative;
+      }
+      .anatomy-track {
+        display: flex;
+        width: 400vw;
+        height: 100%;
+      }
+      .a-panel {
+        width: 100vw;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        padding: 0 10vw;
+      }
+
+      .a-bg-text {
+        position: absolute;
+        font-family: "Anton";
+        font-size: 30vw;
+        color: rgba(255, 255, 255, 0.02);
+        white-space: nowrap;
+        pointer-events: none;
+        z-index: 1;
+      }
+
+      .a-content {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 5vw;
+        z-index: 3;
+        width: 100%;
+      }
+      .a-img {
+        width: 40vw;
+        height: 60vh;
+        object-fit: cover;
+        filter: grayscale(100%);
+        transition: filter 0.5s;
+        border-radius: 20px;
+      }
+      .a-panel:hover .a-img {
+        filter: grayscale(0%);
+      }
+
+      .a-info h3 {
+        font-size: clamp(2rem, 5vw, 5rem);
+        color: var(--nk-neon);
+      }
+      .a-info h2 {
+        font-size: clamp(4rem, 8vw, 8rem);
+        color: var(--nk-white);
+        margin-top: -10px;
+      }
+
+      /* =========================================================
+           Section 6: Kinetic Accordion (NEW)
+           ========================================================= */
+      #accordion {
+        height: 100vh;
+        background: var(--nk-black);
+        display: flex;
+        padding: 10vh 5vw;
+        gap: 20px;
+      }
+
+      .acc-item {
+        flex: 1;
+        height: 100%;
+        border-radius: 20px;
+        overflow: hidden;
+        position: relative;
+        cursor: pointer;
+        transition: flex 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+        border: 1px solid var(--nk-border);
+      }
+      .acc-item:hover {
+        flex: 4;
+      }
+
+      .acc-item img {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        filter: grayscale(100%) brightness(0.6);
+        transition: filter 0.6s, transform 0.6s;
+      }
+      .acc-item:hover img {
+        filter: grayscale(0%) brightness(1);
+        transform: scale(1.05);
+      }
+
+      .acc-content {
+        position: absolute;
+        bottom: 40px;
+        left: 40px;
+        right: 40px;
+        opacity: 0;
+        transform: translateY(20px);
+        transition: opacity 0.4s 0.2s, transform 0.4s 0.2s;
+      }
+      .acc-item:hover .acc-content {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .acc-content h2 {
+        font-size: clamp(3rem, 6vw, 6rem);
+        color: var(--nk-white);
+        line-height: 1;
+        margin-bottom: 10px;
+      }
+      .acc-content p {
+        font-size: 1.2rem;
+        color: var(--nk-neon);
+        font-weight: 800;
+        text-transform: uppercase;
+      }
+
+      .acc-title-vertical {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) rotate(-90deg);
+        font-family: "Anton";
+        font-size: 3rem;
+        color: rgba(255, 255, 255, 0.3);
+        white-space: nowrap;
+        transition: opacity 0.3s;
+        pointer-events: none;
+      }
+      .acc-item:hover .acc-title-vertical {
+        opacity: 0;
+      }
+
+      /* =========================================================
+           Section 7: Asymmetrical Bento Grid (Images Fixed)
+           ========================================================= */
+      #bento {
+        min-height: 100vh;
+        background: var(--nk-black);
+        padding: 15vh 5vw;
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        grid-auto-rows: 300px;
+        gap: 20px;
+      }
+      .bento-header {
+        grid-column: span 4;
+        margin-bottom: 5vh;
+      }
+      .bento-header h2 {
+        font-size: clamp(4rem, 10vw, 10rem);
+        color: var(--nk-white);
+      }
+
+      .b-card {
+        background: var(--nk-grey);
+        border-radius: 20px;
+        overflow: hidden;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        padding: 30px;
+        cursor: pointer;
+        border: 1px solid var(--nk-border);
+      }
+      .b-card img {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        opacity: 0.4;
+        transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.6s;
+      }
+      .b-card:hover img {
+        transform: scale(1.1);
+        opacity: 0.8;
+      }
+      .b-card h3 {
+        position: relative;
+        z-index: 2;
+        font-size: 2.5rem;
+        color: var(--nk-white);
+      }
+
+      .c-1 {
+        grid-column: span 2;
+        grid-row: span 2;
+      }
+      .c-2 {
+        grid-column: span 2;
+        grid-row: span 1;
+        background: var(--nk-neon);
+      }
+      .c-2 h3 {
+        color: var(--nk-black);
+        font-size: 3rem;
+      }
+      .c-3 {
+        grid-column: span 1;
+        grid-row: span 1;
+      }
+      .c-4 {
+        grid-column: span 1;
+        grid-row: span 1;
+        background: var(--nk-white);
+      }
+      .c-4 h3 {
+        color: var(--nk-black);
+      }
+
+      /* =========================================================
+           Section 8: Massive Impact Text & Footer
+           ========================================================= */
+      #impact {
+        height: 100vh;
+        background: var(--nk-white);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        overflow: hidden;
+        flex-direction: column;
+      }
+      .clip-text {
+        font-family: "Anton";
+        font-size: clamp(6rem, 25vw, 30rem);
+        line-height: 0.8;
+        text-align: center;
+        background-image: url("https://images.unsplash.com/photo-1460353581641-37baddab0fa2?auto=format&fit=crop&w=2000&q=80");
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+        color: transparent;
+        -webkit-background-clip: text;
+        background-clip: text;
+      }
+
+      #footer {
+        background: var(--nk-black);
+        padding: 5vh 5vw;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-top: 1px solid var(--nk-border);
+      }
+      .footer-logo {
+        font-size: 4rem;
+        font-family: "Anton";
+        color: var(--nk-white);
+      }
+      .magnetic-btn {
+        padding: 20px 50px;
+        font-size: 1.2rem;
+        font-family: "Inter";
+        font-weight: 800;
+        background: var(--nk-white);
+        color: var(--nk-black);
+        border: none;
+        border-radius: 50px;
+        cursor: pointer;
+        text-transform: uppercase;
+        transition: background 0.3s, color 0.3s;
+      }
+      .magnetic-btn:hover {
+        background: var(--nk-neon);
+      }
+
+      /* =========================================================
+           Mobile Responsiveness
+           ========================================================= */
+      @media (max-width: 768px) {
+        .hero-shoe {
+          width: 160%;
+        }
+        .hud-grid {
+          grid-template-columns: 1fr;
+        }
+        #velocity-gallery {
+          padding: 10vh 5vw;
+          gap: 10vh;
+        }
+        .v-row,
+        .v-row:nth-child(even) {
+          flex-direction: column;
+          text-align: left;
+        }
+        .v-text,
+        .v-img-wrapper {
+          width: 100%;
+        }
+        .v-img-wrapper {
+          height: 50vh;
+        }
+        .a-content {
+          flex-direction: column;
+          text-align: center;
+        }
+        .a-img {
+          width: 80vw;
+          height: 40vh;
+          margin-bottom: 20px;
+        }
+        #accordion {
+          flex-direction: column;
+          height: auto;
+        }
+        .acc-item {
+          height: 300px;
+          flex: auto;
+          width: 100%;
+          margin-bottom: 20px;
+        }
+        .acc-item:hover {
+          height: 400px;
+        }
+        .acc-title-vertical {
+          transform: translate(-50%, -50%) rotate(0deg);
+        }
+        #bento {
+          grid-template-columns: 1fr;
+          grid-auto-rows: 250px;
+        }
+        .c-1,
+        .c-2,
+        .c-3,
+        .c-4 {
+          grid-column: span 1;
+        }
+        #footer {
+          flex-direction: column;
+          gap: 30px;
+          text-align: center;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Brutalist Noise -->
+    <div class="noise"></div>
+
+    <!-- Custom Cursor -->
+    <div class="cursor-dot" id="cursor-dot"></div>
+    <div class="cursor-ring" id="cursor-ring"></div>
+
+    <!-- Intense Preloader -->
+    <div id="preloader">
+      <div class="counter" id="counter">0</div>
+      <div class="loading-bar-container">
+        <div class="loading-bar" id="loading-bar"></div>
+      </div>
+    </div>
+
+    <main>
+      <!-- Nav -->
+      <div class="nav-logo">NIKE</div>
+      <div class="nav-right">Concept // 01</div>
+
+      <!-- Section 1: Interactive 3D Hero -->
+      <section id="hero">
+        <div class="hero-bg-text">A I R</div>
+        <div class="hero-center-box" id="hero-box">
+          <span class="hero-tag">SERIES 9000</span>
+          <!-- Using a highly contrasted Red Nike Shoe -->
+          <img
+            src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=1500&q=80&transparent=true"
+            alt="Nike Shoe"
+            class="hero-shoe"
+            id="shoe-img"
+            style="mix-blend-mode: screen; border-radius: 20px;"
+          />
+          <h1 class="hero-title-front">DEFY.</h1>
+        </div>
+      </section>
+
+      <!-- Section 2: HUD Data Terminal -->
+      <section id="hud-terminal">
+        <div class="laser-line"></div>
+        <div class="hud-grid">
+          <div class="hud-cell">
+            <h4>Weight Core</h4>
+            <h2>
+              <span class="count-up" data-target="14">0</span
+              ><span style="font-size: 3rem; color: var(--nk-white);"
+                >.2 oz</span
+              >
+            </h2>
+            <p>
+              Ultralight carbon-infused framing reduces total mass by 30%
+              without sacrificing durability.
+            </p>
+          </div>
+          <div
+            class="hud-cell"
+            style="
+              border-left: 2px solid var(--nk-border);
+              border-right: 2px solid var(--nk-border);
+            "
+          >
+            <h4>Energy Return</h4>
+            <h2>
+              <span class="count-up" data-target="98">0</span
+              ><span style="font-size: 3rem; color: var(--nk-white);">%</span>
+            </h2>
+            <p>
+              Next-gen ZoomX foam compounds rebound instantly, storing and
+              releasing kinetic energy.
+            </p>
+          </div>
+          <div class="hud-cell">
+            <h4>Aerodynamics</h4>
+            <h2>
+              <span class="count-up" data-target="0.04">0</span
+              ><span style="font-size: 3rem; color: var(--nk-white);">cd</span>
+            </h2>
+            <p>
+              Wind-tunnel tested silhouettes slice through resistance, dropping
+              drag coefficient to historic lows.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 3: Velocity Scroll Gallery -->
+      <section id="velocity-gallery">
+        <div class="v-row">
+          <div class="v-text">
+            <h2>ENGINEERED<br />FOR FLIGHT.</h2>
+            <p>
+              Aerodynamic silhouettes constructed with aerospace-grade mesh.
+              Every stitch is mathematically calculated to reduce drag and
+              maximize explosive energy return.
+            </p>
+          </div>
+          <div class="v-img-wrapper">
+            <div class="wipe-overlay"></div>
+            <img
+              src="https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?auto=format&fit=crop&w=1000&q=80"
+              alt="Green Sneaker"
+              class="v-parallax"
+            />
+          </div>
+        </div>
+
+        <div class="v-row">
+          <div class="v-text">
+            <h2>UNRIVALED<br />TRACTION.</h2>
+            <p>
+              Micro-textured rubber compounds adapt to urban environments,
+              offering absolute control whether you're shifting gears or
+              stopping on a dime.
+            </p>
+          </div>
+          <div class="v-img-wrapper">
+            <div class="wipe-overlay"></div>
+            <!-- FIXED IMAGE: Sneaker Sole Texture -->
+            <img
+              src="https://images.unsplash.com/photo-1549298916-b41d501d3772?auto=format&fit=crop&w=1000&q=80"
+              alt="Sole Detail"
+              class="v-parallax"
+            />
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 4: The Portal Reveal -->
+      <section id="portal-wrap">
+        <h1 class="portal-bg-text">ENTER THE ZONE</h1>
+        <div class="portal-content">
+          <img
+            src="https://images.unsplash.com/photo-1552346154-21d32810baa3?auto=format&fit=crop&w=2000&q=80"
+            alt="Athlete"
+          />
+          <h2>LIMITLESS</h2>
+          <p>MIND OVER MATTER</p>
+        </div>
+      </section>
+
+      <!-- Section 5: Horizontal Anatomy -->
+      <section id="anatomy">
+        <div class="anatomy-track">
+          <!-- Panel 1 -->
+          <div class="a-panel">
+            <div class="a-bg-text">CUSHION</div>
+            <div class="a-content">
+              <img
+                src="https://images.unsplash.com/photo-1605348532760-6753d2c43329?auto=format&fit=crop&w=1000&q=80"
+                alt="Detail 1"
+                class="a-img a-parallax"
+              />
+              <div class="a-info">
+                <h3>01</h3>
+                <h2>AIR UNIT</h2>
+              </div>
+            </div>
+          </div>
+          <!-- Panel 2 -->
+          <div class="a-panel">
+            <div class="a-bg-text">WEAVE</div>
+            <div class="a-content">
+              <img
+                src="https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?auto=format&fit=crop&w=1000&q=80"
+                alt="Detail 2"
+                class="a-img a-parallax"
+              />
+              <div class="a-info">
+                <h3>02</h3>
+                <h2>FLYKNIT</h2>
+              </div>
+            </div>
+          </div>
+          <!-- Panel 3 -->
+          <div class="a-panel">
+            <div class="a-bg-text">SUPPORT</div>
+            <div class="a-content">
+              <!-- FIXED IMAGE: Laces/Lockdown detail -->
+              <img
+                src="https://images.unsplash.com/photo-1514989940723-e8e51635b782?auto=format&fit=crop&w=1000&q=80"
+                alt="Detail 3"
+                class="a-img a-parallax"
+              />
+              <div class="a-info">
+                <h3>03</h3>
+                <h2>LOCKDOWN</h2>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 6: Kinetic Accordion (Hover Gallery) -->
+      <section id="accordion">
+        <div class="acc-item">
+          <img
+            src="https://images.unsplash.com/photo-1461896836934-ffe607ba8211?auto=format&fit=crop&w=800&q=80"
+            alt="Speed"
+          />
+          <div class="acc-title-vertical">SPEED</div>
+          <div class="acc-content">
+            <h2>VELOCITY</h2>
+            <p>Outrun the shadow.</p>
+          </div>
+        </div>
+        <div class="acc-item">
+          <img
+            src="https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?auto=format&fit=crop&w=800&q=80"
+            alt="Power"
+          />
+          <div class="acc-title-vertical">POWER</div>
+          <div class="acc-content">
+            <h2>FORCE</h2>
+            <p>Unleash the kinetic.</p>
+          </div>
+        </div>
+        <div class="acc-item">
+          <img
+            src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=800&q=80"
+            alt="Control"
+          />
+          <div class="acc-title-vertical">CONTROL</div>
+          <div class="acc-content">
+            <h2>PRECISION</h2>
+            <p>Own the moment.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 7: Asymmetrical Bento Grid -->
+      <section id="bento">
+        <div class="bento-header">
+          <h2>PERFORMANCE<br />STATS.</h2>
+        </div>
+
+        <div class="b-card c-1">
+          <img
+            src="https://images.unsplash.com/photo-1556906781-9a412961c28c?auto=format&fit=crop&w=1000&q=80"
+            alt="Action"
+          />
+          <h3>VAPORMAX<br />TECHNOLOGY</h3>
+        </div>
+
+        <div class="b-card c-2">
+          <h3>+ 30%</h3>
+          <p
+            style="
+              color: var(--nk-black);
+              font-weight: 800;
+              font-family: 'Inter';
+              text-transform: uppercase;
+            "
+          >
+            More responsive
+          </p>
+        </div>
+
+        <div class="b-card c-3">
+          <!-- FIXED IMAGE: Dark Abstract / Carbon Fiber Texture -->
+          <img
+            src="https://images.unsplash.com/photo-1596484552834-6a58f850e0a1?auto=format&fit=crop&w=800&q=80"
+            alt="Carbon Plate"
+          />
+          <h3>CARBON<br />PLATE</h3>
+        </div>
+
+        <div class="b-card c-4">
+          <h3>98%</h3>
+          <p
+            style="
+              color: var(--nk-black);
+              font-weight: 800;
+              font-family: 'Inter';
+              text-transform: uppercase;
+            "
+          >
+            Energy Return
+          </p>
+        </div>
+      </section>
+
+      <!-- Section 8: Image Masking Typography & Footer -->
+      <section id="impact">
+        <h1 class="clip-text">JUST<br />DO IT.</h1>
+      </section>
+
+      <footer id="footer">
+        <div class="footer-logo">NIKE</div>
+        <button class="magnetic-btn">Shop The Collection</button>
+      </footer>
+    </main>
+
+    <!-- Scripts -->
+    <script src="https://unpkg.com/@studio-freight/lenis@1.0.34/dist/lenis.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="/lock.js"></script>
+
+    <script>
+      // 1. Initialize Lenis (Snappy physics)
+      const lenis = new Lenis({
+        duration: 1.4,
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        direction: "vertical",
+        gestureDirection: "vertical",
+        smooth: true,
+        mouseMultiplier: 1,
+        smoothTouch: false,
+        touchMultiplier: 2,
+      });
+
+      function raf(time) {
+        lenis.raf(time);
+        requestAnimationFrame(raf);
+      }
+      requestAnimationFrame(raf);
+
+      gsap.registerPlugin(ScrollTrigger);
+
+      // 2. Custom Cursor Logic & Magnetic Buttons
+      if (window.matchMedia("(pointer: fine)").matches) {
+        const cursorDot = document.getElementById("cursor-dot");
+        const cursorRing = document.getElementById("cursor-ring");
+
+        let dotX = gsap.quickTo(cursorDot, "x", {
+          duration: 0.1,
+          ease: "power3.out",
+        });
+        let dotY = gsap.quickTo(cursorDot, "y", {
+          duration: 0.1,
+          ease: "power3.out",
+        });
+        let ringX = gsap.quickTo(cursorRing, "x", {
+          duration: 0.3,
+          ease: "power3.out",
+        });
+        let ringY = gsap.quickTo(cursorRing, "y", {
+          duration: 0.3,
+          ease: "power3.out",
+        });
+
+        window.addEventListener("mousemove", (e) => {
+          dotX(e.clientX);
+          dotY(e.clientY);
+          ringX(e.clientX);
+          ringY(e.clientY);
+        });
+
+        // Hover states for links and accordions
+        document
+          .querySelectorAll("button, .acc-item, .b-card")
+          .forEach((el) => {
+            el.addEventListener("mouseenter", () => {
+              cursorRing.style.width = "60px";
+              cursorRing.style.height = "60px";
+              cursorRing.style.background = "rgba(204, 255, 0, 0.1)";
+            });
+            el.addEventListener("mouseleave", () => {
+              cursorRing.style.width = "40px";
+              cursorRing.style.height = "40px";
+              cursorRing.style.background = "transparent";
+            });
+          });
+
+        // Magnetic Button Logic
+        const magBtn = document.querySelector(".magnetic-btn");
+        magBtn.addEventListener("mousemove", function (e) {
+          const rect = this.getBoundingClientRect();
+          const x = e.clientX - rect.left - rect.width / 2;
+          const y = e.clientY - rect.top - rect.height / 2;
+          gsap.to(this, {
+            x: x * 0.4,
+            y: y * 0.4,
+            duration: 0.3,
+            ease: "power2.out",
+          });
+        });
+        magBtn.addEventListener("mouseleave", function () {
+          gsap.to(this, {
+            x: 0,
+            y: 0,
+            duration: 0.5,
+            ease: "elastic.out(1, 0.3)",
+          });
+        });
+
+        // 3D Hero Mouse Interaction
+        const heroBox = document.getElementById("hero-box");
+        const shoeImg = document.getElementById("shoe-img");
+
+        heroBox.addEventListener("mousemove", (e) => {
+          const rect = heroBox.getBoundingClientRect();
+          const x = (e.clientX - rect.left) / rect.width - 0.5;
+          const y = (e.clientY - rect.top) / rect.height - 0.5;
+
+          gsap.to(shoeImg, {
+            rotationY: x * 30,
+            rotationX: -y * 30,
+            rotationZ: -15 + x * 10,
+            x: x * 40,
+            y: y * 40,
+            duration: 0.5,
+            ease: "power2.out",
+          });
+        });
+
+        heroBox.addEventListener("mouseleave", () => {
+          gsap.to(shoeImg, {
+            rotationY: 0,
+            rotationX: 0,
+            rotationZ: -15,
+            x: 0,
+            y: 0,
+            duration: 1,
+            ease: "elastic.out(1, 0.3)",
+          });
+        });
+      }
+
+      // 3. Preloader
+      window.addEventListener("load", () => {
+        let counterObj = { val: 0 };
+        const tl = gsap.timeline();
+
+        tl.to(counterObj, {
+          val: 100,
+          duration: 2.5,
+          ease: "power4.inOut",
+          onUpdate: () => {
+            document.getElementById("counter").innerText = Math.floor(
+              counterObj.val,
+            );
+            document.getElementById(
+              "loading-bar",
+            ).style.width = `${counterObj.val}%`;
+          },
+        })
+          .to(
+            "#preloader",
+            { yPercent: -100, duration: 0.8, ease: "expo.inOut" },
+            "+=0.2",
+          )
+          .from(
+            ".hero-bg-text",
+            { scale: 0.8, opacity: 0, duration: 2, ease: "power3.out" },
+            "-=0.6",
+          )
+          .from(
+            ".hero-shoe",
+            {
+              y: 200,
+              rotationZ: -30,
+              opacity: 0,
+              duration: 1.5,
+              ease: "back.out(1.5)",
+            },
+            "-=1.5",
+          )
+          .from(
+            ".hero-title-front",
+            { x: -100, opacity: 0, duration: 1, ease: "power3.out" },
+            "-=1",
+          )
+          .from(".hero-tag", { y: -20, opacity: 0, duration: 1 }, "-=1");
+      });
+
+      // 4. Hero Parallax Scroll
+      gsap.to(".hero-bg-text", {
+        xPercent: -30,
+        ease: "none",
+        scrollTrigger: {
+          trigger: "#hero",
+          start: "top top",
+          end: "bottom top",
+          scrub: true,
+        },
+      });
+      gsap.to(".hero-shoe", {
+        yPercent: -50,
+        scale: 0.8,
+        ease: "none",
+        scrollTrigger: {
+          trigger: "#hero",
+          start: "top top",
+          end: "bottom top",
+          scrub: true,
+        },
+      });
+
+      // 5. HUD Data Terminal Scanning & Counting
+      gsap.to(".laser-line", {
+        y: "50vh",
+        ease: "none",
+        scrollTrigger: {
+          trigger: "#hud-terminal",
+          start: "top 80%",
+          end: "bottom 20%",
+          scrub: true,
+        },
+      });
+
+      const counters = document.querySelectorAll(".count-up");
+      counters.forEach((counter) => {
+        let target = parseFloat(counter.getAttribute("data-target"));
+        let obj = { val: 0 };
+        gsap.to(obj, {
+          val: target,
+          duration: 2,
+          ease: "power3.out",
+          scrollTrigger: { trigger: "#hud-terminal", start: "top 70%" },
+          onUpdate: () => {
+            // check if float or int
+            counter.innerText =
+              target % 1 === 0 ? Math.floor(obj.val) : obj.val.toFixed(2);
+          },
+        });
+      });
+
+      // 6. Velocity Gallery Wipes & Parallax
+      gsap.utils.toArray(".v-img-wrapper").forEach((wrapper) => {
+        // Wipe Reveal
+        gsap.to(wrapper.querySelector(".wipe-overlay"), {
+          height: 0,
+          duration: 1.2,
+          ease: "power4.inOut",
+          scrollTrigger: { trigger: wrapper, start: "top 70%" },
+        });
+        // Image Parallax
+        const img = wrapper.querySelector(".v-parallax");
+        gsap.fromTo(
+          img,
+          { yPercent: 0 },
+          {
+            yPercent: -15,
+            ease: "none",
+            scrollTrigger: {
+              trigger: wrapper,
+              start: "top bottom",
+              end: "bottom top",
+              scrub: true,
+            },
+          },
+        );
+      });
+
+      // 7. Portal Reveal (Massive Clip-Path effect)
+      let portalTl = gsap.timeline({
+        scrollTrigger: {
+          trigger: "#portal-wrap",
+          start: "top top",
+          end: "+=150%", // Pins for a long time while scrolling
+          pin: true,
+          scrub: 1,
+        },
+      });
+
+      // Animates the clip-path circle to swallow the screen
+      portalTl
+        .to(".portal-content", {
+          clipPath: "circle(150% at 50% 50%)",
+          duration: 1,
+          ease: "power2.inOut",
+        })
+        .from(
+          ".portal-content h2",
+          { scale: 0.8, opacity: 0, duration: 0.5 },
+          "-=0.5",
+        )
+        .from(
+          ".portal-content p",
+          { y: 50, opacity: 0, duration: 0.5 },
+          "-=0.3",
+        );
+
+      // 8. Horizontal Anatomy Scroll
+      const anatomyTrack = document.querySelector(".anatomy-track");
+      const aPanels = gsap.utils.toArray(".a-panel");
+
+      let horizontalTween = gsap.to(aPanels, {
+        xPercent: -100 * (aPanels.length - 1),
+        ease: "none",
+        scrollTrigger: {
+          trigger: "#anatomy",
+          pin: true,
+          scrub: 1,
+          snap: 1 / (aPanels.length - 1),
+          end: () => "+=" + (anatomyTrack.offsetWidth - window.innerWidth),
+        },
+      });
+
+      aPanels.forEach((panel) => {
+        const img = panel.querySelector(".a-parallax");
+        const bgText = panel.querySelector(".a-bg-text");
+
+        gsap.fromTo(
+          img,
+          { x: 100 },
+          {
+            x: -100,
+            ease: "none",
+            scrollTrigger: {
+              trigger: panel,
+              containerAnimation: horizontalTween,
+              start: "left right",
+              end: "right left",
+              scrub: true,
+            },
+          },
+        );
+
+        gsap.fromTo(
+          bgText,
+          { x: -200 },
+          {
+            x: 200,
+            ease: "none",
+            scrollTrigger: {
+              trigger: panel,
+              containerAnimation: horizontalTween,
+              start: "left right",
+              end: "right left",
+              scrub: true,
+            },
+          },
+        );
+      });
+
+      // 9. Bento Grid Entrance
+      gsap.from(".b-card", {
+        y: 100,
+        opacity: 0,
+        scale: 0.9,
+        duration: 1,
+        stagger: 0.1,
+        ease: "back.out(1.5)",
+        scrollTrigger: { trigger: "#bento", start: "top 70%" },
+      });
+
+      // 10. Impact Text Reveal
+      gsap.from(".clip-text", {
+        scale: 0.8,
+        opacity: 0,
+        duration: 1.5,
+        ease: "power4.out",
+        scrollTrigger: { trigger: "#impact", start: "top 60%" },
+      });
+
+      window.addEventListener("resize", () => {
+        ScrollTrigger.refresh();
+      });
+    </script>
+  </body>
+</html>

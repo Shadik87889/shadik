@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="en" class="antialiased">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AETHERIS INSTITUTE | The Future of Thought</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Playfair+Display:ital,wght@0,300;0,400;0,500;0,900;1,300;1,400&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <!-- Lenis Smooth Scroll -->
+    <script src="https://unpkg.com/lenis@1.1.20/dist/lenis.min.js"></script>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              serif: ['"Playfair Display"', "serif"],
+              mono: ['"Space Mono"', "monospace"],
+              sans: ['"Inter"', "sans-serif"],
+            },
+            colors: {
+              "aether-black": "#050505",
+              "aether-orange": "#FF3300",
+              "aether-gray": "#1a1a1a",
+              "aether-light": "#E5E5E5",
+            },
+            backgroundImage: {
+              noise:
+                "url('data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.65%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22 opacity=%221%22/%3E%3C/svg%3E')",
+            },
+            animation: {
+              marquee: "marquee 30s linear infinite",
+              "slow-zoom": "slow-zoom 20s ease-in-out infinite alternate",
+              reveal: "reveal 1.5s cubic-bezier(0.77, 0, 0.175, 1) forwards",
+            },
+            keyframes: {
+              marquee: {
+                "0%": { transform: "translateX(0)" },
+                "100%": { transform: "translateX(-50%)" },
+              },
+              "slow-zoom": {
+                "0%": { transform: "scale(1)" },
+                "100%": { transform: "scale(1.1)" },
+              },
+              reveal: {
+                "0%": { transform: "translateY(100%)" },
+                "100%": { transform: "translateY(0)" },
+              },
+            },
+          },
+        },
+      };
+    </script>
+
+    <style>
+      /* Base Setup */
+      html.lenis,
+      html.lenis body {
+        height: auto;
+      }
+      .lenis.lenis-smooth {
+        scroll-behavior: auto !important;
+      }
+      .lenis.lenis-smooth [data-lenis-prevent] {
+        overscroll-behavior: contain;
+      }
+      .lenis.lenis-stopped {
+        overflow: hidden;
+      }
+
+      body {
+        background-color: #050505;
+        cursor: none;
+        overflow-x: hidden;
+      }
+
+      /* Noise Overlay */
+      .noise-overlay {
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: 9990;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.8%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22 opacity=%220.05%22/%3E%3C/svg%3E");
+        mix-blend-mode: overlay;
+      }
+
+      /* Custom Cursor */
+      #cursor {
+        width: 16px;
+        height: 16px;
+        background: white;
+        border-radius: 50%;
+        position: fixed;
+        pointer-events: none;
+        z-index: 10000;
+        mix-blend-mode: difference;
+        transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+          height 0.3s cubic-bezier(0.16, 1, 0.3, 1), transform 0.1s linear;
+        transform: translate(-50%, -50%);
+      }
+      #cursor.hovered {
+        width: 64px;
+        height: 64px;
+        background: #ff3300;
+        mix-blend-mode: normal;
+        opacity: 0.8;
+      }
+      #cursor.video-hover {
+        width: 90px;
+        height: 90px;
+        background: white;
+        mix-blend-mode: difference;
+      }
+      #cursor.video-hover::after {
+        content: "PLAY";
+        color: black;
+        font-size: 10px;
+        font-family: monospace;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+
+      /* Typography & Utilities */
+      .stroke-text {
+        -webkit-text-stroke: 1px rgba(255, 255, 255, 0.3);
+        color: transparent;
+        transition: 0.4s;
+      }
+      .stroke-text:hover {
+        color: white;
+        -webkit-text-stroke: 0px;
+      }
+      .writing-vertical-rl {
+        writing-mode: vertical-rl;
+      }
+      ::selection {
+        background: #ff3300;
+        color: white;
+      }
+
+      /* Preloader */
+      #preloader {
+        position: fixed;
+        inset: 0;
+        background: #000;
+        z-index: 99999;
+        display: flex;
+        justify-content: center;
+        items-items: center;
+        transition: transform 0.8s cubic-bezier(0.76, 0, 0.24, 1);
+      }
+      .loader-text {
+        overflow: hidden;
+      }
+      .loader-text span {
+        display: block;
+        transform: translateY(100%);
+        animation: reveal 0.8s forwards;
+      }
+
+      /* Smooth Image Reveal */
+      .reveal-img {
+        clip-path: inset(0 100% 0 0);
+        transition: clip-path 1.2s cubic-bezier(0.76, 0, 0.24, 1);
+      }
+      .reveal-img.active {
+        clip-path: inset(0 0 0 0);
+      }
+    </style>
+  </head>
+  <body class="text-aether-light">
+    <!-- Preloader -->
+    <div id="preloader">
+      <div class="flex flex-col items-center justify-center h-screen">
+        <div
+          class="loader-text font-serif text-4xl md:text-6xl text-aether-orange italic"
+        >
+          <span>Aetheris.</span>
+        </div>
+        <div
+          class="loader-text font-mono text-xs mt-4 text-gray-500 uppercase tracking-widest"
+          style="animation-delay: 0.2s;"
+        >
+          <span>Initializing Reality Engine...</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="noise-overlay"></div>
+    <div id="cursor" class="hidden md:block"></div>
+
+    <!-- Floating Journal Image Preview Container -->
+    <div
+      id="project-preview"
+      class="fixed top-0 left-0 w-[300px] h-[400px] pointer-events-none z-30 opacity-0 transition-opacity duration-500 overflow-hidden rounded-lg hidden md:block"
+    >
+      <img
+        src=""
+        id="project-preview-img"
+        class="w-full h-full object-cover grayscale mix-blend-screen"
+        alt="Preview"
+      />
+    </div>
+
+    <!-- Full Screen Menu -->
+    <div
+      id="menu-overlay"
+      class="fixed inset-0 bg-aether-black z-40 transform -translate-y-full transition-transform duration-[800ms] cubic-bezier(0.76,0,0.24,1) flex flex-col justify-center items-center"
+    >
+      <div class="flex flex-col gap-2 text-center mix-blend-difference">
+        <a
+          href="#"
+          class="menu-link text-[8vw] font-serif leading-none text-transparent stroke-text hover:text-white interactive"
+          >ACADEMICS</a
+        >
+        <a
+          href="#"
+          class="menu-link text-[8vw] font-serif leading-none text-transparent stroke-text hover:text-white interactive"
+          >RESEARCH</a
+        >
+        <a
+          href="#"
+          class="menu-link text-[8vw] font-serif leading-none text-transparent stroke-text hover:text-white interactive"
+          >CAMPUS</a
+        >
+        <a
+          href="#"
+          class="menu-link text-[8vw] font-serif leading-none text-transparent stroke-text hover:text-white interactive"
+          >JOURNAL</a
+        >
+      </div>
+    </div>
+
+    <!-- Nav -->
+    <nav
+      class="fixed top-0 w-full z-50 px-6 py-6 flex justify-between items-center mix-blend-difference text-white"
+    >
+      <a
+        href="#"
+        class="text-xl font-bold tracking-tighter font-serif interactive group flex items-center gap-2"
+      >
+        <div class="w-2 h-2 bg-aether-orange rounded-full animate-pulse"></div>
+        AETHERIS<span class="text-aether-orange">.</span>
+      </a>
+      <div class="flex items-center gap-8">
+        <div
+          class="hidden md:flex gap-8 text-xs font-mono tracking-[0.2em] uppercase text-gray-300"
+        >
+          <span class="interactive hover:text-aether-orange cursor-pointer"
+            >Admissions</span
+          >
+          <span class="interactive hover:text-aether-orange cursor-pointer"
+            >Login</span
+          >
+        </div>
+        <button id="menu-btn" class="interactive group flex items-center gap-3">
+          <span
+            class="hidden md:block font-mono text-xs tracking-widest uppercase group-hover:text-aether-orange transition-colors"
+            >Menu</span
+          >
+          <div
+            class="p-2 bg-white/10 rounded-full group-hover:bg-white group-hover:text-black transition-all"
+          >
+            <i class="ph ph-list text-xl" id="menu-icon"></i>
+          </div>
+        </button>
+      </div>
+    </nav>
+
+    <!-- Content -->
+    <main id="main-content">
+      <!-- HERO -->
+      <section
+        class="relative h-screen w-full overflow-hidden bg-aether-black flex flex-col justify-end pb-12"
+      >
+        <div class="absolute inset-0 z-0">
+          <div
+            class="absolute inset-0 bg-gradient-to-t from-aether-black via-black/40 to-transparent z-10"
+          ></div>
+          <img
+            src="https://images.unsplash.com/photo-1486325212027-8081e485255e?q=80&w=2070&auto=format&fit=crop"
+            class="w-full h-full object-cover animate-slow-zoom opacity-70 parallax-img"
+            data-speed="0.5"
+            alt="Hero"
+          />
+        </div>
+
+        <div class="relative z-10 px-6 md:px-12 w-full pt-32">
+          <div
+            class="flex justify-between items-end border-t border-white/20 pt-6"
+          >
+            <div
+              class="hidden md:block font-mono text-xs tracking-widest text-gray-400"
+            >
+              <p>EST. 2042 — RAJSHAHI</p>
+              <p>COORD: 24.36° N, 88.62° E</p>
+            </div>
+            <h1
+              class="text-[14vw] leading-[0.8] font-serif font-thin tracking-tighter uppercase text-white mix-blend-overlay"
+            >
+              <span
+                class="block ml-12 text-[4vw] font-mono tracking-widest mb-4 opacity-70"
+                >The</span
+              >
+              Architecture <br />
+              <span class="text-aether-orange italic font-light ml-[10vw]"
+                >Of Thought</span
+              >
+            </h1>
+          </div>
+        </div>
+      </section>
+
+      <!-- MARQUEE -->
+      <div
+        class="bg-aether-light text-black py-4 overflow-hidden border-y border-black z-20 relative"
+      >
+        <div
+          class="animate-marquee whitespace-nowrap font-serif text-4xl italic"
+        >
+          ADMISSIONS OPEN FALL 2025 — DEFINING THE FUTURE — QUANTUM ECONOMICS —
+          SYNTHETIC BIOLOGY — ADMISSIONS OPEN FALL 2025 — DEFINING THE FUTURE —
+        </div>
+      </div>
+
+      <!-- MANIFESTO -->
+      <section class="py-32 px-6 md:px-12 bg-aether-black relative">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-12">
+          <div
+            class="md:col-span-3 font-mono text-aether-orange text-xs tracking-widest uppercase sticky top-32 h-fit"
+          >
+            (01) — Our Philosophy
+          </div>
+          <div class="md:col-span-9">
+            <p
+              class="text-4xl md:text-6xl font-serif leading-[1.1] text-gray-200 indent-24"
+            >
+              We are not a university. We are a
+              <span class="text-gray-500 italic">particle accelerator</span> for
+              human potential. At Aetheris, we deconstruct the barriers between
+              art, science, and philosophy to engineer the architects of the
+              next reality.
+            </p>
+            <div
+              class="mt-20 grid grid-cols-1 md:grid-cols-2 gap-12 border-t border-white/10 pt-12"
+            >
+              <div>
+                <h3
+                  class="font-mono text-xs uppercase tracking-widest mb-4 text-gray-500"
+                >
+                  The Method
+                </h3>
+                <p class="text-gray-400 text-sm leading-relaxed">
+                  Our curriculum abandons traditional subjects for "Existential
+                  Paradigms." Students don't just learn biology; they engineer
+                  synthetic life. They don't study economics; they design
+                  planetary resource systems.
+                </p>
+              </div>
+              <div>
+                <h3
+                  class="font-mono text-xs uppercase tracking-widest mb-4 text-gray-500"
+                >
+                  The Outcome
+                </h3>
+                <p class="text-gray-400 text-sm leading-relaxed">
+                  We produce outliers. Nobel laureates, Mars colony architects,
+                  and AI ethicists who draft the laws of machine sentience.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ACADEMIC PILLARS (ACCORDION) -->
+      <section class="py-20 bg-aether-black border-t border-white/10">
+        <div class="px-6 md:px-12 mb-12 flex justify-between items-end">
+          <span
+            class="font-mono text-gray-500 text-xs tracking-widest uppercase"
+            >(02) — Pillars</span
+          >
+          <span
+            class="hidden md:block font-mono text-gray-500 text-xs uppercase"
+            >Select a discipline</span
+          >
+        </div>
+
+        <div class="border-b border-white/10">
+          <!-- Item 1 -->
+          <div
+            class="group relative py-16 px-6 md:px-12 border-t border-white/10 hover:bg-white hover:text-black transition-colors duration-500 interactive cursor-pointer"
+          >
+            <div class="flex justify-between items-center">
+              <div class="flex items-baseline gap-12">
+                <span
+                  class="font-mono text-xl text-aether-orange group-hover:text-black"
+                  >01</span
+                >
+                <h2
+                  class="text-6xl md:text-8xl font-serif tracking-tighter group-hover:translate-x-4 transition-transform duration-500"
+                >
+                  Quantum Arch.
+                </h2>
+              </div>
+              <i
+                class="ph ph-arrow-down-right text-4xl opacity-0 group-hover:opacity-100 transition-opacity"
+              ></i>
+            </div>
+            <div
+              class="h-0 overflow-hidden group-hover:h-auto transition-all duration-500"
+            >
+              <p
+                class="mt-8 ml-0 md:ml-20 max-w-xl font-mono text-sm uppercase tracking-wide opacity-70"
+              >
+                Designing physical and virtual spaces for a civilization that
+                exists in multiple states of reality simultaneously.
+              </p>
+            </div>
+          </div>
+          <!-- Item 2 -->
+          <div
+            class="group relative py-16 px-6 md:px-12 border-t border-white/10 hover:bg-white hover:text-black transition-colors duration-500 interactive cursor-pointer"
+          >
+            <div class="flex justify-between items-center">
+              <div class="flex items-baseline gap-12">
+                <span
+                  class="font-mono text-xl text-aether-orange group-hover:text-black"
+                  >02</span
+                >
+                <h2
+                  class="text-6xl md:text-8xl font-serif tracking-tighter group-hover:translate-x-4 transition-transform duration-500"
+                >
+                  Synth. Biology
+                </h2>
+              </div>
+              <i
+                class="ph ph-arrow-down-right text-4xl opacity-0 group-hover:opacity-100 transition-opacity"
+              ></i>
+            </div>
+            <div
+              class="h-0 overflow-hidden group-hover:h-auto transition-all duration-500"
+            >
+              <p
+                class="mt-8 ml-0 md:ml-20 max-w-xl font-mono text-sm uppercase tracking-wide opacity-70"
+              >
+                Engineering life at the molecular threshold. Programmable
+                immunity and bio-computational storage.
+              </p>
+            </div>
+          </div>
+          <!-- Item 3 -->
+          <div
+            class="group relative py-16 px-6 md:px-12 border-t border-white/10 hover:bg-white hover:text-black transition-colors duration-500 interactive cursor-pointer"
+          >
+            <div class="flex justify-between items-center">
+              <div class="flex items-baseline gap-12">
+                <span
+                  class="font-mono text-xl text-aether-orange group-hover:text-black"
+                  >03</span
+                >
+                <h2
+                  class="text-6xl md:text-8xl font-serif tracking-tighter group-hover:translate-x-4 transition-transform duration-500"
+                >
+                  Void Physics
+                </h2>
+              </div>
+              <i
+                class="ph ph-arrow-down-right text-4xl opacity-0 group-hover:opacity-100 transition-opacity"
+              ></i>
+            </div>
+            <div
+              class="h-0 overflow-hidden group-hover:h-auto transition-all duration-500"
+            >
+              <p
+                class="mt-8 ml-0 md:ml-20 max-w-xl font-mono text-sm uppercase tracking-wide opacity-70"
+              >
+                Harnessing energy from vacuum states. Zero-point energy
+                harvesting and propulsion systems.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- CAMPUS GRID (BENTO) -->
+      <section class="py-32 px-6 md:px-12 bg-aether-light text-black">
+        <div class="flex flex-col md:flex-row justify-between items-end mb-16">
+          <h2
+            class="text-6xl md:text-8xl font-serif tracking-tighter leading-none"
+          >
+            The <br />
+            Campus
+          </h2>
+          <div class="max-w-xs text-right mt-8 md:mt-0">
+            <p
+              class="font-mono text-xs text-gray-500 uppercase tracking-widest mb-4"
+            >
+              A living laboratory spread across three continents and one orbital
+              station.
+            </p>
+            <button
+              class="interactive border-b border-black pb-1 hover:text-aether-orange transition-colors uppercase text-xs font-bold tracking-widest"
+            >
+              View Map
+            </button>
+          </div>
+        </div>
+
+        <!-- Bento Grid -->
+        <div
+          class="grid grid-cols-1 md:grid-cols-4 grid-rows-4 md:grid-rows-2 gap-4 h-[150vh] md:h-[80vh]"
+        >
+          <!-- Large Item -->
+          <div
+            class="md:col-span-2 md:row-span-2 relative overflow-hidden group interactive cursor-none video-trigger"
+          >
+            <img
+              src="https://images.unsplash.com/photo-1562774053-701939374585?q=80&w=2086&auto=format&fit=crop"
+              class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
+              alt="Main Hall"
+            />
+            <div class="absolute bottom-6 left-6 text-white z-10">
+              <h3 class="font-serif text-3xl">The Oculus</h3>
+              <p class="font-mono text-xs uppercase opacity-80">
+                Central Library & Data Hive
+              </p>
+            </div>
+          </div>
+          <!-- Tall Item -->
+          <div
+            class="md:col-span-1 md:row-span-2 relative overflow-hidden group interactive"
+          >
+            <img
+              src="https://images.unsplash.com/photo-1505567745926-ba89000d255a?q=80&w=2071&auto=format&fit=crop"
+              class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
+              alt="Lab"
+            />
+            <div
+              class="absolute top-6 left-6 bg-white/10 backdrop-blur-md px-3 py-1 rounded-full text-white text-xs font-mono uppercase"
+            >
+              Lab Block A
+            </div>
+          </div>
+          <!-- Small Item -->
+          <div
+            class="md:col-span-1 md:row-span-1 relative overflow-hidden group interactive"
+          >
+            <img
+              src="https://images.unsplash.com/photo-1523580846011-d3a5bc25702b?q=80&w=2070&auto=format&fit=crop"
+              class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105 grayscale group-hover:grayscale-0"
+              alt="Student"
+            />
+          </div>
+          <!-- Text Item -->
+          <div
+            class="md:col-span-1 md:row-span-1 bg-black p-8 flex flex-col justify-between text-white group interactive"
+          >
+            <i
+              class="ph ph-asterisk text-4xl text-aether-orange animate-spin-slow"
+            ></i>
+            <div>
+              <div class="text-4xl font-serif mb-2">320+</div>
+              <div class="font-mono text-xs uppercase text-gray-400">
+                Labs Active 24/7
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- JOURNAL (IMPROVED HOVER) -->
+      <section class="py-32 px-6 md:px-12 bg-aether-black text-white">
+        <div class="mb-20">
+          <span
+            class="font-mono text-aether-orange text-xs tracking-widest uppercase mb-4 block"
+            >(04) — Journal</span
+          >
+          <h2 class="text-5xl md:text-7xl font-serif">Latest Thoughts</h2>
+        </div>
+
+        <div class="flex flex-col">
+          <!-- Article 1 -->
+          <div
+            class="journal-item group border-t border-white/10 py-12 flex flex-col md:flex-row justify-between items-center interactive relative z-10 cursor-pointer"
+            data-img="https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=2070&auto=format&fit=crop"
+          >
+            <div class="flex items-baseline gap-8 w-full md:w-auto">
+              <span class="font-mono text-xs text-gray-500">NOV 14, 2025</span>
+              <h3
+                class="text-3xl md:text-5xl font-serif group-hover:italic transition-all"
+              >
+                The Ethics of Memory Deletion
+              </h3>
+            </div>
+            <div class="flex items-center gap-4 mt-4 md:mt-0">
+              <span
+                class="font-mono text-xs uppercase border border-white/20 px-3 py-1 rounded-full"
+                >Neuroscience</span
+              >
+              <i
+                class="ph ph-arrow-right -rotate-45 group-hover:rotate-0 transition-transform duration-300"
+              ></i>
+            </div>
+          </div>
+
+          <!-- Article 2 -->
+          <div
+            class="journal-item group border-t border-white/10 py-12 flex flex-col md:flex-row justify-between items-center interactive relative z-10 cursor-pointer"
+            data-img="https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2072&auto=format&fit=crop"
+          >
+            <div class="flex items-baseline gap-8 w-full md:w-auto">
+              <span class="font-mono text-xs text-gray-500">OCT 22, 2025</span>
+              <h3
+                class="text-3xl md:text-5xl font-serif group-hover:italic transition-all"
+              >
+                Terraforming: A 50 Year Plan
+              </h3>
+            </div>
+            <div class="flex items-center gap-4 mt-4 md:mt-0">
+              <span
+                class="font-mono text-xs uppercase border border-white/20 px-3 py-1 rounded-full"
+                >Planetary Eng.</span
+              >
+              <i
+                class="ph ph-arrow-right -rotate-45 group-hover:rotate-0 transition-transform duration-300"
+              ></i>
+            </div>
+          </div>
+
+          <!-- Article 3 -->
+          <div
+            class="journal-item group border-t border-b border-white/10 py-12 flex flex-col md:flex-row justify-between items-center interactive relative z-10 cursor-pointer"
+            data-img="https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=2070&auto=format&fit=crop"
+          >
+            <div class="flex items-baseline gap-8 w-full md:w-auto">
+              <span class="font-mono text-xs text-gray-500">SEP 08, 2025</span>
+              <h3
+                class="text-3xl md:text-5xl font-serif group-hover:italic transition-all"
+              >
+                Post-Human Economics
+              </h3>
+            </div>
+            <div class="flex items-center gap-4 mt-4 md:mt-0">
+              <span
+                class="font-mono text-xs uppercase border border-white/20 px-3 py-1 rounded-full"
+                >Economy</span
+              >
+              <i
+                class="ph ph-arrow-right -rotate-45 group-hover:rotate-0 transition-transform duration-300"
+              ></i>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- FOOTER -->
+      <footer
+        class="bg-[#020202] text-white pt-40 pb-12 px-6 md:px-12 border-t border-white/5"
+      >
+        <div
+          class="max-w-[95vw] mx-auto grid grid-cols-1 lg:grid-cols-2 gap-20 mb-32"
+        >
+          <div>
+            <h2
+              class="text-[10vw] leading-[0.85] font-serif tracking-tight mb-12 mix-blend-difference"
+            >
+              Start <br />
+              <span class="text-aether-orange italic font-light ml-24"
+                >Here.</span
+              >
+            </h2>
+            <p class="font-mono text-gray-500 text-sm max-w-md leading-relaxed">
+              Applications for the 2026 cohort are now open. Only 0.04% of
+              applicants are selected. Are you ready to architect reality?
+            </p>
+            <div class="mt-12 flex gap-6">
+              <button
+                class="interactive px-12 py-5 bg-white text-black font-mono text-xs font-bold tracking-[0.2em] uppercase hover:bg-aether-orange hover:text-white transition-all"
+              >
+                Apply Now
+              </button>
+            </div>
+          </div>
+
+          <div
+            class="grid grid-cols-2 md:grid-cols-3 gap-12 font-mono text-xs tracking-widest text-gray-500 uppercase"
+          >
+            <div class="flex flex-col gap-4">
+              <span class="text-white border-b border-white/20 pb-2 mb-2"
+                >Sitemap</span
+              >
+              <a href="#" class="hover:text-aether-orange transition-colors"
+                >Academics</a
+              >
+              <a href="#" class="hover:text-aether-orange transition-colors"
+                >Research</a
+              >
+              <a href="#" class="hover:text-aether-orange transition-colors"
+                >Faculty</a
+              >
+              <a href="#" class="hover:text-aether-orange transition-colors"
+                >Events</a
+              >
+            </div>
+            <div class="flex flex-col gap-4">
+              <span class="text-white border-b border-white/20 pb-2 mb-2"
+                >Legal</span
+              >
+              <a href="#" class="hover:text-aether-orange transition-colors"
+                >Privacy</a
+              >
+              <a href="#" class="hover:text-aether-orange transition-colors"
+                >Terms</a
+              >
+              <a href="#" class="hover:text-aether-orange transition-colors"
+                >Cookies</a
+              >
+            </div>
+            <div class="flex flex-col gap-4">
+              <span class="text-white border-b border-white/20 pb-2 mb-2"
+                >Social</span
+              >
+              <a href="#" class="hover:text-aether-orange transition-colors"
+                >Instagram</a
+              >
+              <a href="#" class="hover:text-aether-orange transition-colors"
+                >Twitter / X</a
+              >
+              <a href="#" class="hover:text-aether-orange transition-colors"
+                >LinkedIn</a
+              >
+            </div>
+          </div>
+        </div>
+
+        <div
+          class="flex flex-col md:flex-row justify-between items-end border-t border-white/10 pt-8 text-[10px] font-mono text-gray-600 uppercase tracking-widest"
+        >
+          <p>© 2025 AETHERIS INSTITUTE. ENGINEERING THE UNKNOWN.</p>
+          <p>DESIGNED IN THE VOID.</p>
+        </div>
+      </footer>
+    </main>
+    <script src="/lock.js"></script>
+
+    <script>
+      // --- 1. LENIS SMOOTH SCROLL ---
+      const lenis = new Lenis({
+        duration: 1.2,
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        direction: "vertical",
+        gestureDirection: "vertical",
+        smooth: true,
+        mouseMultiplier: 1,
+        smoothTouch: false,
+        touchMultiplier: 2,
+      });
+
+      function raf(time) {
+        lenis.raf(time);
+        requestAnimationFrame(raf);
+      }
+      requestAnimationFrame(raf);
+
+      // --- 2. CUSTOM CURSOR & JOURNAL PREVIEW ---
+      const cursor = document.getElementById("cursor");
+      const previewObj = document.getElementById("project-preview");
+      const previewImg = document.getElementById("project-preview-img");
+      const journalItems = document.querySelectorAll(".journal-item");
+
+      let mouseX = 0,
+        mouseY = 0;
+      let cursorX = 0,
+        cursorY = 0;
+      let previewX = 0,
+        previewY = 0;
+
+      document.addEventListener("mousemove", (e) => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+      });
+
+      // Combined Animation Loop
+      const animate = () => {
+        // Cursor Follow
+        cursorX += (mouseX - cursorX) * 0.15;
+        cursorY += (mouseY - cursorY) * 0.15;
+        cursor.style.left = `${cursorX}px`;
+        cursor.style.top = `${cursorY}px`;
+
+        // Preview Follow (Slower / Heavier feel)
+        if (window.innerWidth > 768) {
+          // Only calculate on desktop
+          previewX += (mouseX - previewX) * 0.08;
+          previewY += (mouseY - previewY) * 0.08;
+
+          // --- CENTER THE IMAGE ON THE CURSOR ---
+          const width = previewObj.offsetWidth; // 300px
+          const height = previewObj.offsetHeight; // 400px
+
+          // Offset is negative half the width/height
+          const xOffset = -width / 2;
+          const yOffset = -height / 2;
+
+          // Add subtle rotation based on velocity
+          const rotate = (mouseX - previewX) * 0.05;
+
+          previewObj.style.transform = `translate(${previewX + xOffset}px, ${
+            previewY + yOffset
+          }px) rotate(${rotate}deg)`;
+        }
+
+        requestAnimationFrame(animate);
+      };
+      animate();
+
+      // Cursor interactions
+      const addHover = () => cursor.classList.add("hovered");
+      const removeHover = () => cursor.classList.remove("hovered");
+
+      document.querySelectorAll(".interactive").forEach((el) => {
+        el.addEventListener("mouseenter", addHover);
+        el.addEventListener("mouseleave", removeHover);
+      });
+
+      // Video Trigger Cursor
+      const videoTriggers = document.querySelectorAll(".video-trigger");
+      videoTriggers.forEach((el) => {
+        el.addEventListener("mouseenter", () =>
+          cursor.classList.add("video-hover"),
+        );
+        el.addEventListener("mouseleave", () =>
+          cursor.classList.remove("video-hover"),
+        );
+      });
+
+      // Journal Interactions
+      journalItems.forEach((item) => {
+        item.addEventListener("mouseenter", () => {
+          const img = item.getAttribute("data-img");
+          previewImg.src = img;
+          previewObj.classList.remove("opacity-0");
+          previewObj.classList.add("opacity-100");
+        });
+        item.addEventListener("mouseleave", () => {
+          previewObj.classList.remove("opacity-100");
+          previewObj.classList.add("opacity-0");
+        });
+      });
+
+      // --- 3. PRELOADER ---
+      window.addEventListener("load", () => {
+        setTimeout(() => {
+          document.getElementById("preloader").style.transform =
+            "translateY(-100%)";
+        }, 1500);
+      });
+
+      // --- 4. PARALLAX ---
+      const parallaxImgs = document.querySelectorAll(".parallax-img");
+      lenis.on("scroll", ({ scroll }) => {
+        parallaxImgs.forEach((img) => {
+          const speed = img.getAttribute("data-speed") || 0.5;
+          const yPos = -(scroll * speed);
+          img.style.transform = `translateY(${yPos}px) scale(1.1)`;
+        });
+      });
+
+      // --- 5. MENU LOGIC ---
+      const menuBtn = document.getElementById("menu-btn");
+      const menuOverlay = document.getElementById("menu-overlay");
+      const menuIcon = document.getElementById("menu-icon");
+      let isMenuOpen = false;
+
+      menuBtn.addEventListener("click", () => {
+        isMenuOpen = !isMenuOpen;
+        if (isMenuOpen) {
+          menuOverlay.classList.remove("-translate-y-full");
+          menuIcon.classList.replace("ph-list", "ph-x");
+        } else {
+          menuOverlay.classList.add("-translate-y-full");
+          menuIcon.classList.replace("ph-x", "ph-list");
+        }
+      });
+    </script>
+  </body>
+</html>
