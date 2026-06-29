@@ -1,0 +1,1871 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <title>COMMAND CENTER | Premium Web Solutions</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Icons (Lucide) -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+      :root {
+        --bg-void: #020202;
+        --bg-glass: rgba(10, 10, 12, 0.85);
+        --border-subtle: rgba(255, 255, 255, 0.08);
+        --border-active: rgba(255, 255, 255, 0.2);
+        --text-main: #ffffff;
+        --text-mute: #888888;
+        --accent-system: #00ff9d;
+        --accent-danger: #ff3333;
+        --accent-warning: #ffb800;
+        --accent-blue: #3b82f6;
+      }
+
+      body {
+        background-color: var(--bg-void);
+        color: var(--text-main);
+        font-family: "Space Grotesk", sans-serif;
+        margin: 0;
+        overflow: hidden; /* App-like layout */
+      }
+
+      .mono {
+        font-family: "JetBrains Mono", monospace;
+      }
+      .display {
+        font-family: "Syncopate", sans-serif;
+        text-transform: uppercase;
+      }
+
+      /* Custom Scrollbar */
+      ::-webkit-scrollbar {
+        width: 4px;
+        height: 4px;
+      }
+      ::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #333;
+        border-radius: 2px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: var(--accent-system);
+      }
+
+      /* Glassmorphism Panels */
+      .glass-panel {
+        background: rgba(10, 10, 10, 0.6);
+        backdrop-filter: blur(12px);
+        border: 1px solid var(--border-subtle);
+      }
+
+      /* Status Badges */
+      .status-badge {
+        padding: 6px 12px;
+        border-radius: 4px;
+        font-family: "JetBrains Mono";
+        font-size: 10px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        white-space: nowrap;
+      }
+      .status-pending {
+        background: rgba(255, 184, 0, 0.1);
+        color: var(--accent-warning);
+        border: 1px solid rgba(255, 184, 0, 0.3);
+      }
+      .status-completed {
+        background: rgba(0, 255, 157, 0.1);
+        color: var(--accent-system);
+        border: 1px solid rgba(0, 255, 157, 0.3);
+      }
+      .status-cancelled {
+        background: rgba(255, 51, 51, 0.1);
+        color: var(--accent-danger);
+        border: 1px solid rgba(255, 51, 51, 0.3);
+      }
+      .status-in_progress {
+        background: rgba(59, 130, 246, 0.1);
+        color: #60a5fa;
+        border: 1px solid rgba(59, 130, 246, 0.3);
+      }
+      .status-confirmed {
+        background: rgba(0, 255, 157, 0.1);
+        color: var(--accent-system);
+        border: 1px solid rgba(0, 255, 157, 0.3);
+      }
+
+      /* Buttons */
+      .btn-primary {
+        background: var(--accent-system);
+        color: black;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        transition: all 0.3s;
+      }
+      .btn-primary:hover {
+        background: white;
+        box-shadow: 0 0 20px rgba(0, 255, 157, 0.4);
+      }
+      .btn-outline {
+        border: 1px solid var(--border-subtle);
+        color: white;
+        transition: all 0.3s;
+      }
+      .btn-outline:hover {
+        border-color: var(--accent-system);
+        color: var(--accent-system);
+      }
+
+      /* Form Elements */
+      .form-input,
+      .form-select {
+        width: 100%;
+        background: #0a0a0a;
+        border: 1px solid #333;
+        padding: 12px 16px;
+        color: white;
+        font-family: "Space Grotesk";
+        font-size: 14px;
+        outline: none;
+        border-radius: 4px;
+        transition: all 0.3s;
+      }
+      .form-input:focus,
+      .form-select:focus {
+        border-color: var(--accent-system);
+        background: #111;
+      }
+
+      /* Pagination */
+      .pag-btn {
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid var(--border-subtle);
+        border-radius: 4px;
+        font-family: "JetBrains Mono";
+        font-size: 12px;
+        color: var(--text-mute);
+        transition: all 0.2s;
+        cursor: pointer;
+      }
+      .pag-btn:hover:not(:disabled) {
+        border-color: var(--accent-system);
+        color: var(--accent-system);
+        background: rgba(0, 255, 157, 0.05);
+      }
+      .pag-btn.active {
+        border-color: var(--accent-system);
+        color: black;
+        background: var(--accent-system);
+        font-weight: bold;
+      }
+      .pag-btn:disabled {
+        opacity: 0.3;
+        cursor: not-allowed;
+      }
+
+      /* Loader */
+      .loader {
+        border: 3px solid rgba(255, 255, 255, 0.1);
+        border-top-color: var(--accent-system);
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        animation: spin 1s linear infinite;
+      }
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      /* Modals & Screens */
+      .screen {
+        position: fixed;
+        inset: 0;
+        background: var(--bg-void);
+        z-index: 9999;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        transition: opacity 0.5s ease;
+      }
+      .hidden-screen {
+        opacity: 0;
+        pointer-events: none;
+        z-index: -1;
+      }
+
+      .modal-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.9);
+        backdrop-filter: blur(5px);
+        z-index: 1000;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        opacity: 0;
+        pointer-events: none;
+        transition: all 0.3s;
+        padding: 16px;
+      }
+      .modal-overlay.active {
+        opacity: 1;
+        pointer-events: auto;
+      }
+      .modal-content {
+        transform: translateY(20px);
+        transition: all 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+      }
+      .modal-overlay.active .modal-content {
+        transform: translateY(0);
+      }
+
+      /* Sidebar Mobile Overrides */
+      .sidebar-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.8);
+        z-index: 40;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s;
+      }
+      .sidebar-overlay.active {
+        opacity: 1;
+        pointer-events: auto;
+      }
+      @media (max-width: 768px) {
+        .sidebar {
+          transform: translateX(-100%);
+          transition: transform 0.3s cubic-bezier(0.19, 1, 0.22, 1);
+        }
+        .sidebar.open {
+          transform: translateX(0);
+        }
+      }
+
+      /* Views */
+      .view-section {
+        display: none;
+        animation: fadeIn 0.4s ease;
+      }
+      .view-section.active {
+        display: block;
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .nav-btn.active {
+        background: rgba(255, 255, 255, 0.1);
+        border-color: rgba(255, 255, 255, 0.2);
+        color: var(--accent-system);
+      }
+    </style>
+  </head>
+  <body>
+    <!-- LOADING SCREEN -->
+    <div id="loading-screen" class="screen">
+      <div class="loader mb-6"></div>
+      <p
+        class="mono text-xs text-[var(--accent-system)] tracking-[0.2em] animate-pulse"
+      >
+        AUTHENTICATING DATABANKS...
+      </p>
+    </div>
+
+    <!-- AUTH SCREEN -->
+    <div id="auth-screen" class="screen hidden-screen px-4">
+      <div
+        class="glass-panel p-8 sm:p-10 rounded-xl w-full max-w-md text-center border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.5)] relative overflow-hidden"
+      >
+        <div
+          class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[var(--accent-system)] to-transparent"
+        ></div>
+        <i
+          data-lucide="shield-check"
+          class="w-12 h-12 mx-auto text-[var(--accent-system)] mb-6"
+        ></i>
+        <h1 class="display text-2xl text-white mb-2">SECURE LOGIN</h1>
+        <p class="text-sm text-gray-400 mb-8 font-light leading-relaxed">
+          Command Center Access requires authorized Google credentials.
+        </p>
+
+        <button
+          id="login-btn"
+          class="w-full btn-outline py-4 px-6 rounded-md flex items-center justify-center gap-3 group"
+        >
+          <svg
+            class="w-5 h-5 group-hover:scale-110 transition-transform"
+            viewBox="0 0 24 24"
+          >
+            <path
+              fill="currentColor"
+              d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+            />
+            <path
+              fill="#34A853"
+              d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+            />
+            <path
+              fill="#FBBC05"
+              d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
+            />
+            <path
+              fill="#EA4335"
+              d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
+            />
+          </svg>
+          <span class="mono text-[10px] sm:text-xs font-bold tracking-widest"
+            >SIGN IN WITH GOOGLE</span
+          >
+        </button>
+      </div>
+    </div>
+
+    <!-- UNAUTHORIZED SCREEN -->
+    <div id="unauthorized-screen" class="screen hidden-screen px-4">
+      <i data-lucide="lock" class="w-16 h-16 text-red-500 mb-6"></i>
+      <h1 class="display text-3xl text-white mb-2 text-center">
+        ACCESS DENIED
+      </h1>
+      <p class="text-gray-400 mb-8 max-w-md text-center text-sm">
+        Your account (<span id="unauth-email" class="text-white mono"></span>)
+        does not have administrative privileges. Contact the Super Admin.
+      </p>
+      <button
+        id="unauth-logout-btn"
+        class="btn-outline py-3 px-8 rounded mono text-xs"
+      >
+        SIGN OUT
+      </button>
+    </div>
+
+    <!-- MAIN DASHBOARD APP -->
+    <div
+      id="dashboard-screen"
+      class="hidden-screen w-full h-screen flex bg-[#050505]"
+    >
+      <!-- Mobile Sidebar Overlay -->
+      <div id="sidebar-overlay" class="sidebar-overlay md:hidden"></div>
+
+      <!-- Sidebar -->
+      <aside
+        id="sidebar"
+        class="sidebar fixed md:relative z-50 w-72 bg-[#020202] border-r border-white/10 flex flex-col h-full"
+      >
+        <div
+          class="p-6 md:p-8 border-b border-white/10 flex justify-between items-center"
+        >
+          <div>
+            <h1
+              class="display text-xl text-white tracking-widest leading-none mb-1"
+            >
+              COMMAND
+            </h1>
+            <p
+              class="mono text-[10px] text-[var(--accent-system)] flex items-center gap-2"
+            >
+              <span
+                class="w-1.5 h-1.5 bg-[var(--accent-system)] rounded-full animate-pulse"
+              ></span>
+              SYSTEM SECURE
+            </p>
+          </div>
+          <button
+            id="close-sidebar-btn"
+            class="md:hidden text-gray-500 hover:text-white"
+          >
+            <i data-lucide="x" class="w-6 h-6"></i>
+          </button>
+        </div>
+
+        <nav class="flex-1 p-4 space-y-2 overflow-y-auto">
+          <button
+            onclick="window.switchView('dashboard')"
+            id="nav-dashboard"
+            class="nav-btn active w-full flex items-center gap-4 px-4 py-3 text-gray-400 hover:text-white border border-transparent rounded-md transition-all"
+          >
+            <i data-lucide="inbox" class="w-4 h-4"></i>
+            <span class="mono text-xs tracking-wider">PROJECT REQUESTS</span>
+          </button>
+          <button
+            onclick="window.switchView('appointments')"
+            id="nav-appointments"
+            class="nav-btn w-full flex items-center gap-4 px-4 py-3 text-gray-400 hover:text-white border border-transparent rounded-md transition-all"
+          >
+            <i data-lucide="calendar" class="w-4 h-4"></i>
+            <span class="mono text-xs tracking-wider">APPOINTMENTS</span>
+          </button>
+
+          <!-- Super Admin Only Menu -->
+          <button
+            onclick="window.switchView('manage-admins')"
+            id="nav-manage-admins"
+            class="nav-btn w-full flex items-center gap-4 px-4 py-3 text-gray-400 hover:text-white border border-transparent rounded-md transition-all hidden"
+          >
+            <i data-lucide="shield" class="w-4 h-4"></i>
+            <span class="mono text-xs tracking-wider">MANAGE ADMINS</span>
+          </button>
+        </nav>
+
+        <div class="p-6 border-t border-white/10 bg-[#000]">
+          <div class="flex items-center gap-3 mb-6">
+            <div
+              class="w-10 h-10 rounded bg-[#111] border border-white/20 flex items-center justify-center overflow-hidden shrink-0"
+            >
+              <img
+                id="user-avatar"
+                src=""
+                alt="Profile"
+                class="w-full h-full object-cover hidden"
+              />
+              <i
+                data-lucide="user"
+                id="user-icon-fallback"
+                class="w-5 h-5 text-gray-400"
+              ></i>
+            </div>
+            <div class="overflow-hidden">
+              <p
+                id="user-name"
+                class="text-sm font-bold text-white truncate"
+              ></p>
+              <p
+                id="user-role"
+                class="mono text-[9px] text-[var(--accent-system)] uppercase mt-0.5 tracking-widest truncate"
+              ></p>
+            </div>
+          </div>
+          <button
+            id="logout-btn"
+            class="w-full btn-outline py-2.5 rounded mono text-[10px] flex justify-center items-center gap-2"
+          >
+            <i data-lucide="log-out" class="w-3 h-3"></i> SIGN OUT
+          </button>
+        </div>
+      </aside>
+
+      <!-- Main Content Area -->
+      <main
+        class="flex-1 flex flex-col min-w-0 h-full overflow-hidden relative"
+      >
+        <!-- Mobile Header -->
+        <header
+          class="md:hidden flex items-center justify-between p-4 border-b border-white/10 bg-[#020202] z-30 shrink-0"
+        >
+          <div class="flex items-center gap-3">
+            <button
+              id="open-sidebar-btn"
+              class="text-gray-400 hover:text-white"
+            >
+              <i data-lucide="menu" class="w-6 h-6"></i>
+            </button>
+            <div>
+              <h1 class="display text-sm text-white">COMMAND</h1>
+            </div>
+          </div>
+          <button
+            id="mobile-logout-btn"
+            class="text-[var(--accent-system)] p-2"
+          >
+            <i data-lucide="log-out" class="w-5 h-5"></i>
+          </button>
+        </header>
+
+        <!-- Scrollable Content -->
+        <div class="flex-1 overflow-y-auto p-4 sm:p-6 md:p-10 scroll-smooth">
+          <!-- ========================================= -->
+          <!-- VIEW: DASHBOARD (PROJECT REQUESTS)        -->
+          <!-- ========================================= -->
+          <div id="view-dashboard" class="view-section active">
+            <!-- Stats Grid -->
+            <div
+              class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 mb-8"
+            >
+              <div
+                class="glass-panel p-5 sm:p-6 rounded-lg relative overflow-hidden"
+              >
+                <div class="absolute -right-4 -top-4 text-white/5">
+                  <i data-lucide="layers" class="w-32 h-32"></i>
+                </div>
+                <p
+                  class="mono text-[10px] sm:text-xs text-gray-400 tracking-widest mb-1"
+                >
+                  TOTAL REQUESTS
+                </p>
+                <h2
+                  id="stat-req-total"
+                  class="display text-3xl sm:text-4xl text-white"
+                >
+                  0
+                </h2>
+              </div>
+              <div
+                class="glass-panel p-5 sm:p-6 rounded-lg relative overflow-hidden border-[var(--accent-warning)]/30"
+              >
+                <div
+                  class="absolute -right-4 -top-4 text-[var(--accent-warning)]/5"
+                >
+                  <i data-lucide="clock" class="w-32 h-32"></i>
+                </div>
+                <p
+                  class="mono text-[10px] sm:text-xs text-gray-400 tracking-widest mb-1"
+                >
+                  PENDING ACTION
+                </p>
+                <h2
+                  id="stat-req-pending"
+                  class="display text-3xl sm:text-4xl text-[var(--accent-warning)]"
+                >
+                  0
+                </h2>
+              </div>
+              <div
+                class="glass-panel p-5 sm:p-6 rounded-lg relative overflow-hidden border-[var(--accent-system)]/30 sm:col-span-2 md:col-span-1"
+              >
+                <div
+                  class="absolute -right-4 -top-4 text-[var(--accent-system)]/5"
+                >
+                  <i data-lucide="dollar-sign" class="w-32 h-32"></i>
+                </div>
+                <p
+                  class="mono text-[10px] sm:text-xs text-gray-400 tracking-widest mb-1"
+                >
+                  PIPELINE VALUE
+                </p>
+                <h2
+                  id="stat-req-revenue"
+                  class="display text-3xl sm:text-4xl text-[var(--accent-system)]"
+                >
+                  $0
+                </h2>
+              </div>
+            </div>
+
+            <div class="mb-6">
+              <h2 class="display text-xl sm:text-2xl text-white">
+                PROJECT LOG
+              </h2>
+              <p class="text-xs sm:text-sm text-gray-500 mt-1">
+                Real-time sync of all catalog submissions.
+              </p>
+            </div>
+
+            <div
+              class="glass-panel rounded-lg border border-white/10 overflow-hidden flex flex-col"
+            >
+              <div class="overflow-x-auto w-full">
+                <table
+                  class="w-full text-left text-sm whitespace-nowrap min-w-[800px]"
+                >
+                  <thead
+                    class="bg-[#111] border-b border-white/10 font-mono text-[10px] text-gray-400 uppercase tracking-widest"
+                  >
+                    <tr>
+                      <th class="px-6 py-4">ID / Date</th>
+                      <th class="px-6 py-4">Client</th>
+                      <th class="px-6 py-4">Primary Package</th>
+                      <th class="px-6 py-4">Est. Value</th>
+                      <th class="px-6 py-4">Status</th>
+                      <th class="px-6 py-4 text-right">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody
+                    id="requests-table-body"
+                    class="divide-y divide-white/5 text-gray-300"
+                  >
+                    <tr>
+                      <td colspan="6" class="px-6 py-12 text-center">
+                        <div class="loader mx-auto mb-4 w-6 h-6 border-2"></div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!-- Pagination -->
+              <div
+                class="bg-[#0a0a0a] border-t border-white/10 p-4 flex justify-end gap-2"
+                id="req-pagination"
+              >
+                <!-- JS Injected -->
+              </div>
+            </div>
+          </div>
+
+          <!-- ========================================= -->
+          <!-- VIEW: APPOINTMENTS                        -->
+          <!-- ========================================= -->
+          <div id="view-appointments" class="view-section">
+            <!-- Stats Grid -->
+            <div
+              class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 mb-8"
+            >
+              <div
+                class="glass-panel p-5 sm:p-6 rounded-lg relative overflow-hidden"
+              >
+                <div class="absolute -right-4 -top-4 text-white/5">
+                  <i data-lucide="calendar" class="w-32 h-32"></i>
+                </div>
+                <p
+                  class="mono text-[10px] sm:text-xs text-gray-400 tracking-widest mb-1"
+                >
+                  TOTAL SESSIONS
+                </p>
+                <h2
+                  id="stat-app-total"
+                  class="display text-3xl sm:text-4xl text-white"
+                >
+                  0
+                </h2>
+              </div>
+              <div
+                class="glass-panel p-5 sm:p-6 rounded-lg relative overflow-hidden border-[var(--accent-warning)]/30"
+              >
+                <div
+                  class="absolute -right-4 -top-4 text-[var(--accent-warning)]/5"
+                >
+                  <i data-lucide="users" class="w-32 h-32"></i>
+                </div>
+                <p
+                  class="mono text-[10px] sm:text-xs text-gray-400 tracking-widest mb-1"
+                >
+                  PENDING REVIEW
+                </p>
+                <h2
+                  id="stat-app-pending"
+                  class="display text-3xl sm:text-4xl text-[var(--accent-warning)]"
+                >
+                  0
+                </h2>
+              </div>
+              <div
+                class="glass-panel p-5 sm:p-6 rounded-lg relative overflow-hidden border-[var(--accent-blue)]/30 sm:col-span-2 md:col-span-1"
+              >
+                <div
+                  class="absolute -right-4 -top-4 text-[var(--accent-blue)]/5"
+                >
+                  <i data-lucide="check-circle" class="w-32 h-32"></i>
+                </div>
+                <p
+                  class="mono text-[10px] sm:text-xs text-gray-400 tracking-widest mb-1"
+                >
+                  UPCOMING / CONFIRMED
+                </p>
+                <h2
+                  id="stat-app-confirmed"
+                  class="display text-3xl sm:text-4xl text-[var(--accent-blue)]"
+                >
+                  0
+                </h2>
+              </div>
+            </div>
+
+            <div class="mb-6">
+              <h2 class="display text-xl sm:text-2xl text-white">
+                STRATEGY SESSIONS
+              </h2>
+              <p class="text-xs sm:text-sm text-gray-500 mt-1">
+                Schedules incoming from the booking portal.
+              </p>
+            </div>
+
+            <div
+              class="glass-panel rounded-lg border border-white/10 overflow-hidden flex flex-col"
+            >
+              <div class="overflow-x-auto w-full">
+                <table
+                  class="w-full text-left text-sm whitespace-nowrap min-w-[800px]"
+                >
+                  <thead
+                    class="bg-[#111] border-b border-white/10 font-mono text-[10px] text-gray-400 uppercase tracking-widest"
+                  >
+                    <tr>
+                      <th class="px-6 py-4">ID / Submitted</th>
+                      <th class="px-6 py-4">Client</th>
+                      <th class="px-6 py-4">Goal</th>
+                      <th class="px-6 py-4">Scheduled For</th>
+                      <th class="px-6 py-4">Status</th>
+                      <th class="px-6 py-4 text-right">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody
+                    id="appointments-table-body"
+                    class="divide-y divide-white/5 text-gray-300"
+                  >
+                    <tr>
+                      <td colspan="6" class="px-6 py-12 text-center">
+                        <div class="loader mx-auto mb-4 w-6 h-6 border-2"></div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!-- Pagination -->
+              <div
+                class="bg-[#0a0a0a] border-t border-white/10 p-4 flex justify-end gap-2"
+                id="app-pagination"
+              >
+                <!-- JS Injected -->
+              </div>
+            </div>
+          </div>
+
+          <!-- ========================================= -->
+          <!-- VIEW: MANAGE ADMINS (SUPER ADMIN ONLY)    -->
+          <!-- ========================================= -->
+          <div id="view-manage-admins" class="view-section">
+            <div class="mb-8">
+              <h2 class="display text-xl sm:text-2xl text-white">
+                ADMIN DIRECTORY
+              </h2>
+              <p class="text-xs sm:text-sm text-gray-500 mt-1">
+                Control access rights and system privileges.
+              </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8">
+              <div class="lg:col-span-1">
+                <div
+                  class="glass-panel p-6 rounded-lg border border-white/10 sticky top-0"
+                >
+                  <h3
+                    class="mono text-xs text-[var(--accent-system)] font-bold tracking-widest mb-4"
+                  >
+                    AUTHORIZE NEW ADMIN
+                  </h3>
+                  <form id="add-admin-form" class="space-y-4">
+                    <div>
+                      <label
+                        class="block mono text-[10px] text-gray-400 uppercase tracking-widest mb-2"
+                        >Google Email Address</label
+                      >
+                      <input
+                        type="email"
+                        id="new-admin-email"
+                        class="form-input"
+                        placeholder="admin@domain.com"
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label
+                        class="block mono text-[10px] text-gray-400 uppercase tracking-widest mb-2"
+                        >Access Level</label
+                      >
+                      <select id="new-admin-role" class="form-select" required>
+                        <option value="admin"
+                          >Administrator (Read/Write)</option
+                        >
+                        <option value="super_admin"
+                          >Super Admin (Full Control)</option
+                        >
+                      </select>
+                    </div>
+                    <button
+                      type="submit"
+                      class="btn-primary w-full py-3 rounded text-xs flex justify-center items-center gap-2 mt-2"
+                    >
+                      <i data-lucide="user-plus" class="w-4 h-4"></i> GRANT
+                      ACCESS
+                    </button>
+                  </form>
+                </div>
+              </div>
+
+              <div class="lg:col-span-2">
+                <div
+                  class="glass-panel rounded-lg border border-white/10 overflow-hidden"
+                >
+                  <div class="overflow-x-auto w-full">
+                    <table
+                      class="w-full text-left text-sm whitespace-nowrap min-w-[500px]"
+                    >
+                      <thead
+                        class="bg-[#111] border-b border-white/10 font-mono text-[10px] text-gray-400 uppercase tracking-widest"
+                      >
+                        <tr>
+                          <th class="px-6 py-4">Admin Email</th>
+                          <th class="px-6 py-4">Role</th>
+                          <th class="px-6 py-4">Added</th>
+                          <th class="px-6 py-4 text-right">Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody
+                        id="admins-table-body"
+                        class="divide-y divide-white/5 text-gray-300"
+                      >
+                        <tr>
+                          <td colspan="4" class="px-6 py-8 text-center">
+                            <div
+                              class="loader mx-auto mb-4 w-5 h-5 border-2"
+                            ></div>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <!-- REQUEST DETAILS MODAL -->
+    <div id="request-modal" class="modal-overlay">
+      <div
+        class="modal-content glass-panel w-full sm:w-[95%] max-w-4xl max-h-[90vh] md:max-h-[85vh] flex flex-col rounded-xl overflow-hidden shadow-[0_30px_60px_rgba(0,0,0,0.8)] border-white/20 relative"
+      >
+        <div
+          class="px-4 sm:px-8 py-4 sm:py-5 border-b border-white/10 bg-[#050505] flex justify-between items-center shrink-0"
+        >
+          <div>
+            <span
+              id="modal-req-id"
+              class="mono text-[9px] sm:text-[10px] text-[var(--accent-system)] font-bold tracking-widest"
+              >REQ-XXXXX</span
+            >
+            <h2
+              class="display text-lg sm:text-xl text-white mt-1 truncate max-w-[200px] sm:max-w-md"
+            >
+              PROJECT DOSSIER
+            </h2>
+          </div>
+          <button
+            onclick="window.closeReqModal()"
+            class="text-gray-500 hover:text-white p-2 rounded hover:bg-white/10 transition-colors bg-white/5"
+          >
+            <i data-lucide="x" class="w-5 h-5 sm:w-6 sm:h-6"></i>
+          </button>
+        </div>
+
+        <div class="flex-1 overflow-y-auto p-4 sm:p-8 bg-[#0a0a0a]">
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8">
+            <div class="lg:col-span-1 space-y-6">
+              <div class="bg-[#111] p-4 rounded-lg border border-white/5">
+                <p
+                  class="mono text-[10px] text-gray-500 uppercase tracking-widest mb-1"
+                >
+                  Client Profile
+                </p>
+                <p
+                  id="modal-client-name"
+                  class="text-base sm:text-lg text-white font-bold"
+                ></p>
+                <p
+                  id="modal-client-company"
+                  class="text-xs sm:text-sm text-gray-400 mt-1"
+                ></p>
+              </div>
+
+              <div class="space-y-3">
+                <div>
+                  <p
+                    class="mono text-[10px] text-gray-500 uppercase tracking-widest mb-1"
+                  >
+                    Email
+                  </p>
+                  <a
+                    href=""
+                    id="modal-client-email"
+                    class="text-sm text-[var(--accent-system)] hover:underline truncate block"
+                  ></a>
+                </div>
+                <div>
+                  <p
+                    class="mono text-[10px] text-gray-500 uppercase tracking-widest mb-1"
+                  >
+                    WhatsApp
+                  </p>
+                  <a
+                    href=""
+                    id="modal-client-whatsapp"
+                    target="_blank"
+                    class="text-sm text-white hover:text-[var(--accent-system)] transition-colors truncate block flex items-center gap-2"
+                  ></a>
+                </div>
+              </div>
+
+              <div>
+                <p
+                  class="mono text-[10px] text-gray-500 uppercase tracking-widest mb-1"
+                >
+                  Submission Date
+                </p>
+                <p id="modal-date" class="text-sm text-white mono"></p>
+              </div>
+
+              <div>
+                <p
+                  class="mono text-[10px] text-[var(--accent-warning)] font-bold uppercase tracking-widest mb-2"
+                >
+                  Manage Status
+                </p>
+                <select
+                  id="modal-status-select"
+                  class="form-select mono appearance-none font-bold"
+                >
+                  <option value="pending">PENDING</option>
+                  <option value="in_progress">IN PROGRESS</option>
+                  <option value="completed">COMPLETED</option>
+                  <option value="cancelled">CANCELLED</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="lg:col-span-2 space-y-6">
+              <div
+                class="bg-[#050505] p-4 sm:p-5 rounded-lg border border-white/5"
+              >
+                <p
+                  class="mono text-[10px] text-gray-500 uppercase tracking-widest mb-3 border-b border-white/10 pb-2"
+                >
+                  Client Notes & Objective
+                </p>
+                <p
+                  id="modal-notes"
+                  class="text-xs sm:text-sm text-gray-300 whitespace-pre-wrap leading-relaxed italic max-h-40 overflow-y-auto pr-2"
+                ></p>
+              </div>
+
+              <div>
+                <p
+                  class="mono text-[10px] text-[var(--accent-system)] uppercase tracking-widest mb-3 font-bold"
+                >
+                  Configured Architecture
+                </p>
+                <div id="modal-cart-items" class="space-y-3"></div>
+              </div>
+
+              <div
+                class="flex flex-col sm:flex-row justify-between sm:items-end border-t border-white/10 pt-4 mt-6 gap-2"
+              >
+                <span
+                  class="mono text-[10px] sm:text-xs text-gray-500 tracking-widest uppercase"
+                  >Valuation</span
+                >
+                <span
+                  id="modal-total"
+                  class="display text-3xl sm:text-4xl text-[var(--accent-system)]"
+                ></span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div
+          class="px-4 sm:px-8 py-4 sm:py-5 border-t border-white/10 bg-[#050505] flex flex-col sm:flex-row justify-between items-center shrink-0 gap-4 sm:gap-0"
+        >
+          <button
+            id="modal-req-delete-btn"
+            class="w-full sm:w-auto text-red-500 hover:text-white hover:bg-red-500 px-4 py-3 sm:py-2 rounded mono text-[10px] font-bold tracking-widest border border-red-500/30 hover:border-red-500 transition-all hidden flex justify-center items-center"
+          >
+            <i data-lucide="trash-2" class="w-3 h-3 inline mr-2"></i> PURGE
+            RECORD
+          </button>
+          <div class="hidden sm:block flex-1"></div>
+          <button
+            id="modal-req-save-btn"
+            class="btn-primary w-full sm:w-auto py-3 sm:py-2 px-8 rounded text-xs flex justify-center items-center gap-2"
+          >
+            <i data-lucide="save" class="w-4 h-4"></i> UPDATE RECORD
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- APPOINTMENT DETAILS MODAL -->
+    <div id="appointment-modal" class="modal-overlay">
+      <div
+        class="modal-content glass-panel w-full sm:w-[95%] max-w-2xl max-h-[90vh] flex flex-col rounded-xl overflow-hidden shadow-[0_30px_60px_rgba(0,0,0,0.8)] border-white/20 relative"
+      >
+        <div
+          class="px-4 sm:px-8 py-4 sm:py-5 border-b border-white/10 bg-[#050505] flex justify-between items-center shrink-0"
+        >
+          <div>
+            <span
+              id="modal-app-id"
+              class="mono text-[9px] sm:text-[10px] text-[var(--accent-blue)] font-bold tracking-widest"
+              >APP-XXXXX</span
+            >
+            <h2 class="display text-lg sm:text-xl text-white mt-1">
+              SESSION DOSSIER
+            </h2>
+          </div>
+          <button
+            onclick="window.closeAppModal()"
+            class="text-gray-500 hover:text-white p-2 rounded hover:bg-white/10 transition-colors bg-white/5"
+          >
+            <i data-lucide="x" class="w-5 h-5 sm:w-6 sm:h-6"></i>
+          </button>
+        </div>
+
+        <div class="flex-1 overflow-y-auto p-4 sm:p-8 bg-[#0a0a0a]">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
+            <div class="space-y-6">
+              <div class="bg-[#111] p-4 rounded-lg border border-white/5">
+                <p
+                  class="mono text-[10px] text-gray-500 uppercase tracking-widest mb-1"
+                >
+                  Client Name
+                </p>
+                <p
+                  id="modal-app-client-name"
+                  class="text-base sm:text-lg text-white font-bold"
+                ></p>
+              </div>
+
+              <div class="space-y-3">
+                <div>
+                  <p
+                    class="mono text-[10px] text-gray-500 uppercase tracking-widest mb-1"
+                  >
+                    Email
+                  </p>
+                  <a
+                    href=""
+                    id="modal-app-client-email"
+                    class="text-sm text-[var(--accent-system)] hover:underline truncate block"
+                  ></a>
+                </div>
+                <div>
+                  <p
+                    class="mono text-[10px] text-gray-500 uppercase tracking-widest mb-1"
+                  >
+                    WhatsApp
+                  </p>
+                  <a
+                    href=""
+                    id="modal-app-client-whatsapp"
+                    target="_blank"
+                    class="text-sm text-white hover:text-[var(--accent-system)] transition-colors truncate block flex items-center gap-2"
+                  ></a>
+                </div>
+              </div>
+            </div>
+
+            <div class="space-y-6">
+              <div
+                class="bg-[#050505] p-4 rounded-lg border border-[var(--accent-blue)]/30 relative overflow-hidden"
+              >
+                <div
+                  class="absolute right-2 top-2 text-[var(--accent-blue)]/10"
+                >
+                  <i data-lucide="calendar" class="w-12 h-12"></i>
+                </div>
+                <p
+                  class="mono text-[10px] text-[var(--accent-blue)] uppercase tracking-widest mb-1 font-bold"
+                >
+                  Scheduled For
+                </p>
+                <p
+                  id="modal-app-date"
+                  class="text-lg text-white font-bold mb-1"
+                ></p>
+                <p id="modal-app-time" class="mono text-sm text-gray-300"></p>
+              </div>
+
+              <div>
+                <p
+                  class="mono text-[10px] text-gray-500 uppercase tracking-widest mb-1"
+                >
+                  Objective / Goal
+                </p>
+                <p id="modal-app-goal" class="text-sm text-gray-300 italic"></p>
+              </div>
+
+              <div>
+                <p
+                  class="mono text-[10px] text-[var(--accent-warning)] font-bold uppercase tracking-widest mb-2"
+                >
+                  Manage Status
+                </p>
+                <select
+                  id="modal-app-status-select"
+                  class="form-select mono appearance-none font-bold"
+                >
+                  <option value="pending">PENDING</option>
+                  <option value="confirmed">CONFIRMED</option>
+                  <option value="completed">COMPLETED</option>
+                  <option value="cancelled">CANCELLED</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div
+          class="px-4 sm:px-8 py-4 sm:py-5 border-t border-white/10 bg-[#050505] flex flex-col sm:flex-row justify-between items-center shrink-0 gap-4 sm:gap-0"
+        >
+          <button
+            id="modal-app-delete-btn"
+            class="w-full sm:w-auto text-red-500 hover:text-white hover:bg-red-500 px-4 py-3 sm:py-2 rounded mono text-[10px] font-bold tracking-widest border border-red-500/30 hover:border-red-500 transition-all hidden flex justify-center items-center"
+          >
+            <i data-lucide="trash-2" class="w-3 h-3 inline mr-2"></i> PURGE
+            RECORD
+          </button>
+          <div class="hidden sm:block flex-1"></div>
+          <button
+            id="modal-app-save-btn"
+            class="btn-primary w-full sm:w-auto py-3 sm:py-2 px-8 rounded text-xs flex justify-center items-center gap-2"
+          >
+            <i data-lucide="save" class="w-4 h-4"></i> UPDATE SESSION
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Firebase Scripts (v10 modular approach) -->
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+      import {
+        getAuth,
+        signInWithPopup,
+        GoogleAuthProvider,
+        signOut,
+        onAuthStateChanged,
+      } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
+      import {
+        getFirestore,
+        collection,
+        query,
+        orderBy,
+        onSnapshot,
+        doc,
+        getDoc,
+        setDoc,
+        updateDoc,
+        deleteDoc,
+        serverTimestamp,
+      } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+
+      const firebaseConfig = {
+        apiKey: "AIzaSyCsFruMS-khcpdEP2lU4c5fiNxY5LRK7yY",
+        authDomain: "dev-business-9c054.firebaseapp.com",
+        projectId: "dev-business-9c054",
+        storageBucket: "dev-business-9c054.firebasestorage.app",
+        messagingSenderId: "417041626651",
+        appId: "1:417041626651:web:bd2013f70fa9deb6d2aabe",
+      };
+
+      const app = initializeApp(firebaseConfig);
+      const auth = getAuth(app);
+      const db = getFirestore(app);
+
+      lucide.createIcons();
+
+      // DOM Elements
+      const screens = {
+        loading: document.getElementById("loading-screen"),
+        auth: document.getElementById("auth-screen"),
+        unauth: document.getElementById("unauthorized-screen"),
+        dashboard: document.getElementById("dashboard-screen"),
+      };
+
+      let currentUserRole = null;
+      let currentUserEmail = null;
+
+      // Pagination & State Data
+      let allRequests = [];
+      let allAppointments = [];
+
+      let currentReqPage = 1;
+      let currentAppPage = 1;
+      const ITEMS_PER_PAGE = 8;
+
+      let currentActiveRequest = null;
+      let currentActiveAppointment = null;
+
+      let requestsUnsubscribe = null;
+      let appointmentsUnsubscribe = null;
+      let adminsUnsubscribe = null;
+
+      const setupListener = (id, type, callback) => {
+        const element = document.getElementById(id);
+        if (element) {
+          element.addEventListener(type, callback);
+        }
+      };
+
+      // --- NAVIGATION ---
+      function showScreen(screenId) {
+        Object.values(screens).forEach((s) => {
+          if (s) s.classList.add("hidden-screen");
+        });
+        if (screens[screenId])
+          screens[screenId].classList.remove("hidden-screen");
+      }
+
+      function toggleSidebar() {
+        document.getElementById("sidebar")?.classList.toggle("open");
+        document.getElementById("sidebar-overlay")?.classList.toggle("active");
+      }
+      setupListener("open-sidebar-btn", "click", toggleSidebar);
+      setupListener("close-sidebar-btn", "click", toggleSidebar);
+      setupListener("sidebar-overlay", "click", toggleSidebar);
+
+      window.switchView = (viewId) => {
+        document
+          .querySelectorAll(".view-section")
+          .forEach((el) => el.classList.remove("active"));
+        document
+          .querySelectorAll(".nav-btn")
+          .forEach((el) => el.classList.remove("active"));
+
+        document.getElementById(`view-${viewId}`)?.classList.add("active");
+        document.getElementById(`nav-${viewId}`)?.classList.add("active");
+
+        if (
+          window.innerWidth < 768 &&
+          document.getElementById("sidebar")?.classList.contains("open")
+        ) {
+          toggleSidebar();
+        }
+
+        if (
+          viewId === "manage-admins" &&
+          currentUserRole === "super_admin" &&
+          !adminsUnsubscribe
+        ) {
+          fetchAdminsDirectory();
+        }
+      };
+
+      // --- AUTH ---
+      const login = async () => {
+        try {
+          await signInWithPopup(auth, new GoogleAuthProvider());
+        } catch (e) {}
+      };
+      setupListener("login-btn", "click", login);
+
+      const logout = async () => {
+        await signOut(auth);
+        if (requestsUnsubscribe) requestsUnsubscribe();
+        if (appointmentsUnsubscribe) appointmentsUnsubscribe();
+        if (adminsUnsubscribe) adminsUnsubscribe();
+      };
+      setupListener("logout-btn", "click", logout);
+      setupListener("mobile-logout-btn", "click", logout);
+      setupListener("unauth-logout-btn", "click", logout);
+
+      onAuthStateChanged(auth, async (user) => {
+        if (user) {
+          showScreen("loading");
+          const email = user.email.toLowerCase();
+          currentUserEmail = email;
+          try {
+            const adminSnap = await getDoc(doc(db, "admins", email));
+            if (adminSnap.exists()) {
+              currentUserRole = adminSnap.data().role;
+              setupDashboard(user);
+            } else {
+              document.getElementById("unauth-email").innerText = email;
+              showScreen("unauth");
+            }
+          } catch (error) {
+            alert("Permission check failed.");
+            await signOut(auth);
+          }
+        } else {
+          currentUserRole = null;
+          currentUserEmail = null;
+          showScreen("auth");
+        }
+      });
+
+      function setupDashboard(user) {
+        document.getElementById("user-name").innerText =
+          user.displayName || "Admin";
+        document.getElementById("user-role").innerText =
+          currentUserRole === "super_admin" ? "SUPER ADMIN" : "ADMINISTRATOR";
+        if (user.photoURL) {
+          document.getElementById("user-avatar").src = user.photoURL;
+          document.getElementById("user-avatar").classList.remove("hidden");
+          document.getElementById("user-icon-fallback").classList.add("hidden");
+        }
+        if (currentUserRole === "super_admin") {
+          document
+            .getElementById("nav-manage-admins")
+            ?.classList.remove("hidden");
+        } else {
+          document.getElementById("nav-manage-admins")?.classList.add("hidden");
+          window.switchView("dashboard");
+        }
+
+        showScreen("dashboard");
+        fetchRequests();
+        fetchAppointments();
+      }
+
+      // --- HELPER: PAGINATION RENDERER ---
+      function renderPaginationControls(
+        totalItems,
+        currentPage,
+        containerId,
+        renderCallback,
+      ) {
+        const container = document.getElementById(containerId);
+        container.innerHTML = "";
+        const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
+        if (totalPages <= 1) return;
+
+        // Prev
+        const prev = document.createElement("button");
+        prev.className = "pag-btn";
+        prev.innerHTML = '<i data-lucide="chevron-left" class="w-4 h-4"></i>';
+        prev.disabled = currentPage === 1;
+        prev.onclick = () => renderCallback(currentPage - 1);
+        container.appendChild(prev);
+
+        // Pages
+        for (let i = 1; i <= totalPages; i++) {
+          const btn = document.createElement("button");
+          btn.className = `pag-btn ${i === currentPage ? "active" : ""}`;
+          btn.innerText = i;
+          btn.onclick = () => renderCallback(i);
+          container.appendChild(btn);
+        }
+
+        // Next
+        const next = document.createElement("button");
+        next.className = "pag-btn";
+        next.innerHTML = '<i data-lucide="chevron-right" class="w-4 h-4"></i>';
+        next.disabled = currentPage === totalPages;
+        next.onclick = () => renderCallback(currentPage + 1);
+        container.appendChild(next);
+
+        lucide.createIcons({ root: container });
+      }
+
+      // --- FETCH & RENDER PROJECT REQUESTS ---
+      function fetchRequests() {
+        const q = query(
+          collection(db, "requests"),
+          orderBy("createdAt", "desc"),
+        );
+        requestsUnsubscribe = onSnapshot(q, (snapshot) => {
+          allRequests = [];
+          let pendingCount = 0;
+          let rev = 0;
+
+          snapshot.forEach((doc) => {
+            const data = doc.data();
+            allRequests.push({ id: doc.id, ...data });
+            if (data.status === "pending" || data.status === "in_progress")
+              pendingCount++;
+            if (data.status !== "cancelled") rev += data.totalPrice || 0;
+          });
+
+          document.getElementById("stat-req-total").innerText =
+            allRequests.length;
+          document.getElementById("stat-req-pending").innerText = pendingCount;
+          document.getElementById(
+            "stat-req-revenue",
+          ).innerText = `$${rev.toLocaleString()}`;
+
+          window.renderReqPage(currentReqPage);
+        });
+      }
+
+      window.renderReqPage = (page) => {
+        currentReqPage = page;
+        const tbody = document.getElementById("requests-table-body");
+        tbody.innerHTML = "";
+
+        if (allRequests.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="6" class="px-6 py-12 text-center text-gray-500 mono text-xs">NO RECORDS FOUND.</td></tr>`;
+          document.getElementById("req-pagination").innerHTML = "";
+          return;
+        }
+
+        const start = (page - 1) * ITEMS_PER_PAGE;
+        const sliced = allRequests.slice(start, start + ITEMS_PER_PAGE);
+
+        sliced.forEach((data) => {
+          let dateStr = "Unknown";
+          if (data.createdAt) {
+            const d = data.createdAt.toDate();
+            dateStr = `${d.getDate().toString().padStart(2, "0")}/${(
+              d.getMonth() + 1
+            )
+              .toString()
+              .padStart(2, "0")}/${d.getFullYear()}`;
+          }
+
+          let badgeClass = "status-pending";
+          if (data.status === "completed") badgeClass = "status-completed";
+          if (data.status === "in_progress") badgeClass = "status-in_progress";
+          if (data.status === "cancelled") badgeClass = "status-cancelled";
+
+          let primaryPackage = data.cart?.length
+            ? data.cart[0].name
+            : "Custom Order";
+
+          const tr = document.createElement("tr");
+          tr.className =
+            "hover:bg-white/5 transition-colors group cursor-pointer border-b border-white/5";
+          tr.onclick = () => window.openReqModal(data);
+
+          tr.innerHTML = `
+                <td class="px-6 py-4">
+                  <span class="mono text-[10px] text-gray-500 block mb-1">#${data.id
+                    .substring(0, 6)
+                    .toUpperCase()}</span>
+                  <span class="mono text-xs text-white">${dateStr}</span>
+                </td>
+                <td class="px-6 py-4">
+                  <span class="block text-sm text-white font-medium truncate max-w-[150px] sm:max-w-none">${
+                    data.firstName || ""
+                  } ${data.lastName || ""}</span>
+                  <span class="text-xs text-gray-500 truncate max-w-[150px] sm:max-w-none block">${
+                    data.company || "-"
+                  }</span>
+                </td>
+                <td class="px-6 py-4">
+                  <span class="text-xs text-[var(--accent-system)] truncate max-w-[120px] sm:max-w-[200px] block font-bold">${primaryPackage}</span>
+                  <span class="mono text-[9px] text-gray-500">${
+                    data.cart?.length || 0
+                  } ITEMS</span>
+                </td>
+                <td class="px-6 py-4 mono text-sm text-white font-bold">
+                  $${(data.totalPrice || 0).toLocaleString()}
+                </td>
+                <td class="px-6 py-4">
+                  <span class="status-badge ${badgeClass}">${(
+            data.status || "pending"
+          ).replace("_", " ")}</span>
+                </td>
+                <td class="px-6 py-4 text-right">
+                  <button class="text-gray-400 hover:text-[var(--accent-system)] p-2 transition-colors"><i data-lucide="chevron-right" class="w-5 h-5"></i></button>
+                </td>
+            `;
+          tbody.appendChild(tr);
+        });
+
+        lucide.createIcons();
+        renderPaginationControls(
+          allRequests.length,
+          currentReqPage,
+          "req-pagination",
+          window.renderReqPage,
+        );
+      };
+
+      // --- FETCH & RENDER APPOINTMENTS ---
+      function fetchAppointments() {
+        const q = query(
+          collection(db, "appointments"),
+          orderBy("createdAt", "desc"),
+        );
+        appointmentsUnsubscribe = onSnapshot(q, (snapshot) => {
+          allAppointments = [];
+          let pendingCount = 0;
+          let confirmedCount = 0;
+
+          snapshot.forEach((doc) => {
+            const data = doc.data();
+            allAppointments.push({ id: doc.id, ...data });
+            if (data.status === "pending") pendingCount++;
+            if (data.status === "confirmed") confirmedCount++;
+          });
+
+          document.getElementById("stat-app-total").innerText =
+            allAppointments.length;
+          document.getElementById("stat-app-pending").innerText = pendingCount;
+          document.getElementById(
+            "stat-app-confirmed",
+          ).innerText = confirmedCount;
+
+          window.renderAppPage(currentAppPage);
+        });
+      }
+
+      window.renderAppPage = (page) => {
+        currentAppPage = page;
+        const tbody = document.getElementById("appointments-table-body");
+        tbody.innerHTML = "";
+
+        if (allAppointments.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="6" class="px-6 py-12 text-center text-gray-500 mono text-xs">NO SESSIONS FOUND.</td></tr>`;
+          document.getElementById("app-pagination").innerHTML = "";
+          return;
+        }
+
+        const start = (page - 1) * ITEMS_PER_PAGE;
+        const sliced = allAppointments.slice(start, start + ITEMS_PER_PAGE);
+
+        sliced.forEach((data) => {
+          let dateStr = "Unknown";
+          if (data.createdAt) {
+            const d = data.createdAt.toDate();
+            dateStr = `${d.getDate().toString().padStart(2, "0")}/${(
+              d.getMonth() + 1
+            )
+              .toString()
+              .padStart(2, "0")}/${d.getFullYear()}`;
+          }
+
+          let badgeClass = "status-pending";
+          if (data.status === "confirmed") badgeClass = "status-confirmed";
+          if (data.status === "completed") badgeClass = "status-completed";
+          if (data.status === "cancelled") badgeClass = "status-cancelled";
+
+          const tr = document.createElement("tr");
+          tr.className =
+            "hover:bg-white/5 transition-colors group cursor-pointer border-b border-white/5";
+          tr.onclick = () => window.openAppModal(data);
+
+          tr.innerHTML = `
+                <td class="px-6 py-4">
+                  <span class="mono text-[10px] text-gray-500 block mb-1">#${data.id
+                    .substring(0, 6)
+                    .toUpperCase()}</span>
+                  <span class="mono text-xs text-white">${dateStr}</span>
+                </td>
+                <td class="px-6 py-4">
+                  <span class="block text-sm text-white font-medium truncate max-w-[150px] sm:max-w-none">${
+                    data.name || "Client"
+                  }</span>
+                  <span class="text-xs text-gray-500 truncate max-w-[150px] sm:max-w-none block">${
+                    data.email || ""
+                  }</span>
+                </td>
+                <td class="px-6 py-4">
+                  <span class="text-xs text-gray-300 truncate max-w-[150px] block">${
+                    data.goal || "-"
+                  }</span>
+                </td>
+                <td class="px-6 py-4">
+                  <span class="text-sm text-[var(--accent-blue)] block font-bold truncate">${
+                    data.date || "TBD"
+                  }</span>
+                  <span class="mono text-[10px] text-gray-400">${
+                    data.time || ""
+                  }</span>
+                </td>
+                <td class="px-6 py-4">
+                  <span class="status-badge ${badgeClass}">${(
+            data.status || "pending"
+          ).toUpperCase()}</span>
+                </td>
+                <td class="px-6 py-4 text-right">
+                  <button class="text-gray-400 hover:text-[var(--accent-blue)] p-2 transition-colors"><i data-lucide="chevron-right" class="w-5 h-5"></i></button>
+                </td>
+            `;
+          tbody.appendChild(tr);
+        });
+
+        lucide.createIcons();
+        renderPaginationControls(
+          allAppointments.length,
+          currentAppPage,
+          "app-pagination",
+          window.renderAppPage,
+        );
+      };
+
+      // --- MODALS LOGIC ---
+
+      // 1. REQUEST MODAL
+      window.openReqModal = (data) => {
+        currentActiveRequest = data;
+        const setTxt = (id, val) => {
+          if (document.getElementById(id))
+            document.getElementById(id).innerText = val;
+        };
+
+        setTxt("modal-req-id", `REQ-${data.id.substring(0, 8).toUpperCase()}`);
+        setTxt(
+          "modal-client-name",
+          `${data.firstName || ""} ${data.lastName || ""}`,
+        );
+        setTxt("modal-client-company", data.company || "No Company Provided");
+
+        const emailEl = document.getElementById("modal-client-email");
+        if (emailEl) {
+          emailEl.innerText = data.email || "";
+          emailEl.href = `mailto:${data.email || ""}`;
+        }
+
+        // WhatsApp field handling
+        const waEl = document.getElementById("modal-client-whatsapp");
+        if (waEl) {
+          if (data.whatsapp) {
+            waEl.innerHTML = `<i data-lucide="message-circle" class="w-3 h-3 text-[var(--accent-system)]"></i> ${data.whatsapp}`;
+            waEl.href = `https://wa.me/${data.whatsapp.replace(/[^0-9]/g, "")}`;
+          } else {
+            waEl.innerText = "Not Provided";
+            waEl.removeAttribute("href");
+          }
+        }
+
+        setTxt(
+          "modal-date",
+          data.createdAt ? data.createdAt.toDate().toLocaleString() : "Unknown",
+        );
+        document.getElementById("modal-status-select").value =
+          data.status || "pending";
+        setTxt("modal-notes", data.notes || "No notes provided.");
+        setTxt("modal-total", `$${(data.totalPrice || 0).toLocaleString()}`);
+
+        const cartContainer = document.getElementById("modal-cart-items");
+        cartContainer.innerHTML = "";
+        if (data.cart && data.cart.length > 0) {
+          data.cart.forEach((item) => {
+            cartContainer.innerHTML += `
+            <div class="bg-[#111] p-3 sm:p-4 rounded border border-white/10 flex flex-col sm:flex-row justify-between sm:items-start gap-2 sm:gap-0">
+              <div>
+                <p class="text-white text-sm font-bold mb-1">${item.name}</p>
+                <p class="mono text-[9px] text-[var(--accent-system)] uppercase tracking-wider">${
+                  item.customConfig
+                }</p>
+              </div>
+              <span class="mono text-sm text-white font-bold shrink-0">$${(
+                item.selectedPrice || 0
+              ).toLocaleString()}</span>
+            </div>`;
+          });
+        } else {
+          cartContainer.innerHTML = `<p class="text-xs text-gray-500 italic">No configuration data found.</p>`;
+        }
+
+        document
+          .getElementById("modal-req-delete-btn")
+          .classList.toggle("hidden", currentUserRole !== "super_admin");
+        document.getElementById("request-modal").classList.add("active");
+        lucide.createIcons();
+      };
+
+      window.closeReqModal = () =>
+        document.getElementById("request-modal").classList.remove("active");
+
+      setupListener("modal-req-save-btn", "click", async () => {
+        if (!currentActiveRequest) return;
+        const newStatus = document.getElementById("modal-status-select").value;
+        const btn = document.getElementById("modal-req-save-btn");
+        const orig = btn.innerHTML;
+        try {
+          btn.innerHTML = `<div class="loader w-4 h-4 border-2"></div>`;
+          await updateDoc(doc(db, "requests", currentActiveRequest.id), {
+            status: newStatus,
+          });
+          btn.innerHTML = `SAVED`;
+          btn.classList.add("bg-white", "text-black");
+          setTimeout(() => {
+            window.closeReqModal();
+            btn.innerHTML = orig;
+            btn.classList.remove("bg-white", "text-black");
+          }, 1000);
+        } catch (e) {
+          alert("Update failed.");
+          btn.innerHTML = orig;
+        }
+      });
+
+      setupListener("modal-req-delete-btn", "click", async () => {
+        if (!currentActiveRequest || currentUserRole !== "super_admin") return;
+        if (confirm("PURGE RECORD FOREVER?")) {
+          await deleteDoc(doc(db, "requests", currentActiveRequest.id));
+          window.closeReqModal();
+        }
+      });
+
+      // 2. APPOINTMENT MODAL
+      window.openAppModal = (data) => {
+        currentActiveAppointment = data;
+        const setTxt = (id, val) => {
+          if (document.getElementById(id))
+            document.getElementById(id).innerText = val;
+        };
+
+        setTxt("modal-app-id", `APP-${data.id.substring(0, 8).toUpperCase()}`);
+        setTxt("modal-app-client-name", data.name || "Unknown Client");
+
+        const emailEl = document.getElementById("modal-app-client-email");
+        if (emailEl) {
+          emailEl.innerText = data.email || "";
+          emailEl.href = `mailto:${data.email || ""}`;
+        }
+
+        const waEl = document.getElementById("modal-app-client-whatsapp");
+        if (waEl) {
+          if (data.whatsapp) {
+            waEl.innerHTML = `<i data-lucide="message-circle" class="w-3 h-3 text-[var(--accent-system)]"></i> ${data.whatsapp}`;
+            waEl.href = `https://wa.me/${data.whatsapp.replace(/[^0-9]/g, "")}`;
+          } else {
+            waEl.innerText = "Not Provided";
+            waEl.removeAttribute("href");
+          }
+        }
+
+        setTxt("modal-app-date", data.date || "TBD");
+        setTxt("modal-app-time", data.time || "");
+        setTxt("modal-app-goal", data.goal || "No goal specified.");
+        document.getElementById("modal-app-status-select").value =
+          data.status || "pending";
+
+        document
+          .getElementById("modal-app-delete-btn")
+          .classList.toggle("hidden", currentUserRole !== "super_admin");
+        document.getElementById("appointment-modal").classList.add("active");
+        lucide.createIcons();
+      };
+
+      window.closeAppModal = () =>
+        document.getElementById("appointment-modal").classList.remove("active");
+
+      setupListener("modal-app-save-btn", "click", async () => {
+        if (!currentActiveAppointment) return;
+        const newStatus = document.getElementById("modal-app-status-select")
+          .value;
+        const btn = document.getElementById("modal-app-save-btn");
+        const orig = btn.innerHTML;
+        try {
+          btn.innerHTML = `<div class="loader w-4 h-4 border-2"></div>`;
+          await updateDoc(
+            doc(db, "appointments", currentActiveAppointment.id),
+            { status: newStatus },
+          );
+          btn.innerHTML = `SAVED`;
+          btn.classList.add("bg-white", "text-black");
+          setTimeout(() => {
+            window.closeAppModal();
+            btn.innerHTML = orig;
+            btn.classList.remove("bg-white", "text-black");
+          }, 1000);
+        } catch (e) {
+          alert("Update failed.");
+          btn.innerHTML = orig;
+        }
+      });
+
+      setupListener("modal-app-delete-btn", "click", async () => {
+        if (!currentActiveAppointment || currentUserRole !== "super_admin")
+          return;
+        if (confirm("PURGE APPOINTMENT FOREVER?")) {
+          await deleteDoc(doc(db, "appointments", currentActiveAppointment.id));
+          window.closeAppModal();
+        }
+      });
+
+      // --- MANAGE ADMINS ---
+      function fetchAdminsDirectory() {
+        const q = query(collection(db, "admins"), orderBy("role", "desc"));
+        adminsUnsubscribe = onSnapshot(q, (snapshot) => {
+          const tbody = document.getElementById("admins-table-body");
+          if (!tbody) return;
+          tbody.innerHTML = "";
+
+          if (snapshot.empty)
+            tbody.innerHTML = `<tr><td colspan="4" class="text-center py-8">NO ADMINS.</td></tr>`;
+
+          snapshot.forEach((docSnap) => {
+            const data = docSnap.data();
+            const email = docSnap.id;
+            const isSelf = email === currentUserEmail;
+            let roleBadge =
+              data.role === "super_admin"
+                ? `<span class="px-2 py-1 rounded bg-[var(--accent-system)]/10 text-[var(--accent-system)] border text-[9px] font-bold">SUPER ADMIN</span>`
+                : `<span class="px-2 py-1 rounded bg-gray-500/10 text-gray-400 border text-[9px] font-bold">ADMIN</span>`;
+
+            const tr = document.createElement("tr");
+            tr.className = "border-b border-white/5 hover:bg-white/5";
+            tr.innerHTML = `
+            <td class="px-6 py-4 font-medium">${email} ${
+              isSelf
+                ? '<span class="text-gray-500 text-[10px] ml-2">(YOU)</span>'
+                : ""
+            }</td>
+            <td class="px-6 py-4">${roleBadge}</td>
+            <td class="px-6 py-4 mono text-[10px] text-gray-400">${
+              data.addedAt ? data.addedAt.toDate().toLocaleDateString() : "-"
+            }</td>
+            <td class="px-6 py-4 text-right">
+              ${
+                !isSelf
+                  ? `<button onclick="window.removeAdmin('${email}')" class="text-gray-500 hover:text-red-500"><i data-lucide="user-minus" class="w-4 h-4"></i></button>`
+                  : ""
+              }
+            </td>`;
+            tbody.appendChild(tr);
+          });
+          lucide.createIcons();
+        });
+      }
+
+      setupListener("add-admin-form", "submit", async (e) => {
+        e.preventDefault();
+        if (currentUserRole !== "super_admin") return;
+        const email = document
+          .getElementById("new-admin-email")
+          .value.toLowerCase()
+          .trim();
+        const role = document.getElementById("new-admin-role").value;
+        const btn = e.target.querySelector("button");
+        const orig = btn.innerHTML;
+        try {
+          btn.innerHTML = `<div class="loader w-4 h-4 border-2"></div>`;
+          await setDoc(doc(db, "admins", email), {
+            role,
+            addedAt: serverTimestamp(),
+          });
+          document.getElementById("new-admin-email").value = "";
+          btn.innerHTML = `ADDED`;
+        } catch (error) {
+          alert("Failed to add.");
+        }
+        setTimeout(() => {
+          btn.innerHTML = orig;
+        }, 1500);
+      });
+
+      window.removeAdmin = async (email) => {
+        if (
+          currentUserRole === "super_admin" &&
+          email !== currentUserEmail &&
+          confirm(`Revoke ${email}?`)
+        ) {
+          await deleteDoc(doc(db, "admins", email));
+        }
+      };
+    </script>
+  </body>
+</html>
