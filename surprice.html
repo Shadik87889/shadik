@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <title>For Shraboni Apu ✨</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Pacifico&family=Poppins:wght@400;500;600;800&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        font-family: "Poppins", sans-serif;
+        background: #020617;
+        color: white;
+        touch-action: manipulation;
+      }
+
+      .font-fredoka {
+        font-family: "Fredoka", sans-serif;
+      }
+      .font-pacifico {
+        font-family: "Pacifico", cursive;
+      }
+
+      .bg-vivid {
+        background: linear-gradient(
+          -45deg,
+          #1e1b4b,
+          #312e81,
+          #4c1d95,
+          #701a75,
+          #831843
+        );
+        background-size: 400% 400%;
+        animation: gradientBG 15s ease infinite;
+      }
+
+      @keyframes gradientBG {
+        0% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+        100% {
+          background-position: 0% 50%;
+        }
+      }
+
+      .glass-card {
+        background: rgba(15, 23, 42, 0.7);
+        backdrop-filter: blur(25px);
+        -webkit-backdrop-filter: blur(25px);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7),
+          inset 0 0 20px rgba(255, 255, 255, 0.05);
+      }
+
+      .scene {
+        display: none;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 1.5rem;
+      }
+
+      .active-scene {
+        display: flex;
+      }
+
+      .puzzle-input {
+        letter-spacing: 0.3em;
+        text-transform: uppercase;
+        background: rgba(0, 0, 0, 0.4);
+        border: 2px solid rgba(255, 255, 255, 0.1);
+        transition: all 0.3s ease;
+      }
+
+      .puzzle-input:focus {
+        outline: none;
+        border-color: #f472b6;
+        box-shadow: 0 0 20px rgba(244, 114, 182, 0.4);
+        background: rgba(0, 0, 0, 0.6);
+      }
+
+      .balloon {
+        position: absolute;
+        bottom: -150px;
+        width: 55px;
+        height: 75px;
+        border-radius: 50% 50% 50% 50% / 40% 40% 60% 60%;
+      }
+
+      .text-shimmer {
+        background: linear-gradient(90deg, #fff, #fbbf24, #fff);
+        background-size: 200% auto;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        animation: shimmer 3s linear infinite;
+      }
+
+      @keyframes shimmer {
+        to {
+          background-position: 200% center;
+        }
+      }
+
+      .btn-vivid {
+        background: linear-gradient(to right, #ec4899, #8b5cf6);
+        transition: all 0.3s ease;
+      }
+      .btn-vivid:hover {
+        transform: scale(1.05);
+        filter: brightness(1.1);
+        box-shadow: 0 10px 25px rgba(236, 72, 153, 0.4);
+      }
+      .btn-vivid:active {
+        transform: scale(0.95);
+      }
+
+      .dot {
+        transition: all 0.3s ease;
+      }
+      .dot.active {
+        background-color: #f472b6;
+        transform: scale(1.5);
+      }
+    </style>
+  </head>
+  <body class="bg-vivid w-screen h-screen relative">
+    <!-- Scene 0: Introduction -->
+    <div id="scene-0" class="scene active-scene z-10 text-center">
+      <h1
+        class="font-pacifico text-5xl text-white drop-shadow-2xl mb-12"
+        id="greeting"
+      >
+        Hello Apu! 👋
+      </h1>
+
+      <div
+        id="gift-box"
+        class="cursor-pointer relative transform transition-transform"
+        onclick="openGift()"
+      >
+        <div
+          class="absolute -inset-4 bg-pink-500/20 blur-2xl rounded-full"
+        ></div>
+        <svg
+          class="w-56 h-56 relative z-10 drop-shadow-[0_0_30px_rgba(244,114,182,0.4)]"
+          viewBox="0 0 100 100"
+        >
+          <rect x="20" y="40" width="60" height="50" rx="4" fill="#F472B6" />
+          <rect x="15" y="30" width="70" height="15" rx="2" fill="#FB7185" />
+          <rect x="45" y="30" width="10" height="60" fill="#FDE047" />
+          <path d="M50 30 C 40 10, 20 20, 45 30 Z" fill="#FDE047" />
+          <path d="M50 30 C 60 10, 80 20, 55 30 Z" fill="#FDE047" />
+        </svg>
+        <div
+          class="mt-10 font-fredoka text-xl text-yellow-300 animate-pulse tracking-widest"
+        >
+          TAP TO OPEN
+        </div>
+      </div>
+    </div>
+
+    <!-- Scene 1: Security -->
+    <div id="scene-1" class="scene z-20 text-center">
+      <div
+        class="glass-card rounded-[2.5rem] p-8 w-full max-w-sm flex flex-col items-center relative overflow-hidden"
+      >
+        <div id="lock-icon" class="text-5xl mb-4">🔒</div>
+        <h2 class="font-fredoka text-3xl font-bold text-white mb-2">
+          Wait a minute!
+        </h2>
+        <p class="text-gray-300 text-sm mb-6 leading-relaxed">
+          This surprise is highly secured. <br />I need to verify it's really
+          you.
+        </p>
+
+        <div
+          id="question-block"
+          class="w-full bg-indigo-950/50 p-5 rounded-2xl mb-4 border border-white/10 shadow-inner"
+        >
+          <p
+            class="font-bold text-pink-400 mb-1 text-xs tracking-widest uppercase"
+          >
+            Security Question
+          </p>
+          <p class="text-white text-lg font-medium">
+            What is that one word you always call me?
+          </p>
+        </div>
+
+        <!-- Inline Hint -->
+        <div
+          id="inline-hint"
+          class="w-full bg-yellow-500/10 p-4 rounded-2xl mb-4 border border-yellow-500/30 hidden"
+        >
+          <p class="text-yellow-400 font-bold mb-1 text-sm font-fredoka">
+            HINT 💡
+          </p>
+          <p class="text-white text-sm">
+            Starts with <span class="text-yellow-400 font-bold">'K'</span> and
+            ends with <span class="text-yellow-400 font-bold">'O'</span>.
+          </p>
+        </div>
+
+        <input
+          type="text"
+          id="passcode"
+          class="puzzle-input w-full rounded-xl text-center text-2xl font-bold text-white py-4 px-4 mb-4 placeholder-white/10"
+          placeholder="ENTER WORD"
+          autocomplete="off"
+        />
+
+        <button
+          id="unlock-btn"
+          onclick="checkPasscode()"
+          class="btn-vivid w-full text-white font-bold py-4 rounded-xl shadow-lg text-xl font-fredoka"
+        >
+          UNLOCK
+        </button>
+        <p id="error-msg" class="text-red-400 font-bold mt-3 text-sm opacity-0">
+          Opps! Try again.
+        </p>
+
+        <!-- Sad/Reveal Overlay -->
+        <div
+          id="interaction-overlay"
+          class="absolute inset-0 bg-[#020617] z-50 flex flex-col items-center justify-center p-8 opacity-0 pointer-events-none transition-opacity duration-500 rounded-[2.5rem]"
+        >
+          <div id="state-sad" class="hidden flex flex-col items-center">
+            <div class="text-7xl mb-6 animate-bounce">🥺</div>
+            <h2 class="font-fredoka text-2xl text-white mb-4">
+              You don't remember?
+            </h2>
+            <p class="text-gray-400 mb-8 text-sm leading-relaxed italic">
+              "My heart is breaking... you forgot the name you always call me."
+            </p>
+            <button
+              onclick="revealHintInline()"
+              class="w-full bg-white/10 border border-white/20 text-white font-bold py-4 rounded-xl hover:bg-white/20 transition-all"
+            >
+              I'm sorry... try again
+            </button>
+          </div>
+
+          <div id="state-reveal" class="hidden flex flex-col items-center">
+            <div class="text-7xl mb-6">😭</div>
+            <h2 class="font-fredoka text-2xl text-pink-400 mb-2">
+              You really forgot!
+            </h2>
+            <p class="text-white/80 mb-6 text-sm">
+              The word is
+              <span
+                class="text-yellow-400 font-bold text-2xl tracking-widest block mt-2"
+                >KIDDO</span
+              >
+            </p>
+            <p class="text-gray-400 text-xs mb-8">
+              Special things are coming, I can't stay sad! ❤️
+            </p>
+            <button
+              onclick="autoFillAndContinue()"
+              class="btn-vivid w-full text-white font-bold py-4 rounded-xl shadow-pink-500/50"
+            >
+              Continue anyway 🎉
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scene 1.5: Story Reveal Cards -->
+    <div id="scene-story" class="scene z-25 text-center">
+      <div
+        class="glass-card rounded-[3rem] p-8 sm:p-12 w-full max-w-md flex flex-col items-center justify-between min-h-[450px] border-white/20 relative"
+      >
+        <!-- Story Content Area -->
+        <div
+          id="story-content"
+          class="w-full flex-grow flex flex-col items-center justify-center mt-4"
+        >
+          <div id="story-icon" class="text-7xl mb-6 drop-shadow-2xl">✨</div>
+          <p
+            id="story-text"
+            class="text-xl sm:text-2xl font-poppins font-medium text-white/90 leading-relaxed mb-2"
+          >
+            It all started so
+          </p>
+          <p
+            id="story-highlight"
+            class="font-pacifico text-4xl sm:text-5xl text-pink-400 drop-shadow-lg leading-tight"
+          >
+            Randomly...
+          </p>
+        </div>
+
+        <!-- Bottom Controls -->
+        <div class="w-full mt-8">
+          <!-- Progress Dots -->
+          <div id="story-dots" class="flex justify-center gap-2 mb-8">
+            <!-- Dots will be generated by JS -->
+          </div>
+
+          <button
+            id="next-story-btn"
+            onclick="nextStory()"
+            class="btn-vivid w-full text-white font-bold py-4 rounded-2xl shadow-lg text-xl font-fredoka tracking-wide"
+          >
+            Next Page 📖
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scene 2: Finale -->
+    <div id="scene-2" class="scene z-30 bg-black/40 backdrop-blur-xl">
+      <div
+        id="balloon-container"
+        class="absolute inset-0 pointer-events-none overflow-hidden"
+      ></div>
+
+      <div
+        id="finale-content"
+        class="glass-card rounded-[3rem] p-8 sm:p-12 w-full max-w-lg flex flex-col items-center opacity-0 scale-50 z-10 border-white/20"
+      >
+        <div class="text-7xl mb-4 animate-bounce">🎂</div>
+
+        <h1
+          class="font-pacifico text-5xl text-white drop-shadow-lg mb-2 leading-tight"
+        >
+          Happy Birthday
+        </h1>
+        <h2
+          class="text-shimmer font-black text-3xl sm:text-4xl uppercase tracking-widest mb-8 text-center"
+        >
+          Shraboni Apu
+        </h2>
+
+        <div
+          class="bg-white/5 rounded-3xl p-6 sm:p-8 border border-white/10 relative shadow-inner w-full"
+        >
+          <div class="absolute -top-4 -left-4 text-4xl">✨</div>
+          <div class="absolute -bottom-4 -right-4 text-4xl">✨</div>
+          <p
+            class="font-poppins text-lg text-white/90 leading-relaxed font-medium text-center"
+          >
+            Thank you for being such an amazing part of my story. IT just
+            started.<br /><br />
+            May your special day be as beautiful, sweet, and wonderful as you
+            are! Keep smiling always! 🌟
+          </p>
+          <p
+            class="mt-6 font-pacifico text-3xl text-yellow-300 text-center sm:text-right"
+          >
+            Love, Your Kiddo ❤️
+          </p>
+        </div>
+
+        <button
+          onclick="triggerConfettiExplosion()"
+          class="mt-10 btn-vivid text-white font-bold py-4 px-12 rounded-full shadow-2xl active:scale-95 text-xl"
+        >
+          More Magic! 🎇
+        </button>
+      </div>
+    </div>
+
+    <script>
+      let failedAttempts = 0;
+      let currentStoryIndex = 0;
+
+      // The beautifully structured, easy English story cards
+      const storyData = [
+        {
+          icon: "✨",
+          text: "It all started so",
+          highlight: "Randomly...",
+          highlightColor: "text-pink-400",
+        },
+        {
+          icon: "🚶‍♂️",
+          text: "We met, but then I had to",
+          highlight: "leave that place.",
+          highlightColor: "text-blue-300",
+        },
+        {
+          icon: "🤔",
+          text: "Later, I went back for a completely",
+          highlight: "different reason...",
+          highlightColor: "text-yellow-300",
+        },
+        {
+          icon: "💫",
+          text: "...but destiny smiled, and I ended up",
+          highlight: "finding you again!",
+          highlightColor: "text-pink-400",
+        },
+        {
+          icon: "📖",
+          text: "Now, you are one of the most beautiful",
+          highlight: "Chapters in my life.",
+          highlightColor: "text-yellow-300",
+        },
+        {
+          icon: "🌟",
+          text: "You are an amazing Apu, and I am your",
+          highlight: "Good Kiddo.",
+          highlightColor: "text-green-300",
+        },
+        {
+          icon: "❤️",
+          text: "I respect you from the",
+          highlight: "Bottom of my heart.",
+          highlightColor: "text-red-400",
+        },
+      ];
+
+      document.addEventListener("DOMContentLoaded", () => {
+        gsap.from("#gift-box", {
+          y: -50,
+          opacity: 0,
+          duration: 1.5,
+          ease: "bounce.out",
+        });
+        gsap.from("#greeting", { y: -20, opacity: 0, duration: 1, delay: 0.5 });
+
+        // Generate story progress dots
+        const dotsContainer = document.getElementById("story-dots");
+        storyData.forEach((_, i) => {
+          const dot = document.createElement("div");
+          dot.className = `dot w-2 h-2 rounded-full bg-white/30 ${
+            i === 0 ? "active" : ""
+          }`;
+          dot.id = `dot-${i}`;
+          dotsContainer.appendChild(dot);
+        });
+      });
+
+      function switchScene(fromId, toId) {
+        const fromEl = document.getElementById(fromId);
+        const toEl = document.getElementById(toId);
+        gsap.to(fromEl, {
+          opacity: 0,
+          scale: 0.9,
+          duration: 0.6,
+          onComplete: () => {
+            fromEl.classList.remove("active-scene");
+            toEl.classList.add("active-scene");
+            gsap.fromTo(
+              toEl,
+              { opacity: 0, scale: 1.1 },
+              { opacity: 1, scale: 1, duration: 0.8, ease: "power2.out" },
+            );
+          },
+        });
+      }
+
+      function openGift() {
+        gsap.to("#gift-box", {
+          rotation: 15,
+          duration: 0.1,
+          yoyo: true,
+          repeat: 5,
+          onComplete: () => {
+            confetti({ particleCount: 60, spread: 60, origin: { y: 0.6 } });
+            setTimeout(() => switchScene("scene-0", "scene-1"), 400);
+          },
+        });
+      }
+
+      function checkPasscode() {
+        const val = document
+          .getElementById("passcode")
+          .value.trim()
+          .toUpperCase();
+        const errorMsg = document.getElementById("error-msg");
+
+        if (val === "KIDDO") {
+          triggerSuccess();
+        } else {
+          failedAttempts++;
+          errorMsg.style.opacity = 1;
+          gsap.fromTo(
+            ".glass-card",
+            { x: -10 },
+            { x: 10, duration: 0.1, repeat: 5, yoyo: true },
+          );
+
+          if (failedAttempts === 3) showState("sad");
+          else if (failedAttempts >= 5) showState("reveal");
+        }
+      }
+
+      function triggerSuccess() {
+        gsap.to(".glass-card", {
+          backgroundColor: "rgba(22, 163, 74, 0.4)",
+          borderColor: "#4ade80",
+          duration: 0.4,
+        });
+        confetti({ particleCount: 150, spread: 70, origin: { y: 0.5 } });
+
+        setTimeout(() => {
+          switchScene("scene-1", "scene-story");
+          updateStoryCard();
+        }, 1000);
+      }
+
+      function showState(stateName) {
+        const overlay = document.getElementById("interaction-overlay");
+        document.getElementById("state-sad").classList.add("hidden");
+        document.getElementById("state-reveal").classList.add("hidden");
+        document
+          .getElementById(`state-${stateName}`)
+          .classList.remove("hidden");
+
+        overlay.classList.remove("pointer-events-none");
+        gsap.to(overlay, { opacity: 1, duration: 0.5 });
+      }
+
+      function revealHintInline() {
+        const overlay = document.getElementById("interaction-overlay");
+        gsap.to(overlay, {
+          opacity: 0,
+          duration: 0.4,
+          onComplete: () => {
+            overlay.classList.add("pointer-events-none");
+            document.getElementById("question-block").classList.add("hidden");
+            document.getElementById("inline-hint").classList.remove("hidden");
+            document.getElementById("passcode").value = "";
+            document.getElementById("passcode").focus();
+          },
+        });
+      }
+
+      function autoFillAndContinue() {
+        const overlay = document.getElementById("interaction-overlay");
+        gsap.to(overlay, {
+          opacity: 0,
+          duration: 0.4,
+          onComplete: () => {
+            overlay.classList.add("pointer-events-none");
+            const input = document.getElementById("passcode");
+            input.value = "KIDDO";
+            triggerSuccess();
+          },
+        });
+      }
+
+      // --- Beautiful Story UI Logic ---
+      function updateStoryCard() {
+        const data = storyData[currentStoryIndex];
+
+        document.getElementById("story-icon").innerText = data.icon;
+        document.getElementById("story-text").innerText = data.text;
+
+        const highlightEl = document.getElementById("story-highlight");
+        highlightEl.innerText = data.highlight;
+        highlightEl.className = `font-pacifico text-4xl sm:text-5xl drop-shadow-lg leading-tight mt-2 ${data.highlightColor}`;
+
+        // Initial animation for content
+        gsap.fromTo(
+          "#story-content",
+          { opacity: 0, scale: 0.9, y: 20 },
+          { opacity: 1, scale: 1, y: 0, duration: 0.7, ease: "back.out(1.2)" },
+        );
+
+        // Floating animation for icon
+        gsap.to("#story-icon", {
+          y: -10,
+          duration: 1.5,
+          yoyo: true,
+          repeat: -1,
+          ease: "sine.inOut",
+        });
+      }
+
+      function nextStory() {
+        if (currentStoryIndex < storyData.length - 1) {
+          // Animate old text out
+          gsap.to("#story-content", {
+            opacity: 0,
+            x: -50,
+            duration: 0.4,
+            onComplete: () => {
+              // Update dots
+              document
+                .getElementById(`dot-${currentStoryIndex}`)
+                .classList.remove("active");
+              currentStoryIndex++;
+              document
+                .getElementById(`dot-${currentStoryIndex}`)
+                .classList.add("active");
+
+              // Change button text if it's the last slide
+              if (currentStoryIndex === storyData.length - 1) {
+                document.getElementById("next-story-btn").innerHTML =
+                  "Open Final Surprise 🎁";
+                document
+                  .getElementById("next-story-btn")
+                  .classList.replace("from-pink-500", "from-yellow-400");
+              }
+
+              // Bring new text in from the right
+              gsap.set("#story-content", { x: 50 });
+              updateStoryCard();
+              gsap.to("#story-content", {
+                x: 0,
+                duration: 0.5,
+                ease: "power2.out",
+              });
+            },
+          });
+        } else {
+          // Story finished, switch to finale
+          switchScene("scene-story", "scene-2");
+          setTimeout(startFinaleEffects, 800);
+        }
+      }
+
+      // --- Finale Effects ---
+      function startFinaleEffects() {
+        gsap.to("#finale-content", {
+          opacity: 1,
+          scale: 1,
+          duration: 1.2,
+          ease: "elastic.out(1, 0.7)",
+        });
+        createBalloons();
+        triggerContinuousConfetti();
+      }
+
+      function createBalloons() {
+        const container = document.getElementById("balloon-container");
+        const colors = [
+          "#F87171",
+          "#FBBF24",
+          "#34D399",
+          "#60A5FA",
+          "#A78BFA",
+          "#F472B6",
+        ];
+        for (let i = 0; i < 20; i++) {
+          let b = document.createElement("div");
+          b.className = "balloon";
+          b.style.backgroundColor =
+            colors[Math.floor(Math.random() * colors.length)];
+          b.style.left = Math.random() * 100 + "vw";
+          b.style.opacity = "0.7";
+          container.appendChild(b);
+          gsap.to(b, {
+            y: -(window.innerHeight + 200),
+            x: `+=${Math.random() * 100 - 50}`,
+            duration: Math.random() * 5 + 5,
+            delay: Math.random() * 5,
+            repeat: -1,
+            ease: "none",
+          });
+        }
+      }
+
+      function triggerContinuousConfetti() {
+        const end = Date.now() + 5 * 1000;
+        (function frame() {
+          confetti({
+            particleCount: 3,
+            angle: 60,
+            spread: 55,
+            origin: { x: 0 },
+          });
+          confetti({
+            particleCount: 3,
+            angle: 120,
+            spread: 55,
+            origin: { x: 1 },
+          });
+          if (Date.now() < end) requestAnimationFrame(frame);
+        })();
+      }
+
+      function triggerConfettiExplosion() {
+        confetti({ particleCount: 200, spread: 120, origin: { y: 0.6 } });
+        gsap.fromTo(
+          "#finale-content",
+          { scale: 1.05 },
+          { scale: 1, duration: 0.4 },
+        );
+      }
+    </script>
+  </body>
+</html>

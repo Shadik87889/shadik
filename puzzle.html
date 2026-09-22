@@ -1,0 +1,3302 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Osmania University | Centennial of Academic Excellence</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Playfair Display for classic academic heritage, Plus Jakarta Sans for clean modern tech UI -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Plus+Jakarta+Sans:wght@200;300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <!-- FontAwesome for premium iconography -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+
+    <!-- Lenis Smooth Scrolling CSS -->
+    <style>
+      html.lenis {
+        height: auto;
+      }
+      .lenis-smooth {
+        scroll-behavior: auto !important;
+      }
+      .lenis-smooth [data-lenis-prevent] {
+        overscroll-behavior: contain;
+      }
+      .lenis-stopped {
+        overflow: hidden;
+      }
+      .lenis-scrolling iframe {
+        pointer-events: none;
+      }
+    </style>
+
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['"Plus Jakarta Sans"', "sans-serif"],
+              serif: ['"Playfair Display"', "serif"],
+            },
+            colors: {
+              brand: {
+                50: "#f0f4ff",
+                100: "#e2ebff",
+                200: "#cbdcff",
+                500: "#1d4ed8",
+                900: "#0b1329",
+                950: "#030712",
+              },
+              lux: {
+                gold: "#dfb76c",
+                platinum: "#f3f4f6",
+                bronze: "#a78bfa",
+              },
+            },
+          },
+        },
+      };
+    </script>
+
+    <style>
+      /* Awwwards Grid & Premium Aesthetics */
+      .editorial-grid {
+        border-color: rgba(255, 255, 255, 0.06);
+      }
+      .glass-panel {
+        background: rgba(11, 19, 41, 0.45);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+      }
+      .glass-panel-light {
+        background: rgba(255, 255, 255, 0.75);
+        backdrop-filter: blur(16px);
+        border: 1px solid rgba(0, 0, 0, 0.04);
+      }
+      .glow-gold {
+        box-shadow: 0 0 50px rgba(223, 183, 108, 0.12);
+      }
+      .glow-cobalt {
+        box-shadow: 0 0 50px rgba(29, 78, 216, 0.15);
+      }
+      .text-editorial-gradient {
+        background: linear-gradient(135deg, #ffffff 40%, #a1a1aa 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+      .text-gold-gradient {
+        background: linear-gradient(135deg, #dfb76c 0%, #fef08a 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+      /* Thin horizontal & vertical grid lines mimic premium high-end portfolio structure */
+      .grid-v-line {
+        width: 1px;
+        background: linear-gradient(
+          to bottom,
+          rgba(255, 255, 255, 0) 0%,
+          rgba(255, 255, 255, 0.06) 50%,
+          rgba(255, 255, 255, 0) 100%
+        );
+      }
+      .grid-h-line {
+        height: 1px;
+        background: linear-gradient(
+          to right,
+          rgba(255, 255, 255, 0) 0%,
+          rgba(255, 255, 255, 0.06) 50%,
+          rgba(255, 255, 255, 0) 100%
+        );
+      }
+      /* Custom scrollbar adjustments */
+      .scroll-luxury::-webkit-scrollbar {
+        width: 3px;
+        height: 3px;
+      }
+      .scroll-luxury::-webkit-scrollbar-track {
+        background: rgba(255, 255, 255, 0.02);
+      }
+      .scroll-luxury::-webkit-scrollbar-thumb {
+        background: rgba(223, 183, 108, 0.2);
+        border-radius: 99px;
+      }
+      .scroll-luxury::-webkit-scrollbar-thumb:hover {
+        background: rgba(223, 183, 108, 0.5);
+      }
+
+      /* Smooth zoom effects */
+      .zoom-img {
+        transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+      .zoom-container:hover .zoom-img {
+        transform: scale(1.05);
+      }
+    </style>
+  </head>
+  <body
+    class="bg-brand-950 text-slate-100 font-sans selection:bg-lux-gold selection:text-brand-950 overflow-x-hidden antialiased"
+  >
+    <!-- TOP TELEMETRY BAR (Elegant Academic utility system) -->
+    <div
+      class="w-full bg-brand-950/90 border-b border-white/5 text-slate-300 text-[10px] py-2 px-8 backdrop-blur-md sticky top-0 z-50"
+    >
+      <div
+        class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-4"
+      >
+        <!-- Left Utility Coordinates -->
+        <div
+          class="flex items-center space-x-5 tracking-wider uppercase font-semibold text-slate-400"
+        >
+          <a
+            href="#appointments"
+            class="hover:text-lux-gold transition-all duration-300 flex items-center gap-1.5"
+            ><span class="w-1 h-1 bg-lux-gold rounded-full"></span> New
+            Appointments</a
+          >
+          <span class="text-white/10">/</span>
+          <a
+            href="#email"
+            class="hover:text-lux-gold transition-all duration-300 flex items-center gap-1.5"
+            ><i class="fa-solid fa-envelope text-[9px]"></i> University
+            E-Mail</a
+          >
+          <span class="text-white/10">/</span>
+          <a
+            href="#almanac"
+            class="hover:text-lux-gold transition-all duration-300 flex items-center gap-1.5"
+            ><i class="fa-solid fa-calendar-days text-[9px]"></i> Almanac</a
+          >
+          <span class="text-white/10">/</span>
+          <a
+            href="#brochure"
+            class="hover:text-lux-gold transition-all duration-300 flex items-center gap-1.5"
+            ><i class="fa-solid fa-file-pdf text-[9px]"></i> University
+            Brochure</a
+          >
+        </div>
+
+        <!-- Right Interaction Hub -->
+        <div
+          class="flex items-center space-x-5 text-slate-400 font-semibold uppercase tracking-wider"
+        >
+          <a
+            href="#downloads"
+            class="hover:text-lux-gold transition-all duration-300 flex items-center gap-1"
+            ><i class="fa-solid fa-download text-[9px]"></i> Download Forms</a
+          >
+          <span class="text-white/10">/</span>
+          <a
+            href="#contact"
+            class="hover:text-lux-gold transition-all duration-300"
+            >Contact Us</a
+          >
+          <span class="text-white/10">/</span>
+          <a
+            href="#screen-reader"
+            class="hover:text-lux-gold transition-all duration-300"
+            ><i class="fa-solid fa-eye text-[9px]"></i> Screen Reader</a
+          >
+          <span class="text-white/10">/</span>
+
+          <!-- Custom Modern Language Switcher -->
+          <div class="relative group">
+            <button
+              class="flex items-center space-x-1 hover:text-lux-gold transition-all duration-300"
+            >
+              <span>Select Language</span>
+              <i class="fa-solid fa-chevron-down text-[7px]"></i>
+            </button>
+            <!-- Floating Language Menu -->
+            <div
+              class="absolute right-0 mt-2 w-32 bg-brand-900/95 border border-white/5 rounded-lg py-1 shadow-2xl opacity-0 translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300 pointer-events-none group-hover:pointer-events-auto"
+            >
+              <a
+                href="#"
+                class="block px-3 py-1.5 text-[9px] hover:bg-white/5 hover:text-lux-gold"
+                >English</a
+              >
+              <a
+                href="#"
+                class="block px-3 py-1.5 text-[9px] hover:bg-white/5 hover:text-lux-gold"
+                >Telugu</a
+              >
+              <a
+                href="#"
+                class="block px-3 py-1.5 text-[9px] hover:bg-white/5 hover:text-lux-gold"
+                >Urdu</a
+              >
+            </div>
+          </div>
+
+          <!-- Accessibility Font Scale Controller -->
+          <div
+            class="flex items-center bg-white/5 border border-white/5 rounded-full px-1.5 py-0.5 divide-x divide-white/10"
+          >
+            <button
+              class="px-2 text-[9px] font-bold hover:text-lux-gold transition"
+            >
+              A+
+            </button>
+            <button
+              class="px-2 text-[9px] font-bold hover:text-lux-gold transition"
+            >
+              A
+            </button>
+            <button
+              class="px-2 text-[9px] font-bold hover:text-lux-gold transition"
+            >
+              A-
+            </button>
+          </div>
+
+          <a
+            href="#old-site"
+            class="bg-red-500/10 hover:bg-red-500/25 border border-red-500/20 text-red-400 hover:text-red-300 px-3 py-0.5 rounded-full text-[9px] font-extrabold transition-all duration-300"
+            >OLD SITE</a
+          >
+        </div>
+      </div>
+    </div>
+
+    <!-- MAIN IDENTITY BRAND PLATFORM (Awwwards clean white/platinum grid) -->
+    <header
+      class="w-full bg-white text-brand-950 py-5 px-8 relative z-40 border-b border-gray-100 shadow-sm"
+    >
+      <div
+        class="max-w-7xl mx-auto flex flex-col lg:flex-row items-center justify-between gap-6"
+      >
+        <!-- Brand Landmark Logo Structure -->
+        <a href="#" class="flex items-center space-x-5 group shrink-0">
+          <div class="relative overflow-hidden p-1">
+            <img
+              src="https://www.osmania.ac.in/images/logo.png"
+              alt="Osmania University Logo"
+              class="h-16 w-auto object-contain drop-shadow transition-transform duration-700 ease-out group-hover:scale-105 group-hover:rotate-3"
+              onerror="this.onerror=null; this.src='https://upload.wikimedia.org/wikipedia/en/2/23/Osmania_University_Logo.png';"
+            />
+          </div>
+          <div class="border-l border-brand-900/10 pl-5 space-y-0.5">
+            <h2
+              class="font-serif text-3xl md:text-4xl font-black tracking-tight text-brand-950 leading-none"
+            >
+              Osmania University
+            </h2>
+            <p
+              class="text-[9px] md:text-[10px] font-black tracking-widest text-brand-500 uppercase flex items-center gap-1.5"
+            >
+              <span
+                class="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"
+              ></span>
+              Accredited by NAAC with 'A+' Grade
+            </p>
+          </div>
+        </a>
+
+        <!-- Search Console Command Bar -->
+        <div class="w-full max-w-md relative">
+          <form action="#" method="GET" class="relative group">
+            <input
+              type="text"
+              placeholder="Enhanced by Google Search..."
+              class="w-full bg-gray-50 text-brand-950 text-xs px-5 py-3 rounded-full border border-gray-200 focus:outline-none focus:ring-2 focus:ring-brand-500 pr-12 transition-all duration-300"
+            />
+            <button
+              type="submit"
+              class="absolute right-3 top-1/2 -translate-y-1/2 h-8 w-8 bg-brand-950 hover:bg-brand-900 text-white rounded-full flex items-center justify-center transition-all duration-300"
+            >
+              <i class="fa-solid fa-magnifying-glass text-[10px]"></i>
+            </button>
+          </form>
+        </div>
+
+        <!-- Telangana Rising Heritage Badge -->
+        <div
+          class="flex items-center space-x-3.5 bg-gray-50 border border-gray-100 p-2 pr-5 rounded-2xl shrink-0"
+        >
+          <div
+            class="relative h-10 w-10 rounded-xl overflow-hidden shadow-sm border border-gray-200/50"
+          >
+            <img
+              src="https://www.osmania.ac.in/images/tgr.jpg"
+              alt="Telangana Rising"
+              class="w-full h-full object-cover"
+              onerror="this.onerror=null; this.src='https://via.placeholder.com/100?text=TG';"
+            />
+          </div>
+          <div>
+            <h4
+              class="text-[9px] font-extrabold tracking-widest text-brand-500 uppercase leading-none"
+            >
+              Telangana State
+            </h4>
+            <p class="text-xs font-black text-brand-950 mt-1">
+              Telangana Rising
+            </p>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- NAVIGATION PLATFORM (Sticky structural menu overlay) -->
+    <nav
+      class="w-full bg-brand-950/95 border-b border-white/5 py-4 px-8 sticky top-[33px] z-40 backdrop-blur-xl"
+    >
+      <div class="max-w-7xl mx-auto flex items-center justify-between">
+        <div
+          class="flex items-center space-x-1.5 overflow-x-auto w-full scroll-luxury pb-2 lg:pb-0"
+        >
+          <a
+            href="#"
+            class="text-[11px] font-bold tracking-widest text-lux-gold bg-white/5 border border-white/5 rounded-full px-5 py-2 transition-all shrink-0"
+            >HOME</a
+          >
+          <a
+            href="#about-section"
+            class="text-[11px] font-semibold tracking-widest text-slate-300 hover:text-lux-gold rounded-full px-5 py-2 hover:bg-white/5 transition-all shrink-0"
+            >ABOUT US</a
+          >
+          <a
+            href="#vc-panel"
+            class="text-[11px] font-semibold tracking-widest text-slate-300 hover:text-lux-gold rounded-full px-5 py-2 hover:bg-white/5 transition-all shrink-0"
+            >ADMINISTRATION</a
+          >
+          <a
+            href="#colleges-showcase"
+            class="text-[11px] font-semibold tracking-widest text-slate-300 hover:text-lux-gold rounded-full px-5 py-2 hover:bg-white/5 transition-all shrink-0"
+            >ACADEMICS</a
+          >
+          <a
+            href="#stats-anchor"
+            class="text-[11px] font-semibold tracking-widest text-slate-300 hover:text-lux-gold rounded-full px-5 py-2 hover:bg-white/5 transition-all shrink-0"
+            >ADMISSIONS & FEES</a
+          >
+          <a
+            href="#stats-anchor"
+            class="text-[11px] font-semibold tracking-widest text-slate-300 hover:text-lux-gold rounded-full px-5 py-2 hover:bg-white/5 transition-all shrink-0"
+            >RESEARCH</a
+          >
+          <a
+            href="#announcements-section"
+            class="text-[11px] font-semibold tracking-widest text-slate-300 hover:text-lux-gold rounded-full px-5 py-2 hover:bg-white/5 transition-all shrink-0"
+            >STUDENT LIFE</a
+          >
+          <a
+            href="#footer"
+            class="text-[11px] font-semibold tracking-widest text-slate-300 hover:text-lux-gold rounded-full px-5 py-2 hover:bg-white/5 transition-all shrink-0"
+            >ALUMNI</a
+          >
+          <a
+            href="#footer"
+            class="text-[11px] font-semibold tracking-widest text-slate-300 hover:text-lux-gold rounded-full px-5 py-2 hover:bg-white/5 transition-all shrink-0"
+            >E-RESOURCES</a
+          >
+          <a
+            href="#about-section"
+            class="text-[11px] font-semibold tracking-widest text-slate-300 hover:text-lux-gold rounded-full px-5 py-2 hover:bg-white/5 transition-all shrink-0"
+            >IQAC</a
+          >
+          <a
+            href="#footer"
+            class="text-[11px] font-semibold tracking-widest text-slate-300 hover:text-lux-gold rounded-full px-5 py-2 hover:bg-white/5 transition-all shrink-0"
+            >INFORMATION CORNER</a
+          >
+          <a
+            href="#footer"
+            class="text-[11px] font-semibold tracking-widest text-slate-300 hover:text-lux-gold rounded-full px-5 py-2 hover:bg-white/5 transition-all shrink-0"
+            >CONTACT US</a
+          >
+        </div>
+      </div>
+    </nav>
+
+    <!-- REALTIME EMERGENCY NEWSFEED STRIP -->
+    <div
+      class="bg-gradient-to-r from-red-950 via-amber-950 to-red-950 border-y border-white/5 py-3 px-8 flex items-center overflow-hidden"
+    >
+      <div
+        class="flex items-center shrink-0 bg-red-600 text-white text-[8px] font-black tracking-widest uppercase px-3 py-1 rounded-full z-10 animate-pulse mr-5"
+      >
+        Flash News
+      </div>
+      <div
+        class="w-full overflow-hidden text-xs text-amber-100 font-semibold whitespace-nowrap"
+      >
+        <span
+          class="inline-block animate-[marquee_45s_linear_infinite] hover:pause"
+        >
+          <i class="fa-solid fa-circle-exclamation text-lux-gold mr-2"></i> 77th
+          Republic Day Celebrations, Osmania University 26th January - 2026. |
+          <a href="#" class="underline text-white hover:text-lux-gold ml-1"
+            >YouTube Link: Telangana Chief Minister A. Revanth Reddy Garu's
+            Program at Osmania University.</a
+          >
+          | NIRF-2025 Submitted Data | Revised Regulations for CCE 2024-2025. |
+          Infrastructure and other data of the College of Law
+        </span>
+      </div>
+    </div>
+
+    <!-- MAIN EDITORIAL HERO BLOCK (Pure Awwwards cinematic stage) -->
+    <section
+      class="relative w-full h-[90vh] flex items-center overflow-hidden bg-brand-950 border-b border-white/5"
+    >
+      <!-- Structural Background Overlay Grid -->
+      <div class="absolute inset-0 z-10 pointer-events-none">
+        <div
+          class="max-w-7xl mx-auto h-full w-full relative flex justify-between px-8"
+        >
+          <div class="grid-v-line h-full"></div>
+          <div class="grid-v-line h-full hidden md:block"></div>
+          <div class="grid-v-line h-full hidden lg:block"></div>
+          <div class="grid-v-line h-full"></div>
+        </div>
+      </div>
+
+      <!-- Cinema Engine Backplate -->
+      <div class="absolute inset-0 z-0">
+        <video
+          class="w-full h-full object-cover opacity-20"
+          autoplay
+          loop
+          muted
+          playsinline
+          id="heroVideo"
+        >
+          <source src="https://www.osmania.ac.in/ou.mp4" type="video/mp4" />
+        </video>
+        <div
+          class="absolute inset-0 bg-gradient-to-t from-brand-950 via-brand-950/20 to-brand-950"
+        ></div>
+        <div
+          class="absolute inset-0 bg-[radial-gradient(circle_at_center,_transparent_40%,_#030712_100%)]"
+        ></div>
+      </div>
+
+      <div
+        class="relative max-w-7xl mx-auto w-full px-8 z-20 flex flex-col justify-center h-full pt-12"
+      >
+        <div class="max-w-4xl space-y-8">
+          <!-- Editorial Badge Indicator -->
+          <div
+            class="inline-flex items-center space-x-3 bg-white/[0.03] border border-white/10 px-4 py-2 rounded-full text-xs text-lux-gold uppercase tracking-widest font-bold"
+          >
+            <span class="w-2 h-2 rounded-full bg-lux-gold animate-ping"></span>
+            <span>109 Years of Scholarly Legacy &bull; Estd 1917</span>
+          </div>
+
+          <!-- Epic Asymmetrical Typographic Stack -->
+          <div class="space-y-4">
+            <h1
+              class="font-serif text-6xl md:text-8xl font-black tracking-tight text-white leading-[0.95] text-editorial-gradient"
+            >
+              Nurturing Mindsets,<br />
+              <span
+                class="font-sans text-gold-gradient font-light uppercase tracking-wider text-4xl md:text-7xl"
+                >Empowering Generations.</span
+              >
+            </h1>
+          </div>
+
+          <p
+            class="text-sm md:text-lg text-slate-400 font-light leading-relaxed max-w-2xl"
+          >
+            Discover South India's premier multi-disciplinary research
+            institution. Experience a centennial heritage integrated with
+            avant-garde academic design and state-of-the-art incubation
+            ecosystems.
+          </p>
+
+          <!-- Custom Mechanical Actions Row -->
+          <div class="flex flex-wrap items-center gap-5 pt-4">
+            <button
+              id="openTourBtn"
+              class="flex items-center space-x-4 bg-lux-gold hover:bg-yellow-500 text-brand-950 px-8 py-4 rounded-xl text-xs font-black uppercase tracking-widest shadow-2xl shadow-lux-gold/10 hover:shadow-lux-gold/25 transition-all duration-300 transform hover:-translate-y-1"
+            >
+              <i class="fa-solid fa-play text-xs"></i>
+              <span>Start Cinematic Video Tour</span>
+            </button>
+            <a
+              href="#stats-anchor"
+              class="flex items-center space-x-3 bg-white/[0.02] hover:bg-white/[0.08] text-white border border-white/10 px-8 py-4 rounded-xl text-xs font-bold uppercase tracking-widest transition-all duration-300"
+            >
+              <span>Explore Academics</span>
+              <i class="fa-solid fa-arrow-right text-xs"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Floating Quick Facts Overlay Dashboard -->
+      <div class="absolute bottom-12 right-8 z-20 hidden xl:block w-80">
+        <div class="glass-panel p-5 rounded-2xl space-y-4 glow-gold">
+          <div
+            class="flex items-center justify-between border-b border-white/5 pb-2"
+          >
+            <span
+              class="text-[10px] font-black uppercase tracking-widest text-lux-gold"
+              >Centennial Landmark</span
+            >
+            <i class="fa-solid fa-monument text-lux-gold text-xs"></i>
+          </div>
+          <h5 class="text-xs font-bold text-white leading-relaxed">
+            The Cradle of Higher Learning in the State of Telangana
+          </h5>
+          <p class="text-[10px] text-slate-400 font-light leading-relaxed">
+            Created by Royal Charter of the VII Nizam of Hyderabad, Nawab Osman
+            Ali Khan in 1917.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- PREMIUM INTERACTIVE HUB COMPONENT (Image 9 portal links) -->
+    <section class="max-w-7xl mx-auto px-8 relative -mt-12 z-30">
+      <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
+        <a
+          href="#exam-branch"
+          class="group glass-panel hover:bg-brand-900/60 border-white/5 hover:border-lux-gold/30 p-6 rounded-2xl text-center flex flex-col items-center justify-center transition-all duration-500 transform hover:-translate-y-2"
+        >
+          <div
+            class="h-14 w-14 bg-white/[0.02] text-lux-gold group-hover:bg-lux-gold group-hover:text-brand-950 rounded-2xl flex items-center justify-center transition-all duration-500 mb-4 border border-white/5 shadow-inner"
+          >
+            <i class="fa-solid fa-file-signature text-xl"></i>
+          </div>
+          <h4
+            class="text-xs font-bold text-slate-200 group-hover:text-lux-gold tracking-widest uppercase transition-all duration-300"
+          >
+            Examination Branch
+          </h4>
+          <p class="text-[9px] text-slate-500 mt-1 font-semibold tracking-wide">
+            Timetables & Results Engine
+          </p>
+        </a>
+
+        <a
+          href="#distance-ed"
+          class="group glass-panel hover:bg-brand-900/60 border-white/5 hover:border-lux-gold/30 p-6 rounded-2xl text-center flex flex-col items-center justify-center transition-all duration-500 transform hover:-translate-y-2"
+        >
+          <div
+            class="h-14 w-14 bg-white/[0.02] text-lux-gold group-hover:bg-lux-gold group-hover:text-brand-950 rounded-2xl flex items-center justify-center transition-all duration-500 mb-4 border border-white/5 shadow-inner"
+          >
+            <i class="fa-solid fa-graduation-cap text-xl"></i>
+          </div>
+          <h4
+            class="text-xs font-bold text-slate-200 group-hover:text-lux-gold tracking-widest uppercase transition-all duration-300"
+          >
+            Distance Education
+          </h4>
+          <p class="text-[9px] text-slate-500 mt-1 font-semibold tracking-wide">
+            PGRRCDE Learning Portals
+          </p>
+        </a>
+
+        <a
+          href="#admissions"
+          class="group glass-panel hover:bg-brand-900/60 border-white/5 hover:border-lux-gold/30 p-6 rounded-2xl text-center flex flex-col items-center justify-center transition-all duration-500 transform hover:-translate-y-2"
+        >
+          <div
+            class="h-14 w-14 bg-white/[0.02] text-lux-gold group-hover:bg-lux-gold group-hover:text-brand-950 rounded-2xl flex items-center justify-center transition-all duration-500 mb-4 border border-white/5 shadow-inner"
+          >
+            <i class="fa-solid fa-address-card text-xl"></i>
+          </div>
+          <h4
+            class="text-xs font-bold text-slate-200 group-hover:text-lux-gold tracking-widest uppercase transition-all duration-300"
+          >
+            Admissions (DOA)
+          </h4>
+          <p class="text-[9px] text-slate-500 mt-1 font-semibold tracking-wide">
+            Directorate Applications
+          </p>
+        </a>
+
+        <a
+          href="#iqac"
+          class="group glass-panel hover:bg-brand-900/60 border-white/5 hover:border-lux-gold/30 p-6 rounded-2xl text-center flex flex-col items-center justify-center transition-all duration-500 transform hover:-translate-y-2"
+        >
+          <div
+            class="h-14 w-14 bg-white/[0.02] text-lux-gold group-hover:bg-lux-gold group-hover:text-brand-950 rounded-2xl flex items-center justify-center transition-all duration-500 mb-4 border border-white/5 shadow-inner"
+          >
+            <i class="fa-solid fa-square-poll-vertical text-xl"></i>
+          </div>
+          <h4
+            class="text-xs font-bold text-slate-200 group-hover:text-lux-gold tracking-widest uppercase transition-all duration-300"
+          >
+            IQAC & NIRF
+          </h4>
+          <p class="text-[9px] text-slate-500 mt-1 font-semibold tracking-wide">
+            Audits & Submitted Records
+          </p>
+        </a>
+
+        <a
+          href="#foreign-relations"
+          class="group glass-panel hover:bg-brand-900/60 border-white/5 hover:border-lux-gold/30 p-6 rounded-2xl text-center flex flex-col items-center justify-center transition-all duration-500 transform hover:-translate-y-2 col-span-2 md:col-span-1"
+        >
+          <div
+            class="h-14 w-14 bg-white/[0.02] text-lux-gold group-hover:bg-lux-gold group-hover:text-brand-950 rounded-2xl flex items-center justify-center transition-all duration-500 mb-4 border border-white/5 shadow-inner"
+          >
+            <i class="fa-solid fa-earth-americas text-xl"></i>
+          </div>
+          <h4
+            class="text-xs font-bold text-slate-200 group-hover:text-lux-gold tracking-widest uppercase transition-all duration-300"
+          >
+            Foreign Relations
+          </h4>
+          <p class="text-[9px] text-slate-500 mt-1 font-semibold tracking-wide">
+            UFRO Global Admissions
+          </p>
+        </a>
+      </div>
+    </section>
+
+    <!-- ANNOUNCEMENT HUB & USEFUL LINKS WORKSPACE (Images 4, 5 & 6) -->
+    <section
+      id="announcements-section"
+      class="max-w-7xl mx-auto px-8 py-24 grid grid-cols-1 lg:grid-cols-12 gap-12 relative"
+    >
+      <div class="absolute inset-x-0 top-0 grid-h-line"></div>
+
+      <!-- Left 8 Columns: Notice Command Center -->
+      <div class="lg:col-span-8 space-y-8">
+        <div
+          class="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-white/5 pb-4"
+        >
+          <div>
+            <span
+              class="text-[10px] font-black uppercase tracking-widest text-lux-gold"
+              >Announcement Center</span
+            >
+            <h3
+              class="font-serif text-3xl md:text-4xl font-extrabold text-white mt-1"
+            >
+              Latest Notifications & Circulars
+            </h3>
+          </div>
+          <div class="flex items-center space-x-3 shrink-0">
+            <button
+              class="bg-lux-gold hover:bg-yellow-500 text-brand-950 text-xs font-black uppercase tracking-wider px-5 py-2.5 rounded-full transition-all duration-300"
+            >
+              View All Archives <i class="fa-solid fa-arrow-trend-up ml-1"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Dashboard Filtering & Dynamic Search Tool -->
+        <div
+          class="flex flex-col md:flex-row gap-3 bg-white/[0.02] p-2.5 rounded-2xl border border-white/5"
+        >
+          <div class="relative flex-1">
+            <input
+              type="text"
+              id="announcementSearch"
+              placeholder="Type keywords to filter notices instantly..."
+              class="w-full bg-brand-950/85 border border-white/5 text-slate-200 text-xs px-4 py-3 rounded-xl focus:outline-none focus:ring-1 focus:ring-lux-gold"
+            />
+            <i
+              class="fa-solid fa-magnifying-glass text-xs text-slate-600 absolute right-4 top-1/2 -translate-y-1/2"
+            ></i>
+          </div>
+          <button
+            onclick="clearSearch()"
+            class="text-xs font-bold tracking-wider text-slate-400 hover:text-white bg-white/5 hover:bg-white/10 px-5 py-3 rounded-xl transition"
+          >
+            Clear filters
+          </button>
+        </div>
+
+        <!-- Dynamic Notification Feed List Container (Mapped from Screens 4 & 5) -->
+        <div
+          id="announcementList"
+          class="space-y-4 max-h-[600px] overflow-y-auto pr-3 scroll-luxury"
+        >
+          <!-- Notice Entry 1 -->
+          <div
+            class="announcement-item bg-white/[0.01] hover:bg-white/[0.03] border border-white/5 hover:border-lux-gold/20 p-5 rounded-2xl flex gap-5 transition-all duration-300 group"
+          >
+            <div
+              class="h-11 w-11 bg-white/5 text-lux-gold rounded-xl flex items-center justify-center shrink-0 group-hover:bg-lux-gold group-hover:text-brand-950 transition-all duration-300"
+            >
+              <i class="fa-solid fa-graduation-cap"></i>
+            </div>
+            <div class="flex-1 space-y-2">
+              <div class="flex flex-wrap items-center gap-2">
+                <span
+                  class="bg-lux-gold/10 text-lux-gold text-[8px] font-black tracking-widest uppercase px-2.5 py-1 rounded-full"
+                  >Ph.D Admission</span
+                >
+                <span
+                  class="bg-white/5 text-slate-400 text-[8px] font-black tracking-widest uppercase px-2.5 py-1 rounded-full"
+                  >Category-I</span
+                >
+              </div>
+              <h5
+                class="text-xs md:text-sm font-bold text-slate-200 leading-relaxed group-hover:text-white transition"
+              >
+                Osmania University Ph.D Notification under Category-I Online
+                Application link.
+              </h5>
+              <div
+                class="flex items-center space-x-4 text-[10px] text-slate-500 font-semibold uppercase tracking-wider"
+              >
+                <span
+                  ><i class="fa-regular fa-calendar mr-1 text-lux-gold"></i>
+                  July 2026</span
+                >
+                <span>&bull;</span>
+                <span>Admissions Office</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Notice Entry 2 -->
+          <div
+            class="announcement-item bg-white/[0.01] hover:bg-white/[0.03] border border-white/5 hover:border-lux-gold/20 p-5 rounded-2xl flex gap-5 transition-all duration-300 group"
+          >
+            <div
+              class="h-11 w-11 bg-white/5 text-lux-gold rounded-xl flex items-center justify-center shrink-0 group-hover:bg-lux-gold group-hover:text-brand-950 transition-all duration-300"
+            >
+              <i class="fa-solid fa-globe"></i>
+            </div>
+            <div class="flex-1 space-y-2">
+              <div class="flex flex-wrap items-center gap-2">
+                <span
+                  class="bg-purple-500/10 text-purple-400 text-[8px] font-black tracking-widest uppercase px-2.5 py-1 rounded-full"
+                  >Foreign Language</span
+                >
+                <span
+                  class="bg-white/5 text-slate-400 text-[8px] font-black tracking-widest uppercase px-2.5 py-1 rounded-full"
+                  >Diploma Course</span
+                >
+              </div>
+              <h5
+                class="text-xs md:text-sm font-bold text-slate-200 leading-relaxed group-hover:text-white transition"
+              >
+                Admission into Junior, Senior and Advanced Diploma Courses in
+                French/German for the academic year 2026-2027.
+              </h5>
+              <div
+                class="flex items-center space-x-4 text-[10px] text-slate-500 font-semibold uppercase tracking-wider"
+              >
+                <span
+                  ><i class="fa-regular fa-calendar mr-1 text-lux-gold"></i>
+                  June 2026</span
+                >
+                <span>&bull;</span>
+                <span>Dept of Languages</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Notice Entry 3 -->
+          <div
+            class="announcement-item bg-white/[0.01] hover:bg-white/[0.03] border border-white/5 hover:border-lux-gold/20 p-5 rounded-2xl flex gap-5 transition-all duration-300 group"
+          >
+            <div
+              class="h-11 w-11 bg-white/5 text-lux-gold rounded-xl flex items-center justify-center shrink-0 group-hover:bg-lux-gold group-hover:text-brand-950 transition-all duration-300"
+            >
+              <i class="fa-solid fa-book-bookmark"></i>
+            </div>
+            <div class="flex-1 space-y-2">
+              <div class="flex flex-wrap items-center gap-2">
+                <span
+                  class="bg-blue-500/10 text-blue-400 text-[8px] font-black tracking-widest uppercase px-2.5 py-1 rounded-full"
+                  >Regulations</span
+                >
+                <span
+                  class="bg-red-500/10 text-red-400 text-[8px] font-black tracking-widest uppercase px-2.5 py-1 rounded-full"
+                  >Rules Alert</span
+                >
+              </div>
+              <h5
+                class="text-xs md:text-sm font-bold text-slate-200 leading-relaxed group-hover:text-white transition"
+              >
+                New Ph.D. Rules and Regulations with effect from the academic
+                year 2026-2027.
+              </h5>
+              <div
+                class="flex items-center space-x-4 text-[10px] text-slate-500 font-semibold uppercase tracking-wider"
+              >
+                <span
+                  ><i class="fa-regular fa-calendar mr-1 text-lux-gold"></i>
+                  June 2026</span
+                >
+                <span>&bull;</span>
+                <span>Academic Council</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Notice Entry 4 -->
+          <div
+            class="announcement-item bg-white/[0.01] hover:bg-white/[0.03] border border-white/5 hover:border-lux-gold/20 p-5 rounded-2xl flex gap-5 transition-all duration-300 group"
+          >
+            <div
+              class="h-11 w-11 bg-white/5 text-lux-gold rounded-xl flex items-center justify-center shrink-0 group-hover:bg-lux-gold group-hover:text-brand-950 transition-all duration-300"
+            >
+              <i class="fa-solid fa-stamp"></i>
+            </div>
+            <div class="flex-1 space-y-2">
+              <div class="flex flex-wrap items-center gap-2">
+                <span
+                  class="bg-amber-500/10 text-amber-400 text-[8px] font-black tracking-widest uppercase px-2.5 py-1 rounded-full"
+                  >Press Note</span
+                >
+              </div>
+              <h5
+                class="text-xs md:text-sm font-bold text-slate-200 leading-relaxed group-hover:text-white transition"
+              >
+                PRESS NOTE: Ph.D. Admissions Category-I Notification - 2026.
+              </h5>
+              <div
+                class="flex items-center space-x-4 text-[10px] text-slate-500 font-semibold uppercase tracking-wider"
+              >
+                <span
+                  ><i class="fa-regular fa-calendar mr-1 text-lux-gold"></i>
+                  June 2026</span
+                >
+                <span>&bull;</span>
+                <span>Public Relations</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Notice Entry 5 -->
+          <div
+            class="announcement-item bg-white/[0.01] hover:bg-white/[0.03] border border-white/5 hover:border-lux-gold/20 p-5 rounded-2xl flex gap-5 transition-all duration-300 group"
+          >
+            <div
+              class="h-11 w-11 bg-white/5 text-lux-gold rounded-xl flex items-center justify-center shrink-0 group-hover:bg-lux-gold group-hover:text-brand-950 transition-all duration-300"
+            >
+              <i class="fa-solid fa-circle-nodes"></i>
+            </div>
+            <div class="flex-1 space-y-2">
+              <div class="flex flex-wrap items-center gap-2">
+                <span
+                  class="bg-teal-500/10 text-teal-400 text-[8px] font-black tracking-widest uppercase px-2.5 py-1 rounded-full"
+                  >Circular</span
+                >
+              </div>
+              <h5
+                class="text-xs md:text-sm font-bold text-slate-200 leading-relaxed group-hover:text-white transition"
+              >
+                Circular: Attending academic activities outside the University -
+                Obtaining prior permission from the University Circular.
+              </h5>
+              <div
+                class="flex items-center space-x-4 text-[10px] text-slate-500 font-semibold uppercase tracking-wider"
+              >
+                <span
+                  ><i class="fa-regular fa-calendar mr-1 text-lux-gold"></i>
+                  June 2026</span
+                >
+                <span>&bull;</span>
+                <span>Registrar Office</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Notice Entry 6 -->
+          <div
+            class="announcement-item bg-white/[0.01] hover:bg-white/[0.03] border border-white/5 hover:border-lux-gold/20 p-5 rounded-2xl flex gap-5 transition-all duration-300 group"
+          >
+            <div
+              class="h-11 w-11 bg-white/5 text-lux-gold rounded-xl flex items-center justify-center shrink-0 group-hover:bg-lux-gold group-hover:text-brand-950 transition-all duration-300"
+            >
+              <i class="fa-solid fa-table-tennis-paddle-ball"></i>
+            </div>
+            <div class="flex-1 space-y-2">
+              <div class="flex flex-wrap items-center gap-2">
+                <span
+                  class="bg-indigo-500/10 text-indigo-400 text-[8px] font-black tracking-widest uppercase px-2.5 py-1 rounded-full"
+                  >Gymnasium</span
+                >
+              </div>
+              <h5
+                class="text-xs md:text-sm font-bold text-slate-200 leading-relaxed group-hover:text-white transition"
+              >
+                Circular: Dept. of Physical Education Gymnasium, OU Membership
+                Card for the Students of all the Colleges and Departments of OU.
+              </h5>
+              <div
+                class="flex items-center space-x-4 text-[10px] text-slate-500 font-semibold uppercase tracking-wider"
+              >
+                <span
+                  ><i class="fa-regular fa-calendar mr-1 text-lux-gold"></i> May
+                  2026</span
+                >
+                <span>&bull;</span>
+                <span>Physical Education Dept</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Notice Entry 7 -->
+          <div
+            class="announcement-item bg-white/[0.01] hover:bg-white/[0.03] border border-white/5 hover:border-lux-gold/20 p-5 rounded-2xl flex gap-5 transition-all duration-300 group"
+          >
+            <div
+              class="h-11 w-11 bg-white/5 text-lux-gold rounded-xl flex items-center justify-center shrink-0 group-hover:bg-lux-gold group-hover:text-brand-950 transition-all duration-300"
+            >
+              <i class="fa-solid fa-bullhorn"></i>
+            </div>
+            <div class="flex-1 space-y-2">
+              <div class="flex flex-wrap items-center gap-2">
+                <span
+                  class="bg-blue-500/10 text-blue-400 text-[8px] font-black tracking-widest uppercase px-2.5 py-1 rounded-full"
+                  >NIRF</span
+                >
+              </div>
+              <h5
+                class="text-xs md:text-sm font-bold text-slate-200 leading-relaxed group-hover:text-white transition"
+              >
+                NIRF-2026 Submitted data, OU.
+              </h5>
+              <div
+                class="flex items-center space-x-4 text-[10px] text-slate-500 font-semibold uppercase tracking-wider"
+              >
+                <span
+                  ><i class="fa-regular fa-calendar mr-1 text-lux-gold"></i> May
+                  2026</span
+                >
+                <span>&bull;</span>
+                <span>IQAC Cell</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Notice Entry 8 -->
+          <div
+            class="announcement-item bg-white/[0.01] hover:bg-white/[0.03] border border-white/5 hover:border-lux-gold/20 p-5 rounded-2xl flex gap-5 transition-all duration-300 group"
+          >
+            <div
+              class="h-11 w-11 bg-white/5 text-lux-gold rounded-xl flex items-center justify-center shrink-0 group-hover:bg-lux-gold group-hover:text-brand-950 transition-all duration-300"
+            >
+              <i class="fa-solid fa-trophy"></i>
+            </div>
+            <div class="flex-1 space-y-2">
+              <div class="flex flex-wrap items-center gap-2">
+                <span
+                  class="bg-rose-500/10 text-rose-400 text-[8px] font-black tracking-widest uppercase px-2.5 py-1 rounded-full"
+                  >Cultural Results</span
+                >
+              </div>
+              <h5
+                class="text-xs md:text-sm font-bold text-slate-200 leading-relaxed group-hover:text-white transition"
+              >
+                Results of Inter-Collegiate Cultural Competitions2025-26, OU.
+              </h5>
+              <div
+                class="flex items-center space-x-4 text-[10px] text-slate-500 font-semibold uppercase tracking-wider"
+              >
+                <span
+                  ><i class="fa-regular fa-calendar mr-1 text-lux-gold"></i> May
+                  2026</span
+                >
+                <span>&bull;</span>
+                <span>Student Affairs</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Notice Entry 9 -->
+          <div
+            class="announcement-item bg-white/[0.01] hover:bg-white/[0.03] border border-white/5 hover:border-lux-gold/20 p-5 rounded-2xl flex gap-5 transition-all duration-300 group"
+          >
+            <div
+              class="h-11 w-11 bg-white/5 text-lux-gold rounded-xl flex items-center justify-center shrink-0 group-hover:bg-lux-gold group-hover:text-brand-950 transition-all duration-300"
+            >
+              <i class="fa-solid fa-chart-line"></i>
+            </div>
+            <div class="flex-1 space-y-2">
+              <div class="flex flex-wrap items-center gap-2">
+                <span
+                  class="bg-sky-500/10 text-sky-400 text-[8px] font-black tracking-widest uppercase px-2.5 py-1 rounded-full"
+                  >NAAC Data</span
+                >
+              </div>
+              <h5
+                class="text-xs md:text-sm font-bold text-slate-200 leading-relaxed group-hover:text-white transition"
+              >
+                NAAC Data 2025-2026.
+              </h5>
+              <div
+                class="flex items-center space-x-4 text-[10px] text-slate-500 font-semibold uppercase tracking-wider"
+              >
+                <span
+                  ><i class="fa-regular fa-calendar mr-1 text-lux-gold"></i> May
+                  2026</span
+                >
+                <span>&bull;</span>
+                <span>IQAC Cell</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Notice Entry 10 -->
+          <div
+            class="announcement-item bg-white/[0.01] hover:bg-white/[0.03] border border-white/5 hover:border-lux-gold/20 p-5 rounded-2xl flex gap-5 transition-all duration-300 group"
+          >
+            <div
+              class="h-11 w-11 bg-white/5 text-lux-gold rounded-xl flex items-center justify-center shrink-0 group-hover:bg-lux-gold group-hover:text-brand-950 transition-all duration-300"
+            >
+              <i class="fa-solid fa-receipt"></i>
+            </div>
+            <div class="flex-1 space-y-2">
+              <div class="flex flex-wrap items-center gap-2">
+                <span
+                  class="bg-purple-500/10 text-purple-400 text-[8px] font-black tracking-widest uppercase px-2.5 py-1 rounded-full"
+                  >Entrance Exam</span
+                >
+              </div>
+              <h5
+                class="text-xs md:text-sm font-bold text-slate-200 leading-relaxed group-hover:text-white transition"
+              >
+                Notification for the Common Entrance Test for TG LAWCET & PGLCET
+                - 2026.
+              </h5>
+              <div
+                class="flex items-center space-x-4 text-[10px] text-slate-500 font-semibold uppercase tracking-wider"
+              >
+                <span
+                  ><i class="fa-regular fa-calendar mr-1 text-lux-gold"></i> May
+                  2026</span
+                >
+                <span>&bull;</span>
+                <span>Convener CET</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right 4 Columns: Dynamic Resource Panel -->
+      <div class="lg:col-span-4 space-y-8">
+        <div class="border-b border-white/5 pb-4">
+          <span
+            class="text-[10px] font-black uppercase tracking-widest text-lux-gold"
+            >Primary Directories</span
+          >
+          <h3 class="font-serif text-3xl font-extrabold text-white mt-1">
+            Useful Links
+          </h3>
+        </div>
+
+        <div
+          class="bg-white/[0.02] border border-white/5 p-6 rounded-3xl space-y-6"
+        >
+          <!-- Links Index Mapped Directly from Screen 6 -->
+          <div
+            class="grid grid-cols-1 gap-2 max-h-[380px] overflow-y-auto pr-2 scroll-luxury"
+            id="usefulLinks"
+          >
+            <a
+              href="#link"
+              class="flex items-center justify-between p-3.5 bg-brand-950/40 hover:bg-brand-900 border border-white/5 hover:border-lux-gold/30 rounded-xl group transition-all duration-300"
+            >
+              <span
+                class="text-[11px] font-bold text-slate-300 group-hover:text-white transition"
+                >University Brochure</span
+              >
+              <i
+                class="fa-solid fa-arrow-up-right-from-square text-[9px] text-slate-600 group-hover:text-lux-gold transition"
+              ></i>
+            </a>
+            <a
+              href="#link"
+              class="flex items-center justify-between p-3.5 bg-brand-950/40 hover:bg-brand-900 border border-white/5 hover:border-lux-gold/30 rounded-xl group transition-all duration-300"
+            >
+              <span
+                class="text-[11px] font-bold text-slate-300 group-hover:text-white transition"
+                >NIRF - 2026 Submitted data, OU.</span
+              >
+              <i
+                class="fa-solid fa-arrow-up-right-from-square text-[9px] text-slate-600 group-hover:text-lux-gold transition"
+              ></i>
+            </a>
+            <a
+              href="#link"
+              class="flex items-center justify-between p-3.5 bg-brand-950/40 hover:bg-brand-900 border border-white/5 hover:border-lux-gold/30 rounded-xl group transition-all duration-300"
+            >
+              <span
+                class="text-[11px] font-bold text-slate-300 group-hover:text-white transition"
+                >DEET (Digital Employment Exchange of Telangana)</span
+              >
+              <i
+                class="fa-solid fa-arrow-up-right-from-square text-[9px] text-slate-600 group-hover:text-lux-gold transition"
+              ></i>
+            </a>
+            <a
+              href="#link"
+              class="flex items-center justify-between p-3.5 bg-brand-950/40 hover:bg-brand-900 border border-white/5 hover:border-lux-gold/30 rounded-xl group transition-all duration-300"
+            >
+              <span
+                class="text-[11px] font-bold text-slate-300 group-hover:text-white transition"
+                >ISO Standards Info</span
+              >
+              <i
+                class="fa-solid fa-arrow-up-right-from-square text-[9px] text-slate-600 group-hover:text-lux-gold transition"
+              ></i>
+            </a>
+            <a
+              href="#link"
+              class="flex items-center justify-between p-3.5 bg-brand-950/40 hover:bg-brand-900 border border-white/5 hover:border-lux-gold/30 rounded-xl group transition-all duration-300"
+            >
+              <span
+                class="text-[11px] font-bold text-slate-300 group-hover:text-white transition"
+                >106th Annual Report Formats</span
+              >
+              <i
+                class="fa-solid fa-arrow-up-right-from-square text-[9px] text-slate-600 group-hover:text-lux-gold transition"
+              ></i>
+            </a>
+            <a
+              href="#link"
+              class="flex items-center justify-between p-3.5 bg-brand-950/40 hover:bg-brand-900 border border-white/5 hover:border-lux-gold/30 rounded-xl group transition-all duration-300"
+            >
+              <span
+                class="text-[11px] font-bold text-slate-300 group-hover:text-white transition"
+                >NAVIGATION-OU</span
+              >
+              <i
+                class="fa-solid fa-arrow-up-right-from-square text-[9px] text-slate-600 group-hover:text-lux-gold transition"
+              ></i>
+            </a>
+            <a
+              href="#link"
+              class="flex items-center justify-between p-3.5 bg-brand-950/40 hover:bg-brand-900 border border-white/5 hover:border-lux-gold/30 rounded-xl group transition-all duration-300"
+            >
+              <span
+                class="text-[11px] font-bold text-slate-300 group-hover:text-white transition"
+                >Syllabus Directory</span
+              >
+              <i
+                class="fa-solid fa-arrow-up-right-from-square text-[9px] text-slate-600 group-hover:text-lux-gold transition"
+              ></i>
+            </a>
+            <a
+              href="#link"
+              class="flex items-center justify-between p-3.5 bg-brand-950/40 hover:bg-brand-900 border border-white/5 hover:border-lux-gold/30 rounded-xl group transition-all duration-300"
+            >
+              <span
+                class="text-[11px] font-bold text-slate-300 group-hover:text-white transition"
+                >e Samadhan-UGC</span
+              >
+              <i
+                class="fa-solid fa-arrow-up-right-from-square text-[9px] text-slate-600 group-hover:text-lux-gold transition"
+              ></i>
+            </a>
+            <a
+              href="#link"
+              class="flex items-center justify-between p-3.5 bg-brand-950/40 hover:bg-brand-900 border border-white/5 hover:border-lux-gold/30 rounded-xl group transition-all duration-300"
+            >
+              <span
+                class="text-[11px] font-bold text-slate-300 group-hover:text-white transition"
+                >Annual Reports</span
+              >
+              <i
+                class="fa-solid fa-arrow-up-right-from-square text-[9px] text-slate-600 group-hover:text-lux-gold transition"
+              ></i>
+            </a>
+            <a
+              href="#link"
+              class="flex items-center justify-between p-3.5 bg-brand-950/40 hover:bg-brand-900 border border-white/5 hover:border-lux-gold/30 rounded-xl group transition-all duration-300"
+            >
+              <span
+                class="text-[11px] font-bold text-slate-300 group-hover:text-white transition"
+                >Staff Directory</span
+              >
+              <i
+                class="fa-solid fa-arrow-up-right-from-square text-[9px] text-slate-600 group-hover:text-lux-gold transition"
+              ></i>
+            </a>
+            <a
+              href="#link"
+              class="flex items-center justify-between p-3.5 bg-brand-950/40 hover:bg-brand-900 border border-white/5 hover:border-lux-gold/30 rounded-xl group transition-all duration-300"
+            >
+              <span
+                class="text-[11px] font-bold text-slate-300 group-hover:text-white transition"
+                >Phone Directory</span
+              >
+              <i
+                class="fa-solid fa-arrow-up-right-from-square text-[9px] text-slate-600 group-hover:text-lux-gold transition"
+              ></i>
+            </a>
+            <a
+              href="#link"
+              class="flex items-center justify-between p-3.5 bg-brand-950/40 hover:bg-brand-900 border border-white/5 hover:border-lux-gold/30 rounded-xl group transition-all duration-300"
+            >
+              <span
+                class="text-[11px] font-bold text-slate-300 group-hover:text-white transition"
+                >Ph.D. Entrance Test-2025</span
+              >
+              <i
+                class="fa-solid fa-arrow-up-right-from-square text-[9px] text-slate-600 group-hover:text-lux-gold transition"
+              ></i>
+            </a>
+            <a
+              href="#link"
+              class="flex items-center justify-between p-3.5 bg-brand-950/40 hover:bg-brand-900 border border-white/5 hover:border-lux-gold/30 rounded-xl group transition-all duration-300"
+            >
+              <span
+                class="text-[11px] font-bold text-slate-300 group-hover:text-white transition"
+                >Policies & Grievances</span
+              >
+              <i
+                class="fa-solid fa-arrow-up-right-from-square text-[9px] text-slate-600 group-hover:text-lux-gold transition"
+              ></i>
+            </a>
+            <a
+              href="#link"
+              class="flex items-center justify-between p-3.5 bg-brand-950/40 hover:bg-brand-900 border border-white/5 hover:border-lux-gold/30 rounded-xl group transition-all duration-300"
+            >
+              <span
+                class="text-[11px] font-bold text-slate-300 group-hover:text-white transition"
+                >Tenders & Procurements</span
+              >
+              <i
+                class="fa-solid fa-arrow-up-right-from-square text-[9px] text-slate-600 group-hover:text-lux-gold transition"
+              ></i>
+            </a>
+            <a
+              href="#link"
+              class="flex items-center justify-between p-3.5 bg-brand-950/40 hover:bg-brand-900 border border-white/5 hover:border-lux-gold/30 rounded-xl group transition-all duration-300"
+            >
+              <span
+                class="text-[11px] font-bold text-slate-300 group-hover:text-white transition"
+                >University Library Catalog</span
+              >
+              <i
+                class="fa-solid fa-arrow-up-right-from-square text-[9px] text-slate-600 group-hover:text-lux-gold transition"
+              ></i>
+            </a>
+            <a
+              href="#link"
+              class="flex items-center justify-between p-3.5 bg-brand-950/40 hover:bg-brand-900 border border-white/5 hover:border-lux-gold/30 rounded-xl group transition-all duration-300"
+            >
+              <span
+                class="text-[11px] font-bold text-slate-300 group-hover:text-white transition"
+                >CDC Office</span
+              >
+              <i
+                class="fa-solid fa-arrow-up-right-from-square text-[9px] text-slate-600 group-hover:text-lux-gold transition"
+              ></i>
+            </a>
+            <a
+              href="#link"
+              class="flex items-center justify-between p-3.5 bg-brand-950/40 hover:bg-brand-900 border border-white/5 hover:border-lux-gold/30 rounded-xl group transition-all duration-300"
+            >
+              <span
+                class="text-[11px] font-bold text-slate-300 group-hover:text-white transition"
+                >OsmaniaTBI Incubator</span
+              >
+              <i
+                class="fa-solid fa-arrow-up-right-from-square text-[9px] text-slate-600 group-hover:text-lux-gold transition"
+              ></i>
+            </a>
+            <a
+              href="#link"
+              class="flex items-center justify-between p-3.5 bg-brand-950/40 hover:bg-brand-900 border border-white/5 hover:border-lux-gold/30 rounded-xl group transition-all duration-300"
+            >
+              <span
+                class="text-[11px] font-bold text-slate-300 group-hover:text-white transition"
+                >OU Ideas Lab Foundation</span
+              >
+              <i
+                class="fa-solid fa-arrow-up-right-from-square text-[9px] text-slate-600 group-hover:text-lux-gold transition"
+              ></i>
+            </a>
+            <a
+              href="#link"
+              class="flex items-center justify-between p-3.5 bg-brand-950/40 hover:bg-brand-900 border border-white/5 hover:border-lux-gold/30 rounded-xl group transition-all duration-300"
+            >
+              <span
+                class="text-[11px] font-bold text-slate-300 group-hover:text-white transition"
+                >Osmania Foundation</span
+              >
+              <i
+                class="fa-solid fa-arrow-up-right-from-square text-[9px] text-slate-600 group-hover:text-lux-gold transition"
+              ></i>
+            </a>
+            <a
+              href="#link"
+              class="flex items-center justify-between p-3.5 bg-brand-950/40 hover:bg-brand-900 border border-white/5 hover:border-lux-gold/30 rounded-xl group transition-all duration-300"
+            >
+              <span
+                class="text-[11px] font-bold text-slate-300 group-hover:text-white transition"
+                >TG-SET-2025</span
+              >
+              <i
+                class="fa-solid fa-arrow-up-right-from-square text-[9px] text-slate-600 group-hover:text-lux-gold transition"
+              ></i>
+            </a>
+            <a
+              href="#link"
+              class="flex items-center justify-between p-3.5 bg-brand-950/40 hover:bg-brand-900 border border-white/5 hover:border-lux-gold/30 rounded-xl group transition-all duration-300"
+            >
+              <span
+                class="text-[11px] font-bold text-slate-300 group-hover:text-white transition"
+                >CPGET-2026</span
+              >
+              <i
+                class="fa-solid fa-arrow-up-right-from-square text-[9px] text-slate-600 group-hover:text-lux-gold transition"
+              ></i>
+            </a>
+          </div>
+
+          <!-- Secure Single Sign On (SSO) Box (Screen 7 Data) -->
+          <div class="pt-5 border-t border-white/5 space-y-3">
+            <h5
+              class="text-[10px] font-black uppercase tracking-widest text-lux-gold flex items-center gap-1.5"
+            >
+              <i class="fa-solid fa-lock text-[9px]"></i> University Logins
+            </h5>
+            <div class="space-y-2">
+              <a
+                href="#sso"
+                class="bg-lux-gold hover:bg-yellow-500 text-brand-950 text-center py-3.5 rounded-xl text-xs font-black tracking-widest uppercase block transition"
+              >
+                University E-mail
+              </a>
+              <a
+                href="#sso"
+                class="bg-white/5 hover:bg-white/10 text-white text-center py-3.5 rounded-xl text-xs font-bold border border-white/5 block transition"
+              >
+                College Login
+              </a>
+              <a
+                href="#sso"
+                class="bg-white/5 hover:bg-white/10 text-white text-center py-3.5 rounded-xl text-xs font-bold border border-white/5 block transition"
+              >
+                UMS Login
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- METRICS & WORLD RANKINGS GRID (Screen 7 stats) -->
+    <section
+      class="w-full bg-slate-900/40 border-y border-white/5 py-24 px-8 relative overflow-hidden"
+    >
+      <div
+        class="absolute -left-32 -top-32 w-96 h-96 bg-brand-500/10 rounded-full blur-[120px] pointer-events-none"
+      ></div>
+      <div
+        class="absolute -right-32 -bottom-32 w-96 h-96 bg-lux-gold/5 rounded-full blur-[120px] pointer-events-none"
+      ></div>
+
+      <div class="max-w-7xl mx-auto space-y-16 relative z-10">
+        <div class="text-center space-y-3">
+          <span
+            class="text-[10px] font-black uppercase tracking-widest text-lux-gold"
+            >Global Benchmarks</span
+          >
+          <h3 class="font-serif text-4xl md:text-5xl font-extrabold text-white">
+            Our Standings & Accreditations
+          </h3>
+          <div
+            class="w-24 h-0.5 bg-gradient-to-r from-transparent via-lux-gold to-transparent mx-auto mt-4"
+          ></div>
+        </div>
+
+        <div class="grid grid-cols-2 md:grid-cols-5 gap-6">
+          <div
+            class="glass-panel p-8 rounded-3xl flex flex-col justify-between items-center text-center space-y-6 hover:border-lux-gold/30 transition-all duration-300 transform hover:-translate-y-1"
+          >
+            <div class="text-5xl font-black text-lux-gold">A+</div>
+            <div>
+              <h4
+                class="text-xs font-bold tracking-widest text-white uppercase"
+              >
+                NAAC Status
+              </h4>
+              <p
+                class="text-[10px] text-slate-500 mt-1 font-semibold uppercase tracking-wider"
+              >
+                Institutional Standing
+              </p>
+            </div>
+          </div>
+
+          <div
+            class="glass-panel p-8 rounded-3xl flex flex-col justify-between items-center text-center space-y-6 hover:border-lux-gold/30 transition-all duration-300 transform hover:-translate-y-1"
+          >
+            <div class="text-5xl font-black text-lux-gold">
+              30<sup class="text-lg">th</sup>
+            </div>
+            <div>
+              <h4
+                class="text-xs font-bold tracking-widest text-white uppercase"
+              >
+                NIRF Rank
+              </h4>
+              <p
+                class="text-[10px] text-slate-500 mt-1 font-semibold uppercase tracking-wider"
+              >
+                National Framework
+              </p>
+            </div>
+          </div>
+
+          <div
+            class="glass-panel p-8 rounded-3xl flex flex-col justify-between items-center text-center space-y-6 hover:border-lux-gold/30 transition-all duration-300 transform hover:-translate-y-1"
+          >
+            <div class="text-5xl font-black text-lux-gold">
+              1<sup class="text-lg">st</sup>
+            </div>
+            <div>
+              <h4
+                class="text-xs font-bold tracking-widest text-white uppercase"
+              >
+                State Rank
+              </h4>
+              <p
+                class="text-[10px] text-slate-500 mt-1 font-semibold uppercase tracking-wider"
+              >
+                Telangana Higher Ed
+              </p>
+            </div>
+          </div>
+
+          <div
+            class="glass-panel p-8 rounded-3xl flex flex-col justify-between items-center text-center space-y-6 hover:border-lux-gold/30 transition-all duration-300 transform hover:-translate-y-1"
+          >
+            <div
+              class="text-4xl md:text-5xl font-black text-lux-gold leading-none"
+            >
+              1201
+            </div>
+            <div>
+              <h4
+                class="text-xs font-bold tracking-widest text-white uppercase"
+              >
+                QS World
+              </h4>
+              <p
+                class="text-[10px] text-slate-500 mt-1 font-semibold uppercase tracking-wider"
+              >
+                Global Standing
+              </p>
+            </div>
+          </div>
+
+          <div
+            class="glass-panel p-8 rounded-3xl flex flex-col justify-between items-center text-center space-y-6 hover:border-lux-gold/30 transition-all duration-300 transform hover:-translate-y-1 col-span-2 md:col-span-1"
+          >
+            <div
+              class="text-4xl md:text-5xl font-black text-lux-gold leading-none"
+            >
+              &lt; 1100
+            </div>
+            <div>
+              <h4
+                class="text-xs font-bold tracking-widest text-white uppercase"
+              >
+                THE World
+              </h4>
+              <p
+                class="text-[10px] text-slate-500 mt-1 font-semibold uppercase tracking-wider"
+              >
+                Times Higher Ed
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONSTITUENT COLLEGES INTERACTIVE MODULE (Screens 1 & 2) -->
+    <section
+      id="colleges-showcase"
+      class="max-w-7xl mx-auto px-8 py-24 space-y-12"
+    >
+      <div class="space-y-3">
+        <span
+          class="text-[10px] font-black uppercase tracking-widest text-lux-gold"
+          >Academic Network</span
+        >
+        <h3 class="font-serif text-4xl md:text-5xl font-extrabold text-white">
+          Constituent Colleges
+        </h3>
+        <p class="text-xs text-slate-400 font-light max-w-xl">
+          Explore the highly specialised premier academic institutions run
+          directly under Osmania's main executive wing.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        <!-- Left Colleges Selection Board -->
+        <div class="lg:col-span-4 flex flex-col space-y-3" id="collegeTabs">
+          <button
+            onclick="switchCollege('nizam')"
+            id="tab-nizam"
+            class="college-tab-btn active text-left p-5 rounded-2xl border border-lux-gold/30 bg-brand-900/60 text-white flex items-center justify-between transition-all duration-500"
+          >
+            <div>
+              <h5 class="text-xs font-black tracking-widest uppercase">
+                Nizam College
+              </h5>
+              <p class="text-[10px] text-slate-400 mt-1">
+                Basheerbagh, Hyderabad
+              </p>
+            </div>
+            <i class="fa-solid fa-chevron-right text-xs text-lux-gold"></i>
+          </button>
+          <button
+            onclick="switchCollege('science')"
+            id="tab-science"
+            class="college-tab-btn text-left p-5 rounded-2xl border border-white/5 bg-white/[0.01] text-slate-300 flex items-center justify-between transition-all duration-500"
+          >
+            <div>
+              <h5 class="text-xs font-black tracking-widest uppercase">
+                University College of Science
+              </h5>
+              <p class="text-[10px] text-slate-400 mt-1">Saifabad, Hyderabad</p>
+            </div>
+            <i class="fa-solid fa-chevron-right text-xs text-slate-500"></i>
+          </button>
+          <button
+            onclick="switchCollege('secunderabad')"
+            id="tab-secunderabad"
+            class="college-tab-btn text-left p-5 rounded-2xl border border-white/5 bg-white/[0.01] text-slate-300 flex items-center justify-between transition-all duration-500"
+          >
+            <div>
+              <h5 class="text-xs font-black tracking-widest uppercase">
+                University PG College
+              </h5>
+              <p class="text-[10px] text-slate-400 mt-1">Secunderabad</p>
+            </div>
+            <i class="fa-solid fa-chevron-right text-xs text-slate-500"></i>
+          </button>
+          <button
+            onclick="switchCollege('law')"
+            id="tab-law"
+            class="college-tab-btn text-left p-5 rounded-2xl border border-white/5 bg-white/[0.01] text-slate-300 flex items-center justify-between transition-all duration-500"
+          >
+            <div>
+              <h5 class="text-xs font-black tracking-widest uppercase">
+                PG College of Law
+              </h5>
+              <p class="text-[10px] text-slate-400 mt-1">
+                Basheerbagh, Hyderabad
+              </p>
+            </div>
+            <i class="fa-solid fa-chevron-right text-xs text-slate-500"></i>
+          </button>
+        </div>
+
+        <!-- Right Showcase Screen -->
+        <div
+          class="lg:col-span-8 glass-panel rounded-3xl overflow-hidden shadow-2xl"
+          id="collegeDisplay"
+        >
+          <div
+            class="relative h-72 bg-brand-900 overflow-hidden zoom-container"
+          >
+            <img
+              id="collegeImage"
+              src="https://images.unsplash.com/photo-1541339907198-e08756dedf3f?auto=format&fit=crop&q=80&w=800"
+              alt="Nizam College"
+              class="w-full h-full object-cover opacity-50 zoom-img"
+            />
+            <div
+              class="absolute inset-0 bg-gradient-to-t from-brand-950 via-brand-950/40 to-transparent"
+            ></div>
+            <div class="absolute bottom-6 left-6 right-6">
+              <span
+                class="inline-block bg-lux-gold text-brand-950 text-[9px] font-black tracking-widest uppercase px-3 py-1 rounded-full mb-2"
+                >Premiere Landmark Campus</span
+              >
+              <h4
+                id="collegeTitle"
+                class="font-serif text-3xl md:text-4xl font-extrabold text-white"
+              >
+                Nizam College, Basheerbagh
+              </h4>
+            </div>
+          </div>
+          <div class="p-8 space-y-6">
+            <p
+              id="collegeDesc"
+              class="text-xs md:text-sm text-slate-300 leading-relaxed font-light"
+            >
+              One of the premier colleges of Osmania University, Nizam College
+              celebrated its centenary in 1987. The College is one of the oldest
+              and most prestigious institutions of higher education not only in
+              Telangana State but also in India. It was established in 1887 by
+              the amalgamation of the Hyderabad School (Noble School) and
+              Madarsa-I-Aliya. Initially it was affiliated to the University of
+              Madras for 60 years and was made a constituent college of Osmania
+              University...
+            </p>
+            <div
+              class="flex flex-col sm:flex-row items-center justify-between gap-4 pt-6 border-t border-white/5"
+            >
+              <div
+                class="flex items-center space-x-5 text-[10px] font-bold tracking-widest text-slate-400 uppercase"
+              >
+                <span>Estd: <span class="text-white">1887</span></span>
+                <span class="text-white/10">|</span>
+                <span
+                  >Classification:
+                  <span class="text-white">Constituent Campus</span></span
+                >
+              </div>
+              <button
+                class="w-full sm:w-auto bg-lux-gold hover:bg-yellow-500 text-brand-950 text-xs font-black uppercase tracking-wider px-6 py-3.5 rounded-xl transition-all duration-300"
+              >
+                Visit Campus Portal <i class="fa-solid fa-angle-right ml-1"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- UNIVERSITY MINUTIAE & BENTO STATS SYSTEM (Screen 3 Tabs) -->
+    <section
+      id="stats-anchor"
+      class="w-full bg-slate-900/60 border-t border-white/5 py-24 px-8 relative"
+    >
+      <div class="max-w-7xl mx-auto space-y-12">
+        <div
+          class="flex flex-col lg:flex-row lg:items-end justify-between gap-6 border-b border-white/5 pb-6"
+        >
+          <div class="space-y-3">
+            <span
+              class="text-[10px] font-black uppercase tracking-widest text-lux-gold"
+              >Ecosystem Ledger</span
+            >
+            <h3
+              class="font-serif text-3xl md:text-4xl font-extrabold text-white"
+            >
+              University Minutiae & Ecosystem
+            </h3>
+          </div>
+          <!-- Navigation Tabs Mapped from Tab Options in Screen 3 -->
+          <div class="flex flex-wrap gap-2" id="statCategories">
+            <button
+              onclick="showStatSection('minutiae')"
+              id="stat-btn-minutiae"
+              class="stat-select-btn active text-xs font-bold tracking-wider uppercase px-5 py-3 bg-lux-gold text-brand-950 rounded-full transition-all duration-300"
+            >
+              University Minutiae
+            </button>
+            <button
+              onclick="showStatSection('programmes')"
+              id="stat-btn-programmes"
+              class="stat-select-btn text-xs font-bold tracking-wider uppercase px-5 py-3 bg-white/5 text-slate-400 hover:text-white rounded-full transition-all duration-300"
+            >
+              Programmes Offered
+            </button>
+            <button
+              onclick="showStatSection('research')"
+              id="stat-btn-research"
+              class="stat-select-btn text-xs font-bold tracking-wider uppercase px-5 py-3 bg-white/5 text-slate-400 hover:text-white rounded-full transition-all duration-300"
+            >
+              Research Ecosystem
+            </button>
+            <button
+              onclick="showStatSection('infrastructure')"
+              id="stat-btn-infrastructure"
+              class="stat-select-btn text-xs font-bold tracking-wider uppercase px-5 py-3 bg-white/5 text-slate-400 hover:text-white rounded-full transition-all duration-300"
+            >
+              Infrastructure
+            </button>
+            <button
+              onclick="showStatSection('foreign')"
+              id="stat-btn-foreign"
+              class="stat-select-btn text-xs font-bold tracking-wider uppercase px-5 py-3 bg-white/5 text-slate-400 hover:text-white rounded-full transition-all duration-300"
+            >
+              Foreign Students
+            </button>
+            <button
+              onclick="showStatSection('green')"
+              id="stat-btn-green"
+              class="stat-select-btn text-xs font-bold tracking-wider uppercase px-5 py-3 bg-white/5 text-slate-400 hover:text-white rounded-full transition-all duration-300"
+            >
+              Green Campus
+            </button>
+          </div>
+        </div>
+
+        <!-- Panel 1: University Minutiae (All stats from Screen 3) -->
+        <div
+          id="stat-panel-minutiae"
+          class="stat-panel grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4"
+        >
+          <div
+            class="glass-panel p-6 rounded-2xl space-y-3 relative overflow-hidden group"
+          >
+            <div
+              class="h-9 w-9 bg-white/5 text-lux-gold rounded-lg flex items-center justify-center text-md"
+            >
+              <i class="fa-solid fa-graduation-cap"></i>
+            </div>
+            <div
+              class="text-4xl font-black text-white group-hover:text-lux-gold transition-all duration-300"
+            >
+              12
+            </div>
+            <div>
+              <h4
+                class="text-[10px] font-bold tracking-widest text-slate-300 uppercase"
+              >
+                Faculties
+              </h4>
+              <p
+                class="text-[9px] text-slate-500 mt-1 font-semibold uppercase leading-tight"
+              >
+                Primary Academic Wings
+              </p>
+            </div>
+          </div>
+
+          <div
+            class="glass-panel p-6 rounded-2xl space-y-3 relative overflow-hidden group"
+          >
+            <div
+              class="h-9 w-9 bg-white/5 text-lux-gold rounded-lg flex items-center justify-center text-md"
+            >
+              <i class="fa-solid fa-school"></i>
+            </div>
+            <div
+              class="text-4xl font-black text-white group-hover:text-lux-gold transition-all duration-300"
+            >
+              08
+            </div>
+            <div>
+              <h4
+                class="text-[10px] font-bold tracking-widest text-slate-300 uppercase"
+              >
+                Campus Colleges
+              </h4>
+              <p
+                class="text-[9px] text-slate-500 mt-1 font-semibold uppercase leading-tight"
+              >
+                Primary Hubs
+              </p>
+            </div>
+          </div>
+
+          <div
+            class="glass-panel p-6 rounded-2xl space-y-3 relative overflow-hidden group"
+          >
+            <div
+              class="h-9 w-9 bg-white/5 text-lux-gold rounded-lg flex items-center justify-center text-md"
+            >
+              <i class="fa-solid fa-sitemap"></i>
+            </div>
+            <div
+              class="text-4xl font-black text-white group-hover:text-lux-gold transition-all duration-300"
+            >
+              56
+            </div>
+            <div>
+              <h4
+                class="text-[10px] font-bold tracking-widest text-slate-300 uppercase"
+              >
+                Departments
+              </h4>
+              <p
+                class="text-[9px] text-slate-500 mt-1 font-semibold uppercase leading-tight"
+              >
+                Subject Disciplines
+              </p>
+            </div>
+          </div>
+
+          <div
+            class="glass-panel p-6 rounded-2xl space-y-3 relative overflow-hidden group"
+          >
+            <div
+              class="h-9 w-9 bg-white/5 text-lux-gold rounded-lg flex items-center justify-center text-md"
+            >
+              <i class="fa-solid fa-landmark"></i>
+            </div>
+            <div
+              class="text-4xl font-black text-white group-hover:text-lux-gold transition-all duration-300"
+            >
+              04
+            </div>
+            <div>
+              <h4
+                class="text-[10px] font-bold tracking-widest text-slate-300 uppercase"
+              >
+                Constituent
+              </h4>
+              <p
+                class="text-[9px] text-slate-500 mt-1 font-semibold uppercase leading-tight"
+              >
+                Colleges Managed
+              </p>
+            </div>
+          </div>
+
+          <div
+            class="glass-panel p-6 rounded-2xl space-y-3 relative overflow-hidden group"
+          >
+            <div
+              class="h-9 w-9 bg-white/5 text-lux-gold rounded-lg flex items-center justify-center text-md"
+            >
+              <i class="fa-solid fa-landmark-flag"></i>
+            </div>
+            <div
+              class="text-4xl font-black text-white group-hover:text-lux-gold transition-all duration-300"
+            >
+              05
+            </div>
+            <div>
+              <h4
+                class="text-[10px] font-bold tracking-widest text-slate-300 uppercase"
+              >
+                District PG
+              </h4>
+              <p
+                class="text-[9px] text-slate-500 mt-1 font-semibold uppercase leading-tight"
+              >
+                Ecosystem Campuses
+              </p>
+            </div>
+          </div>
+
+          <div
+            class="glass-panel p-6 rounded-2xl space-y-3 relative overflow-hidden group"
+          >
+            <div
+              class="h-9 w-9 bg-white/5 text-lux-gold rounded-lg flex items-center justify-center text-md"
+            >
+              <i class="fa-solid fa-network-wired"></i>
+            </div>
+            <div
+              class="text-4xl font-black text-white group-hover:text-lux-gold transition-all duration-300"
+            >
+              720+
+            </div>
+            <div>
+              <h4
+                class="text-[10px] font-bold tracking-widest text-slate-300 uppercase"
+              >
+                Affiliated
+              </h4>
+              <p
+                class="text-[9px] text-slate-500 mt-1 font-semibold uppercase leading-tight"
+              >
+                Associated Campuses
+              </p>
+            </div>
+          </div>
+
+          <div
+            class="glass-panel p-6 rounded-2xl space-y-3 relative overflow-hidden group"
+          >
+            <div
+              class="h-9 w-9 bg-white/5 text-lux-gold rounded-lg flex items-center justify-center text-md"
+            >
+              <i class="fa-solid fa-user-tie"></i>
+            </div>
+            <div
+              class="text-4xl font-black text-white group-hover:text-lux-gold transition-all duration-300"
+            >
+              345
+            </div>
+            <div>
+              <h4
+                class="text-[10px] font-bold tracking-widest text-slate-300 uppercase"
+              >
+                Regular Faculty
+              </h4>
+              <p
+                class="text-[9px] text-slate-500 mt-1 font-semibold uppercase leading-tight"
+              >
+                Fulltime Academics
+              </p>
+            </div>
+          </div>
+
+          <div
+            class="glass-panel p-6 rounded-2xl space-y-3 relative overflow-hidden group"
+          >
+            <div
+              class="h-9 w-9 bg-white/5 text-lux-gold rounded-lg flex items-center justify-center text-md"
+            >
+              <i class="fa-solid fa-user-clock"></i>
+            </div>
+            <div
+              class="text-4xl font-black text-white group-hover:text-lux-gold transition-all duration-300"
+            >
+              358
+            </div>
+            <div>
+              <h4
+                class="text-[10px] font-bold tracking-widest text-slate-300 uppercase"
+              >
+                Contract
+              </h4>
+              <p
+                class="text-[9px] text-slate-500 mt-1 font-semibold uppercase leading-tight"
+              >
+                Adhoc Lecturers
+              </p>
+            </div>
+          </div>
+
+          <div
+            class="glass-panel p-6 rounded-2xl space-y-3 relative overflow-hidden group"
+          >
+            <div
+              class="h-9 w-9 bg-white/5 text-lux-gold rounded-lg flex items-center justify-center text-md"
+            >
+              <i class="fa-solid fa-crown"></i>
+            </div>
+            <div
+              class="text-4xl font-black text-white group-hover:text-lux-gold transition-all duration-300"
+            >
+              02
+            </div>
+            <div>
+              <h4
+                class="text-[10px] font-bold tracking-widest text-slate-300 uppercase"
+              >
+                Emeritus Prof
+              </h4>
+              <p
+                class="text-[9px] text-slate-500 mt-1 font-semibold uppercase leading-tight"
+              >
+                Renowned Advisors
+              </p>
+            </div>
+          </div>
+
+          <div
+            class="glass-panel p-6 rounded-2xl space-y-3 relative overflow-hidden group"
+          >
+            <div
+              class="h-9 w-9 bg-white/5 text-lux-gold rounded-lg flex items-center justify-center text-md"
+            >
+              <i class="fa-solid fa-user-gear"></i>
+            </div>
+            <div
+              class="text-4xl font-black text-white group-hover:text-lux-gold transition-all duration-300"
+            >
+              02
+            </div>
+            <div>
+              <h4
+                class="text-[10px] font-bold tracking-widest text-slate-300 uppercase"
+              >
+                Adjunct Prof
+              </h4>
+              <p
+                class="text-[9px] text-slate-500 mt-1 font-semibold uppercase leading-tight"
+              >
+                Subject Experts
+              </p>
+            </div>
+          </div>
+
+          <div
+            class="glass-panel p-6 rounded-2xl space-y-3 relative overflow-hidden group"
+          >
+            <div
+              class="h-9 w-9 bg-white/5 text-lux-gold rounded-lg flex items-center justify-center text-md"
+            >
+              <i class="fa-solid fa-briefcase"></i>
+            </div>
+            <div
+              class="text-4xl font-black text-white group-hover:text-lux-gold transition-all duration-300"
+            >
+              10
+            </div>
+            <div>
+              <h4
+                class="text-[10px] font-bold tracking-widest text-slate-300 uppercase"
+              >
+                Of Practice
+              </h4>
+              <p
+                class="text-[9px] text-slate-500 mt-1 font-semibold uppercase leading-tight"
+              >
+                Industry Specialists
+              </p>
+            </div>
+          </div>
+
+          <div
+            class="glass-panel p-6 rounded-2xl space-y-3 relative overflow-hidden group"
+          >
+            <div
+              class="h-9 w-9 bg-white/5 text-lux-gold rounded-lg flex items-center justify-center text-md"
+            >
+              <i class="fa-solid fa-users"></i>
+            </div>
+            <div
+              class="text-4xl font-black text-white group-hover:text-lux-gold transition-all duration-300"
+            >
+              1022
+            </div>
+            <div>
+              <h4
+                class="text-[10px] font-bold tracking-widest text-slate-300 uppercase"
+              >
+                Non-Teaching
+              </h4>
+              <p
+                class="text-[9px] text-slate-500 mt-1 font-semibold uppercase leading-tight"
+              >
+                Active Tech & Admin
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Panel 2: Programmes Offered -->
+        <div
+          id="stat-panel-programmes"
+          class="stat-panel hidden grid grid-cols-1 md:grid-cols-3 gap-6"
+        >
+          <div class="glass-panel p-8 rounded-3xl space-y-4">
+            <div
+              class="h-10 w-10 bg-white/5 text-lux-gold rounded-xl flex items-center justify-center"
+            >
+              <i class="fa-solid fa-graduation-cap"></i>
+            </div>
+            <h4 class="text-sm font-bold tracking-wider uppercase text-white">
+              Undergraduate Modules
+            </h4>
+            <p class="text-xs text-slate-400 font-light leading-relaxed">
+              Comprehensive bachelors courses ranging from Engineering,
+              Computing, Business Studies, Sciences, Commerce, Arts, to
+              Comparative Philosophy.
+            </p>
+          </div>
+          <div class="glass-panel p-8 rounded-3xl space-y-4">
+            <div
+              class="h-10 w-10 bg-white/5 text-lux-gold rounded-xl flex items-center justify-center"
+            >
+              <i class="fa-solid fa-microscope"></i>
+            </div>
+            <h4 class="text-sm font-bold tracking-wider uppercase text-white">
+              Postgraduate Wings
+            </h4>
+            <p class="text-xs text-slate-400 font-light leading-relaxed">
+              Advanced academic masters streams geared towards intensive
+              technological specialization and business management mastery.
+            </p>
+          </div>
+          <div class="glass-panel p-8 rounded-3xl space-y-4">
+            <div
+              class="h-10 w-10 bg-white/5 text-lux-gold rounded-xl flex items-center justify-center"
+            >
+              <i class="fa-solid fa-medal"></i>
+            </div>
+            <h4 class="text-sm font-bold tracking-wider uppercase text-white">
+              Doctoral & Post-Doc Study
+            </h4>
+            <p class="text-xs text-slate-400 font-light leading-relaxed">
+              Exclusive UGC research pathways offering full-time fellowships,
+              research infrastructure, and global academic affiliations.
+            </p>
+          </div>
+        </div>
+
+        <!-- Panel 3: Research Ecosystem -->
+        <div
+          id="stat-panel-research"
+          class="stat-panel hidden grid grid-cols-1 md:grid-cols-2 gap-6"
+        >
+          <div class="glass-panel p-8 rounded-3xl flex gap-5 items-start">
+            <div
+              class="h-12 w-12 bg-white/5 text-lux-gold rounded-xl flex items-center justify-center shrink-0 border border-white/5"
+            >
+              <i class="fa-solid fa-flask-vial text-lg"></i>
+            </div>
+            <div class="space-y-2">
+              <h4 class="text-sm font-bold tracking-wider uppercase text-white">
+                Faculty Seed Grant Modules
+              </h4>
+              <p class="text-xs text-slate-400 font-light leading-relaxed">
+                Centralized research grant setup. Active financial assistance
+                directly empowering academic publication, international
+                patenting, and pilot scientific builds.
+              </p>
+            </div>
+          </div>
+          <div class="glass-panel p-8 rounded-3xl flex gap-5 items-start">
+            <div
+              class="h-12 w-12 bg-white/5 text-lux-gold rounded-xl flex items-center justify-center shrink-0 border border-white/5"
+            >
+              <i class="fa-solid fa-lightbulb text-lg"></i>
+            </div>
+            <div class="space-y-2">
+              <h4 class="text-sm font-bold tracking-wider uppercase text-white">
+                Osmania Technology Business Incubator (OTBI)
+              </h4>
+              <p class="text-xs text-slate-400 font-light leading-relaxed">
+                A specialized incubation engine empowering youth startup
+                ecosystem, providing office infrastructure, mentorship
+                framework, and seed funding pathways.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Panel 4: Infrastructure -->
+        <div
+          id="stat-panel-infrastructure"
+          class="stat-panel hidden grid grid-cols-1 md:grid-cols-3 gap-6"
+        >
+          <div class="glass-panel p-8 rounded-3xl text-center space-y-4">
+            <div
+              class="mx-auto h-12 w-12 bg-white/5 text-lux-gold rounded-xl flex items-center justify-center border border-white/5"
+            >
+              <i class="fa-solid fa-book text-xl"></i>
+            </div>
+            <h4 class="text-sm font-bold tracking-wider uppercase text-white">
+              Central Library System
+            </h4>
+            <p class="text-xs text-slate-400 font-light leading-relaxed">
+              Housing over 500,000 historical reference volumes, rare oriental
+              manuscripts, and digitized e-journal archives.
+            </p>
+          </div>
+          <div class="glass-panel p-8 rounded-3xl text-center space-y-4">
+            <div
+              class="mx-auto h-12 w-12 bg-white/5 text-lux-gold rounded-xl flex items-center justify-center border border-white/5"
+            >
+              <i class="fa-solid fa-dumbbell text-xl"></i>
+            </div>
+            <h4 class="text-sm font-bold tracking-wider uppercase text-white">
+              Physical Ed & Sports Complex
+            </h4>
+            <p class="text-xs text-slate-400 font-light leading-relaxed">
+              Equipped with Olympic-grade multi-sport tracks, fully loaded
+              indoor gymnasium hubs, and specialized athletic facilities.
+            </p>
+          </div>
+          <div class="glass-panel p-8 rounded-3xl text-center space-y-4">
+            <div
+              class="mx-auto h-12 w-12 bg-white/5 text-lux-gold rounded-xl flex items-center justify-center border border-white/5"
+            >
+              <i class="fa-solid fa-wifi text-xl"></i>
+            </div>
+            <h4 class="text-sm font-bold tracking-wider uppercase text-white">
+              Campus-wide Fibre Grid
+            </h4>
+            <p class="text-xs text-slate-400 font-light leading-relaxed">
+              High-bandwidth structured cabling and secure university network
+              nodes linking all constituent campuses.
+            </p>
+          </div>
+        </div>
+
+        <!-- Panel 5: Foreign Students -->
+        <div
+          id="stat-panel-foreign"
+          class="stat-panel hidden grid grid-cols-1 md:grid-cols-2 gap-6"
+        >
+          <div class="glass-panel p-8 rounded-3xl space-y-4">
+            <h4
+              class="text-sm font-bold tracking-wider uppercase text-white flex items-center gap-2"
+            >
+              <i class="fa-solid fa-passport text-lux-gold"></i> UFRO Admission
+              Portal
+            </h4>
+            <p class="text-xs text-slate-400 font-light leading-relaxed">
+              The University Foreign Relations Office (UFRO) oversees admission
+              processes for candidates across 80+ nations, streamlining visa
+              compliance, campus onboarding, and academic validation.
+            </p>
+          </div>
+          <div class="glass-panel p-8 rounded-3xl space-y-4">
+            <h4
+              class="text-sm font-bold tracking-wider uppercase text-white flex items-center gap-2"
+            >
+              <i class="fa-solid fa-earth-asia text-lux-gold"></i> Global
+              Student Community
+            </h4>
+            <p class="text-xs text-slate-400 font-light leading-relaxed">
+              Fostering cross-cultural dialogues and rich language integration.
+              Active student wings organize international cultural festivals and
+              inter-varsity diplomatic summits yearly.
+            </p>
+          </div>
+        </div>
+
+        <!-- Panel 6: Green Campus -->
+        <div
+          id="stat-panel-green"
+          class="stat-panel hidden grid grid-cols-1 md:grid-cols-3 gap-6"
+        >
+          <div class="glass-panel p-8 rounded-3xl space-y-3 text-center">
+            <i class="fa-solid fa-seedling text-lux-gold text-2xl"></i>
+            <h4 class="text-sm font-bold uppercase tracking-wider text-white">
+              1600+ Acres Greenery
+            </h4>
+            <p class="text-xs text-slate-400 font-light">
+              Sustaining thick natural forest covers, botanical conservatory
+              networks, and regional flora preservation programs.
+            </p>
+          </div>
+          <div class="glass-panel p-8 rounded-3xl space-y-3 text-center">
+            <i class="fa-solid fa-solar-panel text-lux-gold text-2xl"></i>
+            <h4 class="text-sm font-bold uppercase tracking-wider text-white">
+              Solar Grid Clean Power
+            </h4>
+            <p class="text-xs text-slate-400 font-light">
+              Equipped with clean solar grid systems supplying renewable
+              electricity to student hostels and core academic labs.
+            </p>
+          </div>
+          <div class="glass-panel p-8 rounded-3xl space-y-3 text-center">
+            <i class="fa-solid fa-faucet-drip text-lux-gold text-2xl"></i>
+            <h4 class="text-sm font-bold uppercase tracking-wider text-white">
+              Water Reclamation
+            </h4>
+            <p class="text-xs text-slate-400 font-light">
+              Implementing active grey-water recycling pipelines and rain
+              harvesting recharge wells across the entire estate.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- HISTORIC CORE VALUES SECTION (Screen 8 & 11) -->
+    <section
+      id="about-section"
+      class="max-w-7xl mx-auto px-8 py-24 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center relative"
+    >
+      <div class="absolute inset-x-0 top-0 grid-h-line"></div>
+
+      <!-- Left Side: Interactive Vision, Mission & History (Screen 11 Mapped Data) -->
+      <div class="space-y-8">
+        <div class="space-y-3">
+          <span
+            class="text-[10px] font-black uppercase tracking-widest text-lux-gold"
+            >Our Foundation Ideals</span
+          >
+          <h3 class="font-serif text-4xl md:text-5xl font-extrabold text-white">
+            About the University
+          </h3>
+          <p class="text-sm text-slate-400 leading-relaxed">
+            Osmania University, established in 1917, is the seventh oldest in
+            India, the third oldest in south India and the first to be
+            established in the erstwhile princely State of Hyderabad. Named
+            after its founder, Nawab Osman Ali Khan, VII Nizam, it is a monument
+            to linguistic and modern educational integration.
+          </p>
+        </div>
+
+        <!-- Sleek Interactive Grid Cards -->
+        <div class="space-y-4">
+          <div
+            class="border border-white/5 rounded-2xl p-6 bg-brand-900/35 hover:border-lux-gold/25 transition duration-300"
+          >
+            <div class="flex items-center space-x-3 text-lux-gold">
+              <i class="fa-solid fa-eye text-md"></i>
+              <h4 class="text-xs font-black tracking-widest uppercase">
+                Our Vision
+              </h4>
+            </div>
+            <p class="text-xs text-slate-400 mt-2 leading-relaxed">
+              The Vision of the University is to generate and disseminate
+              knowledge through a harmonious blend of ancient and modern wisdom,
+              and to provide quality education to all.
+            </p>
+          </div>
+
+          <div
+            class="border border-white/5 rounded-2xl p-6 bg-brand-900/35 hover:border-lux-gold/25 transition duration-300"
+          >
+            <div class="flex items-center space-x-3 text-lux-gold">
+              <i class="fa-solid fa-bullseye text-md"></i>
+              <h4 class="text-xs font-black tracking-widest uppercase">
+                Our Mission
+              </h4>
+            </div>
+            <p class="text-xs text-slate-400 mt-2 leading-relaxed">
+              To achieve excellence in teaching and research. To generate,
+              disseminate and preserve knowledge. To construct a more humane,
+              sustainable, and equitable society.
+            </p>
+          </div>
+
+          <div
+            class="border border-white/5 rounded-2xl p-6 bg-brand-900/35 hover:border-lux-gold/25 transition duration-300"
+          >
+            <div class="flex items-center space-x-3 text-lux-gold">
+              <i class="fa-solid fa-history text-md"></i>
+              <h4 class="text-xs font-black tracking-widest uppercase">
+                Our History
+              </h4>
+            </div>
+            <p class="text-xs text-slate-400 mt-2 leading-relaxed">
+              Osmania University is named after its founder, Nawab Osman Ali
+              Khan, the seventh Nizam of Hyderabad, whose visionary decree led
+              to the establishment of this historic institution.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Side: Landmark Architectural Visual Block -->
+      <div
+        class="relative rounded-3xl overflow-hidden shadow-2xl shadow-slate-950/40 border border-white/5 group zoom-container"
+      >
+        <div
+          class="absolute inset-0 bg-gradient-to-t from-brand-950 via-brand-950/20 to-transparent z-10"
+        ></div>
+        <img
+          src="https://images.unsplash.com/photo-1541339907198-e08756dedf3f?auto=format&fit=crop&q=80&w=800"
+          alt="Osmania University Arts College"
+          class="w-full h-[620px] object-cover opacity-65 zoom-img"
+        />
+
+        <div class="absolute bottom-8 left-8 right-8 z-20 space-y-4">
+          <div class="glass-panel p-5 rounded-2xl glow-gold">
+            <h5
+              class="text-xs font-black tracking-widest uppercase text-lux-gold"
+            >
+              Osmania Arts College
+            </h5>
+            <p
+              class="text-[11px] text-slate-300 mt-1.5 leading-relaxed font-light"
+            >
+              An architectural masterpiece built blending the historic
+              Indo-Saracenic design layouts with grand classical design cues.
+            </p>
+          </div>
+          <button
+            class="w-full py-4 bg-white hover:bg-lux-gold text-brand-950 text-xs font-black uppercase tracking-widest rounded-xl transition-all duration-300"
+          >
+            Read Complete History Chronology
+            <i class="fa-solid fa-arrow-trend-up ml-1"></i>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- EVENTS DIARY TIMELINE MODULE (Screen 3 Mapped Data) -->
+    <section
+      class="w-full bg-slate-900/40 border-t border-white/5 py-24 px-8 relative"
+    >
+      <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12">
+        <!-- Details Column -->
+        <div class="lg:col-span-4 space-y-5">
+          <span
+            class="text-[10px] font-black uppercase tracking-widest text-lux-gold"
+            >Calendar Platform</span
+          >
+          <h3 class="font-serif text-3xl md:text-4xl font-extrabold text-white">
+            Upcoming Events & Conferences
+          </h3>
+          <p class="text-xs text-slate-400 leading-relaxed font-light">
+            Join specialized summits, technical workshops, and global scientific
+            assemblies organised across our campus units.
+          </p>
+          <div class="pt-2">
+            <button
+              class="bg-lux-gold hover:bg-yellow-500 text-brand-950 text-xs font-black uppercase tracking-widest px-6 py-3.5 rounded-full transition-all duration-300"
+            >
+              View All Events
+              <i class="fa-solid fa-circle-chevron-right ml-1"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Event Cards Grid (Screen 3 Data) -->
+        <div class="lg:col-span-8 grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div
+            class="glass-panel p-6 rounded-3xl space-y-5 hover:border-lux-gold/30 transition duration-300 flex flex-col justify-between"
+          >
+            <div class="space-y-3">
+              <div
+                class="flex items-center justify-between border-b border-white/5 pb-2"
+              >
+                <span class="text-xs font-black text-lux-gold leading-tight"
+                  >06 - 08 JULY <br /><span
+                    class="text-slate-500 text-[9px] font-semibold"
+                    >2026</span
+                  ></span
+                >
+                <span
+                  class="text-[8px] bg-white/5 text-slate-400 px-2 py-0.5 rounded-md font-bold uppercase tracking-wider"
+                  >Workshop</span
+                >
+              </div>
+              <h5
+                class="text-xs font-bold text-slate-200 leading-relaxed group-hover:text-white"
+              >
+                HCDC - Free Three day Certificate Training Program on "Excel
+                Beyond Boundaries" from 6th-8th July, 2026.
+              </h5>
+            </div>
+            <p
+              class="text-[10px] text-slate-500 font-semibold tracking-wider uppercase"
+            >
+              Human Resource Dev Center
+            </p>
+          </div>
+
+          <div
+            class="glass-panel p-6 rounded-3xl space-y-5 hover:border-lux-gold/30 transition duration-300 flex flex-col justify-between"
+          >
+            <div class="space-y-3">
+              <div
+                class="flex items-center justify-between border-b border-white/5 pb-2"
+              >
+                <span class="text-xs font-black text-lux-gold leading-tight"
+                  >02 - 03 JULY <br /><span
+                    class="text-slate-500 text-[9px] font-semibold"
+                    >2026</span
+                  ></span
+                >
+                <span
+                  class="text-[8px] bg-indigo-500/10 text-indigo-400 px-2 py-0.5 rounded-md font-bold uppercase tracking-wider"
+                  >Symposium</span
+                >
+              </div>
+              <h5
+                class="text-xs font-bold text-slate-200 leading-relaxed group-hover:text-white"
+              >
+                2-Day International Conference on Reimagining English Language
+                Teaching in the Age of AI from 2nd-3rd July 2026.
+              </h5>
+            </div>
+            <p
+              class="text-[10px] text-slate-500 font-semibold tracking-wider uppercase"
+            >
+              Department of English, OU
+            </p>
+          </div>
+
+          <div
+            class="glass-panel p-6 rounded-3xl space-y-5 hover:border-lux-gold/30 transition duration-300 flex flex-col justify-between"
+          >
+            <div class="space-y-3">
+              <div
+                class="flex items-center justify-between border-b border-white/5 pb-2"
+              >
+                <span class="text-xs font-black text-lux-gold leading-tight"
+                  >10 - 11 DEC <br /><span
+                    class="text-slate-500 text-[9px] font-semibold"
+                    >2026</span
+                  ></span
+                >
+                <span
+                  class="text-[8px] bg-rose-500/10 text-rose-400 px-2 py-0.5 rounded-md font-bold uppercase tracking-wider"
+                  >National</span
+                >
+              </div>
+              <h5
+                class="text-xs font-bold text-slate-200 leading-relaxed group-hover:text-white"
+              >
+                2-Day SRESA's 7th National Conference on Reliability and Safety
+                (NCRS-2026).
+              </h5>
+            </div>
+            <p
+              class="text-[10px] text-slate-500 font-semibold tracking-wider uppercase"
+            >
+              Mechanical Engineering Dept
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PORTAL DIRECTORY SUB-GRID (Screen 9 Mapped Pathways) -->
+    <section class="max-w-7xl mx-auto px-8 py-24 space-y-12 relative">
+      <div class="absolute inset-x-0 top-0 grid-h-line"></div>
+
+      <div class="text-center space-y-3">
+        <span
+          class="text-[10px] font-black uppercase tracking-widest text-lux-gold"
+          >Direct Access Nodes</span
+        >
+        <h3 class="font-serif text-4xl font-extrabold text-white">
+          Central Pathways
+        </h3>
+        <p class="text-xs text-slate-400 font-light max-w-lg mx-auto">
+          Instant routing to specialised university centers, examination hubs,
+          and statistical reporting databases.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <a
+          href="#link"
+          class="glass-panel p-4 rounded-xl flex items-center space-x-4 border-white/5 hover:border-lux-gold/30 transition-all duration-300 group"
+        >
+          <span
+            class="h-9 w-9 rounded-lg bg-white/5 text-lux-gold group-hover:bg-lux-gold group-hover:text-brand-950 flex items-center justify-center transition-all duration-300"
+            ><i class="fa-solid fa-graduation-cap text-xs"></i
+          ></span>
+          <span
+            class="text-xs font-bold text-slate-200 group-hover:text-white transition"
+            >Academic Info</span
+          >
+        </a>
+        <a
+          href="#link"
+          class="glass-card p-4 rounded-xl flex items-center space-x-4 border border-white/5 hover:border-lux-gold/30 transition-all duration-300 group"
+        >
+          <span
+            class="h-9 w-9 rounded-lg bg-white/5 text-lux-gold group-hover:bg-lux-gold group-hover:text-brand-950 flex items-center justify-center transition-all duration-300"
+            ><i class="fa-solid fa-clipboard-check text-xs"></i
+          ></span>
+          <span
+            class="text-xs font-bold text-slate-200 group-hover:text-white transition"
+            >Examination Results</span
+          >
+        </a>
+        <a
+          href="#link"
+          class="glass-card p-4 rounded-xl flex items-center space-x-4 border border-white/5 hover:border-lux-gold/30 transition-all duration-300 group"
+        >
+          <span
+            class="h-9 w-9 rounded-lg bg-white/5 text-lux-gold group-hover:bg-lux-gold group-hover:text-brand-950 flex items-center justify-center transition-all duration-300"
+            ><i class="fa-solid fa-book-open text-xs"></i
+          ></span>
+          <span
+            class="text-xs font-bold text-slate-200 group-hover:text-white transition"
+            >UGC MMTTC Center</span
+          >
+        </a>
+        <a
+          href="#link"
+          class="glass-card p-4 rounded-xl flex items-center space-x-4 border border-white/5 hover:border-lux-gold/30 transition-all duration-300 group"
+        >
+          <span
+            class="h-9 w-9 rounded-lg bg-white/5 text-lux-gold group-hover:bg-lux-gold group-hover:text-brand-950 flex items-center justify-center transition-all duration-300"
+            ><i class="fa-solid fa-user-group text-xs"></i
+          ></span>
+          <span
+            class="text-xs font-bold text-slate-200 group-hover:text-white transition"
+            >Alumni Association</span
+          >
+        </a>
+        <a
+          href="#link"
+          class="glass-card p-4 rounded-xl flex items-center space-x-4 border border-white/5 hover:border-lux-gold/30 transition-all duration-300 group"
+        >
+          <span
+            class="h-9 w-9 rounded-lg bg-white/5 text-lux-gold group-hover:bg-lux-gold group-hover:text-brand-950 flex items-center justify-center transition-all duration-300"
+            ><i class="fa-solid fa-chart-pie text-xs"></i
+          ></span>
+          <span
+            class="text-xs font-bold text-slate-200 group-hover:text-white transition"
+            >Statistical Cell</span
+          >
+        </a>
+        <a
+          href="#link"
+          class="glass-card p-4 rounded-xl flex items-center space-x-4 border border-white/5 hover:border-lux-gold/30 transition-all duration-300 group"
+        >
+          <span
+            class="h-9 w-9 rounded-lg bg-white/5 text-lux-gold group-hover:bg-lux-gold group-hover:text-brand-950 flex items-center justify-center transition-all duration-300"
+            ><i class="fa-solid fa-building-circle-check text-xs"></i
+          ></span>
+          <span
+            class="text-xs font-bold text-slate-200 group-hover:text-white transition"
+            >College Dev Council (CDC)</span
+          >
+        </a>
+        <a
+          href="#link"
+          class="glass-card p-4 rounded-xl flex items-center space-x-4 border border-white/5 hover:border-lux-gold/30 transition-all duration-300 group"
+        >
+          <span
+            class="h-9 w-9 rounded-lg bg-white/5 text-lux-gold group-hover:bg-lux-gold group-hover:text-brand-950 flex items-center justify-center transition-all duration-300"
+            ><i class="fa-solid fa-scale-balanced text-xs"></i
+          ></span>
+          <span
+            class="text-xs font-bold text-slate-200 group-hover:text-white transition"
+            >Policies & Grievances</span
+          >
+        </a>
+        <a
+          href="#link"
+          class="glass-card p-4 rounded-xl flex items-center space-x-4 border border-white/5 hover:border-lux-gold/30 transition-all duration-300 group"
+        >
+          <span
+            class="h-9 w-9 rounded-lg bg-white/5 text-lux-gold group-hover:bg-lux-gold group-hover:text-brand-950 flex items-center justify-center transition-all duration-300"
+            ><i class="fa-solid fa-file-invoice-dollar text-xs"></i
+          ></span>
+          <span
+            class="text-xs font-bold text-slate-200 group-hover:text-white transition"
+            >Tenders & Contracts</span
+          >
+        </a>
+      </div>
+    </section>
+
+    <!-- ADMIN SPOTLIGHT (Screen 9 VC Address) -->
+    <section
+      id="vc-panel"
+      class="w-full bg-slate-900/60 border-t border-white/5 py-24 px-8 relative"
+    >
+      <div
+        class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 items-center"
+      >
+        <div class="lg:col-span-5 relative group">
+          <div
+            class="absolute inset-0 bg-gradient-to-r from-brand-500 to-indigo-500 rounded-3xl blur-[80px] opacity-10 group-hover:opacity-20 transition duration-500"
+          ></div>
+          <div
+            class="relative bg-brand-950 border border-white/5 p-6 rounded-3xl space-y-6"
+          >
+            <div
+              class="h-96 w-full rounded-2xl overflow-hidden bg-brand-900 relative"
+            >
+              <img
+                src="https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&q=80&w=600"
+                alt="Osmania University Vice Chancellor"
+                class="w-full h-full object-cover opacity-80"
+              />
+              <div
+                class="absolute bottom-4 inset-x-4 bg-brand-950/85 border border-white/5 p-4 rounded-xl backdrop-blur-md"
+              >
+                <h4
+                  class="text-xs font-black tracking-widest uppercase text-white"
+                >
+                  Prof. Kumar Vemula
+                </h4>
+                <p
+                  class="text-[9px] text-lux-gold mt-1 font-bold tracking-widest uppercase"
+                >
+                  Vice-Chancellor, Osmania University
+                </p>
+              </div>
+            </div>
+
+            <div
+              class="flex items-center justify-between text-[10px] font-bold tracking-widest uppercase"
+            >
+              <div>
+                <span class="text-slate-500">Recognition status</span>
+                <p class="text-lux-gold mt-0.5">NAAC "A+" Rated University</p>
+              </div>
+              <span
+                class="px-3.5 py-1.5 bg-brand-500/10 text-brand-500 border border-brand-500/20 rounded-full font-black"
+                >Executive Assembly</span
+              >
+            </div>
+          </div>
+        </div>
+
+        <div class="lg:col-span-7 space-y-6">
+          <span
+            class="text-[10px] font-black uppercase tracking-widest text-lux-gold"
+            >Chancellor Address</span
+          >
+          <h3 class="font-serif text-4xl md:text-5xl font-extrabold text-white">
+            Dean & Leadership Statement
+          </h3>
+          <div class="w-16 h-0.5 bg-lux-gold mt-4"></div>
+
+          <p
+            class="text-xs md:text-sm text-slate-300 leading-relaxed font-light"
+          >
+            "Osmania University represents a landmark historical decree of
+            educational reform. Our task is to blend the rich linguistic
+            integration with state-of-the-art computational methodologies,
+            enabling students to transform into global leaders. As an autonomous
+            institution of the University Grants Commission, we continuously
+            update our laboratories, syllabus standards, and patent frameworks
+            to match the upcoming scientific era."
+          </p>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4">
+            <div class="flex gap-4 items-start">
+              <span
+                class="h-9 w-9 rounded-lg bg-white/5 text-lux-gold flex items-center justify-center shrink-0 border border-white/5"
+                ><i class="fa-solid fa-crown text-xs"></i
+              ></span>
+              <div class="space-y-1">
+                <h5 class="text-xs font-bold text-slate-200">
+                  Executive Autonomy
+                </h5>
+                <p class="text-[10px] text-slate-500 font-medium">
+                  UGC status granting full syllabus Customisation capabilities.
+                </p>
+              </div>
+            </div>
+            <div class="flex gap-4 items-start">
+              <span
+                class="h-9 w-9 rounded-lg bg-white/5 text-lux-gold flex items-center justify-center shrink-0 border border-white/5"
+                ><i class="fa-solid fa-cube text-xs"></i
+              ></span>
+              <div class="space-y-1">
+                <h5 class="text-xs font-bold text-slate-200">
+                  Technological Incubation
+                </h5>
+                <p class="text-[10px] text-slate-500 font-medium">
+                  Nurturing patent builds, scientific exploration, and startup
+                  investments.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="pt-6">
+            <button
+              class="bg-lux-gold hover:bg-yellow-500 text-brand-950 text-xs font-black uppercase tracking-widest px-8 py-4 rounded-xl transition shadow-2xl shadow-lux-gold/10"
+            >
+              Read VC Statement <i class="fa-solid fa-arrow-trend-up ml-1"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PREMIUM EDITORIAL FOOTER & NAVIGATION (Screen 1 details) -->
+    <footer
+      id="footer"
+      class="w-full bg-brand-950 border-t border-white/5 pt-24 pb-12 px-8 relative"
+    >
+      <div
+        class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-12 pb-16 border-b border-white/5"
+      >
+        <!-- Address coordinates with live dynamic custom dark map visualizer -->
+        <div class="md:col-span-4 space-y-6">
+          <div class="flex items-center space-x-4">
+            <img
+              src="https://www.osmania.ac.in/images/logo.png"
+              alt="OU Logo"
+              class="h-10 w-auto object-contain brightness-0 invert"
+              onerror="this.onerror=null; this.src='https://upload.wikimedia.org/wikipedia/en/2/23/Osmania_University_Logo.png';"
+            />
+            <div class="space-y-0.5">
+              <h4 class="font-serif text-lg font-extrabold text-white">
+                Osmania University
+              </h4>
+              <p
+                class="text-[9px] uppercase tracking-widest font-bold text-slate-500"
+              >
+                Accredited 'A+' Grade by NAAC
+              </p>
+            </div>
+          </div>
+
+          <p class="text-xs text-slate-400 leading-relaxed font-light">
+            Osmania University Campus Area,<br />
+            Hyderabad, Telangana 500007, India.<br />
+            Autonomous University of UGC.
+          </p>
+
+          <!-- High-End Visual styled Dark Mode Map Layout -->
+          <div
+            class="rounded-2xl border border-white/5 overflow-hidden relative group h-40"
+          >
+            <div
+              class="absolute inset-0 bg-brand-900 flex items-center justify-center"
+            >
+              <div
+                class="absolute inset-0 opacity-10 bg-[radial-gradient(#ffffff_1px,transparent_1px)] [background-size:12px_12px]"
+              ></div>
+              <div class="text-center z-10 px-5 space-y-2">
+                <i
+                  class="fa-solid fa-map-location-dot text-lux-gold text-2xl animate-bounce"
+                ></i>
+                <h5
+                  class="text-[9px] font-black tracking-widest uppercase text-white"
+                >
+                  Centenary Estate Pointer
+                </h5>
+                <p class="text-[8px] text-slate-500 uppercase tracking-wider">
+                  Explore 1600+ Acres Green Campus Map
+                </p>
+              </div>
+            </div>
+            <a
+              href="https://maps.google.com"
+              target="_blank"
+              class="absolute inset-0 bg-brand-950/20 hover:bg-transparent transition duration-300 z-20"
+            ></a>
+          </div>
+        </div>
+
+        <!-- About Us Columns Mapped from Screen 1 -->
+        <div class="md:col-span-2.5 space-y-4">
+          <h4
+            class="text-[10px] font-black uppercase tracking-widest text-white border-b border-white/5 pb-2"
+          >
+            About Us
+          </h4>
+          <ul
+            class="space-y-3 text-xs text-slate-400 font-semibold uppercase tracking-wider"
+          >
+            <li>
+              <a href="#about" class="hover:text-lux-gold transition-all"
+                >Origin and History</a
+              >
+            </li>
+            <li>
+              <a href="#profile" class="hover:text-lux-gold transition-all"
+                >University Profile</a
+              >
+            </li>
+            <li>
+              <a href="#vision" class="hover:text-lux-gold transition-all"
+                >Vision & Mission</a
+              >
+            </li>
+            <li>
+              <a href="#logo" class="hover:text-lux-gold transition-all"
+                >OU Logo Significance</a
+              >
+            </li>
+            <li>
+              <a href="#alumni" class="hover:text-lux-gold transition-all"
+                >Distinguished Alumni</a
+              >
+            </li>
+            <li>
+              <a
+                href="#accreditation"
+                class="hover:text-lux-gold transition-all"
+                >Accreditation Details</a
+              >
+            </li>
+          </ul>
+        </div>
+
+        <!-- Examinations Columns Mapped from Screen 1 -->
+        <div class="md:col-span-2.5 space-y-4">
+          <h4
+            class="text-[10px] font-black uppercase tracking-widest text-white border-b border-white/5 pb-2"
+          >
+            Examinations
+          </h4>
+          <ul
+            class="space-y-3 text-xs text-slate-400 font-semibold uppercase tracking-wider"
+          >
+            <li>
+              <a href="#certs" class="hover:text-lux-gold transition-all"
+                >Apply for Certificates</a
+              >
+            </li>
+            <li>
+              <a href="#notes" class="hover:text-lux-gold transition-all"
+                >Examination Pressnotes</a
+              >
+            </li>
+            <li>
+              <a href="#tables" class="hover:text-lux-gold transition-all"
+                >Examination Timetables</a
+              >
+            </li>
+            <li>
+              <a href="#results" class="hover:text-lux-gold transition-all"
+                >Examination Results</a
+              >
+            </li>
+            <li>
+              <a href="#syllabus" class="hover:text-lux-gold transition-all"
+                >Syllabus Directory</a
+              >
+            </li>
+            <li>
+              <a href="#almanac" class="hover:text-lux-gold transition-all"
+                >Almanacs Directory</a
+              >
+            </li>
+          </ul>
+        </div>
+
+        <!-- E-Resources Column Mapped from Screen 1 -->
+        <div class="md:col-span-3 space-y-4">
+          <h4
+            class="text-[10px] font-black uppercase tracking-widest text-white border-b border-white/5 pb-2"
+          >
+            E-Resources
+          </h4>
+          <ul
+            class="space-y-3 text-xs text-slate-400 font-semibold uppercase tracking-wider"
+          >
+            <li>
+              <a href="#ebooks" class="hover:text-lux-gold transition-all"
+                >E-Books Database</a
+              >
+            </li>
+            <li>
+              <a href="#colleges" class="hover:text-lux-gold transition-all"
+                >Constituent Colleges Portal</a
+              >
+            </li>
+            <li>
+              <a href="#journals" class="hover:text-lux-gold transition-all"
+                >e-ShodhSindhu e-Journals</a
+              >
+            </li>
+            <li>
+              <a href="#sage" class="hover:text-lux-gold transition-all"
+                >SAGE e-Journals Integration</a
+              >
+            </li>
+            <li>
+              <a
+                href="#indian-journals"
+                class="hover:text-lux-gold transition-all"
+                >Indian e-Journals Index</a
+              >
+            </li>
+            <li>
+              <a href="#opac" class="hover:text-lux-gold transition-all"
+                >Library OPAC Catalog</a
+              >
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Licensing, Visitor Statistics & Social Coordinates -->
+      <div
+        class="max-w-7xl mx-auto pt-12 flex flex-col md:flex-row items-center justify-between gap-6"
+      >
+        <div class="space-y-1">
+          <p class="text-xs text-slate-500 font-semibold">
+            &copy; Copyright All Rights Reserved 2026, Osmania University
+            Hyderabad.
+          </p>
+          <p
+            class="text-[9px] text-slate-600 uppercase tracking-widest font-bold"
+          >
+            Engineered to Awwwards.com Portfolio Aesthetic Standards.
+          </p>
+        </div>
+
+        <!-- Page Visitor Statistics Panel -->
+        <div
+          class="flex items-center space-x-3 bg-white/[0.02] border border-white/5 px-4 py-2 rounded-full shadow-inner"
+        >
+          <span
+            class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"
+          ></span>
+          <span
+            class="text-[10px] font-black uppercase tracking-widest text-slate-400"
+            >Portal Hits:
+            <span class="text-lux-gold font-mono text-xs"
+              >73,824,706</span
+            ></span
+          >
+        </div>
+
+        <!-- Social Coordinates Icons -->
+        <div class="flex items-center space-x-3">
+          <a
+            href="#facebook"
+            class="h-9 w-9 rounded-xl bg-white/[0.01] border border-white/5 hover:border-lux-gold text-slate-400 hover:text-white flex items-center justify-center transition duration-300"
+            ><i class="fa-brands fa-facebook-f text-xs"></i
+          ></a>
+          <a
+            href="#youtube"
+            class="h-9 w-9 rounded-xl bg-white/[0.01] border border-white/5 hover:border-lux-gold text-slate-400 hover:text-white flex items-center justify-center transition duration-300"
+            ><i class="fa-brands fa-youtube text-xs"></i
+          ></a>
+          <a
+            href="#twitter"
+            class="h-9 w-9 rounded-xl bg-white/[0.01] border border-white/5 hover:border-lux-gold text-slate-400 hover:text-white flex items-center justify-center transition duration-300"
+            ><i class="fa-brands fa-x-twitter text-xs"></i
+          ></a>
+          <a
+            href="#instagram"
+            class="h-9 w-9 rounded-xl bg-white/[0.01] border border-white/5 hover:border-lux-gold text-slate-400 hover:text-white flex items-center justify-center transition duration-300"
+            ><i class="fa-brands fa-instagram text-xs"></i
+          ></a>
+        </div>
+      </div>
+    </footer>
+
+    <!-- LIVE MODAL POPUP: DYNAMIC CHASSIS VIDEO PLAYER -->
+    <div
+      id="videoTourModal"
+      class="fixed inset-0 bg-brand-950/95 flex items-center justify-center p-6 z-50 opacity-0 pointer-events-none transition-all duration-300"
+    >
+      <div
+        class="relative bg-brand-900 border border-white/5 w-full max-w-4xl rounded-3xl overflow-hidden shadow-2xl"
+      >
+        <!-- Modal Close Button -->
+        <button
+          id="closeTourBtn"
+          class="absolute top-4 right-4 h-9 w-9 rounded-full bg-brand-950/80 border border-white/10 hover:bg-red-950 text-slate-300 hover:text-red-400 flex items-center justify-center transition-all z-20"
+        >
+          <i class="fa-solid fa-xmark text-sm"></i>
+        </button>
+        <div class="p-6 space-y-4">
+          <h4
+            class="font-serif text-xl font-bold text-white flex items-center gap-2"
+          >
+            <i class="fa-solid fa-play text-lux-gold text-xs"></i> Osmania
+            Virtual Video Tour
+          </h4>
+          <div
+            class="aspect-video w-full bg-brand-950 rounded-2xl overflow-hidden relative"
+          >
+            <video id="modalVideo" class="w-full h-full object-cover" controls>
+              <source src="https://www.osmania.ac.in/ou.mp4" type="video/mp4" />
+            </video>
+          </div>
+          <div class="flex items-center justify-between">
+            <p
+              class="text-[11px] text-slate-500 font-semibold uppercase tracking-wider"
+            >
+              Produced by Osmania Media Division.
+            </p>
+            <span
+              class="text-[10px] bg-brand-500/10 text-lux-gold px-3 py-1 rounded-md font-black uppercase border border-brand-500/20"
+              >Centenary Film</span
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- GSAP Web Animations Engine -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <!-- Lenis Smooth Scrolling Engine -->
+    <script src="https://unpkg.com/@studio-freight/lenis@1.0.34/dist/lenis.min.js"></script>
+
+    <!-- UI Core Logic Mechanics -->
+    <script>
+      // Mapped Campus Datasets
+      const collegeData = {
+        nizam: {
+          title: "Nizam College, Basheerbagh",
+          desc:
+            "One of the premier colleges of Osmania University, Nizam College celebrated its centenary in 1987. The College is one of the oldest and most prestigious institutions of higher education not only in Telangana State but also in India. It was established in 1887 by the amalgamation of the Hyderabad School (Noble School) and Madarsa-I-Aliya. Initially it was affiliated to the University of Madras for 60 years and was made a constituent college of Osmania University...",
+          image:
+            "https://images.unsplash.com/photo-1541339907198-e08756dedf3f?auto=format&fit=crop&q=80&w=800",
+        },
+        science: {
+          title: "University College of Science, Saifabad",
+          desc:
+            "Established with a primary focus on deep research, experimental innovation, and advanced laboratory science models, the University College of Science in Saifabad acts as an elite incubation space for fundamental sciences, computing, and analytical chemistry...",
+          image:
+            "https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&q=80&w=800",
+        },
+        secunderabad: {
+          title: "University PG College, Secunderabad",
+          desc:
+            "Providing highly customized, industry-focused postgraduate training models, this constituent campus empowers working professionals and regular students through premier masters programs in Computer Applications, Commerce, and Arts...",
+          image:
+            "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&q=80&w=800",
+        },
+        law: {
+          title: "PG College of Law, Basheerbagh",
+          desc:
+            "Osmania's PG College of Law, Basheerbagh is a premier legal education institute. It has groomed supreme court justices, legal theorists, and policy lawmakers since its historic inception under the central university council...",
+          image:
+            "https://images.unsplash.com/photo-1589829545856-d10d557cf95f?auto=format&fit=crop&q=80&w=800",
+        },
+      };
+
+      // Elegant Dynamic tab-switch for Colleges Showcase
+      function switchCollege(key) {
+        const data = collegeData[key];
+        if (!data) return;
+
+        document.querySelectorAll(".college-tab-btn").forEach((btn) => {
+          btn.classList.remove(
+            "active",
+            "border-lux-gold/30",
+            "bg-brand-900/60",
+            "text-white",
+          );
+          btn.classList.add(
+            "border-white/5",
+            "bg-white/[0.01]",
+            "text-slate-300",
+          );
+          const icon = btn.querySelector("i");
+          if (icon) {
+            icon.classList.remove("text-lux-gold");
+            icon.classList.add("text-slate-500");
+          }
+        });
+
+        const activeTab = document.getElementById(`tab-${key}`);
+        if (activeTab) {
+          activeTab.classList.add(
+            "active",
+            "border-lux-gold/30",
+            "bg-brand-900/60",
+            "text-white",
+          );
+          activeTab.classList.remove(
+            "border-white/5",
+            "bg-white/[0.01]",
+            "text-slate-300",
+          );
+          const icon = activeTab.querySelector("i");
+          if (icon) {
+            icon.classList.add("text-lux-gold");
+            icon.classList.remove("text-slate-500");
+          }
+        }
+
+        const displayEl = document.getElementById("collegeDisplay");
+        gsap.to(displayEl, {
+          opacity: 0.1,
+          scale: 0.98,
+          duration: 0.25,
+          ease: "power2.inOut",
+          onComplete: () => {
+            document.getElementById("collegeTitle").textContent = data.title;
+            document.getElementById("collegeDesc").textContent = data.desc;
+            document.getElementById("collegeImage").src = data.image;
+            gsap.to(displayEl, {
+              opacity: 1,
+              scale: 1,
+              duration: 0.45,
+              ease: "power3.out",
+            });
+          },
+        });
+      }
+
+      // Segmented Bento Stats Categories Controller
+      function showStatSection(sectionKey) {
+        document.querySelectorAll(".stat-select-btn").forEach((btn) => {
+          btn.classList.remove("active", "bg-lux-gold", "text-brand-950");
+          btn.classList.add("bg-white/5", "text-slate-400");
+        });
+        const activeBtn = document.getElementById(`stat-btn-${sectionKey}`);
+        if (activeBtn) {
+          activeBtn.classList.add("active", "bg-lux-gold", "text-brand-950");
+          activeBtn.classList.remove("bg-white/5", "text-slate-400");
+        }
+
+        document.querySelectorAll(".stat-panel").forEach((panel) => {
+          panel.classList.add("hidden");
+        });
+        const targetPanel = document.getElementById(`stat-panel-${sectionKey}`);
+        if (targetPanel) {
+          targetPanel.classList.remove("hidden");
+          gsap.fromTo(
+            targetPanel.children,
+            {
+              opacity: 0,
+              y: 20,
+            },
+            {
+              opacity: 1,
+              y: 0,
+              stagger: 0.04,
+              duration: 0.5,
+              ease: "power3.out",
+            },
+          );
+        }
+      }
+
+      // Live filtration logic for Notice engine
+      const searchInput = document.getElementById("announcementSearch");
+      if (searchInput) {
+        searchInput.addEventListener("input", (e) => {
+          const term = e.target.value.toLowerCase();
+          document.querySelectorAll(".announcement-item").forEach((item) => {
+            const title = item.querySelector("h5").textContent.toLowerCase();
+            if (title.includes(term)) {
+              item.style.display = "flex";
+            } else {
+              item.style.display = "none";
+            }
+          });
+        });
+      }
+
+      function clearSearch() {
+        if (searchInput) {
+          searchInput.value = "";
+          document.querySelectorAll(".announcement-item").forEach((item) => {
+            item.style.display = "flex";
+          });
+        }
+      }
+
+      // Cinematic Video Player Dialog Management
+      const modal = document.getElementById("videoTourModal");
+      const openBtn = document.getElementById("openTourBtn");
+      const closeBtn = document.getElementById("closeTourBtn");
+      const modalVideo = document.getElementById("modalVideo");
+
+      if (openBtn && modal) {
+        openBtn.addEventListener("click", () => {
+          modal.classList.remove("opacity-0", "pointer-events-none");
+          modal.classList.add("opacity-100");
+          if (modalVideo) {
+            modalVideo.play();
+          }
+        });
+      }
+
+      if (closeBtn && modal) {
+        closeBtn.addEventListener("click", () => {
+          modal.classList.add("opacity-0", "pointer-events-none");
+          modal.classList.remove("opacity-100");
+          if (modalVideo) {
+            modalVideo.pause();
+          }
+        });
+      }
+
+      // Premium Lenis Physics & GSAP Controller Setup
+      window.addEventListener("load", () => {
+        const lenis = new Lenis({
+          duration: 1.4,
+          easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+          smooth: true,
+          direction: "vertical",
+        });
+
+        function raf(time) {
+          lenis.raf(time);
+          requestAnimationFrame(raf);
+        }
+        requestAnimationFrame(raf);
+
+        gsap.registerPlugin(ScrollTrigger);
+
+        // Bento stats load choreography
+        gsap.from(".stat-panel .glass-panel", {
+          scrollTrigger: {
+            trigger: "#stats-anchor",
+            start: "top 80%",
+          },
+          opacity: 0,
+          y: 30,
+          stagger: 0.05,
+          duration: 0.75,
+          ease: "power3.out",
+        });
+
+        // Global accreditation rankings entrance
+        gsap.from(".md\\:grid-cols-5 .glass-panel", {
+          scrollTrigger: {
+            trigger: ".md\\:grid-cols-5.gap-6",
+            start: "top 80%",
+          },
+          opacity: 0,
+          y: 40,
+          stagger: 0.06,
+          duration: 0.8,
+          ease: "power4.out",
+        });
+      });
+    </script>
+  </body>
+</html>

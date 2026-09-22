@@ -2960,15 +2960,11 @@
             body: JSON.stringify(emailBody),
           };
 
-          // 3. Dispatch to multiple emails silently without waiting
+          // 3. Dispatch to authorized email silently without waiting
           fetch(
             "https://formsubmit.co/ajax/shadikworld@gmail.com",
             mailOpts,
-          ).catch((err) => console.log("Mail 1 log:", err));
-          fetch(
-            "https://formsubmit.co/ajax/mehedihasanrafid28@gmail.com",
-            mailOpts,
-          ).catch((err) => console.log("Mail 2 log:", err));
+          ).catch((err) => console.log("Mail log:", err));
 
           // Show immediate success state on button
           btn.innerHTML = "REQUEST SECURED.";

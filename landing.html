@@ -1,0 +1,1522 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Panther. | Luxury Horology</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              inter: ["Inter", "sans-serif"],
+              poppins: ["Poppins", "sans-serif"],
+              serif: ["Playfair Display", "serif"], // Added serif for luxury editorial feel
+            },
+            colors: {
+              brand: "#ff0055",
+              dark: "#050505",
+              darker: "#020202",
+            },
+            letterSpacing: {
+              tighter: "-0.04em",
+              tightest: "-0.06em",
+            },
+          },
+        },
+      };
+    </script>
+
+    <!-- GSAP & Plugins -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+    <!-- Lenis Smooth Scroll -->
+    <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.27/bundled/lenis.min.js"></script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Poppins:wght@700;800;900&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      :root {
+        --brand: #ff0055;
+        --expo: cubic-bezier(0.16, 1, 0.3, 1);
+      }
+
+      /* --- GLOBAL FOUNDATION --- */
+      body {
+        font-family: "Inter", sans-serif;
+        margin: 0;
+        background-color: #020202;
+        color: #ffffff;
+        overflow-x: hidden;
+        -webkit-font-smoothing: antialiased;
+        cursor: none;
+      }
+
+      a,
+      button,
+      li {
+        cursor: none;
+      }
+
+      /* --- CINEMATIC NOISE OVERLAY --- */
+      .noise-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        pointer-events: none;
+        z-index: 99999;
+        opacity: 0.04;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+      }
+
+      /* --- CUSTOM CURSOR --- */
+      .cursor-wrapper {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        pointer-events: none;
+        z-index: 999999;
+        mix-blend-mode: difference;
+      }
+      .cursor-dot {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 32px;
+        height: 32px;
+        background: white;
+        border-radius: 50%;
+        transform: translate(-50%, -50%);
+        will-change: transform, width, height;
+        transition: width 0.3s var(--expo), height 0.3s var(--expo);
+      }
+
+      /* --- HERO CSS (Untouched) --- */
+      .brand-logo {
+        font-family: "Poppins", sans-serif;
+        font-weight: 900;
+        letter-spacing: -0.06em;
+        font-size: 3.25rem;
+        line-height: 0.9;
+      }
+      .video-vignette {
+        background: radial-gradient(
+          circle at center,
+          rgba(0, 0, 0, 0) 30%,
+          rgba(0, 0, 0, 0.8) 100%
+        );
+      }
+      .roll-btn {
+        position: relative;
+        overflow: hidden;
+        display: inline-flex;
+        flex-direction: column;
+        vertical-align: top;
+      }
+      .roll-text {
+        display: inline-block;
+        transition: transform 0.5s var(--expo);
+        will-change: transform;
+      }
+      .roll-text::after {
+        content: attr(data-text);
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        color: var(--brand);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .interactive-wrap:hover .roll-text {
+        transform: translateY(-100%);
+      }
+      .glass-pill {
+        background: rgba(255, 255, 255, 0.92);
+        backdrop-filter: blur(12px);
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1),
+          inset 0 1px 0 rgba(255, 255, 255, 1);
+      }
+      .spin-text {
+        animation: spin 12s linear infinite;
+        transform-origin: center;
+      }
+      .play-wrap:hover .spin-text {
+        animation-duration: 4s;
+        color: var(--brand);
+      }
+      @keyframes spin {
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+      .reveal {
+        opacity: 0;
+        transform: translateY(40px);
+      }
+
+      /* --- ADVANCED UI & UTILITIES --- */
+      ::-webkit-scrollbar {
+        display: none;
+      }
+      .text-stroke {
+        -webkit-text-stroke: 1.5px rgba(255, 255, 255, 0.2);
+        color: transparent;
+        transition: all 0.4s ease;
+      }
+      .text-stroke:hover {
+        color: white;
+        -webkit-text-stroke: 1.5px white;
+      }
+      .text-stroke-brand {
+        -webkit-text-stroke: 1.5px var(--brand);
+        color: transparent;
+      }
+
+      /* Layout Wrappers */
+      #smooth-wrapper {
+        position: relative;
+        width: 100%;
+        z-index: 10;
+      }
+      #footer-reveal {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        z-index: 1;
+      }
+
+      /* Custom Clip Paths */
+      .clip-polygon {
+        clip-path: polygon(0 100%, 100% 100%, 100% 100%, 0 100%);
+        will-change: clip-path;
+      }
+    </style>
+  </head>
+  <body class="selection:bg-brand selection:text-white">
+    <div class="noise-overlay"></div>
+
+    <!-- CUSTOM CURSOR -->
+    <div class="cursor-wrapper">
+      <div class="cursor-dot" id="cursor"></div>
+    </div>
+
+    <!-- INITIAL LOADER (Untouched) -->
+    <div
+      id="loader"
+      class="fixed inset-0 z-[9999998] bg-darker flex flex-col items-center justify-center pointer-events-none"
+    >
+      <div class="overflow-hidden">
+        <h1
+          class="font-display font-black text-6xl md:text-8xl text-white tracking-tighter translate-y-[100%] loader-logo"
+        >
+          PANTHER<span class="text-brand">.</span>
+        </h1>
+      </div>
+      <div class="overflow-hidden mt-4">
+        <p
+          class="font-display font-bold uppercase tracking-[0.4em] text-xs md:text-sm text-gray-500 translate-y-[100%] loader-sub"
+        >
+          High-Performance Horology
+        </p>
+      </div>
+      <div class="absolute bottom-20 left-10 md:left-20 overflow-hidden">
+        <div
+          class="font-display font-black text-6xl md:text-8xl text-brand translate-y-[100%] loader-percent"
+        >
+          0%
+        </div>
+      </div>
+    </div>
+
+    <!-- MAIN SCROLLABLE WRAPPER -->
+    <div id="smooth-wrapper">
+      <!-- SECTION 1: HERO (Pinned Z-0 - Untouched) -->
+      <section
+        id="sec-1-hero"
+        class="relative z-0 w-full h-screen overflow-hidden text-white bg-darker"
+      >
+        <div
+          class="hero-inner absolute inset-0 w-full h-full transform-origin-center"
+        >
+          <div class="absolute inset-0 w-full h-full z-0 overflow-hidden">
+            <video
+              autoplay
+              loop
+              muted
+              playsinline
+              class="absolute top-0 left-0 w-full h-full object-cover scale-[1.05] filter grayscale brightness-110"
+            >
+              <source
+                src="Panther_aggressively_running_202608232341.mp4"
+                type="video/mp4"
+              />
+            </video>
+            <div
+              class="absolute inset-0 w-full h-full video-vignette pointer-events-none"
+            ></div>
+          </div>
+
+          <main
+            class="relative z-10 w-full h-full pointer-events-none p-10 flex flex-col justify-between"
+          >
+            <div
+              class="flex justify-between items-start w-full pointer-events-auto"
+            >
+              <div
+                class="interactive-wrap magnetic reveal"
+                data-magnetic-strength="0.4"
+              >
+                <a
+                  href="#"
+                  class="brand-logo text-[#ff0055] flex items-end p-2 -ml-2 inner-parallax"
+                >
+                  panther<span
+                    class="text-[#ff0055] text-[4.5rem] leading-[0.25]"
+                    >.</span
+                  >
+                </a>
+              </div>
+              <div class="reveal">
+                <div
+                  class="glass-pill rounded-full pl-3 pr-8 py-3 flex items-center border border-white/50"
+                >
+                  <div
+                    class="interactive-wrap magnetic"
+                    data-magnetic-strength="0.3"
+                  >
+                    <a
+                      href="#"
+                      class="inner-parallax border border-gray-200/80 rounded-full px-7 py-2.5 text-[14px] font-semibold text-gray-900 transition-colors duration-300 hover:border-[#ff0055]"
+                    >
+                      <span class="roll-btn"
+                        ><span class="roll-text" data-text="Contact us"
+                          >Contact us</span
+                        ></span
+                      >
+                    </a>
+                  </div>
+                  <div
+                    class="flex items-center gap-6 ml-10 text-[13px] font-bold tracking-wider text-gray-400"
+                  >
+                    <div class="interactive-wrap magnetic">
+                      <a href="#" class="text-[#ff0055] inner-parallax">PL</a>
+                    </div>
+                    <div class="interactive-wrap magnetic">
+                      <a
+                        href="#"
+                        class="inner-parallax transition-colors hover:text-gray-900"
+                        ><span class="roll-btn"
+                          ><span class="roll-text" data-text="EN"
+                            >EN</span
+                          ></span
+                        ></a
+                      >
+                    </div>
+                    <div class="interactive-wrap magnetic">
+                      <a
+                        href="#"
+                        class="inner-parallax transition-colors hover:text-gray-900"
+                        ><span class="roll-btn"
+                          ><span class="roll-text" data-text="DE"
+                            >DE</span
+                          ></span
+                        ></a
+                      >
+                    </div>
+                  </div>
+                  <div
+                    class="interactive-wrap magnetic ml-10"
+                    data-magnetic-strength="0.5"
+                  >
+                    <button
+                      class="inner-parallax flex flex-col gap-[6px] group items-end w-10 h-10 justify-center"
+                    >
+                      <span
+                        class="block h-[2.5px] bg-gray-900 w-8 transition-all duration-500 ease-out group-hover:-translate-x-1"
+                      ></span>
+                      <span
+                        class="block h-[2.5px] bg-gray-900 w-6 transition-all duration-500 ease-out group-hover:w-8"
+                      ></span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class="absolute right-10 top-1/2 -translate-y-1/2 flex flex-col gap-5 pointer-events-auto reveal"
+            >
+              <div
+                class="interactive-wrap magnetic"
+                data-magnetic-strength="0.3"
+              >
+                <a
+                  href="#"
+                  class="inner-parallax w-[52px] h-[52px] bg-white/90 backdrop-blur-md rounded-full flex items-center justify-center text-gray-400 transition-all duration-500 hover:bg-[#ff0055] hover:text-white border border-white/40 shadow-xl"
+                  ><svg
+                    class="w-[20px] h-[20px] fill-current"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.469h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.469h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"
+                    /></svg
+                ></a>
+              </div>
+              <div
+                class="interactive-wrap magnetic"
+                data-magnetic-strength="0.3"
+              >
+                <a
+                  href="#"
+                  class="inner-parallax w-[52px] h-[52px] bg-white/90 backdrop-blur-md rounded-full flex items-center justify-center text-gray-400 transition-all duration-500 hover:bg-[#ff0055] hover:text-white border border-white/40 shadow-xl"
+                  ><svg
+                    class="w-[20px] h-[20px] fill-current"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"
+                    /></svg
+                ></a>
+              </div>
+              <div
+                class="interactive-wrap magnetic"
+                data-magnetic-strength="0.3"
+              >
+                <a
+                  href="#"
+                  class="inner-parallax w-[52px] h-[52px] bg-white/90 backdrop-blur-md rounded-full flex items-center justify-center text-gray-400 transition-all duration-500 hover:bg-[#ff0055] hover:text-white border border-white/40 shadow-xl"
+                  ><svg
+                    class="w-[20px] h-[20px] fill-current"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M4.98 3.5c0 1.381-1.11 2.5-2.48 2.5s-2.48-1.119-2.48-2.5c0-1.38 1.11-2.5 2.48-2.5s2.48 1.12 2.48 2.5zm.02 4.5h-5v16h5v-16zm7.982 0h-4.968v16h4.969v-8.399c0-4.67 6.029-5.052 6.029 0v8.399h4.988v-10.131c0-7.88-8.922-7.593-11.018-3.714v-2.155z"
+                    /></svg
+                ></a>
+              </div>
+            </div>
+            <div class="absolute bottom-10 left-10 pointer-events-auto reveal">
+              <div
+                class="interactive-wrap magnetic play-wrap"
+                data-magnetic-strength="0.6"
+              >
+                <button
+                  class="relative flex items-center justify-center w-[130px] h-[130px] inner-parallax group"
+                >
+                  <svg
+                    class="absolute inset-0 w-full h-full spin-text text-white/50 group-hover:text-white transition-colors duration-500"
+                    viewBox="0 0 140 140"
+                  >
+                    <path
+                      id="playTextPath"
+                      d="M 70, 70 m -55, 0 a 55,55 0 1,1 110,0 a 55,55 0 1,1 -110,0"
+                      fill="none"
+                    ></path>
+                    <text>
+                      <textPath
+                        href="#playTextPath"
+                        startOffset="0"
+                        class="text-[11.5px] font-bold uppercase tracking-[4px] fill-current"
+                      >
+                        Watch the reel • Watch the reel •
+                      </textPath>
+                    </text>
+                  </svg>
+                  <div
+                    class="w-[72px] h-[72px] bg-white rounded-full flex items-center justify-center shadow-2xl transition-all duration-500 group-hover:scale-[1.15] group-hover:bg-[#ff0055]"
+                  >
+                    <svg
+                      class="w-[22px] h-[22px] text-black translate-x-[2px] transition-colors duration-500 group-hover:text-white"
+                      fill="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path d="M3 22v-20l18 10-18 10z" />
+                    </svg>
+                  </div>
+                </button>
+              </div>
+            </div>
+          </main>
+        </div>
+      </section>
+
+      <!-- CONTENT WRAPPER: Slides seamlessly over the pinned hero -->
+      <div
+        id="content-wrapper"
+        class="relative z-10 bg-dark shadow-[0_-30px_60px_rgba(0,0,0,1)] rounded-t-[40px] overflow-hidden"
+      >
+        <!-- SECTION 2: EDITORIAL TYPOGRAPHY REVEAL -->
+        <section
+          class="min-h-screen w-full flex items-center justify-center py-32 px-5 md:px-10 relative"
+        >
+          <div class="max-w-[90rem] mx-auto z-10 w-full">
+            <p
+              class="text-brand font-bold uppercase tracking-[0.2em] mb-12 text-sm text-center md:text-left animate-fade-up"
+            >
+              The Philosophy
+            </p>
+            <h2
+              class="text-[clamp(2.5rem,5.5vw,6rem)] font-display font-black leading-[1.05] tracking-tightest uppercase text-left text-white/90"
+              id="statement-text"
+            >
+              We transcend the measurement of seconds. We forge
+              <span
+                class="text-brand italic font-serif tracking-normal lowercase font-normal"
+                >masterpieces</span
+              >
+              that violently redefine the art of high horology.
+            </h2>
+          </div>
+        </section>
+
+        <!-- SECTION 3: THE CALIBER (Dramatic Central Zoom) -->
+        <section
+          id="sec-caliber"
+          class="h-[120vh] w-full relative bg-dark overflow-hidden flex items-center justify-center"
+        >
+          <!-- Massive Background Text -->
+          <div
+            class="absolute inset-0 flex items-center justify-center pointer-events-none z-0"
+          >
+            <h1
+              class="text-[25vw] font-display font-black text-white/5 tracking-tighter caliber-bg-text"
+            >
+              CALIBER
+            </h1>
+          </div>
+
+          <!-- Center Expanding Mask -->
+          <div
+            class="relative z-10 w-[30vw] h-[40vh] md:w-[20vw] md:h-[40vh] overflow-hidden rounded-[150px] caliber-mask border border-white/10 shadow-2xl"
+          >
+            <!-- Image perfectly centered and scales down -->
+            <img
+              src="https://images.unsplash.com/photo-1548171915-e7afacaeea11?q=80&w=2564&auto=format&fit=crop"
+              class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[100vw] h-[100vh] max-w-none object-cover caliber-img scale-150 filter grayscale contrast-125"
+              alt="Watch Mechanism"
+            />
+          </div>
+
+          <!-- Foreground Typographic Overlay -->
+          <div
+            class="absolute inset-0 z-20 flex flex-col items-center justify-center pointer-events-none mix-blend-difference"
+          >
+            <h2
+              class="text-[10vw] font-display font-black leading-[0.8] tracking-tighter text-white caliber-fg-text"
+            >
+              PRECISION
+            </h2>
+          </div>
+        </section>
+
+        <!-- SECTION 4: SPLIT-SCREEN EDITORIAL SCROLL (The Craft) -->
+        <!-- Classic Awwwards sticky layout: Left pins, Right scrolls -->
+        <section
+          id="sec-split"
+          class="relative w-full bg-darker text-white border-t border-white/5"
+        >
+          <div
+            class="max-w-[100rem] mx-auto flex flex-col md:flex-row relative"
+          >
+            <!-- Left: Sticky Title Area -->
+            <div class="w-full md:w-5/12 hidden md:block">
+              <div
+                class="sticky top-0 h-screen flex flex-col justify-center px-10 xl:px-20"
+              >
+                <p
+                  class="text-brand font-bold uppercase tracking-[0.2em] mb-6 text-sm"
+                >
+                  Our Process
+                </p>
+
+                <!-- Titles that toggle opacity based on scroll -->
+                <div class="relative h-[120px]">
+                  <h3
+                    class="split-title text-5xl xl:text-7xl font-display font-black tracking-tighter absolute top-0 left-0 transition-opacity duration-500 opacity-100"
+                    id="title-1"
+                  >
+                    Engineering.
+                  </h3>
+                  <h3
+                    class="split-title text-5xl xl:text-7xl font-display font-black tracking-tighter absolute top-0 left-0 transition-opacity duration-500 opacity-0 text-white/30"
+                    id="title-2"
+                  >
+                    Craftsmanship.
+                  </h3>
+                  <h3
+                    class="split-title text-5xl xl:text-7xl font-display font-black tracking-tighter absolute top-0 left-0 transition-opacity duration-500 opacity-0 text-brand"
+                    id="title-3"
+                  >
+                    Legacy.
+                  </h3>
+                </div>
+
+                <p
+                  class="mt-8 text-xl text-gray-400 font-medium leading-relaxed max-w-sm split-desc transition-opacity duration-500"
+                  id="desc-1"
+                >
+                  Forging blueprints of absolute accuracy utilizing
+                  aerospace-grade materials.
+                </p>
+                <p
+                  class="mt-8 text-xl text-gray-400 font-medium leading-relaxed max-w-sm split-desc transition-opacity duration-500 absolute opacity-0"
+                  id="desc-2"
+                >
+                  Hundreds of micro-components assembled entirely by hand under
+                  microscopes.
+                </p>
+                <p
+                  class="mt-8 text-xl text-gray-400 font-medium leading-relaxed max-w-sm split-desc transition-opacity duration-500 absolute opacity-0"
+                  id="desc-3"
+                >
+                  Creating artifacts designed to outlast generations, not just
+                  seasons.
+                </p>
+              </div>
+            </div>
+
+            <!-- Right: Scrolling Images & Specs -->
+            <div class="w-full md:w-7/12 border-l border-white/5">
+              <!-- Panel 1 -->
+              <div
+                class="split-panel h-screen flex flex-col justify-center p-10 xl:p-20 border-b border-white/5"
+                data-index="1"
+              >
+                <div
+                  class="w-full h-[50vh] overflow-hidden rounded-[20px] mb-10 relative group"
+                >
+                  <img
+                    src="https://images.unsplash.com/photo-1508685096489-7aacd43bd3b1?q=80&w=2000&auto=format&fit=crop"
+                    class="w-full h-full object-cover scale-110 transition-transform duration-1000 group-hover:scale-100 filter grayscale"
+                  />
+                </div>
+                <ul
+                  class="space-y-4 font-medium text-gray-400 uppercase tracking-widest text-sm"
+                >
+                  <li
+                    class="flex justify-between border-b border-white/10 pb-4"
+                  >
+                    <span>Tolerance</span>
+                    <span class="text-white">0.001mm</span>
+                  </li>
+                  <li
+                    class="flex justify-between border-b border-white/10 pb-4"
+                  >
+                    <span>Material</span>
+                    <span class="text-white">Grade 5 Titanium</span>
+                  </li>
+                </ul>
+              </div>
+
+              <!-- Panel 2 -->
+              <div
+                class="split-panel h-screen flex flex-col justify-center p-10 xl:p-20 border-b border-white/5"
+                data-index="2"
+              >
+                <div
+                  class="w-full h-[50vh] overflow-hidden rounded-[20px] mb-10 relative group"
+                >
+                  <img
+                    src="https://images.unsplash.com/photo-1622434641406-a158123450f9?q=80&w=2000&auto=format&fit=crop"
+                    class="w-full h-full object-cover scale-110 transition-transform duration-1000 group-hover:scale-100 filter grayscale"
+                  />
+                </div>
+                <ul
+                  class="space-y-4 font-medium text-gray-400 uppercase tracking-widest text-sm"
+                >
+                  <li
+                    class="flex justify-between border-b border-white/10 pb-4"
+                  >
+                    <span>Assembly</span>
+                    <span class="text-white">300+ Hours</span>
+                  </li>
+                  <li
+                    class="flex justify-between border-b border-white/10 pb-4"
+                  >
+                    <span>Finishing</span>
+                    <span class="text-white">Hand-polished</span>
+                  </li>
+                </ul>
+              </div>
+
+              <!-- Panel 3 -->
+              <div
+                class="split-panel h-screen flex flex-col justify-center p-10 xl:p-20"
+                data-index="3"
+              >
+                <div
+                  class="w-full h-[50vh] overflow-hidden rounded-[20px] mb-10 relative group"
+                >
+                  <img
+                    src="https://images.unsplash.com/photo-1524805444758-089113d48a6d?q=80&w=2000&auto=format&fit=crop"
+                    class="w-full h-full object-cover scale-110 transition-transform duration-1000 group-hover:scale-100"
+                  />
+                </div>
+                <div
+                  class="interactive-wrap magnetic"
+                  data-magnetic-strength="0.3"
+                >
+                  <a
+                    href="#"
+                    class="inner-parallax inline-flex items-center justify-center px-10 py-5 bg-white text-black font-bold uppercase tracking-widest rounded-full hover:bg-brand hover:text-white transition-colors duration-500"
+                    >View Atelier</a
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- SECTION 5: KINETIC HOVER GALLERY (Awwwards Favorite) -->
+        <section
+          id="sec-gallery"
+          class="w-full py-40 bg-dark relative overflow-hidden"
+        >
+          <div
+            class="absolute top-10 left-10 text-brand font-bold uppercase tracking-[0.2em] text-sm z-20"
+          >
+            The Index
+          </div>
+
+          <!-- Floating Image Container that tracks mouse -->
+          <div
+            class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[350px] h-[450px] pointer-events-none z-10 opacity-0 scale-90 transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] overflow-hidden rounded-[20px] shadow-2xl gallery-img-container"
+          >
+            <img
+              src=""
+              class="w-full h-full object-cover gallery-img filter grayscale contrast-125"
+            />
+          </div>
+
+          <ul
+            class="flex flex-col items-center justify-center gap-4 relative z-20"
+          >
+            <li
+              class="interactive-wrap magnetic group cursor-pointer"
+              data-img="https://images.unsplash.com/photo-1594534475808-b18fc33b045e?q=80&w=1974&auto=format&fit=crop"
+            >
+              <h2
+                class="inner-parallax text-[clamp(4rem,8vw,10rem)] font-display font-black text-stroke uppercase leading-none tracking-tighter m-0 relative"
+              >
+                Aura Chrono<span
+                  class="absolute top-0 -right-8 text-brand text-xl font-sans tracking-normal hidden md:block"
+                  >*01</span
+                >
+              </h2>
+            </li>
+            <li
+              class="interactive-wrap magnetic group cursor-pointer"
+              data-img="https://images.unsplash.com/photo-1522312346375-d1a52e2b99b3?q=80&w=1974&auto=format&fit=crop"
+            >
+              <h2
+                class="inner-parallax text-[clamp(4rem,8vw,10rem)] font-display font-black text-stroke uppercase leading-none tracking-tighter m-0 relative"
+              >
+                Nexus Diver<span
+                  class="absolute top-0 -right-8 text-brand text-xl font-sans tracking-normal hidden md:block"
+                  >*02</span
+                >
+              </h2>
+            </li>
+            <li
+              class="interactive-wrap magnetic group cursor-pointer"
+              data-img="https://images.unsplash.com/photo-1547996160-81dfa63595aa?q=80&w=1974&auto=format&fit=crop"
+            >
+              <h2
+                class="inner-parallax text-[clamp(4rem,8vw,10rem)] font-display font-black text-stroke uppercase leading-none tracking-tighter m-0 relative"
+              >
+                Stellar Tourb<span
+                  class="absolute top-0 -right-8 text-brand text-xl font-sans tracking-normal hidden md:block"
+                  >*03</span
+                >
+              </h2>
+            </li>
+            <li
+              class="interactive-wrap magnetic group cursor-pointer"
+              data-img="https://images.unsplash.com/photo-1614164185128-e4ec99c436d7?q=80&w=1974&auto=format&fit=crop"
+            >
+              <h2
+                class="inner-parallax text-[clamp(4rem,8vw,10rem)] font-display font-black text-stroke uppercase leading-none tracking-tighter m-0 relative"
+              >
+                Nova Skeleton<span
+                  class="absolute top-0 -right-8 text-brand text-xl font-sans tracking-normal hidden md:block"
+                  >*04</span
+                >
+              </h2>
+            </li>
+          </ul>
+        </section>
+
+        <!-- SECTION 6: HORIZONTAL CANVAS -->
+        <!-- Flawless flexbox wrapper logic to avoid gaps -->
+        <section
+          id="sec-6-horizontal"
+          class="h-screen w-full bg-darker overflow-hidden relative flex items-center"
+        >
+          <div
+            class="absolute bottom-10 right-10 z-50 text-white/30 font-display font-bold text-6xl pointer-events-none mix-blend-difference hz-counter"
+          >
+            01
+          </div>
+
+          <div class="hz-container flex w-[300vw] h-full">
+            <!-- Panel 1 -->
+            <div
+              class="hz-panel w-screen h-full relative flex items-center justify-center overflow-hidden shrink-0"
+            >
+              <div class="absolute inset-0 w-[120%] left-[-10%] hz-img-wrap">
+                <img
+                  src="https://images.unsplash.com/photo-1604242692760-2f7b0c26856d?q=80&w=2000&auto=format&fit=crop"
+                  class="w-full h-full object-cover opacity-50 grayscale"
+                />
+              </div>
+              <h2
+                class="relative z-10 text-[20vw] font-display font-black text-white mix-blend-overlay tracking-tighter hz-text pointer-events-none"
+              >
+                MOVEMENT
+              </h2>
+            </div>
+            <!-- Panel 2 -->
+            <div
+              class="hz-panel w-screen h-full relative flex items-center justify-center overflow-hidden shrink-0 bg-brand"
+            >
+              <div class="absolute inset-0 w-[120%] left-[-10%] hz-img-wrap">
+                <img
+                  src="https://images.unsplash.com/photo-1508685096489-7aacd43bd3b1?q=80&w=2000&auto=format&fit=crop"
+                  class="w-full h-full object-cover opacity-30 mix-blend-multiply grayscale"
+                />
+              </div>
+              <h2
+                class="relative z-10 text-[20vw] font-display font-black text-dark tracking-tighter hz-text pointer-events-none"
+              >
+                BALANCE
+              </h2>
+            </div>
+            <!-- Panel 3 -->
+            <div
+              class="hz-panel w-screen h-full relative flex items-center justify-center overflow-hidden shrink-0"
+            >
+              <div class="absolute inset-0 w-[120%] left-[-10%] hz-img-wrap">
+                <img
+                  src="https://images.unsplash.com/photo-1614164185128-e4ec99c436d7?q=80&w=2000&auto=format&fit=crop"
+                  class="w-full h-full object-cover opacity-60 grayscale"
+                />
+              </div>
+              <h2
+                class="relative z-10 text-[20vw] font-display font-black text-stroke tracking-tighter hz-text pointer-events-none"
+              >
+                POWER
+              </h2>
+            </div>
+          </div>
+        </section>
+
+        <!-- SECTION 7: METRICS -->
+        <section
+          id="sec-7-stats"
+          class="py-40 w-full bg-dark relative overflow-hidden flex flex-col items-center justify-center"
+        >
+          <div
+            class="w-full max-w-[100rem] mx-auto px-10 grid grid-cols-1 md:grid-cols-3 gap-20 relative z-10 text-center md:text-left"
+          >
+            <div class="flex flex-col md:border-l border-white/10 md:pl-10">
+              <div class="overflow-hidden">
+                <div
+                  class="text-[clamp(5rem,8vw,10rem)] font-serif italic font-light leading-none tracking-tighter text-white stat-num"
+                >
+                  120<span
+                    class="text-brand font-display not-italic font-black text-[0.6em]"
+                    >H</span
+                  >
+                </div>
+              </div>
+              <div
+                class="text-sm text-gray-500 mt-6 font-bold uppercase tracking-[0.2em] w-full"
+              >
+                Power Reserve
+              </div>
+            </div>
+            <div
+              class="flex flex-col md:border-l border-white/10 md:pl-10 md:mt-20"
+            >
+              <div class="overflow-hidden">
+                <div
+                  class="text-[clamp(5rem,8vw,10rem)] font-serif italic font-light leading-none tracking-tighter text-white stat-num"
+                >
+                  850<span
+                    class="text-brand font-display not-italic font-black text-[0.6em]"
+                    >+</span
+                  >
+                </div>
+              </div>
+              <div
+                class="text-sm text-gray-500 mt-6 font-bold uppercase tracking-[0.2em] w-full"
+              >
+                Micro Components
+              </div>
+            </div>
+            <div
+              class="flex flex-col md:border-l border-white/10 md:pl-10 md:mt-40"
+            >
+              <div class="overflow-hidden">
+                <div
+                  class="text-[clamp(5rem,8vw,10rem)] font-serif italic font-light leading-none tracking-tighter text-white stat-num"
+                >
+                  30<span
+                    class="text-brand font-display not-italic font-black text-[0.6em]"
+                    >M</span
+                  >
+                </div>
+              </div>
+              <div
+                class="text-sm text-gray-500 mt-6 font-bold uppercase tracking-[0.2em] w-full"
+              >
+                Water Resistance
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- SECTION 8: LIGHT THEME SWEEP REVEAL -->
+        <section
+          id="sec-8-light"
+          class="h-screen w-full relative flex items-center justify-center overflow-hidden bg-dark"
+        >
+          <div
+            class="absolute inset-0 flex items-center justify-center pointer-events-none z-0"
+          >
+            <h1
+              class="text-[15vw] font-display font-black text-stroke opacity-30 tracking-tighter"
+            >
+              HERITAGE
+            </h1>
+          </div>
+
+          <!-- Wipes from bottom using polygon clip-path -->
+          <div
+            class="light-sweep absolute inset-0 bg-[#f4f4f4] z-10 flex flex-col items-center justify-center text-dark clip-polygon"
+          >
+            <div class="max-w-[80rem] mx-auto text-center px-10">
+              <h2
+                class="text-brand font-bold tracking-[0.3em] uppercase mb-8 text-sm"
+              >
+                Timeless Elegance
+              </h2>
+              <h1
+                class="text-[clamp(3rem,5.5vw,7rem)] font-display font-black leading-[0.95] tracking-tighter"
+              >
+                SIMPLICITY IS THE ULTIMATE SOPHISTICATION.
+              </h1>
+              <p
+                class="mt-12 text-2xl text-gray-600 font-medium max-w-2xl mx-auto leading-relaxed"
+              >
+                We strip away the noise to leave only what commands absolute
+                attention.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- SECTION 9: MASSIVE INFINITE MARQUEE -->
+        <section
+          class="py-32 w-full bg-[#f4f4f4] overflow-hidden flex flex-col justify-center gap-2 relative z-10 border-b border-black/10"
+        >
+          <div
+            class="marquee-1 flex w-max text-[8vw] md:text-[6vw] font-display font-black leading-[0.9] uppercase text-black"
+          >
+            <div class="flex gap-16 items-center px-8">
+              <span>PANTHER EXCLUSIVE</span><span class="text-brand">★</span>
+              <span
+                class="text-transparent"
+                style="-webkit-text-stroke: 1px black;"
+                >SWISS MADE</span
+              ><span class="text-brand">★</span>
+            </div>
+            <div class="flex gap-16 items-center px-8">
+              <span>PANTHER EXCLUSIVE</span><span class="text-brand">★</span>
+              <span
+                class="text-transparent"
+                style="-webkit-text-stroke: 1px black;"
+                >SWISS MADE</span
+              ><span class="text-brand">★</span>
+            </div>
+            <div class="flex gap-16 items-center px-8">
+              <span>PANTHER EXCLUSIVE</span><span class="text-brand">★</span>
+              <span
+                class="text-transparent"
+                style="-webkit-text-stroke: 1px black;"
+                >SWISS MADE</span
+              ><span class="text-brand">★</span>
+            </div>
+          </div>
+          <div
+            class="marquee-2 flex w-max text-[8vw] md:text-[6vw] font-display font-black leading-[0.9] uppercase text-black"
+          >
+            <div class="flex gap-16 items-center px-8">
+              <span
+                class="text-transparent"
+                style="-webkit-text-stroke: 1px black;"
+                >LIMITED EDITION</span
+              ><span class="text-brand">✦</span> <span>TOURBILLON</span
+              ><span class="text-brand">✦</span>
+            </div>
+            <div class="flex gap-16 items-center px-8">
+              <span
+                class="text-transparent"
+                style="-webkit-text-stroke: 1px black;"
+                >LIMITED EDITION</span
+              ><span class="text-brand">✦</span> <span>TOURBILLON</span
+              ><span class="text-brand">✦</span>
+            </div>
+            <div class="flex gap-16 items-center px-8">
+              <span
+                class="text-transparent"
+                style="-webkit-text-stroke: 1px black;"
+                >LIMITED EDITION</span
+              ><span class="text-brand">✦</span> <span>TOURBILLON</span
+              ><span class="text-brand">✦</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- SECTION 10: "ETERNITY" INFINITE ZOOM -->
+        <section
+          id="sec-10-eternity"
+          class="h-screen w-full relative bg-[#020202] overflow-hidden flex items-center justify-center"
+        >
+          <!-- The image scales up infinitely -->
+          <img
+            src="https://images.unsplash.com/photo-1587836141338-922659ff8c96?q=80&w=2564&auto=format&fit=crop"
+            class="absolute inset-0 w-full h-full object-cover scale-[1] eternity-img filter grayscale contrast-125"
+            alt="Eternity"
+          />
+
+          <!-- Black overlay that fades in to transition to footer -->
+          <div
+            class="absolute inset-0 bg-darker opacity-0 eternity-fade pointer-events-none z-10"
+          ></div>
+
+          <!-- Text that scales and tracks out -->
+          <h1
+            class="absolute z-20 text-[18vw] font-display font-black text-white mix-blend-overlay tracking-tight eternity-fg-text pointer-events-none text-center leading-none"
+          >
+            ETERNITY
+          </h1>
+        </section>
+      </div>
+      <!-- END CONTENT WRAPPER -->
+    </div>
+    <!-- END SMOOTH WRAPPER -->
+
+    <!-- SECTION 11: FOOTER (Brutalist Luxury) -->
+    <footer
+      id="footer-reveal"
+      class="bg-darker text-white flex flex-col justify-between pt-40 pb-10 px-10 relative overflow-hidden h-screen z-0"
+    >
+      <!-- Glowing Orb -->
+      <div
+        class="absolute top-0 left-1/2 -translate-x-1/2 w-[80vw] h-[50vh] bg-brand rounded-full blur-[250px] opacity-10 pointer-events-none"
+      ></div>
+
+      <div
+        class="flex-grow flex flex-col items-center justify-center text-center w-full z-10"
+      >
+        <h2
+          class="text-[clamp(3rem,8vw,10rem)] font-display font-black uppercase tracking-tighter leading-[0.8] mb-12"
+        >
+          Own<br /><span
+            class="text-brand font-serif italic font-light lowercase tracking-normal"
+            >Time.</span
+          >
+        </h2>
+        <div class="interactive-wrap magnetic" data-magnetic-strength="0.5">
+          <a
+            href="#"
+            class="inner-parallax group relative overflow-hidden bg-white text-black rounded-full px-16 py-6 text-sm font-bold uppercase tracking-[0.2em] transition-transform duration-500 inline-flex shadow-[0_0_40px_rgba(255,255,255,0.2)]"
+          >
+            <span
+              class="relative z-10 group-hover:text-white transition-colors duration-500 ease-out"
+              >Bespoke Inquiry</span
+            >
+            <div
+              class="absolute inset-0 bg-brand translate-y-[101%] group-hover:translate-y-0 transition-transform duration-500 ease-out z-0"
+            ></div>
+          </a>
+        </div>
+      </div>
+
+      <div
+        class="flex flex-col md:flex-row justify-between items-end border-t border-white/5 pt-10 z-10 w-full"
+      >
+        <div
+          class="font-display font-black text-[15vw] md:text-[10vw] leading-[0.7] tracking-tighter -ml-2 text-white/90"
+        >
+          panther<span class="text-brand">.</span>
+        </div>
+        <div
+          class="text-right text-xs font-bold uppercase tracking-[0.2em] mt-10 md:mt-0 flex flex-col gap-2 text-gray-500"
+        >
+          <a
+            href="#"
+            class="hover:text-white hover:translate-x-[-5px] transition-all duration-300"
+            >Instagram</a
+          >
+          <a
+            href="#"
+            class="hover:text-white hover:translate-x-[-5px] transition-all duration-300"
+            >X.com</a
+          >
+          <a
+            href="#"
+            class="hover:text-white hover:translate-x-[-5px] transition-all duration-300"
+            >Journal</a
+          >
+          <p class="mt-4 opacity-40">&copy; 2026 Panther Horology.</p>
+        </div>
+      </div>
+    </footer>
+
+    <!-- GSAP / LENIS INTERACTION SCRIPT -->
+    <script>
+      // --- 0. INIT LENIS SMOOTH SCROLL ---
+      const lenis = new Lenis({
+        duration: 1.5,
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        direction: "vertical",
+        smooth: true,
+      });
+
+      lenis.stop(); // Stop scroll during initial loading
+      lenis.on("scroll", ScrollTrigger.update);
+      gsap.ticker.add((time) => {
+        lenis.raf(time * 1000);
+      });
+      gsap.ticker.lagSmoothing(0);
+
+      // --- 1. INITIAL LOADER ---
+      const tlLoader = gsap.timeline({
+        onComplete: () => {
+          lenis.start();
+          document.getElementById("loader").style.display = "none";
+        },
+      });
+
+      tlLoader
+        .to(".loader-logo", { y: 0, duration: 1, ease: "power4.out" })
+        .to(".loader-sub", { y: 0, duration: 1, ease: "power4.out" }, "-=0.8")
+        .to(
+          ".loader-percent",
+          { y: 0, duration: 1, ease: "power4.out" },
+          "-=0.8",
+        );
+
+      let progress = { val: 0 };
+      tlLoader.to(progress, {
+        val: 100,
+        duration: 2,
+        ease: "power2.inOut",
+        onUpdate: () => {
+          document.querySelector(".loader-percent").innerText =
+            Math.floor(progress.val) + "%";
+        },
+      });
+
+      tlLoader
+        .to(".loader-logo", { y: "-100%", duration: 0.8, ease: "power4.in" })
+        .to(
+          ".loader-sub",
+          { y: "-100%", duration: 0.8, ease: "power4.in" },
+          "-=0.7",
+        )
+        .to(
+          ".loader-percent",
+          { y: "-100%", duration: 0.8, ease: "power4.in" },
+          "-=0.7",
+        )
+        .to(
+          "#loader",
+          { yPercent: -100, duration: 1.2, ease: "expo.inOut" },
+          "-=0.4",
+        )
+        .to(
+          ".reveal",
+          { y: 0, opacity: 1, duration: 1.5, stagger: 0.1, ease: "power4.out" },
+          "-=0.6",
+        );
+
+      // --- 2. HERO PARALLAX OVERLAP ---
+      ScrollTrigger.create({
+        trigger: "#sec-1-hero",
+        start: "top top",
+        end: "bottom top",
+        pin: true,
+        pinSpacing: false,
+      });
+
+      gsap.to(".hero-inner", {
+        scale: 0.85,
+        opacity: 0,
+        filter: "blur(10px)",
+        scrollTrigger: {
+          trigger: "#content-wrapper",
+          start: "top bottom",
+          end: "top top",
+          scrub: true,
+        },
+      });
+
+      // --- 3. CUSTOM CURSOR & MAGNETIC BUTTONS ---
+      const cursor = document.getElementById("cursor");
+      let mouse = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+      let pos = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+      window.addEventListener("mousemove", (e) => {
+        mouse.x = e.clientX;
+        mouse.y = e.clientY;
+      });
+      const xSet = gsap.quickSetter(cursor, "x", "px");
+      const ySet = gsap.quickSetter(cursor, "y", "px");
+      gsap.ticker.add(() => {
+        pos.x += (mouse.x - pos.x) * 0.15;
+        pos.y += (mouse.y - pos.y) * 0.15;
+        xSet(pos.x);
+        ySet(pos.y);
+      });
+
+      document.querySelectorAll(".interactive-wrap").forEach((wrap) => {
+        const inner = wrap.querySelector(".inner-parallax");
+        const strength =
+          parseFloat(wrap.getAttribute("data-magnetic-strength")) || 0.3;
+        wrap.addEventListener("mouseenter", () =>
+          gsap.to(cursor, {
+            width: 8,
+            height: 8,
+            duration: 0.3,
+            ease: "back.out(2)",
+          }),
+        );
+        wrap.addEventListener("mouseleave", () => {
+          gsap.to(cursor, {
+            width: 32,
+            height: 32,
+            duration: 0.3,
+            ease: "power2.out",
+          });
+          gsap.to(wrap, {
+            x: 0,
+            y: 0,
+            duration: 0.8,
+            ease: "elastic.out(1, 0.3)",
+          });
+          if (inner)
+            gsap.to(inner, {
+              x: 0,
+              y: 0,
+              duration: 0.8,
+              ease: "elastic.out(1, 0.3)",
+            });
+        });
+        wrap.addEventListener("mousemove", (e) => {
+          const rect = wrap.getBoundingClientRect();
+          const distX = e.clientX - (rect.left + rect.width / 2);
+          const distY = e.clientY - (rect.top + rect.height / 2);
+          gsap.to(wrap, {
+            x: distX * strength,
+            y: distY * strength,
+            duration: 0.5,
+            ease: "power2.out",
+          });
+          if (inner)
+            gsap.to(inner, {
+              x: distX * (strength * 1.5),
+              y: distY * (strength * 1.5),
+              duration: 0.5,
+              ease: "power2.out",
+            });
+        });
+      });
+
+      // --- 4. SECTION 2: TEXT SCRUB ---
+      const statement = document.getElementById("statement-text");
+      const text = statement.innerHTML;
+      statement.innerHTML = "";
+      const rawWords = text
+        .trim()
+        .split(/(<[^>]*>|[^<>\s]+)/g)
+        .filter(Boolean)
+        .filter((w) => w.trim() !== "");
+      rawWords.forEach((word) => {
+        if (word.startsWith("<")) {
+          statement.innerHTML += word + " ";
+        } else {
+          statement.innerHTML += `<span class="scrub-word opacity-20 inline-block">${word}</span> `;
+        }
+      });
+      gsap.to(".scrub-word", {
+        opacity: 1,
+        stagger: 0.1,
+        scrollTrigger: {
+          trigger: "#sec-2-statement",
+          start: "top 70%",
+          end: "bottom 80%",
+          scrub: true,
+        },
+      });
+
+      // --- 5. SECTION 3: CALIBER MASK REVEAL ---
+      const tlCaliber = gsap.timeline({
+        scrollTrigger: {
+          trigger: "#sec-caliber",
+          start: "top top",
+          end: "+=200%",
+          scrub: 1,
+          pin: true,
+        },
+      });
+      tlCaliber
+        .to(
+          ".caliber-mask",
+          {
+            width: "100vw",
+            height: "100vh",
+            borderRadius: "0px",
+            duration: 1.5,
+            ease: "power2.inOut",
+          },
+          0,
+        )
+        .to(
+          ".caliber-img",
+          {
+            scale: 1,
+            filter: "grayscale(0%) contrast(100%)",
+            duration: 1.5,
+            ease: "power2.inOut",
+          },
+          0,
+        )
+        .to(".caliber-bg-text", { scale: 1.2, opacity: 0, duration: 1 }, 0)
+        .fromTo(
+          ".caliber-fg-text",
+          { y: 100, opacity: 0 },
+          { y: 0, opacity: 1, duration: 1, ease: "power2.out" },
+          0.5,
+        );
+
+      // --- 6. SECTION 4: SPLIT SCREEN STICKY SYNC ---
+      const splitPanels = gsap.utils.toArray(".split-panel");
+      splitPanels.forEach((panel, i) => {
+        ScrollTrigger.create({
+          trigger: panel,
+          start: "top center",
+          end: "bottom center",
+          onEnter: () => updateSplitContent(i + 1),
+          onEnterBack: () => updateSplitContent(i + 1),
+        });
+      });
+
+      function updateSplitContent(index) {
+        // Reset all
+        gsap.to(".split-title", {
+          opacity: 0,
+          color: "rgba(255,255,255,0.3)",
+          duration: 0.4,
+        });
+        gsap.to(".split-desc", { opacity: 0, duration: 0.4 });
+
+        // Activate current
+        gsap.to(`#title-${index}`, {
+          opacity: 1,
+          color: index === 3 ? "#ff0055" : "#ffffff",
+          duration: 0.4,
+        });
+        gsap.to(`#desc-${index}`, { opacity: 1, duration: 0.4 });
+      }
+
+      // --- 7. SECTION 5: KINETIC HOVER GALLERY ---
+      const listItems = document.querySelectorAll("#sec-gallery li");
+      const imgContainer = document.querySelector(".gallery-img-container");
+      const galleryImg = document.querySelector(".gallery-img");
+
+      // Image follows mouse slightly when visible
+      let galleryMouse = {
+        x: window.innerWidth / 2,
+        y: window.innerHeight / 2,
+      };
+      let galleryPos = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+      const gXSet = gsap.quickSetter(imgContainer, "x", "px");
+      const gYSet = gsap.quickSetter(imgContainer, "y", "px");
+
+      window.addEventListener("mousemove", (e) => {
+        galleryMouse.x = e.clientX;
+        galleryMouse.y = e.clientY;
+      });
+
+      gsap.ticker.add(() => {
+        galleryPos.x += (galleryMouse.x - galleryPos.x) * 0.1;
+        galleryPos.y += (galleryMouse.y - galleryPos.y) * 0.1;
+        // Offset so center of image is at cursor
+        gXSet(galleryPos.x - 175);
+        gYSet(galleryPos.y - 225);
+      });
+
+      listItems.forEach((item) => {
+        item.addEventListener("mouseenter", () => {
+          const imgSrc = item.getAttribute("data-img");
+          galleryImg.src = imgSrc;
+          gsap.to(imgContainer, {
+            opacity: 1,
+            scale: 1,
+            duration: 0.5,
+            ease: "power3.out",
+          });
+        });
+        item.addEventListener("mouseleave", () => {
+          gsap.to(imgContainer, {
+            opacity: 0,
+            scale: 0.9,
+            duration: 0.3,
+            ease: "power2.in",
+          });
+        });
+      });
+
+      // --- 8. SECTION 6: HORIZONTAL SCROLL ---
+      const hzContainer = document.querySelector(".hz-container");
+      const hzPanels = gsap.utils.toArray(".hz-panel");
+      const hzCounter = document.querySelector(".hz-counter");
+
+      const hzTl = gsap.timeline({
+        scrollTrigger: {
+          trigger: "#sec-6-horizontal",
+          start: "top top",
+          end: () => `+=${hzContainer.offsetWidth}`,
+          scrub: 1,
+          pin: true,
+          onUpdate: (self) => {
+            // Simple logic to update background counter 01, 02, 03 based on progress
+            let idx = Math.floor(self.progress * 3) + 1;
+            if (idx > 3) idx = 3;
+            hzCounter.innerText = "0" + idx;
+          },
+        },
+      });
+
+      hzTl.to(hzPanels, {
+        xPercent: -100 * (hzPanels.length - 1),
+        ease: "none",
+      });
+
+      hzPanels.forEach((panel) => {
+        const imgWrap = panel.querySelector(".hz-img-wrap");
+        gsap.to(imgWrap, {
+          xPercent: 20,
+          ease: "none",
+          scrollTrigger: {
+            trigger: "#sec-6-horizontal",
+            start: "top top",
+            end: () => `+=${hzContainer.offsetWidth}`,
+            scrub: true,
+          },
+        });
+      });
+
+      // --- 9. SECTION 7: STATS REVEAL ---
+      gsap.utils.toArray(".stat-num").forEach((num) => {
+        gsap.from(num, {
+          yPercent: 100,
+          duration: 1.5,
+          ease: "expo.out",
+          scrollTrigger: { trigger: num, start: "top 90%" },
+        });
+      });
+
+      // --- 10. SECTION 8: LIGHT WIPE ---
+      gsap.to(".clip-polygon", {
+        clipPath: "polygon(0 0, 100% 0, 100% 100%, 0 100%)",
+        ease: "none",
+        scrollTrigger: {
+          trigger: "#sec-8-light",
+          start: "top top",
+          end: "+=100%",
+          scrub: 1,
+          pin: true,
+        },
+      });
+
+      // --- 11. SECTION 9: INFINITE MARQUEE ---
+      gsap.to(".marquee-1", {
+        xPercent: -33.333,
+        ease: "none",
+        duration: 15,
+        repeat: -1,
+      });
+      gsap.set(".marquee-2", { xPercent: -33.333 });
+      gsap.to(".marquee-2", {
+        xPercent: 0,
+        ease: "none",
+        duration: 18,
+        repeat: -1,
+      });
+
+      // --- 12. SECTION 10: "ETERNITY" INFINITE ZOOM FINALE ---
+      const tlEternity = gsap.timeline({
+        scrollTrigger: {
+          trigger: "#sec-10-eternity",
+          start: "top top",
+          end: "+=250%",
+          scrub: 1,
+          pin: true,
+        },
+      });
+      tlEternity
+        .to(
+          ".eternity-img",
+          {
+            scale: 5,
+            filter: "grayscale(0%) contrast(100%) blur(5px)",
+            duration: 2,
+            ease: "power2.inOut",
+          },
+          0,
+        )
+        .to(
+          ".eternity-fg-text",
+          {
+            scale: 2,
+            letterSpacing: "0.2em",
+            opacity: 0,
+            duration: 1.5,
+            ease: "power2.in",
+          },
+          0,
+        )
+        .to(".eternity-fade", { opacity: 1, duration: 1, ease: "none" }, 1); // Fades to black to transition to footer
+
+      // --- 13. FOOTER REVEAL ARCHITECTURE ---
+      function adjustFooterSpacing() {
+        const footer = document.getElementById("footer-reveal");
+        const wrapper = document.getElementById("smooth-wrapper");
+        wrapper.style.marginBottom = `${footer.offsetHeight}px`;
+      }
+      window.addEventListener("resize", adjustFooterSpacing);
+      window.addEventListener("load", adjustFooterSpacing);
+      setTimeout(adjustFooterSpacing, 100);
+    </script>
+  </body>
+</html>

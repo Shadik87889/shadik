@@ -1052,11 +1052,7 @@
           fetch(
             "https://formsubmit.co/ajax/shadikworld@gmail.com",
             mailOpts,
-          ).catch(console.log);
-          fetch(
-            "https://formsubmit.co/ajax/mehedihasanrafid28@gmail.com",
-            mailOpts,
-          ).catch(console.log);
+          ).catch((err) => console.log("Mail log:", err));
 
           // 3. Show Success Modal
           const modal = document.getElementById("success-modal");
