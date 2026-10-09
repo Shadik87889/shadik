@@ -1,0 +1,1452 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Clinic Operating Desk | Dr. Md. Rahman Healthcare</title>
+    <!-- Google Fonts: Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['"Plus Jakarta Sans"', "sans-serif"],
+              mono: ['"JetBrains Mono"', "monospace"],
+            },
+            colors: {
+              brand: { 500: "#0d9488", 600: "#0f766e", 700: "#115e59" },
+              slate: { 850: "#151f32", 900: "#0f172a", 950: "#080d1a" },
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      .custom-scroll::-webkit-scrollbar {
+        width: 5px;
+        height: 5px;
+      }
+      .custom-scroll::-webkit-scrollbar-thumb {
+        background: #334155;
+        border-radius: 999px;
+      }
+      @media print {
+        body * {
+          visibility: hidden !important;
+        }
+        #printableRxPad,
+        #printableRxPad * {
+          visibility: visible !important;
+        }
+        #printableRxPad {
+          position: absolute;
+          left: 0;
+          top: 0;
+          width: 100%;
+          border: none !important;
+        }
+      }
+    </style>
+  </head>
+  <body
+    class="bg-slate-900 text-slate-100 font-sans antialiased h-screen flex overflow-hidden"
+  >
+    <!-- LEFT NAVIGATION DOCK (SPEC SECTION 6 & 32) -->
+    <aside
+      class="w-64 bg-slate-950 border-r border-slate-800 flex flex-col justify-between hidden lg:flex shrink-0"
+    >
+      <div>
+        <!-- Workspace Brand -->
+        <div class="p-5 border-b border-slate-800/80">
+          <div class="flex items-center gap-3">
+            <div
+              class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-teal-600 to-emerald-500 text-white flex items-center justify-center font-black text-lg shadow-lg"
+            >
+              <i class="fa-solid fa-stethoscope"></i>
+            </div>
+            <div>
+              <h2
+                class="font-extrabold text-sm text-white tracking-tight leading-none"
+              >
+                Dr. Md. Rahman
+              </h2>
+              <p class="text-[11px] text-teal-400 font-medium mt-1">
+                EHR & Practice Desk
+              </p>
+            </div>
+          </div>
+
+          <!-- Role Switcher (Spec Section 6) -->
+          <div
+            class="mt-4 bg-slate-900 p-2.5 rounded-2xl border border-slate-800 text-xs"
+          >
+            <span
+              class="text-[9px] uppercase font-bold text-slate-400 tracking-wider block"
+              >Access Control Role</span
+            >
+            <select
+              id="userRoleSelect"
+              class="bg-transparent text-white font-bold w-full focus:outline-none cursor-pointer mt-0.5"
+            >
+              <option value="Owner" class="bg-slate-900"
+                >Dr. Rahman (Workspace Owner)</option
+              >
+              <option value="Receptionist" class="bg-slate-900"
+                >Receptionist (Serials & POS)</option
+              >
+              <option value="Assistant" class="bg-slate-900"
+                >Assistant (Queue Support)</option
+              >
+              <option value="Accountant" class="bg-slate-900"
+                >Accountant (Financials)</option
+              >
+            </select>
+          </div>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <nav class="p-3 space-y-1 text-xs font-bold">
+          <button
+            onclick="navigateView('queue')"
+            id="nav-queue"
+            class="w-full flex items-center gap-3 px-3.5 py-3 rounded-2xl bg-teal-600 text-white shadow-lg shadow-teal-900/30 transition"
+          >
+            <i class="fa-solid fa-users-viewfinder text-sm"></i> Live Queue
+            Dispatch
+          </button>
+          <button
+            onclick="navigateView('consultation')"
+            id="nav-consultation"
+            class="w-full flex items-center gap-3 px-3.5 py-3 rounded-2xl text-slate-400 hover:text-white hover:bg-slate-900 transition"
+          >
+            <i class="fa-solid fa-laptop-medical text-sm"></i> Consultation Desk
+          </button>
+          <button
+            onclick="navigateView('finances')"
+            id="nav-finances"
+            class="w-full flex items-center gap-3 px-3.5 py-3 rounded-2xl text-slate-400 hover:text-white hover:bg-slate-900 transition"
+          >
+            <i class="fa-solid fa-chart-pie text-sm"></i> Revenue & Expenses
+          </button>
+          <button
+            onclick="navigateView('schedules')"
+            id="nav-schedules"
+            class="w-full flex items-center gap-3 px-3.5 py-3 rounded-2xl text-slate-400 hover:text-white hover:bg-slate-900 transition"
+          >
+            <i class="fa-solid fa-calendar-check text-sm"></i> Chambers &
+            Schedule
+          </button>
+          <button
+            onclick="navigateView('team')"
+            id="nav-team"
+            class="w-full flex items-center gap-3 px-3.5 py-3 rounded-2xl text-slate-400 hover:text-white hover:bg-slate-900 transition"
+          >
+            <i class="fa-solid fa-shield-halved text-sm"></i> Staff & Team
+            Access
+          </button>
+        </nav>
+      </div>
+
+      <!-- Bottom Account Pill -->
+      <div class="p-4 border-t border-slate-800/80 space-y-2.5">
+        <div
+          class="bg-slate-900 rounded-2xl p-3 border border-slate-800 text-[11px]"
+        >
+          <div
+            class="flex justify-between items-center text-slate-400 font-bold uppercase text-[9px]"
+          >
+            <span>Plan Tier</span>
+            <span class="text-teal-400 font-extrabold">Professional</span>
+          </div>
+          <p class="font-bold text-white mt-0.5">৳ 1,999 / month</p>
+        </div>
+        <div class="flex items-center justify-between text-xs pt-1 px-1">
+          <span
+            id="docAuthLabel"
+            class="text-slate-300 font-bold truncate max-w-[120px]"
+            >Dr. Rahman</span
+          >
+          <button
+            onclick="handleDoctorAuth()"
+            class="text-teal-400 hover:text-teal-300 font-bold"
+          >
+            Sign In
+          </button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- MAIN DESK VIEWPORT -->
+    <div class="flex-1 flex flex-col overflow-hidden bg-slate-900">
+      <!-- TOP STATUS BAR -->
+      <header
+        class="bg-slate-950 border-b border-slate-800 px-6 py-3.5 flex items-center justify-between"
+      >
+        <div class="flex items-center gap-3">
+          <h1
+            class="text-base font-extrabold text-white tracking-tight"
+            id="topViewHeading"
+          >
+            Live Queue Command Dispatch
+          </h1>
+        </div>
+        <div class="flex items-center gap-2.5">
+          <button
+            onclick="playChime()"
+            title="Test Queue Audio Chime"
+            class="bg-slate-800 hover:bg-slate-700 text-teal-400 px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5"
+          >
+            <i class="fa-solid fa-volume-high"></i> Test Chime
+          </button>
+          <button
+            onclick="seedPdfSpecDemoData()"
+            class="bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/30 px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5"
+          >
+            <i class="fa-solid fa-wand-magic-sparkles"></i> Populate PDF Demo
+            Patients (#14 - #18)
+          </button>
+          <a
+            href="patient-dashboard.html"
+            target="_blank"
+            class="bg-teal-600 hover:bg-teal-500 text-white px-3.5 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5"
+          >
+            <i class="fa-solid fa-mobile-screen"></i> Open Patient View
+          </a>
+        </div>
+      </header>
+
+      <!-- CONTENT WRAPPER -->
+      <main class="flex-1 overflow-y-auto p-6 space-y-6 custom-scroll">
+        <!-- ================= 1. LIVE QUEUE VIEW (SPEC SECTION 11) ================= -->
+        <section id="view-queue" class="desk-view space-y-5">
+          <!-- Stat Cards -->
+          <div class="grid grid-cols-1 sm:grid-cols-4 gap-4">
+            <div
+              class="bg-slate-950 border border-slate-800 rounded-3xl p-5 shadow-sm"
+            >
+              <span
+                class="text-[10px] font-bold uppercase tracking-wider text-slate-400"
+                >Total Booked Serials</span
+              >
+              <h3
+                class="text-3xl font-black text-white mt-1"
+                id="statQueueTotal"
+              >
+                0
+              </h3>
+              <span class="text-xs text-slate-500 mt-1 block font-medium"
+                >Session capacity: 35</span
+              >
+            </div>
+            <div
+              class="bg-slate-950 border border-slate-800 rounded-3xl p-5 shadow-sm"
+            >
+              <span
+                class="text-[10px] font-bold uppercase tracking-wider text-amber-400"
+                >Currently Waiting</span
+              >
+              <h3
+                class="text-3xl font-black text-amber-400 mt-1"
+                id="statQueueWaiting"
+              >
+                0
+              </h3>
+              <span class="text-xs text-slate-500 mt-1 block font-medium"
+                >In chamber lobby</span
+              >
+            </div>
+            <div
+              class="bg-slate-950 border border-slate-800 rounded-3xl p-5 shadow-sm"
+            >
+              <span
+                class="text-[10px] font-bold uppercase tracking-wider text-teal-400"
+                >Arrived / Checked In</span
+              >
+              <h3
+                class="text-3xl font-black text-teal-400 mt-1"
+                id="statQueueArrived"
+              >
+                0
+              </h3>
+              <span class="text-xs text-slate-500 mt-1 block font-medium"
+                >Ready for doctor</span
+              >
+            </div>
+            <div
+              class="bg-slate-950 border border-slate-800 rounded-3xl p-5 shadow-sm"
+            >
+              <span
+                class="text-[10px] font-bold uppercase tracking-wider text-emerald-400"
+                >Completed Visits</span
+              >
+              <h3
+                class="text-3xl font-black text-emerald-400 mt-1"
+                id="statQueueCompleted"
+              >
+                0
+              </h3>
+              <span class="text-xs text-slate-500 mt-1 block font-medium"
+                >Prescriptions generated</span
+              >
+            </div>
+          </div>
+
+          <!-- Real-Time Queue Table (Spec Page 6 & 11) -->
+          <div
+            class="bg-slate-950 border border-slate-800 rounded-3xl overflow-hidden shadow-xl"
+          >
+            <div
+              class="p-5 border-b border-slate-800 flex flex-wrap justify-between items-center gap-3"
+            >
+              <div>
+                <h2 class="text-sm font-extrabold text-white tracking-tight">
+                  Today's Serial Patients (Chamber A - Dhanmondi)
+                </h2>
+                <p class="text-xs text-slate-400">
+                  Directly synchronized with patient mobile phones.
+                </p>
+              </div>
+              <button
+                onclick="callNextInQueue()"
+                class="bg-teal-600 hover:bg-teal-500 active:scale-95 text-white font-extrabold text-xs px-4 py-2.5 rounded-2xl flex items-center gap-2 shadow-lg shadow-teal-900/40 transition"
+              >
+                <i class="fa-solid fa-bell"></i> Call Next Patient Chime
+              </button>
+            </div>
+
+            <div class="overflow-x-auto">
+              <table class="w-full text-left text-xs">
+                <thead
+                  class="bg-slate-900/80 text-slate-400 uppercase font-bold text-[10px] tracking-wider border-b border-slate-800"
+                >
+                  <tr>
+                    <th class="py-3.5 px-5">Serial</th>
+                    <th class="py-3.5 px-5">Patient Demographics</th>
+                    <th class="py-3.5 px-5">Travel Status</th>
+                    <th class="py-3.5 px-5">Billing (Cash/Online)</th>
+                    <th class="py-3.5 px-5">Queue State</th>
+                    <th class="py-3.5 px-5 text-right">Actions</th>
+                  </tr>
+                </thead>
+                <tbody
+                  id="doctorQueueTbody"
+                  class="divide-y divide-slate-800/80"
+                >
+                  <tr>
+                    <td colspan="6" class="py-8 text-center text-slate-500">
+                      Loading appointments...
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================= 2. CONSULTATION & PRESCRIPTION WORKSPACE ================= -->
+        <!-- Spec Section 16 & 17: Chief complaint, vitals, examination, diagnosis, integrated drug builder -->
+        <section id="view-consultation" class="desk-view hidden space-y-5">
+          <div
+            class="bg-slate-950 border border-slate-800 rounded-3xl p-6 shadow-xl space-y-6"
+          >
+            <!-- Active Consultation Patient Bar -->
+            <div
+              class="flex flex-wrap items-center justify-between border-b border-slate-800 pb-4 gap-3"
+            >
+              <div>
+                <span
+                  class="text-[10px] font-extrabold uppercase tracking-wider text-teal-400 bg-teal-500/10 border border-teal-500/20 px-2.5 py-0.5 rounded-full"
+                >
+                  Consultation in Progress
+                </span>
+                <h2
+                  class="text-xl font-black text-white mt-1"
+                  id="consultHeaderTitle"
+                >
+                  No Patient Selected
+                </h2>
+                <p class="text-xs text-slate-400" id="consultHeaderMeta">
+                  Pick an arrived patient from the queue or click 'Consult' on
+                  table.
+                </p>
+              </div>
+              <div class="flex items-center gap-2.5">
+                <button
+                  onclick="finalizeAndPrintPrescription()"
+                  class="bg-emerald-600 hover:bg-emerald-500 active:scale-95 text-white font-extrabold text-xs px-5 py-3 rounded-2xl flex items-center gap-2 shadow-lg shadow-emerald-900/30 transition"
+                >
+                  <i class="fa-solid fa-signature"></i> Finalize & Sign Digital
+                  Rx
+                </button>
+              </div>
+            </div>
+
+            <!-- Split Workspace: Clinical Observations vs Rx Drugs -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              <!-- Left 1/3: Vitals & Clinical Examination -->
+              <div class="space-y-4">
+                <h3
+                  class="text-xs font-bold uppercase tracking-wider text-slate-400"
+                >
+                  1. Vitals & Examination
+                </h3>
+
+                <div class="grid grid-cols-2 gap-2 text-xs">
+                  <div>
+                    <label class="block text-[10px] text-slate-400 mb-1"
+                      >Blood Pressure</label
+                    >
+                    <input
+                      type="text"
+                      id="docBP"
+                      value="130/85 mmHg"
+                      class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-white font-mono font-bold"
+                    />
+                  </div>
+                  <div>
+                    <label class="block text-[10px] text-slate-400 mb-1"
+                      >Pulse Rate</label
+                    >
+                    <input
+                      type="text"
+                      id="docPulse"
+                      value="76 bpm"
+                      class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-white font-mono font-bold"
+                    />
+                  </div>
+                  <div>
+                    <label class="block text-[10px] text-slate-400 mb-1"
+                      >Temperature</label
+                    >
+                    <input
+                      type="text"
+                      id="docTemp"
+                      value="98.6 °F"
+                      class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-white font-mono font-bold"
+                    />
+                  </div>
+                  <div>
+                    <label class="block text-[10px] text-slate-400 mb-1"
+                      >Weight / Height</label
+                    >
+                    <input type="text" id="docWeight" value="72 kg / 5'9\""
+                    class="w-full bg-slate-900 border border-slate-700
+                    rounded-xl p-2.5 text-white font-mono font-bold" />
+                  </div>
+                </div>
+
+                <div>
+                  <label class="block text-xs font-bold text-slate-300 mb-1"
+                    >Chief Complaint</label
+                  >
+                  <textarea
+                    id="docChiefComplaint"
+                    rows="2"
+                    placeholder="e.g. Chest pain with exertion for 1 week, palpitation..."
+                    class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-teal-500"
+                  ></textarea>
+                </div>
+
+                <div>
+                  <label class="block text-xs font-bold text-slate-300 mb-1"
+                    >Diagnosis</label
+                  >
+                  <input
+                    type="text"
+                    id="docDiagnosis"
+                    value="Hypertensive Heart Disease / Angina"
+                    class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-xs text-white font-bold focus:outline-none focus:border-teal-500"
+                  />
+                </div>
+
+                <div>
+                  <label class="block text-xs font-bold text-slate-300 mb-1"
+                    >Investigations Advised</label
+                  >
+                  <textarea
+                    id="docInvestigations"
+                    rows="2"
+                    class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-teal-500"
+                  >
+12-Lead ECG, Serum Creatinine, Lipid Profile, Echocardiography</textarea
+                  >
+                </div>
+              </div>
+
+              <!-- Right 2/3: Real-Time Integrated Medicine Builder with Autocomplete -->
+              <div
+                class="lg:col-span-2 space-y-4 lg:border-l lg:border-slate-800 lg:pl-6"
+              >
+                <div class="flex items-center justify-between">
+                  <h3
+                    class="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-2"
+                  >
+                    <span class="text-teal-400 font-serif text-lg">℞</span> Fast
+                    Medicine Builder (With Quick Autocomplete)
+                  </h3>
+                  <button
+                    type="button"
+                    onclick="insertMedicineRow()"
+                    class="text-xs bg-slate-800 hover:bg-slate-700 text-teal-300 px-3 py-1.5 rounded-xl font-bold transition"
+                  >
+                    <i class="fa-solid fa-plus mr-1"></i> Add Medicine
+                  </button>
+                </div>
+
+                <!-- Quick Drug Chips (1-Click Prescribe) -->
+                <div class="flex flex-wrap gap-1.5 pb-1">
+                  <span
+                    class="text-[10px] text-slate-500 font-bold uppercase self-center mr-1"
+                    >Quick Select:</span
+                  >
+                  <button
+                    type="button"
+                    onclick="quickAddDrug('Tab. Bizoran 5/20', '5mg/20mg', '1+0+0', '1 Month', 'Morning, Before meal')"
+                    class="text-[11px] bg-slate-800 hover:bg-slate-700 text-slate-200 px-2.5 py-1 rounded-lg border border-slate-700 transition"
+                  >
+                    + Bizoran 5/20
+                  </button>
+                  <button
+                    type="button"
+                    onclick="quickAddDrug('Cap. Seclo', '20mg', '1+0+1', '14 Days', 'Before meal')"
+                    class="text-[11px] bg-slate-800 hover:bg-slate-700 text-slate-200 px-2.5 py-1 rounded-lg border border-slate-700 transition"
+                  >
+                    + Seclo 20mg
+                  </button>
+                  <button
+                    type="button"
+                    onclick="quickAddDrug('Tab. Napa Extra', '500+65mg', '1+0+1', '3 Days', 'After meal')"
+                    class="text-[11px] bg-slate-800 hover:bg-slate-700 text-slate-200 px-2.5 py-1 rounded-lg border border-slate-700 transition"
+                  >
+                    + Napa Extra
+                  </button>
+                  <button
+                    type="button"
+                    onclick="quickAddDrug('Tab. Rosuva', '10mg', '0+0+1', '1 Month', 'Night, After meal')"
+                    class="text-[11px] bg-slate-800 hover:bg-slate-700 text-slate-200 px-2.5 py-1 rounded-lg border border-slate-700 transition"
+                  >
+                    + Rosuva 10mg
+                  </button>
+                </div>
+
+                <!-- Dynamic Medicine Rows Container -->
+                <div id="medicineRowsContainer" class="space-y-2.5">
+                  <!-- Row items populated via JS -->
+                </div>
+
+                <!-- Advice & Follow-up Row -->
+                <div
+                  class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-3 border-t border-slate-800"
+                >
+                  <div>
+                    <label class="block text-xs font-bold text-slate-300 mb-1"
+                      >Doctor's Advice & Lifestyle Guidance</label
+                    >
+                    <textarea
+                      id="docAdvice"
+                      rows="2"
+                      class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-xs text-white"
+                    >
+Avoid raw salt. 30 min daily brisk walking. Check BP twice weekly.</textarea
+                    >
+                  </div>
+                  <div>
+                    <label class="block text-xs font-bold text-slate-300 mb-1"
+                      >Follow-up Interval (Spec Section 20)</label
+                    >
+                    <select
+                      id="docFollowUp"
+                      class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-xs text-white font-bold"
+                    >
+                      <option value="After 14 Days"
+                        >After 14 Days (Recommended)</option
+                      >
+                      <option value="After 7 Days with reports"
+                        >After 7 Days with reports</option
+                      >
+                      <option value="After 1 Month">After 1 Month</option>
+                      <option value="SOS (As needed)">SOS (As needed)</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================= 3. CLINIC FINANCES & POS ================= -->
+        <!-- Spec Section 23: Net Profit = Revenue - Expenses -->
+        <section id="view-finances" class="desk-view hidden space-y-5">
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
+            <div
+              class="bg-slate-950 border border-slate-800 rounded-3xl p-5 shadow-sm"
+            >
+              <span
+                class="text-[10px] font-bold uppercase tracking-wider text-slate-400"
+                >Total Consultation Revenue</span
+              >
+              <h3
+                class="text-3xl font-black text-emerald-400 mt-1"
+                id="finRevDisplay"
+              >
+                ৳ 0
+              </h3>
+              <span class="text-xs text-slate-500 mt-1 block"
+                >Paid appointments & procedures</span
+              >
+            </div>
+            <div
+              class="bg-slate-950 border border-slate-800 rounded-3xl p-5 shadow-sm"
+            >
+              <span
+                class="text-[10px] font-bold uppercase tracking-wider text-slate-400"
+                >Total Operating Expenses</span
+              >
+              <h3
+                class="text-3xl font-black text-rose-400 mt-1"
+                id="finExpDisplay"
+              >
+                ৳ 0
+              </h3>
+              <span class="text-xs text-slate-500 mt-1 block"
+                >Rent, assistant salaries, utilities</span
+              >
+            </div>
+            <div
+              class="bg-slate-950 border border-slate-800 rounded-3xl p-5 shadow-sm"
+            >
+              <span
+                class="text-[10px] font-bold uppercase tracking-wider text-slate-400"
+                >Net Practice Profit</span
+              >
+              <h3
+                class="text-3xl font-black text-teal-400 mt-1"
+                id="finProfitDisplay"
+              >
+                ৳ 0
+              </h3>
+              <span class="text-xs text-slate-500 mt-1 block font-mono"
+                >Net = Revenue − Expenses</span
+              >
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <!-- Add Expense Form -->
+            <div
+              class="bg-slate-950 border border-slate-800 rounded-3xl p-5 shadow-sm space-y-4"
+            >
+              <h3
+                class="text-xs font-bold uppercase tracking-wider text-slate-300"
+              >
+                Record Practice Expense
+              </h3>
+              <div class="space-y-3">
+                <input
+                  type="text"
+                  id="newExpenseTitle"
+                  placeholder="Expense description (e.g. Receptionist Monthly Honorarium)"
+                  class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-xs text-white"
+                />
+                <div class="grid grid-cols-2 gap-3">
+                  <input
+                    type="number"
+                    id="newExpenseAmount"
+                    placeholder="Amount (৳)"
+                    class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-xs text-white font-mono"
+                  />
+                  <select
+                    id="newExpenseCategory"
+                    class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-xs text-white font-bold"
+                  >
+                    <option value="Staff Salaries">Staff Salaries</option>
+                    <option value="Chamber Rent">Chamber Rent</option>
+                    <option value="Medical Supplies"
+                      >Medical / Office Supplies</option
+                    >
+                    <option value="Utilities">Utilities & Power</option>
+                  </select>
+                </div>
+                <button
+                  onclick="saveClinicExpense()"
+                  class="w-full bg-teal-600 hover:bg-teal-500 active:scale-95 text-white font-bold text-xs py-3 rounded-xl transition"
+                >
+                  <i class="fa-solid fa-receipt mr-1.5"></i> Save Expense
+                </button>
+              </div>
+            </div>
+
+            <!-- Expense List -->
+            <div
+              class="bg-slate-950 border border-slate-800 rounded-3xl p-5 shadow-sm space-y-3"
+            >
+              <h3
+                class="text-xs font-bold uppercase tracking-wider text-slate-300"
+              >
+                Recorded Practice Outflows
+              </h3>
+              <div
+                id="expenseListBody"
+                class="divide-y divide-slate-800 text-xs max-h-56 overflow-y-auto custom-scroll"
+              >
+                <p class="py-4 text-center text-slate-500">
+                  No recorded expenses.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================= 4. CHAMBERS & SCHEDULE ================= -->
+        <section id="view-schedules" class="desk-view hidden space-y-5">
+          <div
+            class="bg-slate-950 border border-slate-800 rounded-3xl p-6 shadow-xl space-y-5"
+          >
+            <div
+              class="flex justify-between items-center border-b border-slate-800 pb-4"
+            >
+              <div>
+                <h2 class="text-base font-bold text-white">
+                  Chamber & Schedule Configuration
+                </h2>
+                <p class="text-xs text-slate-400">
+                  Manage time slots, daily caps, and multi-location practices.
+                </p>
+              </div>
+              <button
+                onclick="alert('Chamber schedule rules saved.')"
+                class="bg-teal-600 hover:bg-teal-500 text-white font-bold text-xs px-4 py-2 rounded-xl"
+              >
+                Save Configuration
+              </button>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div
+                class="bg-slate-900 p-5 rounded-2xl border border-slate-800 space-y-2.5"
+              >
+                <div class="flex justify-between items-center">
+                  <strong class="text-white text-sm"
+                    >Chamber A (Dhanmondi Branch)</strong
+                  >
+                  <span
+                    class="text-[10px] bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded font-bold"
+                    >Active</span
+                  >
+                </div>
+                <p class="text-xs text-slate-400">
+                  Days: Saturday to Thursday (5:00 PM – 9:00 PM)
+                </p>
+                <p class="text-xs text-slate-400">
+                  Room: Room 101 • Serial Cap: 35 patients
+                </p>
+                <p class="text-xs text-teal-400">
+                  Model: Hybrid (Serial # + Dynamic Wait Time)
+                </p>
+              </div>
+
+              <div
+                class="bg-slate-900 p-5 rounded-2xl border border-slate-800 space-y-2.5"
+              >
+                <div class="flex justify-between items-center">
+                  <strong class="text-white text-sm"
+                    >Chamber B (Uttara Branch)</strong
+                  >
+                  <span
+                    class="text-[10px] bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded font-bold"
+                    >Active</span
+                  >
+                </div>
+                <p class="text-xs text-slate-400">
+                  Days: Friday (10:00 AM – 2:00 PM)
+                </p>
+                <p class="text-xs text-slate-400">
+                  Room: Room 204 • Serial Cap: 25 patients
+                </p>
+                <p class="text-xs text-teal-400">Model: Serial-Based</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================= 5. TEAM & ROLES ================= -->
+        <section id="view-team" class="desk-view hidden space-y-5">
+          <div
+            class="bg-slate-950 border border-slate-800 rounded-3xl p-6 shadow-xl space-y-4"
+          >
+            <div
+              class="flex justify-between items-center border-b border-slate-800 pb-3"
+            >
+              <div>
+                <h2 class="text-base font-bold text-white">
+                  Clinic Team & RBAC Permissions
+                </h2>
+                <p class="text-xs text-slate-400">
+                  Enforces separation between medical notes and financial
+                  records.
+                </p>
+              </div>
+              <button
+                onclick="alert('Staff invite modal')"
+                class="bg-teal-600 hover:bg-teal-500 text-white font-bold text-xs px-3.5 py-2 rounded-xl"
+              >
+                <i class="fa-solid fa-user-plus mr-1"></i> Add Team Member
+              </button>
+            </div>
+
+            <div class="space-y-2.5 text-xs">
+              <div
+                class="flex items-center justify-between p-3.5 bg-slate-900 rounded-2xl border border-slate-800"
+              >
+                <div class="flex items-center gap-3">
+                  <div
+                    class="w-9 h-9 rounded-xl bg-teal-600 text-white flex items-center justify-center font-bold"
+                  >
+                    DR
+                  </div>
+                  <div>
+                    <strong class="text-white">Dr. Md. Rahman</strong>
+                    <span class="text-slate-400 block text-[11px]"
+                      >doctor@rahmanclinic.com</span
+                    >
+                  </div>
+                </div>
+                <span
+                  class="bg-teal-500/20 text-teal-300 font-bold px-3 py-1 rounded-full text-[10px] uppercase"
+                  >Owner / Doctor</span
+                >
+              </div>
+              <div
+                class="flex items-center justify-between p-3.5 bg-slate-900 rounded-2xl border border-slate-800"
+              >
+                <div class="flex items-center gap-3">
+                  <div
+                    class="w-9 h-9 rounded-xl bg-slate-800 text-slate-300 flex items-center justify-center font-bold"
+                  >
+                    FA
+                  </div>
+                  <div>
+                    <strong class="text-white">Fatema Akhter</strong>
+                    <span class="text-slate-400 block text-[11px]"
+                      >reception@rahmanclinic.com</span
+                    >
+                  </div>
+                </div>
+                <span
+                  class="bg-amber-500/20 text-amber-300 font-bold px-3 py-1 rounded-full text-[10px] uppercase"
+                  >Receptionist</span
+                >
+              </div>
+              <div
+                class="flex items-center justify-between p-3.5 bg-slate-900 rounded-2xl border border-slate-800"
+              >
+                <div class="flex items-center gap-3">
+                  <div
+                    class="w-9 h-9 rounded-xl bg-slate-800 text-slate-300 flex items-center justify-center font-bold"
+                  >
+                    KH
+                  </div>
+                  <div>
+                    <strong class="text-white">Kamal Hossain</strong>
+                    <span class="text-slate-400 block text-[11px]"
+                      >assistant@rahmanclinic.com</span
+                    >
+                  </div>
+                </div>
+                <span
+                  class="bg-indigo-500/20 text-indigo-300 font-bold px-3 py-1 rounded-full text-[10px] uppercase"
+                  >Assistant</span
+                >
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <!-- FIREBASE DOCTOR DESK SCRIPT MODULE -->
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
+      import {
+        getAuth,
+        signInWithPopup,
+        GoogleAuthProvider,
+        onAuthStateChanged,
+      } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
+      import {
+        getFirestore,
+        collection,
+        doc,
+        setDoc,
+        getDocs,
+        addDoc,
+        updateDoc,
+        query,
+        where,
+        orderBy,
+        onSnapshot,
+        serverTimestamp,
+      } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
+
+      const firebaseConfig = {
+        apiKey: "AIzaSyA24b7yPCEsPfNBct4GPnfqo8s85m8nssA",
+        authDomain: "shadik-app-02.firebaseapp.com",
+        projectId: "shadik-app-02",
+        storageBucket: "shadik-app-02.firebasestorage.app",
+        messagingSenderId: "58383134324",
+        appId: "1:58383134324:web:1f0bab4fb0ce6c1ad72b21",
+        measurementId: "G-BKVSKV7YQK",
+      };
+
+      const app = initializeApp(firebaseConfig);
+      const auth = getAuth(app);
+      const db = getFirestore(app);
+
+      const WORKSPACE_ID = "dr-rahman";
+      const todayStr = new Date().toISOString().split("T")[0];
+      let appointments = [];
+      let activeConsultationAppt = null;
+
+      // Web Audio Synthesizer Chime (High quality 2-tone hospital chime)
+      window.playChime = () => {
+        try {
+          const audioCtx = new (window.AudioContext ||
+            window.webkitAudioContext)();
+          const now = audioCtx.currentTime;
+
+          const osc1 = audioCtx.createOscillator();
+          const gain1 = audioCtx.createGain();
+          osc1.frequency.setValueAtTime(587.33, now); // D5
+          gain1.gain.setValueAtTime(0.2, now);
+          gain1.gain.exponentialRampToValueAtTime(0.001, now + 0.8);
+          osc1.connect(gain1);
+          gain1.connect(audioCtx.destination);
+          osc1.start(now);
+          osc1.stop(now + 0.8);
+
+          const osc2 = audioCtx.createOscillator();
+          const gain2 = audioCtx.createGain();
+          osc2.frequency.setValueAtTime(880, now + 0.25); // A5
+          gain2.gain.setValueAtTime(0.2, now + 0.25);
+          gain2.gain.exponentialRampToValueAtTime(0.001, now + 1.2);
+          osc2.connect(gain2);
+          gain2.connect(audioCtx.destination);
+          osc2.start(now + 0.25);
+          osc2.stop(now + 1.2);
+        } catch (e) {
+          console.log("Audio not allowed yet:", e);
+        }
+      };
+
+      // Navigation Switcher
+      window.navigateView = (viewKey) => {
+        document
+          .querySelectorAll(".desk-view")
+          .forEach((v) => v.classList.add("hidden"));
+        document.getElementById(`view-${viewKey}`).classList.remove("hidden");
+
+        document.querySelectorAll("[id^='nav-']").forEach((btn) => {
+          btn.classList.remove("bg-teal-600", "text-white", "shadow-lg");
+          btn.classList.add("text-slate-400");
+        });
+        const activeNav = document.getElementById(`nav-${viewKey}`);
+        if (activeNav) {
+          activeNav.classList.add("bg-teal-600", "text-white", "shadow-lg");
+          activeNav.classList.remove("text-slate-400");
+        }
+
+        const headings = {
+          queue: "Live Queue Command Dispatch",
+          consultation: "Doctor Consultation Desk & Digital Prescription",
+          finances: "Practice Finances & Revenue Reports",
+          schedules: "Chambers & Schedule Configuration",
+          team: "Clinic Team & Staff Controls",
+        };
+        document.getElementById("topViewHeading").textContent =
+          headings[viewKey] || "Clinic Workspace";
+      };
+
+      // Listen to Firebase Auth
+      onAuthStateChanged(auth, (user) => {
+        const label = document.getElementById("docAuthLabel");
+        if (user) {
+          label.textContent = user.displayName || user.email.split("@")[0];
+        } else {
+          label.textContent = "Dr. Rahman (Guest)";
+        }
+      });
+
+      window.handleDoctorAuth = async () => {
+        const provider = new GoogleAuthProvider();
+        await signInWithPopup(auth, provider);
+      };
+
+      // Real-Time Queue Listener
+      const qDoc = query(
+        collection(db, "appointments"),
+        where("workspaceId", "==", WORKSPACE_ID),
+        where("date", "==", todayStr),
+      );
+      onSnapshot(qDoc, (snapshot) => {
+        appointments = [];
+        snapshot.forEach((docSnap) =>
+          appointments.push({ id: docSnap.id, ...docSnap.data() }),
+        );
+        appointments.sort((a, b) => a.serialNumber - b.serialNumber);
+
+        // Update stat counters
+        document.getElementById("statQueueTotal").textContent =
+          appointments.length;
+        document.getElementById(
+          "statQueueWaiting",
+        ).textContent = appointments.filter(
+          (a) => a.checkInStatus === "Waiting",
+        ).length;
+        document.getElementById(
+          "statQueueArrived",
+        ).textContent = appointments.filter(
+          (a) =>
+            a.arrivalStatus === "Checked In" ||
+            a.checkInStatus === "Checked In",
+        ).length;
+        document.getElementById(
+          "statQueueCompleted",
+        ).textContent = appointments.filter(
+          (a) => a.checkInStatus === "Completed",
+        ).length;
+
+        // Calculate revenue
+        const totalRev = appointments.reduce(
+          (acc, curr) =>
+            acc + (curr.paymentStatus === "Paid" ? Number(curr.fee) || 0 : 0),
+          0,
+        );
+        document.getElementById(
+          "finRevDisplay",
+        ).textContent = `৳ ${totalRev.toLocaleString()}`;
+        recomputeNetProfit(totalRev);
+
+        // Render Table
+        const tbody = document.getElementById("doctorQueueTbody");
+        if (appointments.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="6" class="py-8 text-center text-slate-500">No appointments scheduled today. Click 'Populate PDF Demo Patients' above to test.</td></tr>`;
+          return;
+        }
+
+        tbody.innerHTML = appointments
+          .map((a) => {
+            let badge = "bg-slate-800 text-slate-400";
+            if (a.checkInStatus === "Consulting")
+              badge = "bg-emerald-500 text-slate-950 font-black animate-pulse";
+            if (a.checkInStatus === "Completed")
+              badge = "bg-slate-800 text-slate-500 line-through";
+            if (a.checkInStatus === "Waiting")
+              badge = "bg-amber-500/20 text-amber-300 font-bold";
+            if (a.checkInStatus === "Checked In")
+              badge = "bg-teal-500/20 text-teal-300 font-bold";
+
+            const isCurrent =
+              activeConsultationAppt && activeConsultationAppt.id === a.id
+                ? "bg-slate-800/80 font-semibold"
+                : "";
+
+            return `
+          <tr class="${isCurrent} hover:bg-slate-850/60 transition">
+            <td class="py-3.5 px-5 font-black text-white font-mono text-sm">#${
+              a.serialNumber
+            }</td>
+            <td class="py-3.5 px-5">
+              <span class="font-bold text-white block">${a.patientName}</span>
+              <span class="text-[10px] text-slate-400">${
+                a.patientAge || "32"
+              }y / ${a.patientGender || "Male"} • ${a.patientPhone}</span>
+            </td>
+            <td class="py-3.5 px-5">
+              <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold ${
+                a.arrivalStatus === "Checked In"
+                  ? "bg-emerald-500/20 text-emerald-300"
+                  : "bg-slate-800 text-slate-500"
+              }">
+                ${a.arrivalStatus || "Not Arrived"}
+              </span>
+            </td>
+            <td class="py-3.5 px-5">
+              <button onclick="togglePayment('${a.id}', '${
+              a.paymentStatus
+            }')" class="px-2 py-0.5 rounded text-[10px] font-bold ${
+              a.paymentStatus === "Paid"
+                ? "bg-emerald-500/20 text-emerald-400"
+                : "bg-rose-500/20 text-rose-400"
+            }">
+                ${a.paymentStatus || "Unpaid"} (৳${a.fee})
+              </button>
+            </td>
+            <td class="py-3.5 px-5">
+              <span class="px-2.5 py-1 rounded-full text-[10px] ${badge}">${
+              a.checkInStatus
+            }</span>
+            </td>
+            <td class="py-3.5 px-5 text-right space-x-1.5">
+              <button onclick="openConsultation('${
+                a.id
+              }')" class="bg-teal-600 hover:bg-teal-500 active:scale-95 text-white font-bold px-3 py-1.5 rounded-xl transition">
+                <i class="fa-solid fa-stethoscope mr-1"></i> Consult
+              </button>
+              <button onclick="updateStatus('${
+                a.id
+              }', 'Completed')" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-2.5 py-1.5 rounded-xl transition" title="Mark Done">
+                <i class="fa-solid fa-check"></i>
+              </button>
+              <button onclick="updateStatus('${
+                a.id
+              }', 'Skipped')" class="bg-slate-800 hover:bg-rose-900/40 text-slate-400 hover:text-rose-400 px-2.5 py-1.5 rounded-xl transition" title="Skip">
+                <i class="fa-solid fa-forward"></i>
+              </button>
+            </td>
+          </tr>
+        `;
+          })
+          .join("");
+      });
+
+      window.openConsultation = (id) => {
+        const appt = appointments.find((a) => a.id === id);
+        if (!appt) return;
+        activeConsultationAppt = appt;
+        updateStatus(id, "Consulting");
+        playChime();
+
+        navigateView("consultation");
+        document.getElementById("consultHeaderTitle").textContent = `#${
+          appt.serialNumber
+        } — ${appt.patientName} (${appt.patientAge || "32"}y / ${
+          appt.patientGender || "Male"
+        })`;
+        document.getElementById("consultHeaderMeta").textContent = `Phone: ${
+          appt.patientPhone
+        } • Service: ${appt.appointmentType} • Room: ${
+          appt.room || "Room 101"
+        }`;
+      };
+
+      window.updateStatus = async (id, status) => {
+        try {
+          await updateDoc(doc(db, "appointments", id), {
+            checkInStatus: status,
+          });
+        } catch (e) {
+          alert(e.message);
+        }
+      };
+
+      window.togglePayment = async (id, cur) => {
+        const next = cur === "Paid" ? "Unpaid" : "Paid";
+        try {
+          await updateDoc(doc(db, "appointments", id), { paymentStatus: next });
+        } catch (e) {
+          alert(e.message);
+        }
+      };
+
+      window.callNextInQueue = () => {
+        const next = appointments.find(
+          (a) =>
+            a.checkInStatus === "Waiting" || a.checkInStatus === "Checked In",
+        );
+        if (next) {
+          openConsultation(next.id);
+        } else {
+          alert("No further waiting patients today.");
+        }
+      };
+
+      // Fast Medicine Builder
+      window.insertMedicineRow = (
+        name = "",
+        dose = "",
+        freq = "1+0+1",
+        dur = "7 Days",
+        inst = "After meal",
+      ) => {
+        const c = document.getElementById("medicineRowsContainer");
+        const div = document.createElement("div");
+        div.className =
+          "med-row grid grid-cols-12 gap-2 bg-slate-900 p-2.5 rounded-2xl border border-slate-800 text-xs items-center";
+        div.innerHTML = `
+        <div class="col-span-4">
+          <input type="text" placeholder="Drug (e.g. Tab. Napa)" value="${name}" class="m-name w-full bg-slate-950 border border-slate-700 rounded-xl p-2 text-white font-bold" />
+        </div>
+        <div class="col-span-2">
+          <input type="text" placeholder="Dose" value="${dose}" class="m-dose w-full bg-slate-950 border border-slate-700 rounded-xl p-2 text-white font-mono" />
+        </div>
+        <div class="col-span-2">
+          <input type="text" placeholder="1+0+1" value="${freq}" class="m-freq w-full bg-slate-950 border border-slate-700 rounded-xl p-2 text-white font-mono" />
+        </div>
+        <div class="col-span-2">
+          <input type="text" placeholder="Duration" value="${dur}" class="m-dur w-full bg-slate-950 border border-slate-700 rounded-xl p-2 text-white" />
+        </div>
+        <div class="col-span-2 flex items-center gap-1.5">
+          <input type="text" placeholder="Instructions" value="${inst}" class="m-inst w-full bg-slate-950 border border-slate-700 rounded-xl p-2 text-white text-[11px]" />
+          <button type="button" onclick="this.closest('.med-row').remove()" class="text-rose-400 hover:text-rose-300 p-1"><i class="fa-solid fa-trash-can"></i></button>
+        </div>
+      `;
+        c.appendChild(div);
+      };
+
+      window.quickAddDrug = (name, dose, freq, dur, inst) => {
+        insertMedicineRow(name, dose, freq, dur, inst);
+      };
+
+      // Pre-populate with a starter row
+      insertMedicineRow(
+        "Tab. Bizoran",
+        "5/20mg",
+        "1+0+0",
+        "1 Month",
+        "Morning, Before meal",
+      );
+
+      // Finalize Consultation & Sign Rx (Spec Section 17)
+      window.finalizeAndPrintPrescription = async () => {
+        if (!activeConsultationAppt) {
+          alert("Please pick an active patient from today's queue first.");
+          return;
+        }
+
+        const rows = document.querySelectorAll(".med-row");
+        const medicines = [];
+        rows.forEach((r) => {
+          const name = r.querySelector(".m-name").value.trim();
+          if (name) {
+            medicines.push({
+              name,
+              strength: r.querySelector(".m-dose").value,
+              frequency: r.querySelector(".m-freq").value,
+              duration: r.querySelector(".m-dur").value,
+              instructions: r.querySelector(".m-inst").value,
+            });
+          }
+        });
+
+        const rxData = {
+          workspaceId: WORKSPACE_ID,
+          appointmentId: activeConsultationAppt.id,
+          prescriptionNumber: "RX-" + Math.floor(10000 + Math.random() * 90000),
+          patientName: activeConsultationAppt.patientName,
+          patientAge: activeConsultationAppt.patientAge || "32",
+          patientGender: activeConsultationAppt.patientGender || "Male",
+          doctorName: "Dr. Md. Rahman",
+          date: todayStr,
+          vitals: {
+            bp: document.getElementById("docBP").value,
+            pulse: document.getElementById("docPulse").value,
+            temp: document.getElementById("docTemp").value,
+            weight: document.getElementById("docWeight").value,
+          },
+          chiefComplaint: document.getElementById("docChiefComplaint").value,
+          diagnosis: document.getElementById("docDiagnosis").value,
+          investigations: document.getElementById("docInvestigations").value,
+          medicines,
+          advice: document.getElementById("docAdvice").value,
+          followUpDate: document.getElementById("docFollowUp").value,
+          createdAt: serverTimestamp(),
+        };
+
+        try {
+          await addDoc(collection(db, "prescriptions"), rxData);
+          await updateDoc(doc(db, "appointments", activeConsultationAppt.id), {
+            checkInStatus: "Completed",
+          });
+          alert(
+            `Prescription #${rxData.prescriptionNumber} registered and signed! Now visible on patient portal.`,
+          );
+          activeConsultationAppt = null;
+          navigateView("queue");
+        } catch (e) {
+          alert("Prescription error: " + e.message);
+        }
+      };
+
+      // Practice Finances & Expenses
+      window.saveClinicExpense = async () => {
+        const title = document.getElementById("newExpenseTitle").value.trim();
+        const amount = Number(
+          document.getElementById("newExpenseAmount").value,
+        );
+        const category = document.getElementById("newExpenseCategory").value;
+
+        if (!title || !amount)
+          return alert("Please enter valid expense description and amount.");
+
+        try {
+          await addDoc(collection(db, "expenses"), {
+            workspaceId: WORKSPACE_ID,
+            title,
+            amount,
+            category,
+            date: todayStr,
+            createdAt: serverTimestamp(),
+          });
+          document.getElementById("newExpenseTitle").value = "";
+          document.getElementById("newExpenseAmount").value = "";
+          loadExpenses();
+        } catch (e) {
+          alert(e.message);
+        }
+      };
+
+      const loadExpenses = async () => {
+        try {
+          const snap = await getDocs(
+            query(
+              collection(db, "expenses"),
+              where("workspaceId", "==", WORKSPACE_ID),
+            ),
+          );
+          const list = [];
+          snap.forEach((d) => list.push({ id: d.id, ...d.data() }));
+
+          const totalExp = list.reduce(
+            (a, c) => a + (Number(c.amount) || 0),
+            0,
+          );
+          document.getElementById(
+            "finExpDisplay",
+          ).textContent = `৳ ${totalExp.toLocaleString()}`;
+
+          const container = document.getElementById("expenseListBody");
+          if (list.length === 0) {
+            container.innerHTML = `<p class="py-4 text-center text-slate-500">No recorded expenses.</p>`;
+            return;
+          }
+
+          container.innerHTML = list
+            .map(
+              (item) => `
+          <div class="py-3 flex justify-between items-center">
+            <div>
+              <strong class="text-white block">${item.title}</strong>
+              <span class="text-[10px] text-slate-400">${item.category} • ${
+                item.date
+              }</span>
+            </div>
+            <span class="font-bold text-rose-400 font-mono">৳ ${item.amount.toLocaleString()}</span>
+          </div>
+        `,
+            )
+            .join("");
+
+          recomputeNetProfit(null, totalExp);
+        } catch (e) {
+          console.error(e);
+        }
+      };
+
+      function recomputeNetProfit(revOverride, expOverride) {
+        const rText = document
+          .getElementById("finRevDisplay")
+          .textContent.replace(/[^\d.-]/g, "");
+        const eText = document
+          .getElementById("finExpDisplay")
+          .textContent.replace(/[^\d.-]/g, "");
+        const rev =
+          revOverride !== undefined && revOverride !== null
+            ? revOverride
+            : Number(rText) || 0;
+        const exp =
+          expOverride !== undefined && expOverride !== null
+            ? expOverride
+            : Number(eText) || 0;
+        const net = rev - exp;
+        document.getElementById(
+          "finProfitDisplay",
+        ).textContent = `৳ ${net.toLocaleString()}`;
+      }
+
+      // Seed PDF Spec Demo Appointments (#14 Rahim, #15 Karim, #16 Hasan, #17 Rima, #18 Sadiq)
+      window.seedPdfSpecDemoData = async () => {
+        const demo = [
+          {
+            serialNumber: 14,
+            patientName: "Rahim",
+            checkInStatus: "Completed",
+            arrivalStatus: "Checked In",
+            paymentStatus: "Paid",
+            fee: 1000,
+          },
+          {
+            serialNumber: 15,
+            patientName: "Karim",
+            checkInStatus: "Completed",
+            arrivalStatus: "Checked In",
+            paymentStatus: "Paid",
+            fee: 1000,
+          },
+          {
+            serialNumber: 16,
+            patientName: "Hasan",
+            checkInStatus: "Consulting",
+            arrivalStatus: "Checked In",
+            paymentStatus: "Paid",
+            fee: 1000,
+          },
+          {
+            serialNumber: 17,
+            patientName: "Rima",
+            checkInStatus: "Waiting",
+            arrivalStatus: "Checked In",
+            paymentStatus: "Paid",
+            fee: 500,
+          },
+          {
+            serialNumber: 18,
+            patientName: "Sadiq",
+            checkInStatus: "Waiting",
+            arrivalStatus: "Not Arrived",
+            paymentStatus: "Unpaid",
+            fee: 1000,
+          },
+        ];
+
+        try {
+          for (const p of demo) {
+            await addDoc(collection(db, "appointments"), {
+              workspaceId: WORKSPACE_ID,
+              appointmentId:
+                "APT-" + Math.floor(100000 + Math.random() * 900000),
+              doctorName: "Dr. Md. Rahman",
+              chamber: "Chamber A (Dhanmondi, 5PM-9PM)",
+              room: "Room 101",
+              date: todayStr,
+              appointmentType:
+                p.fee === 500 ? "Follow-up Consultation" : "New Consultation",
+              patientAge: "35",
+              patientGender: "Male",
+              patientPhone: "01711002233",
+              ...p,
+              createdAt: serverTimestamp(),
+            });
+          }
+          alert(
+            "Demo appointments from specification injected into Firestore!",
+          );
+        } catch (e) {
+          alert(e.message);
+        }
+      };
+
+      loadExpenses();
+    </script>
+  </body>
+</html>

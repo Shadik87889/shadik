@@ -1,0 +1,1055 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MD SHAIDK HOSSAIN TALUKDER - Professional Curriculum Vitae</title>
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Font Awesome 6 Icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+
+    <!-- Google Fonts: Plus Jakarta Sans & Space Grotesk -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700;800&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      body {
+        font-family: "Plus Jakarta Sans", sans-serif;
+        color: #0f172a;
+        background-color: #0b1120;
+        margin: 0;
+        padding: 0;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      .font-heading {
+        font-family: "Space Grotesk", sans-serif;
+      }
+
+      /* Exact Symmetrical A4 Geometry (210mm x 297mm) */
+      .a4-page {
+        width: 210mm;
+        height: 297mm;
+        max-height: 297mm;
+        min-height: 297mm;
+        margin: 24px auto;
+        padding: 11mm 13mm; /* Strict Symmetrical 11mm Top & Bottom */
+        background: #ffffff;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.45);
+        box-sizing: border-box;
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+
+      /* Print & PDF Export Rules */
+      @media print {
+        body {
+          background: transparent !important;
+          padding: 0 !important;
+        }
+        .no-print {
+          display: none !important;
+        }
+        .a4-page {
+          width: 210mm !important;
+          height: 297mm !important;
+          max-height: 297mm !important;
+          min-height: 297mm !important;
+          margin: 0 !important;
+          padding: 11mm 13mm !important;
+          box-shadow: none !important;
+          page-break-after: always !important;
+          break-after: page !important;
+        }
+        @page {
+          size: A4 portrait;
+          margin: 0;
+        }
+        * {
+          -webkit-print-color-adjust: exact !important;
+          print-color-adjust: exact !important;
+        }
+      }
+
+      /* Section Header */
+      .section-header {
+        font-size: 10pt;
+        font-weight: 800;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: #0f172a;
+        border-bottom: 1.5px solid #0f172a;
+        padding-bottom: 3px;
+        margin-bottom: 7px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .section-header-title {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .section-header i {
+        color: #b45309;
+        font-size: 9.5pt;
+      }
+    </style>
+  </head>
+  <body class="py-6">
+    <!-- Screen Control Bar (Excluded from PDF) -->
+    <header
+      class="no-print max-w-[210mm] mx-auto mb-5 bg-slate-900 border border-slate-800 rounded-xl shadow-2xl p-3.5 px-6 flex flex-wrap items-center justify-between gap-4 text-white"
+    >
+      <div class="flex items-center gap-3">
+        <div
+          class="w-9 h-9 rounded-lg bg-amber-500 flex items-center justify-center text-slate-950 font-black text-base shadow-md"
+        >
+          <i class="fa-solid fa-graduation-cap"></i>
+        </div>
+        <div>
+          <h1 class="text-sm font-bold tracking-wide">
+            MD SHAIDK HOSSAIN TALUKDER
+          </h1>
+          <p class="text-xs text-slate-400">
+            Honest & Grounded CV &bull; TPR Storytelling &bull; Symmetrical 11mm
+            Padding
+          </p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <label
+          for="photoUpload"
+          class="cursor-pointer bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold px-3 py-1.5 rounded-lg border border-slate-700 transition flex items-center gap-1.5"
+        >
+          <i class="fa-solid fa-camera"></i> Change Photo
+        </label>
+        <input type="file" id="photoUpload" accept="image/*" class="hidden" />
+
+        <button
+          onclick="window.print()"
+          class="bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold text-xs px-4 py-1.5 rounded-lg shadow-lg transition flex items-center gap-1.5"
+        >
+          <i class="fa-solid fa-print"></i> Save / Print PDF
+        </button>
+      </div>
+    </header>
+
+    <!-- ========================================================================= -->
+    <!-- PAGE 1: ACADEMICS, HONORS & SPOKEN ENGLISH TEACHING -->
+    <!-- ========================================================================= -->
+    <main class="a4-page">
+      <div class="flex flex-col gap-y-3.5">
+        <!-- TOP HEADER -->
+        <header
+          class="flex items-center gap-4 border-b-[2px] border-slate-950 pb-3"
+        >
+          <!-- Portrait -->
+          <div
+            class="relative cursor-pointer group flex-shrink-0"
+            onclick="document.getElementById('photoUpload').click()"
+            title="Click to replace portrait"
+          >
+            <div
+              class="w-[27mm] h-[27mm] rounded-xl overflow-hidden border-2 border-slate-900 shadow-sm bg-slate-100 ring-2 ring-amber-500/20"
+            >
+              <img
+                id="avatarImg"
+                src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=400&auto=format&fit=crop"
+                alt="MD SHAIDK HOSSAIN TALUKDER"
+                class="w-full h-full object-cover object-top"
+              />
+            </div>
+            <div
+              class="absolute inset-0 bg-slate-950/70 text-white text-[7.5pt] font-bold uppercase rounded-xl opacity-0 group-hover:opacity-100 flex items-center justify-center no-print transition"
+            >
+              Update
+            </div>
+          </div>
+
+          <!-- Name, Title, Badges & Contact Ribbon -->
+          <div class="flex-grow">
+            <!-- Badges Row -->
+            <div class="flex items-center gap-2 mb-1">
+              <span
+                class="text-[7.8pt] font-extrabold uppercase tracking-wider bg-amber-100 text-amber-900 px-2.5 py-0.5 rounded border border-amber-300 inline-flex items-center gap-1.5"
+              >
+                <i class="fa-solid fa-medal text-amber-700"></i> Board Rank 57th
+                &bull; ICCR Scholar
+              </span>
+              <span
+                class="text-[7.8pt] font-extrabold uppercase tracking-wider bg-slate-100 text-slate-800 px-2 py-0.5 rounded border border-slate-300"
+              >
+                Dual GPA 5.00
+              </span>
+            </div>
+
+            <!-- Candidate Name -->
+            <h1
+              class="text-[21pt] font-extrabold tracking-tight uppercase leading-none text-slate-950 font-heading"
+            >
+              MD SHAIDK
+              <span class="font-normal text-slate-700">HOSSAIN TALUKDER</span>
+            </h1>
+
+            <!-- Subtitle -->
+            <h2
+              class="text-[9.2pt] font-extrabold tracking-[0.14em] text-amber-800 uppercase mt-1"
+            >
+              Spoken English Teacher &bull; Published Author &bull; EdTech
+              Developer
+            </h2>
+
+            <!-- Contact Ribbon (Bogura, Bangladesh | Unbreakable Pills) -->
+            <div class="flex items-center gap-2 mt-2 flex-wrap">
+              <span
+                class="inline-flex items-center gap-1.5 whitespace-nowrap bg-slate-100 text-slate-800 px-2.5 py-0.5 rounded-md border border-slate-200 text-[8.2pt] font-bold"
+              >
+                <i class="fa-solid fa-location-dot text-amber-600"></i> Bogura,
+                Bangladesh
+              </span>
+
+              <a
+                href="mailto:shadikworld@gmail.com"
+                class="inline-flex items-center gap-1.5 whitespace-nowrap bg-slate-100 text-slate-800 hover:text-amber-800 px-2.5 py-0.5 rounded-md border border-slate-200 text-[8.2pt] font-bold transition"
+              >
+                <i class="fa-solid fa-envelope text-amber-600"></i>
+                shadikworld@gmail.com
+              </a>
+
+              <a
+                href="https://www.linkedin.com/in/md-shadik-hossain-talukder-41b064346/?isSelfProfile=true"
+                target="_blank"
+                class="inline-flex items-center gap-1.5 whitespace-nowrap bg-slate-100 text-slate-800 hover:text-blue-700 px-2.5 py-0.5 rounded-md border border-slate-200 text-[8.2pt] font-bold transition"
+              >
+                <i class="fa-brands fa-linkedin text-blue-600"></i>
+                linkedin.com/in/shadik
+              </a>
+
+              <span
+                class="inline-flex items-center gap-1.5 whitespace-nowrap bg-slate-100 text-slate-800 px-2.5 py-0.5 rounded-md border border-slate-200 text-[8.2pt] font-bold"
+              >
+                <i class="fa-solid fa-globe text-slate-500"></i> Web Portfolio
+              </span>
+            </div>
+          </div>
+        </header>
+
+        <!-- PROFESSIONAL SUMMARY -->
+        <section>
+          <p
+            class="text-[9.3pt] text-slate-700 leading-[1.5] text-justify font-medium bg-slate-50/80 p-2.5 rounded-lg border border-slate-200"
+          >
+            Dedicated English educator, published author, and software developer
+            applying for
+            <strong class="text-slate-950 font-extrabold"
+              >BRAC's Smart Students Programme (Communicative English
+              Course)</strong
+            >. Ranked
+            <strong class="text-slate-950 font-extrabold"
+              >57th out of 181,000 students in the board exams</strong
+            >
+            (earning a Government Talentpool Scholarship) with
+            <strong class="text-slate-950 font-extrabold"
+              >GPA 5.00 in both SSC and HSC</strong
+            >, and awarded the full
+            <strong class="text-slate-950 font-extrabold"
+              >ICCR Government Scholarship</strong
+            >
+            to Osmania University, India. Author of two published English books
+            and trained in the
+            <strong class="text-slate-900 font-bold"
+              >TPR Storytelling (TPRS) method</strong
+            >, I use interactive stories, practical drills, and modern web tools
+            (like <em>IELTS Mahir</em>) to help students overcome fear, improve
+            pronunciation, and speak communicative English with genuine
+            confidence.
+          </p>
+        </section>
+
+        <!-- ACADEMIC BACKGROUND -->
+        <section>
+          <div class="section-header">
+            <span class="section-header-title"
+              ><i class="fa-solid fa-graduation-cap"></i> Academic Background &
+              Key Institutions</span
+            >
+            <span class="text-[7.8pt] font-bold text-slate-500 tracking-wider"
+              >EDUCATION</span
+            >
+          </div>
+
+          <div class="grid grid-cols-3 gap-2.5">
+            <!-- Osmania University -->
+            <div
+              class="bg-amber-50/40 p-2.5 rounded-lg border border-amber-300 flex flex-col justify-between"
+            >
+              <div>
+                <div class="flex items-center justify-between mb-1">
+                  <span
+                    class="text-[7.2pt] font-extrabold uppercase tracking-wider bg-amber-600 text-white px-2 py-0.5 rounded"
+                    >ICCR Scholar</span
+                  >
+                  <span class="text-[7.2pt] font-bold text-amber-900 font-mono"
+                    >Govt. of India</span
+                  >
+                </div>
+                <h3
+                  class="text-[9.2pt] font-extrabold text-slate-950 leading-tight"
+                >
+                  Osmania University
+                </h3>
+                <p class="text-[8.2pt] font-bold text-amber-900 mt-0.5">
+                  Hyderabad, Telangana, India
+                </p>
+                <p class="text-[8.5pt] text-slate-600 mt-1 leading-[1.45]">
+                  Ranked
+                  <strong class="text-slate-950"
+                    >#1 state university in Telangana</strong
+                  >. Won a full government scholarship covering 100% tuition,
+                  student housing, and living costs.
+                </p>
+              </div>
+              <div
+                class="mt-2 pt-1 border-t border-amber-200 text-[7.8pt] font-extrabold text-amber-900 flex items-center justify-between"
+              >
+                <span>100% Full Ride</span>
+                <i class="fa-solid fa-award text-amber-600"></i>
+              </div>
+            </div>
+
+            <!-- Rajshahi Government City College -->
+            <div
+              class="bg-white p-2.5 rounded-lg border border-slate-200 flex flex-col justify-between"
+            >
+              <div>
+                <div class="flex items-center justify-between mb-1">
+                  <span
+                    class="text-[7.2pt] font-extrabold uppercase tracking-wider bg-slate-900 text-white px-2 py-0.5 rounded"
+                    >HSC</span
+                  >
+                  <span
+                    class="text-[8.2pt] font-extrabold text-slate-950 font-mono"
+                    >GPA 5.00 / 5.00</span
+                  >
+                </div>
+                <h3
+                  class="text-[9.2pt] font-extrabold text-slate-950 leading-tight"
+                >
+                  Rajshahi Govt. City College
+                </h3>
+                <p class="text-[8.2pt] font-bold text-slate-600 mt-0.5">
+                  Science Group &bull; Rajshahi Board
+                </p>
+                <p class="text-[8.5pt] text-slate-600 mt-1 leading-[1.45]">
+                  One of the top government colleges in the country. Completed
+                  higher secondary education in the Humanities group with a
+                  perfect GPA 5.00.
+                </p>
+              </div>
+              <div
+                class="mt-2 pt-1 border-t border-slate-200 text-[7.8pt] font-extrabold text-slate-800 flex items-center justify-between"
+              >
+                <span>Grade: A+</span>
+                <i class="fa-solid fa-circle-check text-emerald-600"></i>
+              </div>
+            </div>
+
+            <!-- Aghore Malancha High School -->
+            <div
+              class="bg-white p-2.5 rounded-lg border border-slate-200 flex flex-col justify-between"
+            >
+              <div>
+                <div class="flex items-center justify-between mb-1">
+                  <span
+                    class="text-[7.2pt] font-extrabold uppercase tracking-wider bg-slate-900 text-white px-2 py-0.5 rounded"
+                    >SSC</span
+                  >
+                  <span
+                    class="text-[8.2pt] font-extrabold text-slate-950 font-mono"
+                    >GPA 5.00 / 5.00</span
+                  >
+                </div>
+                <h3
+                  class="text-[9.2pt] font-extrabold text-slate-950 leading-tight"
+                >
+                  Aghore Malancha High School
+                </h3>
+                <p class="text-[8.2pt] font-bold text-slate-600 mt-0.5">
+                  Kahaloo, Bogura &bull; Humanities
+                </p>
+                <p class="text-[8.5pt] text-slate-600 mt-1 leading-[1.45]">
+                  Ranked
+                  <strong class="text-slate-950 font-extrabold"
+                    >57th in the board exams</strong
+                  >
+                  out of roughly 181,000 students, earning the Government
+                  Talentpool Scholarship.
+                </p>
+              </div>
+              <div
+                class="mt-2 pt-1 border-t border-slate-200 text-[7.8pt] font-extrabold text-slate-800 flex items-center justify-between"
+              >
+                <span>Top 0.03% Board Merit</span>
+                <i class="fa-solid fa-star text-amber-500"></i>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- AWARDS & HONORS -->
+        <section>
+          <div class="section-header">
+            <span class="section-header-title"
+              ><i class="fa-solid fa-trophy"></i> Key Awards &
+              Distinctions</span
+            >
+            <span class="text-[7.8pt] font-bold text-slate-500 tracking-wider"
+              >AWARDS</span
+            >
+          </div>
+
+          <div class="space-y-2">
+            <!-- ICCR -->
+            <div
+              class="p-2 rounded-lg bg-white border border-slate-200 flex items-start justify-between gap-3"
+            >
+              <div class="flex items-start gap-2.5">
+                <div
+                  class="w-6 h-6 rounded bg-amber-100 text-amber-800 flex items-center justify-center font-bold text-[9pt] mt-0.5 flex-shrink-0"
+                >
+                  <i class="fa-solid fa-earth-americas"></i>
+                </div>
+                <div>
+                  <h4
+                    class="text-[9.2pt] font-extrabold text-slate-950 leading-tight"
+                  >
+                    ICCR Full Government Scholarship (Government of India)
+                  </h4>
+                  <p class="text-[8.5pt] text-slate-600 mt-0.5 leading-[1.45]">
+                    Selected through a competitive international application
+                    process by the Indian Government; covers 100% university
+                    tuition fees, housing, and monthly living allowances.
+                  </p>
+                </div>
+              </div>
+              <span
+                class="text-[7.5pt] font-extrabold uppercase tracking-wider text-amber-800 bg-amber-50 px-2 py-0.5 rounded border border-amber-200 whitespace-nowrap"
+              >
+                Fully Funded
+              </span>
+            </div>
+
+            <!-- Board Merit 57th -->
+            <div
+              class="p-2 rounded-lg bg-white border border-slate-200 flex items-start justify-between gap-3"
+            >
+              <div class="flex items-start gap-2.5">
+                <div
+                  class="w-6 h-6 rounded bg-blue-100 text-blue-800 flex items-center justify-center font-bold text-[9pt] mt-0.5 flex-shrink-0"
+                >
+                  <i class="fa-solid fa-ranking-star"></i>
+                </div>
+                <div>
+                  <h4
+                    class="text-[9.2pt] font-extrabold text-slate-950 leading-tight"
+                  >
+                    57th Board Merit Rank & Government Talentpool Scholarship
+                  </h4>
+                  <p class="text-[8.5pt] text-slate-600 mt-0.5 leading-[1.45]">
+                    Placed 57th out of nearly 181,000 students across the entire
+                    education board, receiving a multi-year government cash
+                    stipend for high academic marks.
+                  </p>
+                </div>
+              </div>
+              <span
+                class="text-[7.5pt] font-extrabold uppercase tracking-wider text-slate-800 bg-slate-100 px-2 py-0.5 rounded border border-slate-200 whitespace-nowrap"
+              >
+                Top ~181,000
+              </span>
+            </div>
+
+            <!-- Published Author Honor -->
+            <div
+              class="p-2 rounded-lg bg-white border border-slate-200 flex items-start justify-between gap-3"
+            >
+              <div class="flex items-start gap-2.5">
+                <div
+                  class="w-6 h-6 rounded bg-emerald-100 text-emerald-800 flex items-center justify-center font-bold text-[9pt] mt-0.5 flex-shrink-0"
+                >
+                  <i class="fa-solid fa-book-open"></i>
+                </div>
+                <div>
+                  <h4
+                    class="text-[9.2pt] font-extrabold text-slate-950 leading-tight"
+                  >
+                    Published Author of Two English Books (2022 & 2023)
+                  </h4>
+                  <p class="text-[8.5pt] text-slate-600 mt-0.5 leading-[1.45]">
+                    Researched, wrote, and published two original English
+                    works—<em>The Experience</em> and
+                    <em>The Incidents I Faced</em>—exploring hands-on practical
+                    learning and student mental resilience.
+                  </p>
+                </div>
+              </div>
+              <span
+                class="text-[7.5pt] font-extrabold uppercase tracking-wider text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200 whitespace-nowrap"
+              >
+                2 Published Books
+              </span>
+            </div>
+          </div>
+        </section>
+
+        <!-- SPOKEN ENGLISH TEACHING & CLASSROOM SKILLS -->
+        <section>
+          <div class="section-header">
+            <span class="section-header-title"
+              ><i class="fa-solid fa-microphone-lines"></i> Spoken English
+              Teaching & Classroom Skills</span
+            >
+            <span class="text-[7.8pt] font-bold text-slate-500 tracking-wider"
+              >SKILLS</span
+            >
+          </div>
+
+          <div class="grid grid-cols-2 gap-2.5">
+            <!-- TPR Storytelling -->
+            <div
+              class="p-2.5 rounded-lg border border-slate-200 bg-slate-50/50"
+            >
+              <h4
+                class="text-[9pt] font-extrabold text-slate-950 flex items-center gap-1.5"
+              >
+                <i class="fa-solid fa-book-reader text-amber-600"></i> TPR
+                Storytelling (TPRS) Method
+              </h4>
+              <p class="text-[8.5pt] text-slate-600 mt-1 leading-[1.45]">
+                Using the TPR Storytelling approach to help students pick up
+                vocabulary, sentence patterns, and grammar naturally through
+                engaging, repetitive stories.
+              </p>
+            </div>
+
+            <!-- Clear Pronunciation -->
+            <div
+              class="p-2.5 rounded-lg border border-slate-200 bg-slate-50/50"
+            >
+              <h4
+                class="text-[9pt] font-extrabold text-slate-950 flex items-center gap-1.5"
+              >
+                <i class="fa-solid fa-volume-high text-amber-600"></i>
+                Pronunciation & Natural Phonics
+              </h4>
+              <p class="text-[8.5pt] text-slate-600 mt-1 leading-[1.45]">
+                Teaching clear word stress, basic sound rules, and steady pacing
+                so students sound natural, speak clearly, and eliminate
+                hesitation without pressure.
+              </p>
+            </div>
+
+            <!-- Real-World Language Apps -->
+            <div
+              class="p-2.5 rounded-lg border border-slate-200 bg-slate-50/50"
+            >
+              <h4
+                class="text-[9pt] font-extrabold text-slate-950 flex items-center gap-1.5"
+              >
+                <i class="fa-solid fa-laptop-code text-amber-600"></i>
+                Real-World Language Mastery Apps
+              </h4>
+              <p class="text-[8.5pt] text-slate-600 mt-1 leading-[1.45]">
+                Built working language websites and apps (including
+                <em>IELTS Mahir</em> and speed typing trainers) to give students
+                daily interactive speaking and listening practice.
+              </p>
+            </div>
+
+            <!-- Bilingual Bridging -->
+            <div
+              class="p-2.5 rounded-lg border border-slate-200 bg-slate-50/50"
+            >
+              <h4
+                class="text-[9pt] font-extrabold text-slate-950 flex items-center gap-1.5"
+              >
+                <i class="fa-solid fa-language text-amber-600"></i> Simple
+                Bilingual Explanations
+              </h4>
+              <p class="text-[8.5pt] text-slate-600 mt-1 leading-[1.45]">
+                Explaining difficult grammar rules in simple Bengali first
+                whenever learners need clarity, then smoothly moving them right
+                back into active English speaking.
+              </p>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- FOOTER PAGE 1 -->
+      <footer
+        class="pt-2 border-t border-slate-200 flex items-center justify-between text-[7.8pt] font-bold text-slate-400 uppercase tracking-widest mt-auto"
+      >
+        <span>MD SHAIDK HOSSAIN TALUKDER &bull; Professional Dossier</span>
+        <span>Page 01 of 02</span>
+      </footer>
+    </main>
+
+    <!-- ========================================================================= -->
+    <!-- PAGE 2: AUTHORED BOOKS, FEATURED SOFTWARE & LEADERSHIP -->
+    <!-- ========================================================================= -->
+    <main class="a4-page">
+      <div class="flex flex-col gap-y-3.5">
+        <!-- TOP SLIM BAR -->
+        <div
+          class="flex items-center justify-between border-b-[2px] border-slate-950 pb-2"
+        >
+          <div class="flex items-center gap-2.5">
+            <span
+              class="text-[10.5pt] font-extrabold uppercase tracking-widest text-slate-950 font-heading"
+              >MD SHAIDK HOSSAIN TALUKDER</span
+            >
+            <span class="text-slate-300">|</span>
+            <span
+              class="text-[8.5pt] font-extrabold text-amber-800 uppercase tracking-widest"
+              >Publications & Software Portfolio</span
+            >
+          </div>
+          <div
+            class="text-[7.8pt] font-bold text-slate-500 uppercase tracking-wider flex items-center gap-2"
+          >
+            <span>Verified Dossier</span>
+            <span
+              class="w-2 h-2 rounded-full bg-emerald-500 inline-block"
+            ></span>
+          </div>
+        </div>
+
+        <!-- AUTHORED ENGLISH BOOKS -->
+        <section>
+          <div class="section-header">
+            <span class="section-header-title"
+              ><i class="fa-solid fa-book-open"></i> Authored English Books &
+              Publications</span
+            >
+            <span class="text-[7.8pt] font-bold text-amber-700 tracking-wider"
+              >OFFICIAL BOOKS</span
+            >
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <!-- Book 1: The Experience -->
+            <div
+              class="p-3 rounded-xl border border-slate-200 bg-white shadow-xs flex gap-3.5 items-center"
+            >
+              <div
+                class="w-[28mm] h-[40mm] flex-shrink-0 flex items-center justify-center"
+              >
+                <img
+                  id="bookMockup1"
+                  src="books/The Experience Book Cover.png"
+                  alt="The Experience Book Mockup"
+                  class="max-h-full max-w-full object-contain select-none"
+                  onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?q=80&w=300&auto=format&fit=crop';"
+                />
+              </div>
+
+              <!-- Metadata & Blurb -->
+              <div class="flex-grow">
+                <div class="flex items-center justify-between mb-1">
+                  <span
+                    class="text-[7.2pt] font-extrabold uppercase tracking-wider text-amber-900 bg-amber-100 px-2 py-0.5 rounded whitespace-nowrap"
+                    >Philosophy</span
+                  >
+                  <span
+                    class="text-[7.2pt] font-extrabold text-slate-400 whitespace-nowrap"
+                    >Published &bull; 2023</span
+                  >
+                </div>
+                <h3
+                  class="text-[10pt] font-extrabold text-slate-950 leading-tight"
+                >
+                  The Experience
+                </h3>
+                <p class="text-[8.2pt] font-bold text-slate-700 italic mt-0.5">
+                  Philosophy of Hands-on Learning
+                </p>
+                <p class="text-[8.5pt] text-slate-600 mt-1.5 leading-[1.48]">
+                  Explains why practical, real-life experience teaches better
+                  than memorizing textbooks. This book forms the core idea
+                  behind my active, speaking-first teaching method.
+                </p>
+                <div
+                  class="mt-2 text-[7.5pt] font-extrabold text-amber-800 uppercase tracking-wider flex items-center gap-1.5 whitespace-nowrap"
+                >
+                  <i class="fa-solid fa-feather-pointed text-amber-600"></i>
+                  Practical Teaching Core
+                </div>
+              </div>
+            </div>
+
+            <!-- Book 2: The Incidents I Faced -->
+            <div
+              class="p-3 rounded-xl border border-slate-200 bg-white shadow-xs flex gap-3.5 items-center"
+            >
+              <div
+                class="w-[28mm] h-[40mm] flex-shrink-0 flex items-center justify-center"
+              >
+                <img
+                  id="bookMockup2"
+                  src="books/The incidents I faced book cover.png"
+                  alt="The Incidents I Faced Book Mockup"
+                  class="max-h-full max-w-full object-contain select-none"
+                  onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1512820790803-83ca734da794?q=80&w=300&auto=format&fit=crop';"
+                />
+              </div>
+
+              <!-- Metadata & Blurb -->
+              <div class="flex-grow">
+                <div class="flex items-center justify-between mb-1">
+                  <span
+                    class="text-[7.2pt] font-extrabold uppercase tracking-wider text-slate-900 bg-slate-100 px-2 py-0.5 rounded whitespace-nowrap"
+                    >Memoir</span
+                  >
+                  <span
+                    class="text-[7.2pt] font-extrabold text-slate-400 whitespace-nowrap"
+                    >Published &bull; 2022</span
+                  >
+                </div>
+                <h3
+                  class="text-[10pt] font-extrabold text-slate-950 leading-tight"
+                >
+                  The Incidents I Faced
+                </h3>
+                <p class="text-[8.2pt] font-bold text-slate-700 italic mt-0.5">
+                  Personal Growth & Resilience
+                </p>
+                <p class="text-[8.5pt] text-slate-600 mt-1.5 leading-[1.48]">
+                  A personal story about building mental strength, handling
+                  pressure, and overcoming anxiety as a student. Demonstrates
+                  clear, expressive English writing and empathy.
+                </p>
+                <div
+                  class="mt-2 text-[7.5pt] font-extrabold text-slate-800 uppercase tracking-wider flex items-center gap-1.5 whitespace-nowrap"
+                >
+                  <i class="fa-solid fa-pen-nib text-slate-600"></i> Clear
+                  Reflective Writing
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- SOFTWARE PROJECTS -->
+        <section>
+          <div class="section-header">
+            <span class="section-header-title"
+              ><i class="fa-solid fa-laptop-code"></i> Software Projects & Web
+              Applications</span
+            >
+            <span class="text-[7.8pt] font-bold text-slate-500 tracking-wider"
+              >PROJECTS</span
+            >
+          </div>
+
+          <div class="grid grid-cols-2 gap-2.5">
+            <!-- IELTS Mahir -->
+            <div class="p-2.5 rounded-lg border border-slate-200 bg-white">
+              <div class="flex items-center justify-between mb-1">
+                <h4
+                  class="text-[9.2pt] font-extrabold text-slate-950 flex items-center gap-1.5"
+                >
+                  <i class="fa-solid fa-graduation-cap text-amber-600"></i>
+                  IELTS Mahir
+                </h4>
+                <span
+                  class="text-[7.2pt] font-extrabold uppercase tracking-wider text-amber-900 bg-amber-50 border border-amber-200 px-1.5 py-0.5 rounded"
+                  >EdTech</span
+                >
+              </div>
+              <p class="text-[8.5pt] text-slate-600 leading-[1.45]">
+                Built the web platform for an English learning service,
+                featuring realistic IELTS speaking practice, audio listening
+                tests, and automatic score feedback.
+              </p>
+              <div
+                class="mt-1.5 flex items-center gap-1.5 text-[7.2pt] font-mono text-slate-600 font-semibold"
+              >
+                <span
+                  class="bg-slate-100 px-1.5 py-0.5 rounded border border-slate-200"
+                  >JavaScript</span
+                >
+                <span
+                  class="bg-slate-100 px-1.5 py-0.5 rounded border border-slate-200"
+                  >Tailwind</span
+                >
+                <span
+                  class="bg-slate-100 px-1.5 py-0.5 rounded border border-slate-200"
+                  >Audio APIs</span
+                >
+              </div>
+            </div>
+
+            <!-- CashShilpo -->
+            <div class="p-2.5 rounded-lg border border-slate-200 bg-white">
+              <div class="flex items-center justify-between mb-1">
+                <h4
+                  class="text-[9.2pt] font-extrabold text-slate-950 flex items-center gap-1.5"
+                >
+                  <i class="fa-solid fa-cash-register text-emerald-600"></i>
+                  CashShilpo
+                </h4>
+                <span
+                  class="text-[7.2pt] font-extrabold uppercase tracking-wider text-emerald-900 bg-emerald-50 border border-emerald-200 px-1.5 py-0.5 rounded"
+                  >ERP & POS</span
+                >
+              </div>
+              <p class="text-[8.5pt] text-slate-600 leading-[1.45]">
+                Created a cloud business management and POS system with live
+                multi-branch inventory tracking, fast checkout, staff payroll,
+                and bilingual (English/Bengali) bills.
+              </p>
+              <div
+                class="mt-1.5 flex items-center gap-1.5 text-[7.2pt] font-mono text-slate-600 font-semibold"
+              >
+                <span
+                  class="bg-slate-100 px-1.5 py-0.5 rounded border border-slate-200"
+                  >Firebase Realtime</span
+                >
+                <span
+                  class="bg-slate-100 px-1.5 py-0.5 rounded border border-slate-200"
+                  >POS Engine</span
+                >
+                <span
+                  class="bg-slate-100 px-1.5 py-0.5 rounded border border-slate-200"
+                  >ES6+</span
+                >
+              </div>
+            </div>
+
+            <!-- rolandrosebeauty.com -->
+            <div class="p-2.5 rounded-lg border border-slate-200 bg-white">
+              <div class="flex items-center justify-between mb-1">
+                <h4
+                  class="text-[9.2pt] font-extrabold text-slate-950 flex items-center gap-1.5"
+                >
+                  <i class="fa-solid fa-gem text-rose-600"></i>
+                  rolandrosebeauty.com
+                </h4>
+                <span
+                  class="text-[7.2pt] font-extrabold uppercase tracking-wider text-rose-900 bg-rose-50 border border-rose-200 px-1.5 py-0.5 rounded"
+                  >E-Commerce</span
+                >
+              </div>
+              <p class="text-[8.5pt] text-slate-600 leading-[1.45]">
+                Built the official online store for the skincare and beauty
+                brand Roland Rose Beauty. Focused on fast page loading, clean
+                modern design, and easy mobile checkout.
+              </p>
+              <div
+                class="mt-1.5 flex items-center gap-1.5 text-[7.2pt] font-mono text-slate-600 font-semibold"
+              >
+                <span
+                  class="bg-slate-100 px-1.5 py-0.5 rounded border border-slate-200"
+                  >Production Web</span
+                >
+                <span
+                  class="bg-slate-100 px-1.5 py-0.5 rounded border border-slate-200"
+                  >UI/UX</span
+                >
+                <span
+                  class="bg-slate-100 px-1.5 py-0.5 rounded border border-slate-200"
+                  >Checkout</span
+                >
+              </div>
+            </div>
+
+            <!-- TypeShilpo -->
+            <div class="p-2.5 rounded-lg border border-slate-200 bg-white">
+              <div class="flex items-center justify-between mb-1">
+                <h4
+                  class="text-[9.2pt] font-extrabold text-slate-950 flex items-center gap-1.5"
+                >
+                  <i class="fa-solid fa-keyboard text-indigo-600"></i>
+                  TypeShilpo
+                </h4>
+                <span
+                  class="text-[7.2pt] font-extrabold uppercase tracking-wider text-indigo-900 bg-indigo-50 border border-indigo-200 px-1.5 py-0.5 rounded"
+                  >Learning App</span
+                >
+              </div>
+              <p class="text-[8.5pt] text-slate-600 leading-[1.45]">
+                Developed a fast-paced typing practice game that helps learners
+                improve their typing speed, muscle memory, and English
+                vocabulary through live leaderboards.
+              </p>
+              <div
+                class="mt-1.5 flex items-center gap-1.5 text-[7.2pt] font-mono text-slate-600 font-semibold"
+              >
+                <span
+                  class="bg-slate-100 px-1.5 py-0.5 rounded border border-slate-200"
+                  >Speed Engine</span
+                >
+                <span
+                  class="bg-slate-100 px-1.5 py-0.5 rounded border border-slate-200"
+                  >Vocabulary Drills</span
+                >
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- LEADERSHIP & COMMUNITY INITIATIVES -->
+        <section>
+          <div class="section-header">
+            <span class="section-header-title"
+              ><i class="fa-solid fa-users-gear"></i> Leadership & Community
+              Work</span
+            >
+            <span class="text-[7.8pt] font-bold text-slate-500 tracking-wider"
+              >LEADERSHIP</span
+            >
+          </div>
+
+          <div class="grid grid-cols-2 gap-2.5">
+            <div
+              class="p-2.5 rounded-lg border border-slate-200 bg-slate-50/50"
+            >
+              <div class="flex justify-between items-baseline mb-0.5">
+                <h4 class="text-[9pt] font-extrabold text-slate-950">
+                  Founder & Chief Editor
+                </h4>
+                <span
+                  class="text-[7.5pt] font-bold text-amber-800 uppercase font-mono"
+                  >The Daily Origin</span
+                >
+              </div>
+              <p class="text-[8.5pt] text-slate-600 leading-[1.45]">
+                Leads an online media outlet covering global news, science, and
+                the economy. Writes clear analytical articles in English and
+                manages the writing team.
+              </p>
+            </div>
+
+            <div
+              class="p-2.5 rounded-lg border border-slate-200 bg-slate-50/50"
+            >
+              <div class="flex justify-between items-baseline mb-0.5">
+                <h4 class="text-[9pt] font-extrabold text-slate-950">
+                  Founder & Director
+                </h4>
+                <span
+                  class="text-[7.5pt] font-bold text-emerald-800 uppercase font-mono"
+                  >Rural Peace Org</span
+                >
+              </div>
+              <p class="text-[8.5pt] text-slate-600 leading-[1.45]">
+                Founded a community group to keep local peace during national
+                crisis times; organized volunteer teams to deliver emergency
+                food, clean water, and medical aid during the Sylhet floods.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- LANGUAGES & REFERENCES -->
+        <section>
+          <div class="grid grid-cols-3 gap-2.5">
+            <!-- English -->
+            <div
+              class="p-2.5 rounded-lg bg-slate-950 text-white flex flex-col justify-between"
+            >
+              <div>
+                <span
+                  class="text-[7.2pt] font-extrabold uppercase tracking-widest text-amber-400"
+                  >Professional Level</span
+                >
+                <h4 class="text-[9.5pt] font-extrabold mt-0.5">English</h4>
+              </div>
+              <p class="text-[8.2pt] text-slate-300 mt-1 leading-[1.42]">
+                Author of two English books, fluent & comfortable in spoken
+                English, and dedicated to helping students practice speaking.
+              </p>
+            </div>
+
+            <!-- Bengali -->
+            <div
+              class="p-2.5 rounded-lg border border-slate-200 bg-slate-50 flex flex-col justify-between"
+            >
+              <div>
+                <span
+                  class="text-[7.2pt] font-extrabold uppercase tracking-widest text-slate-500"
+                  >Native Speaker</span
+                >
+                <h4 class="text-[9.5pt] font-extrabold text-slate-950 mt-0.5">
+                  Bengali (Bangla)
+                </h4>
+              </div>
+              <p class="text-[8.2pt] text-slate-600 mt-1 leading-[1.42]">
+                Mother tongue. Able to explain difficult English ideas clearly
+                and simply in Bengali.
+              </p>
+            </div>
+
+            <!-- References Note -->
+            <div
+              class="p-2.5 rounded-lg border border-slate-200 bg-white flex flex-col justify-center text-center"
+            >
+              <i
+                class="fa-solid fa-stamp text-amber-600 text-[10.5pt] mb-1"
+              ></i>
+              <div class="text-[8.2pt] font-extrabold text-slate-950 uppercase">
+                Ready Upon Request
+              </div>
+              <p class="text-[7.5pt] text-slate-500 mt-0.5 leading-tight">
+                Certificates, mark sheets, book copies, and references are
+                available upon request.
+              </p>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- FOOTER PAGE 2 -->
+      <footer
+        class="pt-2 border-t border-slate-200 flex items-center justify-between text-[7.8pt] font-bold text-slate-400 uppercase tracking-widest mt-auto"
+      >
+        <span>MD SHAIDK HOSSAIN TALUKDER &bull; Professional Dossier</span>
+        <span>Page 02 of 02</span>
+      </footer>
+    </main>
+
+    <!-- Photo Replacement Script -->
+    <script>
+      document
+        .getElementById("photoUpload")
+        .addEventListener("change", function (e) {
+          const file = e.target.files[0];
+          if (file) {
+            const reader = new FileReader();
+            reader.onload = function (event) {
+              document.getElementById("avatarImg").src = event.target.result;
+            };
+            reader.readAsDataURL(file);
+          }
+        });
+    </script>
+  </body>
+</html>

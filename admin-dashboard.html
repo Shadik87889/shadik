@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SaaS Super Admin | Multi-Tenant Platform Master</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['"Plus Jakarta Sans"', "sans-serif"],
+              mono: ['"JetBrains Mono"', "monospace"],
+            },
+          },
+        },
+      };
+    </script>
+  </head>
+  <body
+    class="bg-slate-950 text-slate-100 font-sans antialiased min-h-screen flex flex-col"
+  >
+    <!-- TOP APP BAR -->
+    <header
+      class="bg-slate-900 border-b border-slate-800 px-6 py-4 flex items-center justify-between"
+    >
+      <div class="flex items-center gap-3.5">
+        <div
+          class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-indigo-500 via-indigo-600 to-teal-400 text-white flex items-center justify-center font-black text-xl shadow-lg"
+        >
+          <i class="fa-solid fa-cloud-medical"></i>
+        </div>
+        <div>
+          <h1
+            class="text-base font-extrabold text-white tracking-tight leading-none"
+          >
+            Doctor & Clinic SaaS — Platform Owner
+          </h1>
+          <p class="text-xs text-slate-400 mt-1">
+            Multi-Tenant Operating System & MRR Subscription Infrastructure
+          </p>
+        </div>
+      </div>
+      <div class="flex items-center gap-2.5">
+        <button
+          onclick="handleAdminSignIn()"
+          class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs px-4 py-2 rounded-xl transition flex items-center gap-1.5 shadow-sm"
+        >
+          <i class="fa-solid fa-shield-halved"></i>
+          <span id="adminUserStatus">Sign In as Admin</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- MAIN METRICS & TENANT CONTROLS -->
+    <main class="flex-1 max-w-7xl mx-auto w-full p-6 space-y-6">
+      <!-- KPI Metric Cards (Spec Section 27 & 28) -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div
+          class="bg-slate-900 border border-slate-800 rounded-3xl p-5 shadow-sm"
+        >
+          <span
+            class="text-[10px] font-bold uppercase tracking-wider text-slate-400"
+            >Monthly Recurring Revenue</span
+          >
+          <h3 class="text-3xl font-black text-emerald-400 mt-1">৳ 6,997</h3>
+          <span class="text-xs text-emerald-500 font-bold mt-1 inline-block"
+            >↑ 22% this quarter</span
+          >
+        </div>
+        <div
+          class="bg-slate-900 border border-slate-800 rounded-3xl p-5 shadow-sm"
+        >
+          <span
+            class="text-[10px] font-bold uppercase tracking-wider text-slate-400"
+            >Active Tenant Workspaces</span
+          >
+          <h3 class="text-3xl font-black text-indigo-400 mt-1" id="kpiTenants">
+            3 Subscribed
+          </h3>
+          <span class="text-xs text-slate-400 mt-1 inline-block"
+            >0 In grace period</span
+          >
+        </div>
+        <div
+          class="bg-slate-900 border border-slate-800 rounded-3xl p-5 shadow-sm"
+        >
+          <span
+            class="text-[10px] font-bold uppercase tracking-wider text-slate-400"
+            >Total Consultations Processed</span
+          >
+          <h3
+            class="text-3xl font-black text-teal-400 mt-1"
+            id="kpiAppointments"
+          >
+            --
+          </h3>
+          <span class="text-xs text-slate-400 mt-1 inline-block"
+            >Real-time sync</span
+          >
+        </div>
+        <div
+          class="bg-slate-900 border border-slate-800 rounded-3xl p-5 shadow-sm"
+        >
+          <span
+            class="text-[10px] font-bold uppercase tracking-wider text-slate-400"
+            >Multi-Tenant Isolation</span
+          >
+          <h3 class="text-3xl font-black text-emerald-400 mt-1">Enforced</h3>
+          <span class="text-xs text-slate-400 mt-1 inline-block"
+            >Strict boundary checks</span
+          >
+        </div>
+      </div>
+
+      <!-- Tenant Management Table (Spec Section 3 & 4) -->
+      <div
+        class="bg-slate-900 border border-slate-800 rounded-3xl overflow-hidden shadow-xl"
+      >
+        <div
+          class="p-5 border-b border-slate-800 flex flex-wrap justify-between items-center gap-3"
+        >
+          <div>
+            <h2 class="text-sm font-extrabold text-white">
+              Registered Practice Workspaces
+            </h2>
+            <p class="text-xs text-slate-400">
+              Each clinic has its own database boundary.
+            </p>
+          </div>
+          <button
+            onclick="provisionNewClinicPrompt()"
+            class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs px-4 py-2 rounded-xl transition flex items-center gap-1.5 shadow-sm"
+          >
+            <i class="fa-solid fa-plus"></i> Provision Clinic Workspace
+          </button>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs">
+            <thead
+              class="bg-slate-800/80 text-slate-400 uppercase font-bold text-[10px] tracking-wider border-b border-slate-800"
+            >
+              <tr>
+                <th class="py-3.5 px-5">Workspace Namespace</th>
+                <th class="py-3.5 px-5">Physician / Owner</th>
+                <th class="py-3.5 px-5">Plan Tier</th>
+                <th class="py-3.5 px-5">Active Chambers</th>
+                <th class="py-3.5 px-5">Tenant Health</th>
+                <th class="py-3.5 px-5 text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="tenantsTableBody" class="divide-y divide-slate-800">
+              <!-- Rendered by JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Subscription Plans Matrix (Spec Section 27) -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+        <div
+          class="bg-slate-900 border border-slate-800 rounded-3xl p-5 space-y-3"
+        >
+          <div class="flex justify-between items-center">
+            <span class="text-xs font-bold uppercase text-slate-400"
+              >Starter</span
+            >
+            <span class="font-extrabold text-teal-400">৳ 999 / mo</span>
+          </div>
+          <ul class="text-xs text-slate-300 space-y-1.5">
+            <li>
+              <i class="fa-solid fa-check text-emerald-400 mr-1.5"></i> 1 Doctor
+              profile
+            </li>
+            <li>
+              <i class="fa-solid fa-check text-emerald-400 mr-1.5"></i> Single
+              chamber queue
+            </li>
+            <li>
+              <i class="fa-solid fa-check text-emerald-400 mr-1.5"></i> Digital
+              prescription builder
+            </li>
+            <li>
+              <i class="fa-solid fa-xmark text-slate-600 mr-1.5"></i>
+              Multi-chamber routing
+            </li>
+          </ul>
+        </div>
+
+        <div
+          class="bg-slate-900 border-2 border-indigo-500 rounded-3xl p-5 space-y-3 shadow-xl"
+        >
+          <div class="flex justify-between items-center">
+            <span class="text-xs font-bold uppercase text-indigo-400"
+              >Professional (Featured)</span
+            >
+            <span class="font-extrabold text-indigo-400">৳ 1,999 / mo</span>
+          </div>
+          <ul class="text-xs text-slate-300 space-y-1.5">
+            <li>
+              <i class="fa-solid fa-check text-emerald-400 mr-1.5"></i> Multiple
+              chambers (Dhanmondi / Uttara)
+            </li>
+            <li>
+              <i class="fa-solid fa-check text-emerald-400 mr-1.5"></i>
+              Receptionist & Assistant roles
+            </li>
+            <li>
+              <i class="fa-solid fa-check text-emerald-400 mr-1.5"></i>
+              Financials & net profit accounting
+            </li>
+            <li>
+              <i class="fa-solid fa-check text-emerald-400 mr-1.5"></i> Dynamic
+              wait-time calculations
+            </li>
+          </ul>
+        </div>
+
+        <div
+          class="bg-slate-900 border border-slate-800 rounded-3xl p-5 space-y-3"
+        >
+          <div class="flex justify-between items-center">
+            <span class="text-xs font-bold uppercase text-purple-400"
+              >Business Enterprise</span
+            >
+            <span class="font-extrabold text-purple-400">৳ 3,999 / mo</span>
+          </div>
+          <ul class="text-xs text-slate-300 space-y-1.5">
+            <li>
+              <i class="fa-solid fa-check text-emerald-400 mr-1.5"></i> Multiple
+              doctors per workspace
+            </li>
+            <li>
+              <i class="fa-solid fa-check text-emerald-400 mr-1.5"></i>
+              Unlimited branches
+            </li>
+            <li>
+              <i class="fa-solid fa-check text-emerald-400 mr-1.5"></i> Custom
+              white-label domain
+            </li>
+            <li>
+              <i class="fa-solid fa-check text-emerald-400 mr-1.5"></i> 24/7
+              Priority support hotline
+            </li>
+          </ul>
+        </div>
+      </div>
+    </main>
+
+    <footer
+      class="bg-slate-950 border-t border-slate-800 px-6 py-4 text-center text-xs text-slate-500"
+    >
+      Doctor & Clinic SaaS System • Spec Compliant Multitenant Core
+    </footer>
+
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
+      import {
+        getAuth,
+        signInWithPopup,
+        GoogleAuthProvider,
+        onAuthStateChanged,
+      } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
+      import {
+        getFirestore,
+        collection,
+        getDocs,
+      } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
+
+      const firebaseConfig = {
+        apiKey: "AIzaSyA24b7yPCEsPfNBct4GPnfqo8s85m8nssA",
+        authDomain: "shadik-app-02.firebaseapp.com",
+        projectId: "shadik-app-02",
+        storageBucket: "shadik-app-02.firebasestorage.app",
+        messagingSenderId: "58383134324",
+        appId: "1:58383134324:web:1f0bab4fb0ce6c1ad72b21",
+        measurementId: "G-BKVSKV7YQK",
+      };
+
+      const app = initializeApp(firebaseConfig);
+      const auth = getAuth(app);
+      const db = getFirestore(app);
+
+      onAuthStateChanged(auth, (u) => {
+        const el = document.getElementById("adminUserStatus");
+        if (u) el.textContent = u.displayName || u.email;
+        else el.textContent = "Sign In as Admin";
+      });
+
+      window.handleAdminSignIn = async () => {
+        const provider = new GoogleAuthProvider();
+        await signInWithPopup(auth, provider);
+      };
+
+      const tenantList = [
+        {
+          id: "dr-rahman",
+          name: "Dr. Md. Rahman Healthcare",
+          doctor: "Dr. Md. Rahman",
+          specialty: "Cardiology & Medicine",
+          plan: "Professional",
+          fee: 1999,
+          chambers: "Dhanmondi, Uttara",
+          status: "Active",
+        },
+        {
+          id: "dr-karim",
+          name: "Dr. Karim Pediatrics Hub",
+          doctor: "Dr. Fazle Karim",
+          specialty: "Pediatrics",
+          plan: "Starter",
+          fee: 999,
+          chambers: "Mirpur-10",
+          status: "Active",
+        },
+        {
+          id: "clinic-c",
+          name: "CarePoint Multi-Chamber Center",
+          doctor: "Dr. Nusrat Jahan & Team",
+          specialty: "Gynecology & Surgery",
+          plan: "Business",
+          fee: 3999,
+          chambers: "Banani, Gulshan",
+          status: "Active",
+        },
+      ];
+
+      function renderTenantTable() {
+        const tbody = document.getElementById("tenantsTableBody");
+        tbody.innerHTML = tenantList
+          .map(
+            (t) => `
+        <tr class="hover:bg-slate-800/40 transition">
+          <td class="py-4 px-5">
+            <strong class="text-white block font-bold">${t.name}</strong>
+            <span class="text-[10px] text-indigo-400 font-mono">ns: ${
+              t.id
+            }</span>
+          </td>
+          <td class="py-4 px-5">
+            <span class="text-slate-300 font-semibold">${t.doctor}</span>
+            <span class="text-[10px] text-slate-500 block">${t.specialty}</span>
+          </td>
+          <td class="py-4 px-5">
+            <span class="px-2.5 py-1 rounded-full text-[10px] font-bold ${
+              t.plan === "Professional"
+                ? "bg-indigo-500/20 text-indigo-300"
+                : t.plan === "Business"
+                ? "bg-purple-500/20 text-purple-300"
+                : "bg-slate-800 text-slate-300"
+            }">
+              ${t.plan} (৳${t.fee}/m)
+            </span>
+          </td>
+          <td class="py-4 px-5 text-slate-400">${t.chambers}</td>
+          <td class="py-4 px-5">
+            <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-400">
+              ${t.status}
+            </span>
+          </td>
+          <td class="py-4 px-5 text-right space-x-2">
+            <a href="doctor-dashboard.html" class="bg-slate-800 hover:bg-slate-700 text-slate-200 px-3 py-1.5 rounded-xl font-bold transition">Open Desk</a>
+          </td>
+        </tr>
+      `,
+          )
+          .join("");
+      }
+
+      window.provisionNewClinicPrompt = () => {
+        const name = prompt(
+          "Enter New Clinic Workspace Name (e.g. Apollo Specialized Center):",
+        );
+        if (!name) return;
+        const docName = prompt("Enter Workspace Lead Physician Name:");
+        const plan = prompt(
+          "Select Plan (Starter, Professional, Business):",
+          "Professional",
+        );
+
+        tenantList.push({
+          id: name
+            .toLowerCase()
+            .replace(/[^a-z0-9]/g, "-")
+            .slice(0, 15),
+          name,
+          doctor: docName || "Medical Practitioner",
+          specialty: "General Medicine",
+          plan: plan || "Professional",
+          fee: plan === "Business" ? 3999 : plan === "Starter" ? 999 : 1999,
+          chambers: "Main Practice Hub",
+          status: "Active",
+        });
+        renderTenantTable();
+        alert(
+          `Tenant workspace [${name}] provisioned with isolated data namespace.`,
+        );
+      };
+
+      async function loadStats() {
+        try {
+          const snap = await getDocs(collection(db, "appointments"));
+          document.getElementById(
+            "kpiAppointments",
+          ).textContent = `${snap.size} Consultations`;
+        } catch (e) {
+          console.error(e);
+        }
+      }
+
+      renderTenantTable();
+      loadStats();
+    </script>
+  </body>
+</html>

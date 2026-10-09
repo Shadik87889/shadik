@@ -1,0 +1,3336 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"
+    />
+    <title>CareSync™ | Private Practice Portal</title>
+
+    <!-- Fonts: Plus Jakarta Sans, Hind Siliguri (Bangla), & JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700;800&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Tailwind CSS & FontAwesome Pro CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: [
+                '"Plus Jakarta Sans"',
+                '"Hind Siliguri"',
+                "-apple-system",
+                "sans-serif",
+              ],
+              bangla: ['"Hind Siliguri"', "sans-serif"],
+              mono: ['"JetBrains Mono"', "monospace"],
+            },
+            colors: {
+              canvas: "#F5F6F4",
+              darkCard: "#191A1E",
+              limePill: "#D4F782",
+              coralBar: "#FA5A5A",
+            },
+          },
+        },
+      };
+    </script>
+
+    <style>
+      body {
+        background-color: #f5f6f4;
+        -webkit-font-smoothing: antialiased;
+        -webkit-tap-highlight-color: transparent;
+      }
+      .hide-scrollbar::-webkit-scrollbar {
+        display: none;
+      }
+      .hide-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+
+      @media print {
+        body * {
+          visibility: hidden !important;
+        }
+        #printableRxPad,
+        #printableRxPad * {
+          visibility: visible !important;
+        }
+        #printableRxPad {
+          position: absolute;
+          left: 0;
+          top: 0;
+          width: 100%;
+          border: none !important;
+        }
+      }
+    </style>
+  </head>
+
+  <body
+    class="text-slate-900 bg-canvas min-h-screen flex justify-center selection:bg-limePill selection:text-slate-900"
+  >
+    <!-- ================= CUSTOM TOAST CONTAINER ================= -->
+    <div
+      id="toastContainer"
+      class="fixed top-4 z-50 flex flex-col gap-2 max-w-sm w-full px-4 pointer-events-none transition-all"
+    ></div>
+
+    <!-- ================= NOTIFICATION DRAWER ================= -->
+    <div
+      id="notificationDrawer"
+      class="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 hidden flex justify-end"
+    >
+      <div
+        class="bg-white w-full max-w-sm h-full p-6 shadow-2xl flex flex-col justify-between overflow-y-auto"
+      >
+        <div class="space-y-4">
+          <div
+            class="flex items-center justify-between border-b border-slate-100 pb-3"
+          >
+            <div class="flex items-center gap-2">
+              <h3
+                class="font-bold text-slate-900 text-sm"
+                data-i18n="notificationsTitle"
+              >
+                Chamber Notifications
+              </h3>
+              <span class="w-2 h-2 rounded-full bg-coralBar"></span>
+            </div>
+            <button
+              onclick="toggleNotifications()"
+              class="w-8 h-8 rounded-full bg-slate-100 text-slate-600 flex items-center justify-center hover:bg-slate-200 transition"
+            >
+              <i class="fa-solid fa-xmark text-xs"></i>
+            </button>
+          </div>
+          <div id="notificationList" class="space-y-2.5 text-xs"></div>
+        </div>
+        <button
+          onclick="clearNotifications()"
+          class="w-full py-2.5 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs transition"
+          data-i18n="clearNotificationsBtn"
+        >
+          Clear All Notifications
+        </button>
+      </div>
+    </div>
+
+    <!-- ================= MAIN APP CANVAS ================= -->
+    <div
+      class="w-full max-w-[440px] bg-canvas min-h-screen relative flex flex-col px-5 pt-4"
+    >
+      <!-- ========================================================================= -->
+      <!-- INITIAL STATE: ONBOARDING DOCTOR CODE ENTRY SCREEN (NO DOCTOR BY DEFAULT) -->
+      <!-- ========================================================================= -->
+      <div
+        id="unlinkedOnboardingView"
+        class="flex-1 flex flex-col justify-between py-6 space-y-6"
+      >
+        <!-- Top Branding & Language Switcher -->
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-2.5">
+            <div
+              class="w-10 h-10 rounded-2xl bg-darkCard text-white flex items-center justify-center font-bold text-base shadow-sm"
+            >
+              <i class="fa-solid fa-stethoscope text-limePill text-sm"></i>
+            </div>
+            <div>
+              <span
+                class="text-xs font-mono font-bold tracking-widest text-slate-400 block uppercase"
+                >CareSync OS</span
+              >
+              <strong class="text-sm font-bold text-slate-900 leading-none"
+                >Doctor Practice Gateway</strong
+              >
+            </div>
+          </div>
+
+          <button
+            onclick="toggleLanguage()"
+            class="px-3 py-1.5 rounded-full bg-white border border-slate-200 text-xs font-extrabold text-slate-700 shadow-sm hover:bg-slate-50 transition active:scale-95 flex items-center gap-1.5"
+          >
+            <i class="fa-solid fa-language text-slate-400"></i>
+            <span id="langToggleOnboarding">বাংলা</span>
+          </button>
+        </div>
+
+        <!-- Main Code Entry Card -->
+        <div
+          class="bg-white rounded-[32px] p-6 sm:p-7 border border-slate-100 shadow-sm space-y-5 text-center my-auto"
+        >
+          <div
+            class="w-16 h-16 rounded-3xl bg-slate-100 border border-slate-200 flex items-center justify-center text-darkCard text-2xl mx-auto shadow-inner"
+          >
+            <i class="fa-solid fa-shield-halved text-slate-700"></i>
+          </div>
+
+          <div class="space-y-1.5">
+            <h2
+              class="text-xl font-extrabold text-slate-900 tracking-tight"
+              data-i18n="onboardingTitle"
+            >
+              Connect With Your Doctor
+            </h2>
+            <p
+              class="text-xs text-slate-500 leading-relaxed"
+              data-i18n="onboardingSubtitle"
+            >
+              This app adapts to your specific doctor's private chamber. Enter
+              the practice code provided on your prescription, visiting card, or
+              clinic desk.
+            </p>
+          </div>
+
+          <!-- Code Input Form -->
+          <div class="space-y-3 pt-2">
+            <div class="relative">
+              <input
+                type="text"
+                id="initialPracticeCodeInput"
+                placeholder="e.g. RAHMAN-101"
+                class="w-full bg-slate-50 border-2 border-slate-200 rounded-2xl py-3.5 px-4 text-center text-lg font-mono font-black uppercase text-darkCard tracking-widest focus:outline-none focus:border-darkCard focus:bg-white transition"
+              />
+            </div>
+
+            <button
+              onclick="handleInitialCodeSubmit()"
+              class="w-full bg-darkCard hover:bg-black text-white font-extrabold text-xs py-4 rounded-full transition active:scale-95 shadow-md flex items-center justify-center gap-2"
+            >
+              <span>Link Practice & Open App</span>
+              <i class="fa-solid fa-arrow-right text-limePill text-xs"></i>
+            </button>
+          </div>
+
+          <!-- Preference Directory Trigger -->
+          <div class="pt-3 border-t border-slate-100">
+            <span
+              class="text-xs text-slate-400 block mb-1"
+              data-i18n="dontHaveCodePrompt"
+              >Don't have your doctor's code?</span
+            >
+            <button
+              onclick="openDoctorPreferenceModal()"
+              class="text-xs font-bold text-darkCard underline hover:text-slate-700 transition"
+              data-i18n="browseByPreferenceBtn"
+            >
+              Find Practice Code by Specialty & Location
+            </button>
+          </div>
+
+          <!-- Quick Demo Codes Pill List for instant testing -->
+          <div
+            class="bg-slate-50 p-3 rounded-2xl border border-slate-100 text-[11px] text-slate-500 text-left space-y-1.5"
+          >
+            <span
+              class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block"
+              >Verified Practice Codes (Click to Fill):</span
+            >
+            <div class="flex flex-wrap gap-1.5 font-mono font-bold">
+              <button
+                onclick="fillTestCode('RAHMAN-101')"
+                class="bg-white hover:bg-slate-200 px-2.5 py-1 rounded-lg border border-slate-200 text-slate-800 text-[10px]"
+              >
+                RAHMAN-101 (Cardiology)
+              </button>
+              <button
+                onclick="fillTestCode('KARIM-PEDS')"
+                class="bg-white hover:bg-slate-200 px-2.5 py-1 rounded-lg border border-slate-200 text-slate-800 text-[10px]"
+              >
+                KARIM-PEDS (Pediatrics)
+              </button>
+              <button
+                onclick="fillTestCode('NUSRAT-GYN')"
+                class="bg-white hover:bg-slate-200 px-2.5 py-1 rounded-lg border border-slate-200 text-slate-800 text-[10px]"
+              >
+                NUSRAT-GYN (Gynecology)
+              </button>
+              <button
+                onclick="fillTestCode('KAVINSKY-NEURO')"
+                class="bg-white hover:bg-slate-200 px-2.5 py-1 rounded-lg border border-slate-200 text-slate-800 text-[10px]"
+              >
+                KAVINSKY-NEURO (Neurology)
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Footer Security Note -->
+        <div class="text-center text-[11px] text-slate-400">
+          <i class="fa-solid fa-lock text-[10px] mr-1"></i> Private Tenant
+          Isolation • BMDC Verified Workspaces
+        </div>
+      </div>
+
+      <!-- ========================================================================= -->
+      <!-- LINKED STATE: MAIN APP WORKSPACE (VISIBLE ONLY ONCE DOCTOR CODE IS LINKED) -->
+      <!-- ========================================================================= -->
+      <div id="linkedMainApp" class="hidden flex-1 flex flex-col pb-28">
+        <!-- ================= 1. HOME VIEW ================= -->
+        <div id="tab-home" class="view-panel space-y-4">
+          <!-- Top User Bar -->
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-3">
+              <div
+                class="w-12 h-12 rounded-full overflow-hidden border border-white shadow-sm bg-slate-200 shrink-0"
+              >
+                <img
+                  id="userAvatarImg"
+                  src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80"
+                  alt="Patient"
+                  class="w-full h-full object-cover"
+                />
+              </div>
+              <div>
+                <span
+                  class="text-xs text-slate-400 font-medium block"
+                  data-i18n="welcomeGreeting"
+                  >Hi, Welcome Back!</span
+                >
+                <h2
+                  id="patientDisplayName"
+                  class="text-base font-bold text-slate-900 leading-tight"
+                >
+                  Leon Fernandez
+                </h2>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-2">
+              <button
+                onclick="toggleLanguage()"
+                class="px-2.5 py-1.5 rounded-full bg-white border border-slate-200 text-[11px] font-extrabold text-slate-700 shadow-sm hover:bg-slate-50 transition active:scale-95 flex items-center gap-1.5"
+              >
+                <i class="fa-solid fa-language text-slate-400"></i>
+                <span id="langToggleLabel">বাংলা</span>
+              </button>
+
+              <button
+                onclick="toggleNotifications()"
+                class="w-10 h-10 rounded-full bg-white border border-slate-100 shadow-sm flex items-center justify-center text-slate-700 relative hover:bg-slate-50 transition active:scale-95"
+              >
+                <i class="fa-regular fa-bell text-sm"></i>
+                <span
+                  id="unreadDot"
+                  class="w-2 h-2 rounded-full bg-coralBar absolute top-2.5 right-2.5"
+                ></span>
+              </button>
+            </div>
+          </div>
+
+          <!-- ACTIVE CONNECTED DOCTOR PILL -->
+          <div
+            class="bg-white rounded-[24px] p-3.5 border border-slate-100 shadow-sm flex items-center justify-between"
+          >
+            <div class="flex items-center gap-2.5 min-w-0">
+              <div
+                class="w-8 h-8 rounded-full bg-slate-900 text-white flex items-center justify-center text-xs shrink-0 font-bold"
+              >
+                <i class="fa-solid fa-id-badge text-limePill text-xs"></i>
+              </div>
+              <div class="min-w-0">
+                <div class="flex items-center gap-1.5">
+                  <span
+                    class="text-[10px] uppercase font-bold text-slate-400"
+                    data-i18n="connectedDoctorLabel"
+                    >Active Practice Code</span
+                  >
+                  <span
+                    id="headerDoctorCodeBadge"
+                    class="bg-slate-100 text-slate-800 text-[10px] font-mono font-extrabold px-1.5 py-0.5 rounded"
+                    >--</span
+                  >
+                </div>
+                <strong
+                  id="headerDoctorName"
+                  class="text-xs font-bold text-slate-900 block truncate"
+                  >Dr. Md. Rahman</strong
+                >
+              </div>
+            </div>
+
+            <button
+              onclick="disconnectOrChangeDoctor()"
+              class="px-3 py-1.5 rounded-full bg-slate-100 hover:bg-slate-200 text-darkCard font-bold text-xs shrink-0 transition active:scale-95"
+              data-i18n="btnChangeDoctor"
+            >
+              Change Code
+            </button>
+          </div>
+
+          <!-- Headline -->
+          <div>
+            <h1
+              class="text-[26px] font-extrabold text-slate-900 tracking-tight leading-[1.2]"
+              data-i18n="heroHeadline"
+            >
+              How are you feeling<br />right now today?
+            </h1>
+          </div>
+
+          <!-- 2-Col Metric Cards -->
+          <div class="grid grid-cols-2 gap-3.5">
+            <!-- Serving Serial -->
+            <div
+              class="bg-darkCard rounded-[28px] p-4 text-white relative shadow-sm flex flex-col justify-between h-[155px]"
+            >
+              <div>
+                <div class="flex items-center justify-between mb-2">
+                  <div
+                    class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center text-white text-xs"
+                  >
+                    <i class="fa-solid fa-stethoscope"></i>
+                  </div>
+                  <span
+                    class="bg-limePill text-darkCard text-[10px] font-extrabold px-2.5 py-0.5 rounded-full uppercase"
+                    data-i18n="badgeServing"
+                    >Serving</span
+                  >
+                </div>
+                <span
+                  class="text-xs text-slate-300 font-medium block"
+                  data-i18n="nowInRoom"
+                  >Now In Room</span
+                >
+              </div>
+              <div>
+                <span
+                  id="homeServingSerial"
+                  class="text-3xl font-black tracking-tight text-white font-mono"
+                  >#--</span
+                >
+                <span
+                  class="text-[10px] text-slate-400 block mt-0.5"
+                  id="homeChamberRoom"
+                  >Room 101</span
+                >
+              </div>
+            </div>
+
+            <!-- Your Serial -->
+            <div
+              class="bg-white rounded-[28px] p-4 border border-slate-100 shadow-sm flex flex-col justify-between h-[155px]"
+            >
+              <div>
+                <div class="flex items-center justify-between mb-2">
+                  <div
+                    class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-700 text-xs"
+                  >
+                    <i class="fa-solid fa-ticket"></i>
+                  </div>
+                  <span
+                    class="bg-slate-100 text-slate-700 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase"
+                    data-i18n="badgeQueue"
+                    >Queue</span
+                  >
+                </div>
+                <span
+                  class="text-xs text-slate-400 font-medium block"
+                  data-i18n="yourSerial"
+                  >Your Serial</span
+                >
+              </div>
+              <div>
+                <span
+                  id="homeYourSerial"
+                  class="text-3xl font-black tracking-tight text-slate-900 font-mono"
+                  >#--</span
+                >
+                <span
+                  class="text-[10px] text-slate-500 font-medium block mt-0.5"
+                  id="homeEstimatedWaitText"
+                  data-i18n="noBookingToday"
+                  >No booking today</span
+                >
+              </div>
+            </div>
+          </div>
+
+          <!-- 4-Card Quick Action Grid -->
+          <div class="grid grid-cols-2 gap-3">
+            <button
+              onclick="openBookingDrawer()"
+              class="bg-white hover:bg-slate-50 p-4 rounded-[24px] border border-slate-100 shadow-sm flex items-center gap-3.5 text-left transition active:scale-95 group"
+            >
+              <div
+                class="w-11 h-11 rounded-2xl bg-darkCard text-white flex items-center justify-center text-sm shadow-sm shrink-0 group-hover:scale-105 transition"
+              >
+                <i class="fa-solid fa-calendar-plus text-limePill"></i>
+              </div>
+              <div>
+                <strong
+                  class="text-xs font-bold text-slate-900 block leading-tight"
+                  data-i18n="ctaBookSerial"
+                  >Book Serial</strong
+                >
+                <span
+                  class="text-[10px] text-slate-400 font-medium"
+                  id="ctaDoctorChamberLabel"
+                  >Chamber A & B</span
+                >
+              </div>
+            </button>
+
+            <button
+              onclick="switchTab('queue')"
+              class="bg-white hover:bg-slate-50 p-4 rounded-[24px] border border-slate-100 shadow-sm flex items-center gap-3.5 text-left transition active:scale-95 group"
+            >
+              <div
+                class="w-11 h-11 rounded-2xl bg-emerald-50 text-emerald-800 flex items-center justify-center text-sm shadow-sm shrink-0 group-hover:scale-105 transition"
+              >
+                <i class="fa-solid fa-bars-staggered"></i>
+              </div>
+              <div>
+                <strong
+                  class="text-xs font-bold text-slate-900 block leading-tight"
+                  data-i18n="ctaQueueRadar"
+                  >Queue Radar</strong
+                >
+                <span
+                  class="text-[10px] text-slate-400 font-medium"
+                  data-i18n="ctaLiveTelemetry"
+                  >Live Telemetry</span
+                >
+              </div>
+            </button>
+
+            <button
+              onclick="switchTab('records')"
+              class="bg-white hover:bg-slate-50 p-4 rounded-[24px] border border-slate-100 shadow-sm flex items-center gap-3.5 text-left transition active:scale-95 group"
+            >
+              <div
+                class="w-11 h-11 rounded-2xl bg-slate-100 text-slate-800 flex items-center justify-center text-sm shadow-sm shrink-0 group-hover:scale-105 transition"
+              >
+                <i class="fa-solid fa-file-prescription"></i>
+              </div>
+              <div>
+                <strong
+                  class="text-xs font-bold text-slate-900 block leading-tight"
+                  data-i18n="ctaPrescriptions"
+                  >Prescriptions</strong
+                >
+                <span
+                  class="text-[10px] text-slate-400 font-medium"
+                  data-i18n="ctaDownloadPrint"
+                  >Download / Print</span
+                >
+              </div>
+            </button>
+
+            <a
+              id="ctaHotlineLink"
+              href="tel:+8801711000000"
+              class="bg-white hover:bg-slate-50 p-4 rounded-[24px] border border-slate-100 shadow-sm flex items-center gap-3.5 text-left transition active:scale-95 group"
+            >
+              <div
+                class="w-11 h-11 rounded-2xl bg-amber-50 text-amber-800 flex items-center justify-center text-sm shadow-sm shrink-0 group-hover:scale-105 transition"
+              >
+                <i class="fa-solid fa-phone"></i>
+              </div>
+              <div>
+                <strong
+                  class="text-xs font-bold text-slate-900 block leading-tight"
+                  data-i18n="ctaCallChamber"
+                  >Call Chamber</strong
+                >
+                <span
+                  class="text-[10px] text-slate-400 font-medium"
+                  id="ctaHotlineNumber"
+                  >+880 1711 000</span
+                >
+              </div>
+            </a>
+          </div>
+
+          <!-- Weekly Load Pace Bar Chart -->
+          <div
+            class="bg-white rounded-[28px] p-5 border border-slate-100 shadow-sm space-y-3"
+          >
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <div
+                  class="w-7 h-7 rounded-full bg-slate-100 flex items-center justify-center text-slate-700 text-xs"
+                >
+                  <i class="fa-solid fa-chart-simple"></i>
+                </div>
+                <span
+                  class="text-xs font-bold text-slate-800"
+                  data-i18n="queuePaceTitle"
+                  >Chamber Queue Pace (Real-Time)</span
+                >
+              </div>
+              <span
+                id="livePaceBadge"
+                class="bg-limePill text-darkCard text-[10px] font-extrabold px-2.5 py-0.5 rounded-full uppercase"
+                >~11m Avg</span
+              >
+            </div>
+
+            <div
+              class="flex items-end justify-between pt-2 px-1"
+              id="weeklyLoadBars"
+            ></div>
+
+            <div class="grid grid-cols-2 gap-2 pt-2 border-t border-slate-100">
+              <button
+                onclick="updatePatientArrival('On My Way')"
+                class="bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold py-2.5 rounded-full transition flex items-center justify-center gap-1.5 active:scale-95"
+              >
+                <i class="fa-solid fa-car-side text-xs"></i>
+                <span data-i18n="btnOnMyWay">On My Way</span>
+              </button>
+              <button
+                onclick="updatePatientArrival('Checked In')"
+                class="bg-darkCard hover:bg-black text-white text-xs font-bold py-2.5 rounded-full transition flex items-center justify-center gap-1.5 active:scale-95"
+              >
+                <i class="fa-solid fa-location-dot text-xs text-limePill"></i>
+                <span data-i18n="btnArrived">I Have Arrived</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Doctor Banner -->
+          <div
+            class="bg-white rounded-[26px] p-4 border border-slate-100 shadow-sm flex items-center justify-between"
+          >
+            <div class="flex items-center gap-3">
+              <div
+                class="w-12 h-12 rounded-full overflow-hidden bg-slate-100 border border-slate-200 shrink-0"
+              >
+                <img
+                  id="connectedDocAvatar"
+                  src=""
+                  alt="Doctor"
+                  class="w-full h-full object-cover"
+                />
+              </div>
+              <div>
+                <h4
+                  class="text-sm font-bold text-slate-900 leading-tight"
+                  id="profileCardDocName"
+                >
+                  --
+                </h4>
+                <p
+                  class="text-[11px] text-slate-400 font-medium"
+                  id="profileCardDocSpecialty"
+                >
+                  --
+                </p>
+                <span
+                  class="text-[10px] text-emerald-700 font-semibold block mt-0.5"
+                  id="profileCardDocHours"
+                  >--</span
+                >
+              </div>
+            </div>
+            <button
+              onclick="openDoctorPreferenceModal()"
+              class="text-xs font-bold text-darkCard underline pr-1"
+              data-i18n="btnDoctorPreferences"
+            >
+              Find Code
+            </button>
+          </div>
+        </div>
+
+        <!-- ================= 2. LIVE QUEUE TELEMETRY VIEW ================= -->
+        <div id="tab-queue" class="view-panel hidden space-y-4">
+          <div class="flex items-center justify-between">
+            <div>
+              <h2
+                class="text-lg font-extrabold text-slate-900 tracking-tight"
+                data-i18n="queueTelemetryTitle"
+              >
+                Live Queue Telemetry
+              </h2>
+              <p
+                class="text-xs text-slate-400 font-medium"
+                data-i18n="queueTelemetrySub"
+              >
+                Real-time consultation dispatch
+              </p>
+            </div>
+            <span
+              id="queueDateBadge"
+              class="text-xs font-mono font-bold bg-white px-3 py-1 rounded-full border border-slate-200 text-slate-700"
+              >Today</span
+            >
+          </div>
+
+          <!-- Stats Grid -->
+          <div class="grid grid-cols-2 gap-3">
+            <div
+              class="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm text-center"
+            >
+              <span
+                class="text-[10px] font-bold uppercase text-slate-400 block tracking-wider"
+                data-i18n="patientsAheadLabel"
+                >Patients Ahead</span
+              >
+              <span
+                id="telemetryAheadCount"
+                class="text-3xl font-black font-mono text-slate-900 mt-1 block"
+                >0</span
+              >
+              <span
+                class="text-[10px] text-slate-500"
+                id="telemetryAheadSub"
+                data-i18n="inWaitingRoom"
+                >In waiting room</span
+              >
+            </div>
+            <div
+              class="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm text-center"
+            >
+              <span
+                class="text-[10px] font-bold uppercase text-slate-400 block tracking-wider"
+                data-i18n="dynamicWaitLabel"
+                >Dynamic Wait</span
+              >
+              <span
+                id="telemetryWaitMinutes"
+                class="text-2xl font-bold font-mono text-emerald-700 mt-1 block"
+                >-- mins</span
+              >
+              <span
+                class="text-[10px] text-slate-500"
+                data-i18n="adaptsToDoctor"
+                >Adapts to doctor pace</span
+              >
+            </div>
+          </div>
+
+          <!-- Gauge Widget -->
+          <div
+            class="bg-white rounded-[28px] p-5 border border-slate-100 shadow-sm space-y-2 text-center"
+          >
+            <div
+              class="relative w-44 h-24 mx-auto flex items-end justify-center"
+            >
+              <svg viewBox="0 0 160 90" class="w-44 h-24">
+                <path
+                  d="M 20 80 A 60 60 0 0 1 140 80"
+                  fill="none"
+                  stroke="#E5E7EB"
+                  stroke-width="12"
+                  stroke-linecap="round"
+                  stroke-dasharray="6, 8"
+                />
+                <path
+                  id="svgActiveArc"
+                  d="M 20 80 A 60 60 0 0 1 115 28"
+                  fill="none"
+                  stroke="url(#arcGradientGrad)"
+                  stroke-width="12"
+                  stroke-linecap="round"
+                  stroke-dasharray="6, 8"
+                />
+                <defs>
+                  <linearGradient
+                    id="arcGradientGrad"
+                    x1="0%"
+                    y1="0%"
+                    x2="100%"
+                    y2="0%"
+                  >
+                    <stop offset="0%" stop-color="#FCD34D" />
+                    <stop offset="50%" stop-color="#FB923C" />
+                    <stop offset="100%" stop-color="#FA5A5A" />
+                  </linearGradient>
+                </defs>
+              </svg>
+              <div class="absolute bottom-0 text-center">
+                <span
+                  class="text-2xl font-extrabold text-slate-900 leading-none"
+                  id="gaugePercentage"
+                  >--%</span
+                >
+                <span
+                  class="text-[9px] text-slate-400 block mt-0.5"
+                  data-i18n="sessionCompleted"
+                  >Session Completed</span
+                >
+              </div>
+            </div>
+          </div>
+
+          <!-- Live Roster List -->
+          <div
+            class="bg-white rounded-[26px] p-4 border border-slate-100 shadow-sm space-y-3"
+          >
+            <div
+              class="flex items-center justify-between border-b border-slate-100 pb-2.5"
+            >
+              <h3
+                class="text-xs font-bold text-slate-800 uppercase tracking-wider"
+                data-i18n="rosterTitle"
+              >
+                Patient Dispatch Roster
+              </h3>
+              <span
+                class="text-[11px] font-mono text-slate-400"
+                id="rosterChamberLabel"
+                >Room 101</span
+              >
+            </div>
+            <div
+              id="queueRosterTable"
+              class="divide-y divide-slate-100 text-xs"
+            >
+              <p
+                class="py-4 text-center text-slate-400"
+                data-i18n="loadingQueueStream"
+              >
+                Loading session queue...
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- ================= 3. SCHEDULE & BOOKING VIEW ================= -->
+        <div id="tab-schedule" class="view-panel hidden space-y-4">
+          <div class="flex items-center justify-between">
+            <div>
+              <h3
+                class="text-base font-bold text-slate-900"
+                data-i18n="scheduleHeading"
+              >
+                Chamber Schedules
+              </h3>
+              <p class="text-xs text-slate-400" id="scheduleSubDoctor">--</p>
+            </div>
+            <button
+              onclick="document.getElementById('nativeCalendarPicker').showPicker()"
+              class="w-9 h-9 rounded-full bg-white border border-slate-100 shadow-sm flex items-center justify-center text-slate-700 hover:bg-slate-50 transition"
+            >
+              <i class="fa-regular fa-calendar text-xs"></i>
+            </button>
+            <input
+              type="date"
+              id="nativeCalendarPicker"
+              onchange="onDateChanged(this.value)"
+              class="hidden"
+            />
+          </div>
+
+          <div
+            class="flex items-center justify-between gap-1 overflow-x-auto hide-scrollbar py-1"
+            id="datePillContainer"
+          ></div>
+
+          <!-- Practice Card -->
+          <div
+            class="bg-white rounded-[26px] p-5 border border-slate-100 shadow-sm space-y-3.5"
+          >
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-3">
+                <div
+                  class="w-12 h-12 rounded-full overflow-hidden bg-slate-100 border border-slate-200 shrink-0"
+                >
+                  <img
+                    id="scheduleDocAvatar"
+                    src=""
+                    alt="Doctor"
+                    class="w-full h-full object-cover"
+                  />
+                </div>
+                <div>
+                  <h4
+                    class="text-sm font-bold text-slate-900"
+                    id="scheduleDocName"
+                  >
+                    --
+                  </h4>
+                  <div
+                    class="flex items-center gap-1.5 text-[11px] text-slate-500 mt-0.5"
+                  >
+                    <i class="fa-solid fa-stethoscope text-[10px]"></i>
+                    <span id="scheduleDocSpecialty">--</span>
+                  </div>
+                </div>
+              </div>
+              <span
+                class="text-xs font-mono font-bold text-slate-500 bg-slate-100 px-2 py-0.5 rounded"
+                id="scheduleDocCode"
+                >--</span
+              >
+            </div>
+
+            <div
+              class="border-t border-slate-100 pt-3 text-xs space-y-1.5 text-slate-600"
+            >
+              <p>
+                <strong>Chamber:</strong>
+                <span id="scheduleChamberDetails">--</span>
+              </p>
+              <p>
+                <strong>Visiting:</strong>
+                <span id="scheduleHoursDetails">--</span>
+              </p>
+              <p>
+                <strong>Consultation Fee:</strong>
+                <span
+                  id="scheduleFeeDetails"
+                  class="font-bold text-slate-900 font-mono"
+                  >--</span
+                >
+              </p>
+            </div>
+
+            <button
+              onclick="openBookingDrawer()"
+              class="w-full bg-darkCard text-white py-3 rounded-full font-bold text-xs shadow-sm hover:bg-black transition active:scale-95 flex items-center justify-center gap-2"
+            >
+              <i class="fa-solid fa-calendar-check text-limePill text-xs"></i>
+              <span data-i18n="ctaBookSerial">Book Serial for This Doctor</span>
+            </button>
+          </div>
+
+          <!-- Quick Switcher Prompt -->
+          <div
+            class="p-4 rounded-2xl bg-slate-100/80 border border-slate-200/60 flex items-center justify-between"
+          >
+            <div>
+              <span
+                class="text-xs font-bold text-slate-800 block"
+                data-i18n="needDifferentDoctor"
+                >Need a different doctor?</span
+              >
+              <span
+                class="text-[11px] text-slate-500"
+                data-i18n="needDifferentDoctorSub"
+                >Enter practice code or filter by symptoms</span
+              >
+            </div>
+            <button
+              onclick="openDoctorPreferenceModal()"
+              class="text-xs font-bold text-darkCard underline"
+              data-i18n="btnDoctorPreferences"
+            >
+              Find Code
+            </button>
+          </div>
+        </div>
+
+        <!-- ================= 4. MEDICAL RECORDS VIEW ================= -->
+        <div id="tab-records" class="view-panel hidden space-y-4">
+          <div class="flex items-center justify-between">
+            <div>
+              <h2
+                class="text-lg font-extrabold text-slate-900 tracking-tight"
+                data-i18n="medicalRecordsHeading"
+              >
+                Clinical Records
+              </h2>
+              <p
+                class="text-xs text-slate-400 font-medium"
+                data-i18n="medicalRecordsSub"
+              >
+                Digital prescriptions & diagnostic history
+              </p>
+            </div>
+            <button
+              onclick="fetchPrescriptions()"
+              class="text-xs bg-white border border-slate-200 px-3.5 py-1.5 rounded-full font-bold shadow-sm hover:bg-slate-50 transition flex items-center gap-1"
+            >
+              <i class="fa-solid fa-rotate-right mr-1"></i>
+              <span data-i18n="btnRefresh">Refresh</span>
+            </button>
+          </div>
+
+          <div id="prescriptionRecordCards" class="space-y-3">
+            <p
+              class="text-center py-8 text-xs text-slate-400"
+              data-i18n="loadingPrescriptions"
+            >
+              Loading prescription archives...
+            </p>
+          </div>
+        </div>
+
+        <!-- ================= 5. SETTINGS VIEW ================= -->
+        <div id="tab-settings" class="view-panel hidden space-y-4">
+          <div class="flex items-center justify-between">
+            <h2
+              class="text-lg font-extrabold text-slate-900 tracking-tight"
+              data-i18n="settingsHeading"
+            >
+              Patient Settings
+            </h2>
+            <span class="text-[10px] font-mono text-slate-400">v3.1.0</span>
+          </div>
+
+          <!-- Demographics Form -->
+          <div
+            class="bg-white rounded-[26px] p-5 border border-slate-100 shadow-sm space-y-4"
+          >
+            <h3
+              class="text-xs font-bold text-slate-800 uppercase tracking-wider"
+              data-i18n="demographicsTitle"
+            >
+              Patient Demographics
+            </h3>
+
+            <div class="space-y-3 text-xs">
+              <div>
+                <label
+                  class="block text-slate-500 font-semibold mb-1"
+                  data-i18n="labelFullName"
+                  >Full Legal Name</label
+                >
+                <input
+                  type="text"
+                  id="settingName"
+                  value="Leon Fernandez"
+                  class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 font-bold text-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-300"
+                />
+              </div>
+
+              <div class="grid grid-cols-2 gap-2">
+                <div>
+                  <label
+                    class="block text-slate-500 font-semibold mb-1"
+                    data-i18n="labelAge"
+                    >Age (Years)</label
+                  >
+                  <input
+                    type="number"
+                    id="settingAge"
+                    value="32"
+                    class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 font-bold text-slate-800 font-mono"
+                  />
+                </div>
+                <div>
+                  <label
+                    class="block text-slate-500 font-semibold mb-1"
+                    data-i18n="labelBloodGroup"
+                    >Blood Group</label
+                  >
+                  <select
+                    id="settingBloodGroup"
+                    class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 font-bold text-slate-800"
+                  >
+                    <option value="B+">B+ (Positive)</option>
+                    <option value="O+">O+ (Positive)</option>
+                    <option value="A+">A+ (Positive)</option>
+                    <option value="AB+">AB+ (Positive)</option>
+                    <option value="O-">O- (Negative)</option>
+                  </select>
+                </div>
+              </div>
+
+              <div>
+                <label
+                  class="block text-slate-500 font-semibold mb-1"
+                  data-i18n="labelAllergies"
+                  >Known Drug Allergies</label
+                >
+                <input
+                  type="text"
+                  id="settingAllergies"
+                  value="Penicillin"
+                  placeholder="None"
+                  class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 font-semibold text-rose-600 bg-rose-50/30"
+                />
+              </div>
+
+              <button
+                onclick="savePatientDemographics()"
+                class="w-full bg-darkCard text-white py-2.5 rounded-full font-bold text-xs shadow-sm hover:bg-black transition active:scale-95"
+                data-i18n="btnSaveDemographics"
+              >
+                Save Demographic Updates
+              </button>
+            </div>
+          </div>
+
+          <!-- Practice Link Config -->
+          <div
+            class="bg-white rounded-[26px] p-5 border border-slate-100 shadow-sm space-y-3 text-xs"
+          >
+            <h3
+              class="text-xs font-bold text-slate-800 uppercase tracking-wider"
+              data-i18n="personalizationSettingsTitle"
+            >
+              Personalized Practice Setup
+            </h3>
+            <p class="text-slate-500">
+              Configure or re-bind this app to your doctor's official clinic
+              workspace.
+            </p>
+            <div class="grid grid-cols-2 gap-2 pt-1">
+              <button
+                onclick="openDoctorCodeModal()"
+                class="py-2.5 rounded-full bg-slate-900 text-white font-bold text-xs transition"
+              >
+                Enter Code
+              </button>
+              <button
+                onclick="openDoctorPreferenceModal()"
+                class="py-2.5 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs transition"
+              >
+                Filter Preferences
+              </button>
+            </div>
+          </div>
+
+          <!-- Account Controls -->
+          <div
+            class="bg-white rounded-[26px] p-5 border border-slate-100 shadow-sm space-y-3"
+          >
+            <div class="flex items-center justify-between">
+              <span
+                class="text-xs font-bold text-slate-700"
+                data-i18n="labelAccountCredentials"
+                >Account Credentials</span
+              >
+              <span
+                id="userAccountEmail"
+                class="text-xs font-mono font-bold text-slate-500 truncate max-w-[160px]"
+                >Guest Patient</span
+              >
+            </div>
+            <div class="grid grid-cols-2 gap-2 pt-1">
+              <button
+                onclick="openAuthModal()"
+                class="py-2.5 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold transition"
+                data-i18n="btnSwitchAccount"
+              >
+                Sign In / Switch
+              </button>
+              <button
+                onclick="handleSignOut()"
+                class="py-2.5 rounded-full bg-rose-50 hover:bg-rose-100 text-rose-700 text-xs font-bold transition"
+                data-i18n="btnSignOut"
+              >
+                Sign Out
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ================= FIXED 5-ICON FLOATING DOCK ================= -->
+        <nav
+          class="fixed bottom-4 inset-x-0 z-40 max-w-[360px] mx-auto px-2 pointer-events-auto"
+        >
+          <div
+            class="bg-white rounded-full p-2 shadow-[0_12px_40px_rgba(0,0,0,0.08)] border border-slate-100 flex items-center justify-around"
+          >
+            <button
+              onclick="switchTab('home')"
+              id="dock-home"
+              class="dock-btn w-11 h-11 bg-darkCard text-white rounded-full flex items-center justify-center shadow-md transition"
+              title="Home"
+            >
+              <i class="fa-solid fa-house text-sm"></i>
+            </button>
+            <button
+              onclick="switchTab('queue')"
+              id="dock-queue"
+              class="dock-btn w-11 h-11 rounded-full flex items-center justify-center text-slate-400 hover:text-slate-700 transition"
+              title="Live Queue"
+            >
+              <i class="fa-solid fa-bars-staggered text-sm"></i>
+            </button>
+            <button
+              onclick="switchTab('schedule')"
+              id="dock-schedule"
+              class="dock-btn w-11 h-11 rounded-full flex items-center justify-center text-slate-400 hover:text-slate-700 transition"
+              title="Chambers"
+            >
+              <i class="fa-regular fa-calendar text-sm"></i>
+            </button>
+            <button
+              onclick="switchTab('records')"
+              id="dock-records"
+              class="dock-btn w-11 h-11 rounded-full flex items-center justify-center text-slate-400 hover:text-slate-700 transition"
+              title="Medical Records"
+            >
+              <i class="fa-regular fa-file-lines text-sm"></i>
+            </button>
+            <button
+              onclick="switchTab('settings')"
+              id="dock-settings"
+              class="dock-btn w-11 h-11 rounded-full flex items-center justify-center text-slate-400 hover:text-slate-700 transition"
+              title="Settings"
+            >
+              <i class="fa-solid fa-gear text-sm"></i>
+            </button>
+          </div>
+        </nav>
+      </div>
+    </div>
+
+    <!-- ================= 1. ENTER DOCTOR PRACTICE CODE MODAL ================= -->
+    <div
+      id="doctorCodeModal"
+      class="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4"
+    >
+      <div
+        class="bg-white rounded-[28px] max-w-sm w-full p-6 shadow-2xl space-y-4"
+      >
+        <div class="flex items-center justify-between">
+          <div>
+            <h3
+              class="font-bold text-slate-900 text-sm"
+              data-i18n="codeModalTitle"
+            >
+              Personalize with Doctor Code
+            </h3>
+            <p class="text-[11px] text-slate-400" data-i18n="codeModalSub">
+              Provided on visiting card or clinic desk
+            </p>
+          </div>
+          <button
+            onclick="closeDoctorCodeModal()"
+            class="text-slate-400 hover:text-slate-600"
+          >
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+
+        <div class="space-y-3 pt-1">
+          <div>
+            <label
+              class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1"
+              data-i18n="codeFieldLabel"
+              >Enter Practice Code</label
+            >
+            <input
+              type="text"
+              id="inputPracticeCode"
+              placeholder="e.g. RAHMAN-101"
+              class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-center text-base font-mono font-black uppercase text-darkCard tracking-widest focus:outline-none focus:ring-2 focus:ring-slate-400"
+            />
+          </div>
+
+          <button
+            onclick="applyDoctorCodeFromInput()"
+            class="w-full bg-darkCard hover:bg-black text-white font-bold text-xs py-3 rounded-full transition active:scale-95 shadow-sm"
+            data-i18n="btnApplyCode"
+          >
+            Link & Personalize App
+          </button>
+
+          <div class="pt-2 border-t border-slate-100 text-center">
+            <button
+              onclick="closeDoctorCodeModal(); openDoctorPreferenceModal();"
+              class="text-xs font-bold text-slate-600 hover:text-slate-950 underline"
+              data-i18n="btnDontHaveCode"
+            >
+              Don't have a code? Filter by preference
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= 2. FIND DOCTOR CODE BY PREFERENCE MODAL ================= -->
+    <div
+      id="doctorPreferenceModal"
+      class="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 hidden flex items-end sm:items-center justify-center p-0 sm:p-4"
+    >
+      <div
+        class="bg-white rounded-t-[32px] sm:rounded-[32px] w-full max-w-md p-6 shadow-2xl space-y-4 max-h-[88vh] overflow-y-auto"
+      >
+        <div
+          class="flex items-center justify-between border-b border-slate-100 pb-3"
+        >
+          <div>
+            <h3
+              class="font-bold text-base text-slate-900"
+              data-i18n="preferenceModalTitle"
+            >
+              Find Doctor Practice Code
+            </h3>
+            <p class="text-xs text-slate-400" data-i18n="preferenceModalSub">
+              Filter by specialty and chamber location
+            </p>
+          </div>
+          <button
+            onclick="closeDoctorPreferenceModal()"
+            class="w-8 h-8 rounded-full bg-slate-100 text-slate-500 flex items-center justify-center"
+          >
+            <i class="fa-solid fa-xmark text-xs"></i>
+          </button>
+        </div>
+
+        <!-- Filters -->
+        <div class="space-y-2.5 text-xs">
+          <div>
+            <label
+              class="block font-bold text-slate-600 mb-1"
+              data-i18n="filterSpecialtyLabel"
+              >Specialty</label
+            >
+            <div class="flex gap-1.5 overflow-x-auto hide-scrollbar pb-1">
+              <button
+                onclick="filterPreferenceDirectory('all', this)"
+                class="pref-spec-btn active px-3 py-1.5 rounded-full bg-darkCard text-white font-bold shrink-0"
+              >
+                All
+              </button>
+              <button
+                onclick="filterPreferenceDirectory('Cardiology', this)"
+                class="pref-spec-btn px-3 py-1.5 rounded-full bg-slate-100 text-slate-700 font-bold shrink-0"
+              >
+                Cardiology
+              </button>
+              <button
+                onclick="filterPreferenceDirectory('Pediatrics', this)"
+                class="pref-spec-btn px-3 py-1.5 rounded-full bg-slate-100 text-slate-700 font-bold shrink-0"
+              >
+                Pediatrics
+              </button>
+              <button
+                onclick="filterPreferenceDirectory('Neurology', this)"
+                class="pref-spec-btn px-3 py-1.5 rounded-full bg-slate-100 text-slate-700 font-bold shrink-0"
+              >
+                Neurology
+              </button>
+              <button
+                onclick="filterPreferenceDirectory('Gynecology', this)"
+                class="pref-spec-btn px-3 py-1.5 rounded-full bg-slate-100 text-slate-700 font-bold shrink-0"
+              >
+                Gynecology
+              </button>
+            </div>
+          </div>
+
+          <div>
+            <label
+              class="block font-bold text-slate-600 mb-1"
+              data-i18n="filterLocationLabel"
+              >Chamber Location</label
+            >
+            <div class="flex gap-1.5 overflow-x-auto hide-scrollbar pb-1">
+              <button
+                onclick="filterLocationDirectory('all', this)"
+                class="pref-loc-btn active px-3 py-1.5 rounded-full bg-darkCard text-white font-bold shrink-0"
+              >
+                All Dhaka
+              </button>
+              <button
+                onclick="filterLocationDirectory('Dhanmondi', this)"
+                class="pref-loc-btn px-3 py-1.5 rounded-full bg-slate-100 text-slate-700 font-bold shrink-0"
+              >
+                Dhanmondi
+              </button>
+              <button
+                onclick="filterLocationDirectory('Uttara', this)"
+                class="pref-loc-btn px-3 py-1.5 rounded-full bg-slate-100 text-slate-700 font-bold shrink-0"
+              >
+                Uttara
+              </button>
+              <button
+                onclick="filterLocationDirectory('Banani', this)"
+                class="pref-loc-btn px-3 py-1.5 rounded-full bg-slate-100 text-slate-700 font-bold shrink-0"
+              >
+                Banani
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Doctor Cards -->
+        <div id="preferenceResultsList" class="space-y-3 pt-2"></div>
+      </div>
+    </div>
+
+    <!-- ================= BOOKING DRAWER WITH AGE OVERRIDE ================= -->
+    <div
+      id="bookingDrawer"
+      class="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 hidden flex items-end justify-center"
+    >
+      <div
+        class="bg-white rounded-t-[32px] w-full max-w-[440px] p-6 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto"
+      >
+        <div
+          class="flex items-center justify-between border-b border-slate-100 pb-3"
+        >
+          <div>
+            <h3
+              class="font-bold text-base text-slate-900"
+              id="drawerDoctorHeading"
+            >
+              Book Chamber Serial
+            </h3>
+            <p class="text-xs text-slate-400" id="drawerDocSubHeading">
+              Private Practice
+            </p>
+          </div>
+          <button
+            onclick="closeBookingDrawer()"
+            class="w-8 h-8 rounded-full bg-slate-100 text-slate-500 flex items-center justify-center"
+          >
+            <i class="fa-solid fa-xmark text-xs"></i>
+          </button>
+        </div>
+
+        <div class="space-y-3.5 text-xs">
+          <div>
+            <label
+              class="block text-slate-600 font-bold mb-1"
+              data-i18n="labelConsultService"
+              >Consultation Service</label
+            >
+            <div class="grid grid-cols-3 gap-2">
+              <button
+                type="button"
+                onclick="selectDrawerType(this, 'New Consultation', 1000)"
+                class="drawer-type-pill active bg-darkCard text-white p-2.5 rounded-xl font-bold text-center"
+                data-i18n="typeNew"
+              >
+                New (৳1000)
+              </button>
+              <button
+                type="button"
+                onclick="selectDrawerType(this, 'Follow-up', 500)"
+                class="drawer-type-pill bg-slate-100 text-slate-700 p-2.5 rounded-xl font-bold text-center"
+                data-i18n="typeFollowup"
+              >
+                Follow-up (৳500)
+              </button>
+              <button
+                type="button"
+                onclick="selectDrawerType(this, 'Report Show', 300)"
+                class="drawer-type-pill bg-slate-100 text-slate-700 p-2.5 rounded-xl font-bold text-center"
+                data-i18n="typeReport"
+              >
+                Report (৳300)
+              </button>
+            </div>
+          </div>
+
+          <div>
+            <label
+              class="block text-slate-600 font-bold mb-1"
+              data-i18n="labelChamberLocation"
+              >Chamber Location</label
+            >
+            <select
+              id="drawerChamber"
+              class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 font-semibold text-slate-800"
+            ></select>
+          </div>
+
+          <div>
+            <label
+              class="block text-slate-600 font-bold mb-1"
+              data-i18n="labelApptDate"
+              >Appointment Date</label
+            >
+            <input
+              type="date"
+              id="drawerDate"
+              class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 font-semibold text-slate-800"
+            />
+          </div>
+
+          <div>
+            <label
+              class="block text-slate-600 font-bold mb-1"
+              data-i18n="labelPatientFullName"
+              >Patient Full Name *</label
+            >
+            <input
+              type="text"
+              id="drawerName"
+              placeholder="Full name"
+              class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 font-semibold text-slate-800"
+            />
+          </div>
+
+          <!-- Age Input (Auto-Filled from Profile + Fully Overridable) -->
+          <div class="grid grid-cols-2 gap-2">
+            <div>
+              <div class="flex items-center justify-between mb-1">
+                <label
+                  class="text-slate-600 font-bold"
+                  data-i18n="labelAgeYears"
+                  >Age (Years) *</label
+                >
+                <span
+                  class="text-[9px] text-slate-400 font-medium"
+                  data-i18n="editableTag"
+                  >Editable</span
+                >
+              </div>
+              <input
+                type="number"
+                id="drawerAge"
+                placeholder="e.g. 32"
+                class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 font-mono font-bold text-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-400"
+              />
+            </div>
+            <div>
+              <label
+                class="block text-slate-600 font-bold mb-1"
+                data-i18n="labelGender"
+                >Gender</label
+              >
+              <select
+                id="drawerGender"
+                class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 font-semibold text-slate-800"
+              >
+                <option value="Male" data-i18n="genderMale">Male</option>
+                <option value="Female" data-i18n="genderFemale">Female</option>
+                <option value="Other" data-i18n="genderOther">Other</option>
+              </select>
+            </div>
+          </div>
+          <p class="text-[10px] text-slate-400" data-i18n="ageHintNote">
+            💡 Age auto-filled from profile. Edit if booking for a family
+            member.
+          </p>
+
+          <div>
+            <label
+              class="block text-slate-600 font-bold mb-1"
+              data-i18n="labelMobilePhone"
+              >Mobile Phone (For Serial SMS) *</label
+            >
+            <input
+              type="tel"
+              id="drawerPhone"
+              placeholder="017xxxxxxxx"
+              class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 font-semibold font-mono text-slate-800"
+            />
+          </div>
+
+          <button
+            onclick="confirmDrawerBooking()"
+            id="btnDrawerSubmit"
+            class="w-full bg-darkCard text-white py-3.5 rounded-full font-extrabold text-sm shadow-md active:scale-95 transition mt-2 flex items-center justify-center gap-2"
+          >
+            <span data-i18n="btnConfirmReservation"
+              >Confirm Serial Reservation</span
+            >
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= ADVANCED AUTH MODAL ================= -->
+    <div
+      id="authModal"
+      class="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4"
+    >
+      <div
+        class="bg-white rounded-[28px] max-w-sm w-full p-6 shadow-2xl space-y-4"
+      >
+        <div class="flex items-center justify-between">
+          <h3
+            class="font-bold text-slate-900 text-sm"
+            id="authModalTitle"
+            data-i18n="authModalTitleSignIn"
+          >
+            Patient Sign In
+          </h3>
+          <button
+            onclick="closeAuthModal()"
+            class="text-slate-400 hover:text-slate-600"
+          >
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+
+        <div class="flex bg-slate-100 p-1 rounded-xl text-xs font-bold">
+          <button
+            onclick="toggleAuthMode('signin')"
+            id="btnAuthTabSignIn"
+            class="flex-1 py-1.5 rounded-lg bg-white shadow-sm text-slate-900 transition"
+            data-i18n="tabSignIn"
+          >
+            Sign In
+          </button>
+          <button
+            onclick="toggleAuthMode('register')"
+            id="btnAuthTabRegister"
+            class="flex-1 py-1.5 rounded-lg text-slate-500 transition"
+            data-i18n="tabRegister"
+          >
+            Create Account
+          </button>
+        </div>
+
+        <button
+          onclick="signInWithGoogle()"
+          class="w-full bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 font-semibold text-xs py-3 px-4 rounded-xl flex items-center justify-center gap-2 shadow-sm transition active:scale-95"
+        >
+          <svg class="w-4 h-4" viewBox="0 0 24 24">
+            <path
+              fill="#4285F4"
+              d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+            />
+            <path
+              fill="#34A853"
+              d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+            />
+            <path
+              fill="#FBBC05"
+              d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"
+            />
+            <path
+              fill="#EA4335"
+              d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"
+            />
+          </svg>
+          <span data-i18n="btnContinueGoogle">Continue with Google</span>
+        </button>
+
+        <div class="relative flex items-center justify-center my-1">
+          <div class="border-t border-slate-200 w-full"></div>
+          <span
+            class="bg-white px-2 text-[10px] font-bold text-slate-400 uppercase"
+            data-i18n="orEmailTag"
+            >Or Email</span
+          >
+        </div>
+
+        <div id="registerExtraFields" class="space-y-2 hidden">
+          <input
+            type="text"
+            id="authNameInput"
+            placeholder="Full Legal Name"
+            class="w-full bg-slate-50 border border-slate-200 rounded-xl text-xs px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-slate-400 font-semibold"
+          />
+          <div class="grid grid-cols-2 gap-2">
+            <input
+              type="number"
+              id="authAgeInput"
+              placeholder="Age (e.g. 32)"
+              class="w-full bg-slate-50 border border-slate-200 rounded-xl text-xs px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-slate-400 font-mono font-bold"
+            />
+            <input
+              type="tel"
+              id="authPhoneInput"
+              placeholder="017xxxxxxxx"
+              class="w-full bg-slate-50 border border-slate-200 rounded-xl text-xs px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-slate-400 font-mono font-semibold"
+            />
+          </div>
+        </div>
+
+        <input
+          type="email"
+          id="authEmail"
+          placeholder="patient@example.com"
+          class="w-full bg-slate-50 border border-slate-200 rounded-xl text-xs px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-slate-400 font-semibold"
+        />
+        <input
+          type="password"
+          id="authPassword"
+          placeholder="Password"
+          class="w-full bg-slate-50 border border-slate-200 rounded-xl text-xs px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-slate-400 font-semibold"
+        />
+
+        <button
+          onclick="handleAuthSubmit()"
+          id="btnAuthSubmit"
+          class="w-full bg-darkCard hover:bg-black text-white font-bold text-xs py-3 rounded-xl transition active:scale-95 shadow-sm"
+        >
+          <span data-i18n="tabSignIn">Sign In</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- ================= PROFESSIONAL PRESCRIPTION PAD (STRICTLY IN ENGLISH) ================= -->
+    <div
+      id="rxModal"
+      class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-3 sm:p-6 overflow-y-auto"
+    >
+      <div
+        class="bg-white rounded-3xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl relative my-auto border border-slate-200"
+      >
+        <div
+          class="flex items-center justify-between pb-3 border-b border-slate-100 no-print"
+        >
+          <span
+            class="text-xs font-mono font-bold text-slate-400 uppercase tracking-wider"
+            >Official BMDC Digital Prescription</span
+          >
+          <div class="flex items-center gap-2">
+            <button
+              onclick="window.print()"
+              class="bg-darkCard hover:bg-black text-white font-bold text-xs px-4 py-2 rounded-full flex items-center gap-1.5 transition"
+            >
+              <i class="fa-solid fa-print"></i> Print / PDF
+            </button>
+            <button
+              onclick="closeRxModal()"
+              class="w-8 h-8 rounded-full bg-slate-100 text-slate-600 flex items-center justify-center hover:bg-slate-200 transition"
+            >
+              <i class="fa-solid fa-xmark text-xs"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Real Doctor Prescription Letterhead (In English) -->
+        <div
+          id="printableRxPad"
+          class="space-y-4 pt-3 text-xs text-slate-800 font-sans"
+        >
+          <div
+            class="flex justify-between items-start border-b-2 border-slate-900 pb-3"
+          >
+            <div>
+              <h2
+                class="text-xl font-extrabold text-slate-900 tracking-tight"
+                id="rxDoctorName"
+              >
+                --
+              </h2>
+              <p
+                class="font-bold text-emerald-800 text-xs"
+                id="rxDoctorDegrees"
+              >
+                --
+              </p>
+              <p class="text-slate-500 text-[11px]" id="rxDoctorDesignation">
+                --
+              </p>
+              <p class="text-slate-400 text-[10px] font-mono" id="rxDoctorBMDC">
+                --
+              </p>
+            </div>
+            <div class="text-right">
+              <h3
+                class="font-extrabold text-xs uppercase text-slate-900"
+                id="rxClinicTitle"
+              >
+                --
+              </h3>
+              <p class="text-slate-600 text-[11px]" id="rxChamberLocation">
+                --
+              </p>
+              <p class="text-slate-500 text-[10px]" id="rxChamberHotline">--</p>
+              <p class="text-slate-400 text-[10px]">
+                Official Workspace Prescription
+              </p>
+            </div>
+          </div>
+
+          <div
+            class="grid grid-cols-4 gap-2 bg-slate-50 border border-slate-200 p-2.5 rounded-xl font-medium text-[11px]"
+          >
+            <div>
+              <span class="text-slate-400 block text-[9px] uppercase font-bold"
+                >Patient</span
+              ><strong id="rxModalPatient" class="text-slate-900">--</strong>
+            </div>
+            <div>
+              <span class="text-slate-400 block text-[9px] uppercase font-bold"
+                >Age / Gender</span
+              ><strong id="rxModalAgeGender" class="text-slate-900">--</strong>
+            </div>
+            <div>
+              <span class="text-slate-400 block text-[9px] uppercase font-bold"
+                >Date</span
+              ><strong id="rxModalDate" class="text-slate-900">--</strong>
+            </div>
+            <div>
+              <span class="text-slate-400 block text-[9px] uppercase font-bold"
+                >Rx ID</span
+              ><strong id="rxModalId" class="text-darkCard font-mono"
+                >--</strong
+              >
+            </div>
+          </div>
+
+          <div class="grid grid-cols-3 gap-5 pt-1">
+            <div class="space-y-4 border-r border-slate-200 pr-3">
+              <div>
+                <span
+                  class="font-bold text-[10px] text-slate-400 uppercase tracking-wider block mb-1"
+                  >Clinical Vitals</span
+                >
+                <div
+                  id="rxModalVitals"
+                  class="space-y-0.5 text-slate-700 text-[11px] font-mono"
+                >
+                  BP: 120/80 mmHg<br />Pulse: 74 bpm
+                </div>
+              </div>
+              <div>
+                <span
+                  class="font-bold text-[10px] text-slate-400 uppercase tracking-wider block mb-1"
+                  >Diagnosis</span
+                >
+                <p
+                  id="rxModalDiagnosis"
+                  class="font-bold text-slate-900 text-xs"
+                >
+                  Essential Hypertension
+                </p>
+              </div>
+              <div>
+                <span
+                  class="font-bold text-[10px] text-slate-400 uppercase tracking-wider block mb-1"
+                  >Investigations Advised</span
+                >
+                <p
+                  id="rxModalInvestigations"
+                  class="text-slate-600 text-[11px]"
+                >
+                  12-lead ECG, Lipid Profile
+                </p>
+              </div>
+            </div>
+
+            <div class="col-span-2 pl-1 space-y-3">
+              <div
+                class="text-2xl font-serif font-black italic text-slate-900 leading-none"
+              >
+                ℞
+              </div>
+              <div id="rxModalDrugsList" class="space-y-2.5"></div>
+
+              <div class="border-t border-slate-100 pt-3">
+                <span class="font-bold text-slate-700 block text-[11px]"
+                  >Doctor Advice:</span
+                >
+                <p id="rxModalAdvice" class="text-slate-600 text-[11px]">
+                  Avoid raw table salt. 30 min daily brisk walking. Continue
+                  existing dose.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="flex justify-between items-end pt-6 border-t border-slate-200 text-[11px]"
+          >
+            <div>
+              <span class="text-slate-400 block text-[9px] uppercase font-bold"
+                >Follow-Up Schedule</span
+              >
+              <strong id="rxModalFollowUp" class="text-emerald-800 text-xs"
+                >After 14 Days</strong
+              >
+            </div>
+            <div class="text-center">
+              <div class="border-b border-slate-400 w-36 mb-1"></div>
+              <span class="font-bold text-slate-800" id="rxSignatureName"
+                >--</span
+              >
+              <span class="block text-[9px] text-slate-400"
+                >Digitally Verified</span
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= FIREBASE & APP SCRIPT ================= -->
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
+      import {
+        getAuth,
+        signInWithPopup,
+        GoogleAuthProvider,
+        signInWithEmailAndPassword,
+        createUserWithEmailAndPassword,
+        signOut,
+        onAuthStateChanged,
+      } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
+      import {
+        getFirestore,
+        collection,
+        doc,
+        getDocs,
+        addDoc,
+        updateDoc,
+        query,
+        where,
+        onSnapshot,
+        serverTimestamp,
+      } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
+
+      // Provided Firebase Config
+      const firebaseConfig = {
+        apiKey: "AIzaSyA24b7yPCEsPfNBct4GPnfqo8s85m8nssA",
+        authDomain: "shadik-app-02.firebaseapp.com",
+        projectId: "shadik-app-02",
+        storageBucket: "shadik-app-02.firebasestorage.app",
+        messagingSenderId: "58383134324",
+        appId: "1:58383134324:web:1f0bab4fb0ce6c1ad72b21",
+        measurementId: "G-BKVSKV7YQK",
+      };
+
+      const app = initializeApp(firebaseConfig);
+      const auth = getAuth(app);
+      const db = getFirestore(app);
+
+      // ================= VERIFIED DOCTORS PRACTICE CODES DIRECTORY =================
+      const doctorsDirectory = {
+        "RAHMAN-101": {
+          code: "RAHMAN-101",
+          workspaceId: "dr-rahman",
+          name: "Dr. Md. Rahman",
+          degrees: "MBBS, FCPS (Medicine), MD (Cardiology)",
+          designation: "Associate Professor of Cardiology",
+          specialty: "Cardiology Specialist",
+          specialtyCategory: "Cardiology",
+          locationCategory: "Dhanmondi",
+          bmdc: "BMDC Reg. No: A-48920",
+          chamberTitle: "Dr. Rahman Healthcare",
+          chamberDetails: "Room 101, Dhanmondi Practice Hub",
+          visitingHours: "Saturday to Thursday (5:00 PM – 9:00 PM)",
+          hotline: "+880 1711 000000",
+          fee: 1000,
+          avatar:
+            "https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&w=200&q=80",
+        },
+        "KARIM-PEDS": {
+          code: "KARIM-PEDS",
+          workspaceId: "dr-karim",
+          name: "Dr. Fazle Karim",
+          degrees: "MBBS, DCH, FCPS (Pediatrics)",
+          designation: "Consultant Pediatrician",
+          specialty: "Child Health & Pediatrics",
+          specialtyCategory: "Pediatrics",
+          locationCategory: "Uttara",
+          bmdc: "BMDC Reg. No: A-39210",
+          chamberTitle: "CareChild Pediatrics Hub",
+          chamberDetails: "Sector 7, Road 11, Uttara, Dhaka",
+          visitingHours: "Friday & Saturday (10:00 AM – 2:00 PM)",
+          hotline: "+880 1722 111111",
+          fee: 800,
+          avatar:
+            "https://images.unsplash.com/photo-1537368910025-700350fe46c7?auto=format&fit=crop&w=200&q=80",
+        },
+        "NUSRAT-GYN": {
+          code: "NUSRAT-GYN",
+          workspaceId: "dr-nusrat",
+          name: "Dr. Nusrat Jahan",
+          degrees: "MBBS, FCPS, MS (Gynecology & Obstetrics)",
+          designation: "Senior Gynecological Surgeon",
+          specialty: "Gynecology & Obstetrics",
+          specialtyCategory: "Gynecology",
+          locationCategory: "Dhanmondi",
+          bmdc: "BMDC Reg. No: A-51044",
+          chamberTitle: "Mother & Baby Wellness Care",
+          chamberDetails: "Dhanmondi 27, Practice Suite 304",
+          visitingHours: "Sunday to Wednesday (4:00 PM – 8:00 PM)",
+          hotline: "+880 1733 222222",
+          fee: 1200,
+          avatar:
+            "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&w=200&q=80",
+        },
+        "KAVINSKY-NEURO": {
+          code: "KAVINSKY-NEURO",
+          workspaceId: "dr-kavinsky",
+          name: "Dr. Peter Kavinsky",
+          degrees: "MBBS, MD (Neurology), Fellow (Stroke Care)",
+          designation: "Consultant Neurologist",
+          specialty: "Neurology Specialist",
+          specialtyCategory: "Neurology",
+          locationCategory: "Banani",
+          bmdc: "BMDC Reg. No: A-64201",
+          chamberTitle: "NeuroSpine Care Suite",
+          chamberDetails: "Road 11, Block D, Banani, Dhaka",
+          visitingHours: "Monday to Thursday (6:00 PM – 9:30 PM)",
+          hotline: "+880 1744 333333",
+          fee: 1500,
+          avatar:
+            "https://images.unsplash.com/photo-1582750433449-648ed127bb54?auto=format&fit=crop&w=200&q=80",
+        },
+      };
+
+      // NO DOCTOR BY DEFAULT: Checked from localStorage
+      let activeDoctorCode = localStorage.getItem("active_doctor_code") || null;
+      let activeDoctor = activeDoctorCode
+        ? doctorsDirectory[activeDoctorCode]
+        : null;
+      let WORKSPACE_ID = activeDoctor ? activeDoctor.workspaceId : null;
+
+      let currentUser = null;
+      let currentAppointmentId =
+        localStorage.getItem("caresync_active_appt_id") || null;
+      let selectedConsultFee = activeDoctor ? activeDoctor.fee : 1000;
+      let selectedConsultType = "New Consultation";
+      let selectedDateStr = new Date().toISOString().split("T")[0];
+      let isBookingLocked = false;
+      let authMode = "signin";
+      let activeQueueUnsubscribe = null;
+
+      // ================= BILINGUAL I18N DICTIONARY =================
+      let currentLang = localStorage.getItem("patient_lang") || "en";
+
+      const translations = {
+        en: {
+          welcomeGreeting: "Hi, Welcome Back!",
+          heroHeadline: "How are you feeling<br />right now today?",
+          connectedDoctorLabel: "Active Practice Code",
+          btnChangeDoctor: "Change Code",
+          badgeServing: "Serving",
+          nowInRoom: "Now In Room",
+          badgeQueue: "Queue",
+          yourSerial: "Your Serial",
+          noBookingToday: "No booking today",
+          ctaBookSerial: "Book Serial",
+          ctaQueueRadar: "Queue Radar",
+          ctaLiveTelemetry: "Live Telemetry",
+          ctaPrescriptions: "Prescriptions",
+          ctaDownloadPrint: "Download / Print",
+          ctaCallChamber: "Call Chamber",
+          queuePaceTitle: "Chamber Queue Pace (Real-Time)",
+          btnOnMyWay: "On My Way",
+          btnArrived: "I Have Arrived",
+          btnDoctorPreferences: "Find Code",
+          queueTelemetryTitle: "Live Queue Telemetry",
+          queueTelemetrySub: "Real-time consultation dispatch",
+          patientsAheadLabel: "Patients Ahead",
+          inWaitingRoom: "In waiting room",
+          dynamicWaitLabel: "Dynamic Wait",
+          adaptsToDoctor: "Adapts to doctor pace",
+          sessionCompleted: "Session Completed",
+          rosterTitle: "Patient Dispatch Roster",
+          loadingQueueStream: "Loading session queue...",
+          scheduleHeading: "Chamber Schedules",
+          medicalRecordsHeading: "Clinical Records",
+          medicalRecordsSub: "Digital prescriptions & diagnostic history",
+          btnRefresh: "Refresh",
+          loadingPrescriptions: "Loading prescription archives...",
+          settingsHeading: "Patient Settings",
+          demographicsTitle: "Patient Demographics",
+          labelFullName: "Full Legal Name",
+          labelAge: "Age (Years)",
+          labelBloodGroup: "Blood Group",
+          labelAllergies: "Known Drug Allergies",
+          btnSaveDemographics: "Save Demographic Updates",
+          personalizationSettingsTitle: "Personalized Practice Setup",
+          labelAccountCredentials: "Account Credentials",
+          btnSwitchAccount: "Sign In / Switch",
+          btnSignOut: "Sign Out",
+          codeModalTitle: "Personalize with Doctor Code",
+          codeModalSub: "Provided on visiting card or clinic desk",
+          codeFieldLabel: "Enter Practice Code",
+          btnApplyCode: "Link & Personalize App",
+          btnDontHaveCode: "Don't have a code? Filter by preference",
+          preferenceModalTitle: "Find Doctor Practice Code",
+          preferenceModalSub: "Filter by specialty and chamber location",
+          filterSpecialtyLabel: "Specialty",
+          filterLocationLabel: "Chamber Location",
+          btnConnectAndPersonalize: "Personalize to this Doctor",
+          needDifferentDoctor: "Need a different doctor?",
+          needDifferentDoctorSub: "Enter practice code or filter by symptoms",
+          labelConsultService: "Consultation Service",
+          typeNew: "New (৳1000)",
+          typeFollowup: "Follow-up (৳500)",
+          typeReport: "Report (৳300)",
+          labelChamberLocation: "Chamber Location",
+          labelApptDate: "Appointment Date",
+          labelPatientFullName: "Patient Full Name *",
+          labelAgeYears: "Age (Years) *",
+          editableTag: "Editable",
+          labelGender: "Gender",
+          genderMale: "Male",
+          genderFemale: "Female",
+          genderOther: "Other",
+          ageHintNote:
+            "💡 Age auto-filled from profile. Edit if booking for a family member.",
+          labelMobilePhone: "Mobile Phone (For Serial SMS) *",
+          btnConfirmReservation: "Confirm Serial Reservation",
+          authModalTitleSignIn: "Patient Sign In",
+          authModalTitleCreate: "Create Patient Account",
+          tabSignIn: "Sign In",
+          tabRegister: "Create Account",
+          btnContinueGoogle: "Continue with Google",
+          orEmailTag: "Or Email",
+          notificationsTitle: "Chamber Notifications",
+          clearNotificationsBtn: "Clear All Notifications",
+          onboardingTitle: "Connect With Your Doctor",
+          onboardingSubtitle:
+            "This app adapts to your specific doctor's private chamber. Enter the practice code provided on your prescription, visiting card, or clinic desk.",
+          dontHaveCodePrompt: "Don't have your doctor's code?",
+          browseByPreferenceBtn: "Find Practice Code by Specialty & Location",
+        },
+        bn: {
+          welcomeGreeting: "স্বাগতম!",
+          heroHeadline: "আজ আপনি কেমন<br />বোধ করছেন?",
+          connectedDoctorLabel: "ডাক্তার প্র্যাকটিস কোড",
+          btnChangeDoctor: "কোড বদলান",
+          badgeServing: "চলমান",
+          nowInRoom: "বর্তমানে কক্ষে",
+          badgeQueue: "সিরিয়াল",
+          yourSerial: "আপনার সিরিয়াল",
+          noBookingToday: "আজ কোনো বুকিং নেই",
+          ctaBookSerial: "সিরিয়াল নিন",
+          ctaQueueRadar: "লাইভ কিউ",
+          ctaLiveTelemetry: "লাইভ ট্র্যাকার",
+          ctaPrescriptions: "প্রেসক্রিপশন",
+          ctaDownloadPrint: "সংরক্ষণ / প্রিন্ট",
+          ctaCallChamber: "চেম্বারে কল",
+          queuePaceTitle: "রোগী দেখার গতি (রিয়েল-টাইম)",
+          btnOnMyWay: "আসছি (অন মাই ওয়ে)",
+          btnArrived: "পৌঁছে গেছি",
+          btnDoctorPreferences: "কোড খুঁজুন",
+          queueTelemetryTitle: "লাইভ কিউ টেলিমেট্রি",
+          queueTelemetrySub: "সরাসরি চেম্বার থেকে লাইভ আপডেট",
+          patientsAheadLabel: "সামনে বাকি রোগী",
+          inWaitingRoom: "অপেক্ষারত রোগী",
+          dynamicWaitLabel: "আনুমানিক অপেক্ষা",
+          adaptsToDoctor: "ডাক্তারের গতির সাথে সমন্বিত",
+          sessionCompleted: "সেশন সম্পন্ন",
+          rosterTitle: "আজকের ক্রম তালিকা",
+          loadingQueueStream: "সিরিয়াল তালিকা লোড হচ্ছে...",
+          scheduleHeading: "চেম্বারের সময়সূচী",
+          medicalRecordsHeading: "চিকিৎসা ইতিহাস ও রেকর্ড",
+          medicalRecordsSub: "ডিজিটাল প্রেসক্রিপশন ও পূর্ববর্তী ইতিহাস",
+          btnRefresh: "রিফ্রেশ",
+          loadingPrescriptions: "প্রেসক্রিপশন লোড হচ্ছে...",
+          settingsHeading: "রোগীর সেটিংস",
+          demographicsTitle: "ব্যক্তিগত তথ্য",
+          labelFullName: "পূর্ণ নাম",
+          labelAge: "বয়স (বছর)",
+          labelBloodGroup: "রক্তের গ্রুপ",
+          labelAllergies: "ঔষধের এলার্জি (যদি থাকে)",
+          btnSaveDemographics: "তথ্য আপডেট সংরক্ষণ করুন",
+          personalizationSettingsTitle: "ব্যক্তিগত প্র্যাকটিস সেটআপ",
+          labelAccountCredentials: "অ্যাকাউন্ট তথ্য",
+          btnSwitchAccount: "সাইন ইন / পরিবর্তন",
+          btnSignOut: "সাইন আউট",
+          codeModalTitle: "ডাক্তার কোড দিয়ে পার্সোনালাইজ করুন",
+          codeModalSub: "প্রেসক্রিপশন বা ভিজিটিং কার্ডে প্রদত্ত কোড",
+          codeFieldLabel: "প্র্যাকটিস কোড লিখুন",
+          btnApplyCode: "যুক্ত ও পার্সোনালাইজ করুন",
+          btnDontHaveCode: "কোড জানা নেই? পছন্দমত ফিল্টার করুন",
+          preferenceModalTitle: "ডাক্তার কোড ডিরেক্টরি",
+          preferenceModalSub: "বিশেষজ্ঞতা ও এলাকা অনুযায়ী কোড খুঁজুন",
+          filterSpecialtyLabel: "বিশেষজ্ঞতা",
+          filterLocationLabel: "চেম্বারের অবস্থান",
+          btnConnectAndPersonalize: "এই ডাক্তারকে যুক্ত করুন",
+          needDifferentDoctor: "অন্য ডাক্তার দেখাতে চান?",
+          needDifferentDoctorSub: "কোড লিখুন অথবা ফিল্টার করে বেছে নিন",
+          labelConsultService: "পরামর্শের ধরন",
+          typeNew: "নতুন (৳১০০০)",
+          typeFollowup: "পুরাতন (৳৫০০)",
+          typeReport: "রিপোর্ট (৳৩০০)",
+          labelChamberLocation: "চেম্বার অবস্থান",
+          labelApptDate: "সাক্ষাতের তারিখ",
+          labelPatientFullName: "রোগীর পূর্ণ নাম *",
+          labelAgeYears: "বয়স (বছর) *",
+          editableTag: "পরিবর্তনযোগ্য",
+          labelGender: "লিঙ্গ",
+          genderMale: "পুরুষ",
+          genderFemale: "মহিলা",
+          genderOther: "অন্যান্য",
+          ageHintNote:
+            "💡 প্রোফাইল থেকে বয়স যুক্ত হয়েছে। পরিবারের কারো হলে পরিবর্তন করুন।",
+          labelMobilePhone: "মোবাইল নম্বর (সিরিয়াল এসএমএসের জন্য) *",
+          btnConfirmReservation: "সিরিয়াল নিশ্চিত করুন",
+          authModalTitleSignIn: "রোগী সাইন ইন",
+          authModalTitleCreate: "নতুন অ্যাকাউন্ট তৈরি করুন",
+          tabSignIn: "সাইন ইন",
+          tabRegister: "অ্যাকাউন্ট খুলুন",
+          btnContinueGoogle: "গুগল দিয়ে চালিয়ে যান",
+          orEmailTag: "অথবা ইমেইল",
+          notificationsTitle: "চেম্বার নোটিফিকেশন",
+          clearNotificationsBtn: "সব নোটিফিকেশন মুছুন",
+          onboardingTitle: "আপনার ডাক্তারের সাথে যুক্ত হোন",
+          onboardingSubtitle:
+            "এই অ্যাপটি সরাসরি আপনার নির্দিষ্ট ডাক্তারের চেম্বার সিস্টেমের সাথে কাজ করে। ভিজিটিং কার্ড বা প্রেসক্রিপশনে দেওয়া প্র্যাকটিস কোডটি লিখুন।",
+          dontHaveCodePrompt: "ডাক্তারের কোড জানা নেই?",
+          browseByPreferenceBtn: "বিশেষজ্ঞতা ও চেম্বার এলাকা দিয়ে কোড খুঁজুন",
+        },
+      };
+
+      function t(key) {
+        return (
+          (translations[currentLang] && translations[currentLang][key]) ||
+          translations["en"][key] ||
+          key
+        );
+      }
+
+      function applyTranslations() {
+        document.querySelectorAll("[data-i18n]").forEach((el) => {
+          const key = el.getAttribute("data-i18n");
+          if (translations[currentLang] && translations[currentLang][key]) {
+            el.innerHTML = translations[currentLang][key];
+          }
+        });
+        const lbl = currentLang === "en" ? "বাংলা" : "English";
+        document.getElementById("langToggleLabel").textContent = lbl;
+        document.getElementById("langToggleOnboarding").textContent = lbl;
+        renderDatePills();
+      }
+
+      window.toggleLanguage = () => {
+        currentLang = currentLang === "en" ? "bn" : "en";
+        localStorage.setItem("patient_lang", currentLang);
+        applyTranslations();
+        showToast(
+          currentLang === "bn" ? "ভাষা পরিবর্তিত" : "Language Changed",
+          currentLang === "bn"
+            ? "বাংলা ভাষা সক্রিয় করা হয়েছে।"
+            : "Switched to English.",
+        );
+      };
+
+      // Patient Profile in local storage for auto-fill
+      let userProfile = JSON.parse(localStorage.getItem("patient_profile")) || {
+        name: "Leon Fernandez",
+        age: "32",
+        phone: "",
+        email: "",
+      };
+
+      function syncProfileUI() {
+        document.getElementById("patientDisplayName").textContent =
+          userProfile.name;
+        document.getElementById("settingName").value = userProfile.name;
+        document.getElementById("settingAge").value = userProfile.age;
+        document.getElementById("drawerName").value = userProfile.name;
+        document.getElementById("drawerAge").value = userProfile.age;
+        if (userProfile.phone)
+          document.getElementById("drawerPhone").value = userProfile.phone;
+      }
+
+      // ================= INITIAL ONBOARDING CODE HANDLERS =================
+      window.handleInitialCodeSubmit = () => {
+        const code = document
+          .getElementById("initialPracticeCodeInput")
+          .value.trim()
+          .toUpperCase();
+        if (!code) {
+          return showToast(
+            currentLang === "bn" ? "কোড দিন" : "Code Required",
+            currentLang === "bn"
+              ? "অনুগ্রহ করে ডাক্তারের প্র্যাকটিস কোডটি লিখুন।"
+              : "Please enter your doctor practice code.",
+            "error",
+          );
+        }
+        if (morphAppToDoctor(code)) {
+          showToast(
+            currentLang === "bn" ? "যুক্ত হয়েছে!" : "Practice Linked!",
+            currentLang === "bn"
+              ? "অ্যাপটি সফলভাবে ডাক্তারের সাথে সংযুক্ত হয়েছে।"
+              : "App personalized to your doctor's clinic.",
+          );
+        }
+      };
+
+      window.fillTestCode = (code) => {
+        document.getElementById("initialPracticeCodeInput").value = code;
+      };
+
+      window.disconnectOrChangeDoctor = () => {
+        openDoctorCodeModal();
+      };
+
+      // ================= DYNAMIC DOCTOR MORPHING ENGINE =================
+      function morphAppToDoctor(doctorKey) {
+        const docData = doctorsDirectory[doctorKey.toUpperCase()];
+        if (!docData) {
+          showToast(
+            "Invalid Practice Code",
+            "No doctor workspace registered under this code.",
+            "error",
+          );
+          return false;
+        }
+
+        activeDoctor = docData;
+        activeDoctorCode = docData.code;
+        WORKSPACE_ID = docData.workspaceId;
+        selectedConsultFee = docData.fee;
+
+        localStorage.setItem("active_doctor_code", activeDoctorCode);
+
+        // Unhide Main App View & Hide Onboarding
+        document
+          .getElementById("unlinkedOnboardingView")
+          .classList.add("hidden");
+        document.getElementById("linkedMainApp").classList.remove("hidden");
+
+        // Update Home Elements
+        document.getElementById("headerDoctorCodeBadge").textContent =
+          docData.code;
+        document.getElementById("headerDoctorName").textContent = docData.name;
+        document.getElementById("homeChamberRoom").textContent = `${
+          docData.locationCategory
+        } • ${docData.chamberDetails.split(",")[0]}`;
+        document.getElementById("profileCardDocName").textContent =
+          docData.name;
+        document.getElementById(
+          "profileCardDocSpecialty",
+        ).textContent = `${docData.specialty} • ${docData.locationCategory}`;
+        document.getElementById(
+          "profileCardDocHours",
+        ).textContent = `Visiting: ${docData.visitingHours}`;
+        document.getElementById("connectedDocAvatar").src = docData.avatar;
+        document.getElementById("ctaDoctorChamberLabel").textContent =
+          docData.chamberTitle;
+        document.getElementById(
+          "ctaHotlineLink",
+        ).href = `tel:${docData.hotline.replace(/\s+/g, "")}`;
+        document.getElementById("ctaHotlineNumber").textContent =
+          docData.hotline;
+
+        // Update Schedule Elements
+        document.getElementById(
+          "scheduleSubDoctor",
+        ).textContent = `${docData.name} Practice`;
+        document.getElementById("scheduleDocAvatar").src = docData.avatar;
+        document.getElementById("scheduleDocName").textContent = docData.name;
+        document.getElementById("scheduleDocSpecialty").textContent =
+          docData.specialty;
+        document.getElementById("scheduleDocCode").textContent = docData.code;
+        document.getElementById("scheduleChamberDetails").textContent =
+          docData.chamberDetails;
+        document.getElementById("scheduleHoursDetails").textContent =
+          docData.visitingHours;
+        document.getElementById(
+          "scheduleFeeDetails",
+        ).textContent = `৳ ${docData.fee.toLocaleString()}`;
+
+        // Update Drawer Elements
+        document.getElementById(
+          "drawerDoctorHeading",
+        ).textContent = `Book with ${docData.name}`;
+        document.getElementById("drawerDocSubHeading").textContent =
+          docData.chamberTitle;
+        document.getElementById("drawerChamber").innerHTML = `
+        <option value="${docData.chamberDetails}">${docData.chamberTitle} (${docData.chamberDetails})</option>
+      `;
+
+        // Update Prescription Pad (Strictly in English)
+        document.getElementById("rxDoctorName").textContent = docData.name;
+        document.getElementById("rxDoctorDegrees").textContent =
+          docData.degrees;
+        document.getElementById("rxDoctorDesignation").textContent =
+          docData.designation;
+        document.getElementById("rxDoctorBMDC").textContent = docData.bmdc;
+        document.getElementById("rxClinicTitle").textContent =
+          docData.chamberTitle;
+        document.getElementById("rxChamberLocation").textContent =
+          docData.chamberDetails;
+        document.getElementById(
+          "rxChamberHotline",
+        ).textContent = `Hotline: ${docData.hotline}`;
+        document.getElementById("rxSignatureName").textContent = docData.name;
+
+        // Re-bind Real-Time Telemetry to the new workspace
+        attachQueueTelemetry();
+        fetchPrescriptions();
+        return true;
+      }
+
+      // Modal Triggers for Practice Code
+      window.openDoctorCodeModal = () => {
+        document.getElementById("inputPracticeCode").value =
+          activeDoctorCode || "";
+        document.getElementById("doctorCodeModal").classList.remove("hidden");
+      };
+
+      window.closeDoctorCodeModal = () => {
+        document.getElementById("doctorCodeModal").classList.add("hidden");
+      };
+
+      window.applyDoctorCodeFromInput = () => {
+        const code = document
+          .getElementById("inputPracticeCode")
+          .value.trim()
+          .toUpperCase();
+        if (!code)
+          return showToast(
+            "Required",
+            "Please type your doctor practice code.",
+            "error",
+          );
+        if (morphAppToDoctor(code)) {
+          closeDoctorCodeModal();
+          showToast(
+            "Practice Linked",
+            `App successfully personalized to ${activeDoctor.name}.`,
+          );
+        }
+      };
+
+      // Modal Triggers for Finding Practice Code by Preference
+      window.openDoctorPreferenceModal = () => {
+        renderPreferenceDirectory();
+        document
+          .getElementById("doctorPreferenceModal")
+          .classList.remove("hidden");
+      };
+
+      window.closeDoctorPreferenceModal = () => {
+        document
+          .getElementById("doctorPreferenceModal")
+          .classList.add("hidden");
+      };
+
+      let selectedFilterSpecialty = "all";
+      let selectedFilterLocation = "all";
+
+      window.filterPreferenceDirectory = (specialty, btn) => {
+        selectedFilterSpecialty = specialty;
+        document.querySelectorAll(".pref-spec-btn").forEach((b) => {
+          b.className =
+            "pref-spec-btn px-3 py-1.5 rounded-full bg-slate-100 text-slate-700 font-bold shrink-0";
+        });
+        btn.className =
+          "pref-spec-btn active px-3 py-1.5 rounded-full bg-darkCard text-white font-bold shrink-0";
+        renderPreferenceDirectory();
+      };
+
+      window.filterLocationDirectory = (location, btn) => {
+        selectedFilterLocation = location;
+        document.querySelectorAll(".pref-loc-btn").forEach((b) => {
+          b.className =
+            "pref-loc-btn px-3 py-1.5 rounded-full bg-slate-100 text-slate-700 font-bold shrink-0";
+        });
+        btn.className =
+          "pref-loc-btn active px-3 py-1.5 rounded-full bg-darkCard text-white font-bold shrink-0";
+        renderPreferenceDirectory();
+      };
+
+      function renderPreferenceDirectory() {
+        const container = document.getElementById("preferenceResultsList");
+        const list = Object.values(doctorsDirectory).filter((doc) => {
+          const matchesSpec =
+            selectedFilterSpecialty === "all" ||
+            doc.specialtyCategory === selectedFilterSpecialty;
+          const matchesLoc =
+            selectedFilterLocation === "all" ||
+            doc.locationCategory === selectedFilterLocation;
+          return matchesSpec && matchesLoc;
+        });
+
+        if (list.length === 0) {
+          container.innerHTML = `<p class="py-8 text-center text-slate-400 text-xs">No doctors matched this filter. Try adjusting your preferences.</p>`;
+          return;
+        }
+
+        container.innerHTML = list
+          .map((d) => {
+            const isCurrent = d.code === activeDoctorCode;
+            return `
+          <div class="bg-white p-4 rounded-2xl border ${
+            isCurrent
+              ? "border-2 border-slate-900 bg-slate-50/50"
+              : "border-slate-100"
+          } shadow-sm space-y-3">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-3">
+                <img src="${
+                  d.avatar
+                }" class="w-12 h-12 rounded-full object-cover border border-slate-200" />
+                <div>
+                  <h4 class="font-bold text-slate-900 text-xs sm:text-sm leading-tight">${
+                    d.name
+                  }</h4>
+                  <p class="text-[11px] text-slate-500 font-medium">${
+                    d.specialty
+                  } • ${d.locationCategory}</p>
+                </div>
+              </div>
+              <div class="text-right">
+                <span class="text-[10px] font-mono font-bold text-slate-400 uppercase block">Code</span>
+                <span class="font-mono font-black text-xs text-darkCard bg-slate-100 px-2 py-0.5 rounded">${
+                  d.code
+                }</span>
+              </div>
+            </div>
+
+            <div class="border-t border-slate-100 pt-2 flex items-center justify-between text-[11px] text-slate-600">
+              <span>Fee: <strong class="font-mono text-slate-900">৳ ${
+                d.fee
+              }</strong></span>
+              <button onclick="morphAppToDoctor('${
+                d.code
+              }'); closeDoctorPreferenceModal();" class="px-3.5 py-1.5 rounded-full font-bold text-xs transition active:scale-95 ${
+              isCurrent
+                ? "bg-emerald-100 text-emerald-800"
+                : "bg-darkCard text-white hover:bg-black"
+            }">
+                ${isCurrent ? "✓ Active Doctor" : t("btnConnectAndPersonalize")}
+              </button>
+            </div>
+          </div>
+        `;
+          })
+          .join("");
+      }
+
+      // Toast Notification System
+      window.showToast = (title, message, type = "success") => {
+        const container = document.getElementById("toastContainer");
+        const toast = document.createElement("div");
+        const icon =
+          type === "success"
+            ? "fa-circle-check text-emerald-500"
+            : type === "info"
+            ? "fa-circle-info text-sky-500"
+            : "fa-circle-exclamation text-coralBar";
+
+        toast.className =
+          "pointer-events-auto bg-white border border-slate-100 rounded-2xl p-4 shadow-xl flex items-start gap-3 transition-all duration-300 transform -translate-y-2 opacity-0";
+        toast.innerHTML = `
+        <i class="fa-solid ${icon} text-base mt-0.5"></i>
+        <div class="flex-1 min-w-0">
+          <h4 class="text-xs font-bold text-slate-900">${title}</h4>
+          <p class="text-[11px] text-slate-500 mt-0.5 leading-snug">${message}</p>
+        </div>
+      `;
+        container.appendChild(toast);
+
+        requestAnimationFrame(() =>
+          toast.classList.remove("-translate-y-2", "opacity-0"),
+        );
+        setTimeout(() => {
+          toast.classList.add("opacity-0", "-translate-y-2");
+          setTimeout(() => toast.remove(), 300);
+        }, 3500);
+      };
+
+      // Notification Drawer
+      let notificationItems = [
+        {
+          title: "Chamber Active",
+          message: "Doctor is consulting in Room 101.",
+          time: "Live",
+        },
+        {
+          title: "Queue Telemetry",
+          message: "Dynamic wait time is updating in real time.",
+          time: "10m ago",
+        },
+      ];
+
+      window.toggleNotifications = () => {
+        const drawer = document.getElementById("notificationDrawer");
+        drawer.classList.toggle("hidden");
+        renderNotificationList();
+      };
+
+      function renderNotificationList() {
+        const listEl = document.getElementById("notificationList");
+        if (notificationItems.length === 0) {
+          listEl.innerHTML = `<p class="py-6 text-center text-slate-400">No active notifications.</p>`;
+          document.getElementById("unreadDot").classList.add("hidden");
+          return;
+        }
+        listEl.innerHTML = notificationItems
+          .map(
+            (item) => `
+        <div class="p-3 rounded-2xl bg-slate-50 border border-slate-100">
+          <div class="flex items-center justify-between">
+            <strong class="font-bold text-slate-900">${item.title}</strong>
+            <span class="text-[10px] text-slate-400 font-mono">${item.time}</span>
+          </div>
+          <p class="text-[11px] mt-1 text-slate-600 leading-snug">${item.message}</p>
+        </div>
+      `,
+          )
+          .join("");
+      }
+
+      window.clearNotifications = () => {
+        notificationItems = [];
+        renderNotificationList();
+        showToast(
+          t("notificationsTitle"),
+          currentLang === "bn"
+            ? "সকল নোটিফিকেশন মুছে ফেলা হয়েছে।"
+            : "All notifications dismissed.",
+          "info",
+        );
+      };
+
+      // Fixed Bottom Dock Navigation (Zero Overflow Bug)
+      window.switchTab = (tabId) => {
+        document
+          .querySelectorAll(".view-panel")
+          .forEach((p) => p.classList.add("hidden"));
+        document.getElementById(`tab-${tabId}`).classList.remove("hidden");
+
+        document.querySelectorAll(".dock-btn").forEach((b) => {
+          b.className =
+            "dock-btn w-11 h-11 rounded-full flex items-center justify-center text-slate-400 hover:text-slate-700 transition";
+        });
+
+        const activeBtn = document.getElementById(`dock-${tabId}`);
+        if (activeBtn) {
+          activeBtn.className =
+            "dock-btn w-11 h-11 bg-darkCard text-white rounded-full flex items-center justify-center shadow-md transition";
+        }
+      };
+
+      // Date Carousel with Silent Switching
+      const renderDatePills = () => {
+        const container = document.getElementById("datePillContainer");
+        if (!container) return;
+        container.innerHTML = "";
+        const daysEn = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+        const daysBn = ["রবি", "সোম", "মঙ্গল", "বুধ", "বৃহঃ", "শুক্র", "শনি"];
+
+        for (let i = 0; i < 5; i++) {
+          const d = new Date();
+          d.setDate(d.getDate() + i);
+          const iso = d.toISOString().split("T")[0];
+          const dayName =
+            currentLang === "bn" ? daysBn[d.getDay()] : daysEn[d.getDay()];
+          const dayNum = String(d.getDate()).padStart(2, "0");
+          const isActive = i === 0;
+
+          const pill = document.createElement("button");
+          pill.className = `date-pill px-3 py-2.5 rounded-full flex flex-col items-center min-w-[58px] transition ${
+            isActive
+              ? "bg-limePill text-darkCard font-black shadow-sm"
+              : "bg-white text-slate-500 font-bold border border-slate-100 hover:bg-slate-50"
+          }`;
+          pill.onclick = () => {
+            document.querySelectorAll(".date-pill").forEach((p) => {
+              p.className =
+                "date-pill px-3 py-2.5 rounded-full flex flex-col items-center min-w-[58px] bg-white text-slate-500 font-bold border border-slate-100 hover:bg-slate-50 transition";
+            });
+            pill.className =
+              "date-pill px-3 py-2.5 rounded-full flex flex-col items-center min-w-[58px] bg-limePill text-darkCard font-black shadow-sm transition";
+            selectedDateStr = iso;
+            document.getElementById("drawerDate").value = iso;
+            document.getElementById("queueDateBadge").textContent = iso;
+            attachQueueTelemetry();
+          };
+          pill.innerHTML = `
+          <span class="text-[9px] uppercase font-bold tracking-tight opacity-80">${dayName}</span>
+          <span class="text-sm font-black mt-0.5">${dayNum}</span>
+        `;
+          container.appendChild(pill);
+        }
+        document.getElementById("drawerDate").value = selectedDateStr;
+        document.getElementById("queueDateBadge").textContent = selectedDateStr;
+      };
+
+      window.onDateChanged = (val) => {
+        if (!val) return;
+        selectedDateStr = val;
+        document.getElementById("drawerDate").value = val;
+        document.getElementById("queueDateBadge").textContent = val;
+        attachQueueTelemetry();
+      };
+
+      // Booking Drawer with Auto-filled Profile & Override Capability
+      window.openBookingDrawer = () => {
+        if (!activeDoctor) {
+          return openDoctorCodeModal();
+        }
+        document.getElementById("drawerDoctorHeading").textContent =
+          currentLang === "bn"
+            ? `${activeDoctor.name}-এর সিরিয়াল বুকিং`
+            : `Book with ${activeDoctor.name}`;
+        document.getElementById("drawerDocSubHeading").textContent =
+          activeDoctor.chamberTitle;
+        selectedConsultFee = activeDoctor.fee;
+        document.getElementById("drawerDate").value = selectedDateStr;
+
+        // Auto-fill from user profile
+        document.getElementById("drawerName").value = userProfile.name || "";
+        document.getElementById("drawerAge").value = userProfile.age || "";
+        if (userProfile.phone)
+          document.getElementById("drawerPhone").value = userProfile.phone;
+
+        document.getElementById("bookingDrawer").classList.remove("hidden");
+      };
+
+      window.closeBookingDrawer = () => {
+        document.getElementById("bookingDrawer").classList.add("hidden");
+      };
+
+      window.selectDrawerType = (btn, typeName, fee) => {
+        document.querySelectorAll(".drawer-type-pill").forEach((b) => {
+          b.className =
+            "drawer-type-pill bg-slate-100 text-slate-700 p-2.5 rounded-xl font-bold text-center";
+        });
+        btn.className =
+          "drawer-type-pill active bg-darkCard text-white p-2.5 rounded-xl font-bold text-center";
+        selectedConsultType = typeName;
+        selectedConsultFee = fee;
+      };
+
+      // PERMISSION-SAFE BOOKING ENGINE
+      window.confirmDrawerBooking = async () => {
+        if (isBookingLocked) return;
+
+        const name = document.getElementById("drawerName").value.trim();
+        const age = document.getElementById("drawerAge").value.trim();
+        const gender = document.getElementById("drawerGender").value;
+        const phone = document.getElementById("drawerPhone").value.trim();
+        const chamber = document.getElementById("drawerChamber").value;
+        const date = document.getElementById("drawerDate").value;
+
+        if (!name || !phone || !age) {
+          return showToast(
+            currentLang === "bn" ? "তথ্য অসম্পূর্ণ" : "Required Fields",
+            currentLang === "bn"
+              ? "রোগীর নাম, বয়স ও মোবাইল নম্বর দিন।"
+              : "Please enter patient name, age and phone number.",
+            "error",
+          );
+        }
+
+        isBookingLocked = true;
+        const btn = document.getElementById("btnDrawerSubmit");
+        btn.disabled = true;
+        btn.innerHTML = `<i class="fa-solid fa-spinner animate-spin mr-1"></i> ${
+          currentLang === "bn" ? "সংরক্ষণ হচ্ছে..." : "Reserving..."
+        }`;
+
+        try {
+          const qCount = query(
+            collection(db, "appointments"),
+            where("workspaceId", "==", WORKSPACE_ID),
+            where("date", "==", date),
+          );
+          const snap = await getDocs(qCount);
+
+          let maxSerial = 0;
+          snap.forEach((d) => {
+            const num = Number(d.data().serialNumber) || 0;
+            if (num > maxSerial) maxSerial = num;
+          });
+          const assignedSerial = maxSerial + 1;
+          const apptId = "APT-" + Math.floor(100000 + Math.random() * 900000);
+
+          const newAppt = {
+            appointmentId: apptId,
+            workspaceId: WORKSPACE_ID,
+            patientName: name,
+            patientAge: age,
+            patientGender: gender,
+            patientPhone: phone,
+            doctorName: activeDoctor.name,
+            chamber,
+            room: activeDoctor.chamberDetails.split(",")[0],
+            date,
+            serialNumber: assignedSerial,
+            appointmentType: selectedConsultType,
+            fee: selectedConsultFee,
+            paymentStatus: "Unpaid",
+            checkInStatus: "Waiting",
+            arrivalStatus: "Not Arrived",
+            userId: currentUser ? currentUser.uid : "guest",
+            createdAt: serverTimestamp(),
+          };
+
+          const docRef = await addDoc(collection(db, "appointments"), newAppt);
+          currentAppointmentId = docRef.id;
+          localStorage.setItem("caresync_active_appt_id", docRef.id);
+
+          closeBookingDrawer();
+          switchTab("home");
+
+          document.getElementById(
+            "homeYourSerial",
+          ).textContent = `#${assignedSerial}`;
+          document.getElementById("homeEstimatedWaitText").textContent =
+            currentLang === "bn"
+              ? `${date}-এর জন্য সিরিয়াল নিশ্চিত`
+              : `Booked for ${date}`;
+          showToast(
+            currentLang === "bn" ? "সিরিয়াল নিশ্চিত!" : "Serial Confirmed!",
+            currentLang === "bn"
+              ? `${name} (${age} বছর)-এর সিরিয়াল #${assignedSerial} সংরক্ষিত হয়েছে।`
+              : `Serial #${assignedSerial} reserved for ${name} (${age}y).`,
+          );
+        } catch (err) {
+          showToast(
+            currentLang === "bn" ? "বুকিং ত্রুটি" : "Booking Error",
+            err.message,
+            "error",
+          );
+        } finally {
+          isBookingLocked = false;
+          btn.disabled = false;
+          btn.innerHTML = `<span data-i18n="btnConfirmReservation">${t(
+            "btnConfirmReservation",
+          )}</span>`;
+        }
+      };
+
+      // Patient Arrival Self Check-in
+      window.updatePatientArrival = async (status) => {
+        if (!currentAppointmentId) {
+          return showToast(
+            currentLang === "bn" ? "বুকিং নেই" : "No Booking",
+            currentLang === "bn"
+              ? "চেক-ইন করার পূর্বে অনুগ্রহ করে সিরিয়াল বুক করুন।"
+              : "Please book a serial first to check in.",
+            "error",
+          );
+        }
+        try {
+          const ref = doc(db, "appointments", currentAppointmentId);
+          await updateDoc(ref, {
+            arrivalStatus: status,
+            checkInStatus: status === "Checked In" ? "Checked In" : "Waiting",
+          });
+          showToast(
+            currentLang === "bn" ? "স্ট্যাটাস আপডেট" : "Arrival Updated",
+            currentLang === "bn"
+              ? `আপনার উপস্থিতি "${status}" হিসেবে চিহ্নিত হয়েছে।`
+              : `Your status is marked as "${status}". Reception notified.`,
+          );
+        } catch (e) {
+          showToast("Error", e.message, "error");
+        }
+      };
+
+      // REAL-TIME QUEUE & TELEMETRY LISTENER
+      function attachQueueTelemetry() {
+        if (activeQueueUnsubscribe) {
+          activeQueueUnsubscribe();
+        }
+        if (!WORKSPACE_ID) return;
+
+        const queueQuery = query(
+          collection(db, "appointments"),
+          where("workspaceId", "==", WORKSPACE_ID),
+          where("date", "==", selectedDateStr),
+        );
+
+        activeQueueUnsubscribe = onSnapshot(queueQuery, (snapshot) => {
+          const rawList = [];
+          snapshot.forEach((d) => rawList.push({ id: d.id, ...d.data() }));
+
+          const uniqueMap = new Map();
+          rawList.forEach((item) => {
+            const key = item.serialNumber
+              ? `serial-${item.serialNumber}`
+              : item.id;
+            if (!uniqueMap.has(key)) uniqueMap.set(key, item);
+          });
+          const deduplicated = Array.from(uniqueMap.values());
+          deduplicated.sort(
+            (a, b) =>
+              (Number(a.serialNumber) || 0) - (Number(b.serialNumber) || 0),
+          );
+
+          renderWeeklyPaceBars(deduplicated.length);
+
+          if (deduplicated.length === 0) {
+            document.getElementById("homeServingSerial").textContent = "#--";
+            document.getElementById("telemetryAheadCount").textContent = "0";
+            document.getElementById("telemetryAheadSub").textContent =
+              currentLang === "bn" ? "আজ কোনো বুকিং নেই" : "No active bookings";
+            document.getElementById("telemetryWaitMinutes").textContent =
+              "-- mins";
+            document.getElementById("gaugePercentage").textContent = "0%";
+            document.getElementById(
+              "queueRosterTable",
+            ).innerHTML = `<p class="py-4 text-center text-slate-400">${
+              currentLang === "bn"
+                ? "আজকের সেশনে এখনো কোনো সিরিয়াল নেই।"
+                : "No appointments scheduled for this session."
+            }</p>`;
+            return;
+          }
+
+          const consulting = deduplicated.find(
+            (a) => a.checkInStatus === "Consulting",
+          );
+          const activeSerial = consulting
+            ? consulting.serialNumber
+            : deduplicated.find((a) => a.checkInStatus !== "Completed")
+                ?.serialNumber || "--";
+          document.getElementById("homeServingSerial").textContent =
+            activeSerial !== "--" ? `#${activeSerial}` : "#--";
+
+          const userAppt = deduplicated.find(
+            (a) => a.id === currentAppointmentId,
+          );
+          if (userAppt) {
+            document.getElementById(
+              "homeYourSerial",
+            ).textContent = `#${userAppt.serialNumber}`;
+
+            if (userAppt.checkInStatus === "Completed") {
+              document.getElementById("telemetryAheadCount").textContent = "0";
+              document.getElementById("telemetryAheadSub").textContent =
+                currentLang === "bn" ? "সাক্ষাত সম্পন্ন" : "Visit completed";
+              document.getElementById("telemetryWaitMinutes").textContent =
+                currentLang === "bn" ? "সম্পন্ন" : "Finished";
+              document.getElementById("homeEstimatedWaitText").textContent =
+                currentLang === "bn"
+                  ? "সাক্ষাত সম্পন্ন হয়েছে"
+                  : "Visit completed";
+            } else if (userAppt.checkInStatus === "Consulting") {
+              document.getElementById("telemetryAheadCount").textContent = "0";
+              document.getElementById("telemetryAheadSub").textContent =
+                currentLang === "bn"
+                  ? "বর্তমানে চেম্বারে উপস্থিত"
+                  : "In consultation room";
+              document.getElementById("telemetryWaitMinutes").textContent =
+                currentLang === "bn" ? "কক্ষে আছেন" : "Now In Room";
+              document.getElementById("homeEstimatedWaitText").textContent =
+                currentLang === "bn"
+                  ? "বর্তমানে চেম্বার কক্ষে আছেন"
+                  : "Now In Room";
+            } else {
+              const ahead = deduplicated.filter(
+                (a) =>
+                  Number(a.serialNumber) < Number(userAppt.serialNumber) &&
+                  a.checkInStatus !== "Completed" &&
+                  a.checkInStatus !== "Skipped",
+              ).length;
+              document.getElementById(
+                "telemetryAheadCount",
+              ).textContent = ahead;
+              document.getElementById("telemetryAheadSub").textContent =
+                ahead === 0
+                  ? currentLang === "bn"
+                    ? "পরবর্তী সিরিয়াল আপনার"
+                    : "You are next in line"
+                  : currentLang === "bn"
+                  ? "সামনে বাকি রোগী"
+                  : "Patients ahead of you";
+
+              const waitText =
+                ahead === 0
+                  ? currentLang === "bn"
+                    ? "২–৫ মিনিট"
+                    : "2–5 mins"
+                  : currentLang === "bn"
+                  ? `~${ahead * 11} মিনিট`
+                  : `${ahead * 10}–${ahead * 12 + 5} mins`;
+              document.getElementById(
+                "telemetryWaitMinutes",
+              ).textContent = waitText;
+              document.getElementById("homeEstimatedWaitText").textContent =
+                ahead === 0
+                  ? currentLang === "bn"
+                    ? "এরপর আপনার ডাক (~২-৫মি)"
+                    : "You're Next (~2-5m)"
+                  : currentLang === "bn"
+                  ? `~${ahead * 11} মিনিট অপেক্ষা (${ahead} জন বাকি)`
+                  : `~${ahead * 11}m wait (${ahead} ahead)`;
+            }
+          } else {
+            const totalWaiting = deduplicated.filter(
+              (a) => a.checkInStatus !== "Completed",
+            ).length;
+            document.getElementById(
+              "telemetryAheadCount",
+            ).textContent = totalWaiting;
+            document.getElementById("telemetryAheadSub").textContent =
+              currentLang === "bn"
+                ? "সর্বমোট অপেক্ষমান রোগী"
+                : "Total session waiting";
+            document.getElementById("telemetryWaitMinutes").textContent = `~${
+              totalWaiting * 11
+            } mins`;
+          }
+
+          const completedCount = deduplicated.filter(
+            (a) => a.checkInStatus === "Completed",
+          ).length;
+          const progressPercent = Math.round(
+            (completedCount / deduplicated.length) * 100,
+          );
+          document.getElementById(
+            "gaugePercentage",
+          ).textContent = `${progressPercent}%`;
+
+          const rosterTable = document.getElementById("queueRosterTable");
+          rosterTable.innerHTML = deduplicated
+            .map((item) => {
+              let badgeClass = "bg-slate-100 text-slate-600";
+              let statusLabel = item.checkInStatus;
+              if (item.checkInStatus === "Consulting") {
+                badgeClass =
+                  "bg-emerald-500 text-white font-bold animate-pulse";
+                statusLabel =
+                  currentLang === "bn" ? "পরামর্শ চলছে" : "Consulting";
+              } else if (item.checkInStatus === "Completed") {
+                badgeClass = "bg-slate-200 text-slate-400 line-through";
+                statusLabel = currentLang === "bn" ? "সম্পন্ন" : "Completed";
+              } else if (item.checkInStatus === "Checked In") {
+                badgeClass = "bg-limePill text-darkCard font-bold";
+                statusLabel = currentLang === "bn" ? "উপস্থিত" : "Checked In";
+              } else if (item.checkInStatus === "Waiting") {
+                badgeClass = "bg-amber-100 text-amber-800 font-semibold";
+                statusLabel = currentLang === "bn" ? "অপেক্ষমান" : "Waiting";
+              }
+
+              const isMe =
+                item.id === currentAppointmentId
+                  ? "border-l-4 border-darkCard pl-2.5 font-bold"
+                  : "";
+
+              return `
+            <div class="py-2.5 flex items-center justify-between ${isMe}">
+              <div class="flex items-center gap-2.5">
+                <span class="w-7 h-7 rounded-full bg-slate-100 flex items-center justify-center font-mono font-bold text-xs">#${
+                  item.serialNumber
+                }</span>
+                <div>
+                  <strong class="text-slate-900 block text-xs">${
+                    item.patientName
+                  } (${item.patientAge || "32"}${
+                currentLang === "bn" ? " বছর" : "y"
+              })</strong>
+                  <span class="text-[10px] text-slate-400">${
+                    item.appointmentType
+                  } • ${
+                item.arrivalStatus === "Checked In"
+                  ? currentLang === "bn"
+                    ? "উপস্থিত"
+                    : "Arrived"
+                  : currentLang === "bn"
+                  ? "উপস্থিত হননি"
+                  : "Not Arrived"
+              }</span>
+                </div>
+              </div>
+              <span class="text-[10px] uppercase px-2.5 py-0.5 rounded-full ${badgeClass}">${statusLabel}</span>
+            </div>
+          `;
+            })
+            .join("");
+        });
+      }
+
+      function renderWeeklyPaceBars(todayCount) {
+        const container = document.getElementById("weeklyLoadBars");
+        if (!container) return;
+        container.innerHTML = "";
+        const daysEn = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+        const daysBn = ["সোম", "মঙ্গল", "বুধ", "বৃহঃ", "শুক্র", "শনি", "রবি"];
+        const currentDayIdx = (new Date().getDay() + 6) % 7;
+        const counts = [4, 6, 8, 5, todayCount || 7, 3, 2];
+        const maxCount = Math.max(...counts, 10);
+
+        daysEn.forEach((dayEn, idx) => {
+          const isToday = idx === currentDayIdx;
+          const count = counts[idx];
+          const heightPx = Math.max(
+            16,
+            Math.min(64, Math.round((count / maxCount) * 64)),
+          );
+          const dayLabel = currentLang === "bn" ? daysBn[idx] : dayEn;
+
+          const bar = document.createElement("div");
+          bar.className = "flex flex-col items-center gap-2 cursor-pointer";
+          bar.title = `${dayLabel}: ${count} ${
+            currentLang === "bn" ? "রোগী" : "patients"
+          }`;
+          bar.innerHTML = `
+          <div class="w-8 rounded-full transition-all duration-300 ${
+            isToday
+              ? "bg-coralBar shadow-sm"
+              : "bg-slate-100 hover:bg-slate-200"
+          }" style="height: ${heightPx}px;"></div>
+          <span class="text-[10px] ${
+            isToday ? "font-bold text-slate-900" : "text-slate-400 font-medium"
+          }">${dayLabel}</span>
+        `;
+          container.appendChild(bar);
+        });
+      }
+
+      // Patient Settings Save
+      window.savePatientDemographics = () => {
+        const name = document.getElementById("settingName").value.trim();
+        const age = document.getElementById("settingAge").value.trim();
+        if (!name || !age)
+          return showToast(
+            currentLang === "bn" ? "যাচাইকরণ" : "Validation",
+            currentLang === "bn"
+              ? "নাম ও বয়স খালি রাখা যাবে না।"
+              : "Name and age cannot be empty.",
+            "error",
+          );
+
+        userProfile.name = name;
+        userProfile.age = age;
+        localStorage.setItem("patient_profile", JSON.stringify(userProfile));
+
+        syncProfileUI();
+        showToast(
+          currentLang === "bn" ? "সংরক্ষিত" : "Updated",
+          currentLang === "bn"
+            ? "রোগীর তথ্য সফলভাবে হালনাগাদ করা হয়েছে।"
+            : "Patient demographics saved.",
+        );
+      };
+
+      // Advanced Auth System
+      window.toggleAuthMode = (mode) => {
+        authMode = mode;
+        const btnIn = document.getElementById("btnAuthTabSignIn");
+        const btnReg = document.getElementById("btnAuthTabRegister");
+        const extra = document.getElementById("registerExtraFields");
+        const title = document.getElementById("authModalTitle");
+        const submit = document.getElementById("btnAuthSubmit");
+
+        if (mode === "register") {
+          btnReg.className =
+            "flex-1 py-1.5 rounded-lg bg-white shadow-sm text-slate-900 transition";
+          btnIn.className =
+            "flex-1 py-1.5 rounded-lg text-slate-500 transition";
+          extra.classList.remove("hidden");
+          title.textContent = t("authModalTitleCreate");
+          submit.innerHTML = `<span>${t("tabRegister")}</span>`;
+        } else {
+          btnIn.className =
+            "flex-1 py-1.5 rounded-lg bg-white shadow-sm text-slate-900 transition";
+          btnReg.className =
+            "flex-1 py-1.5 rounded-lg text-slate-500 transition";
+          extra.classList.add("hidden");
+          title.textContent = t("authModalTitleSignIn");
+          submit.innerHTML = `<span>${t("tabSignIn")}</span>`;
+        }
+      };
+
+      window.openAuthModal = () =>
+        document.getElementById("authModal").classList.remove("hidden");
+      window.closeAuthModal = () =>
+        document.getElementById("authModal").classList.add("hidden");
+
+      window.handleAuthSubmit = async () => {
+        const email = document.getElementById("authEmail").value.trim();
+        const pass = document.getElementById("authPassword").value;
+
+        if (!email || !pass)
+          return showToast(
+            currentLang === "bn" ? "তথ্য প্রয়োজন" : "Required",
+            currentLang === "bn"
+              ? "ইমেইল ও পাসওয়ার্ড প্রদান করুন।"
+              : "Please enter email and password.",
+            "error",
+          );
+
+        if (authMode === "register") {
+          const name = document.getElementById("authNameInput").value.trim();
+          const age = document.getElementById("authAgeInput").value.trim();
+          const phone = document.getElementById("authPhoneInput").value.trim();
+
+          if (!name || !age)
+            return showToast(
+              currentLang === "bn" ? "তথ্য প্রয়োজন" : "Required",
+              currentLang === "bn"
+                ? "আপনার নাম ও বয়স লিখুন।"
+                : "Please enter your name and age.",
+              "error",
+            );
+
+          try {
+            await createUserWithEmailAndPassword(auth, email, pass);
+            userProfile = { name, age, phone, email };
+            localStorage.setItem(
+              "patient_profile",
+              JSON.stringify(userProfile),
+            );
+            syncProfileUI();
+            closeAuthModal();
+            showToast(
+              currentLang === "bn" ? "নিবন্ধন সম্পন্ন" : "Registered",
+              currentLang === "bn"
+                ? `স্বাগতম ${name}! আপনার প্রোফাইল তৈরি হয়েছে।`
+                : `Welcome ${name}! Your profile is ready.`,
+            );
+          } catch (err) {
+            showToast("Sign Up Error", err.message, "error");
+          }
+        } else {
+          try {
+            await signInWithEmailAndPassword(auth, email, pass);
+            closeAuthModal();
+            showToast(
+              currentLang === "bn" ? "স্বাগতম" : "Welcome Back",
+              currentLang === "bn"
+                ? "সফলভাবে সাইন ইন হয়েছে।"
+                : "Signed in successfully.",
+            );
+          } catch (err) {
+            showToast("Sign In Failed", err.message, "error");
+          }
+        }
+      };
+
+      window.signInWithGoogle = async () => {
+        try {
+          const provider = new GoogleAuthProvider();
+          const res = await signInWithPopup(auth, provider);
+          userProfile.name = res.user.displayName || userProfile.name;
+          userProfile.email = res.user.email || "";
+          localStorage.setItem("patient_profile", JSON.stringify(userProfile));
+          syncProfileUI();
+          closeAuthModal();
+          showToast(
+            currentLang === "bn" ? "সাইন ইন সম্পন্ন" : "Signed In",
+            currentLang === "bn"
+              ? `স্বাগতম ${userProfile.name}!`
+              : `Welcome ${userProfile.name}!`,
+          );
+        } catch (e) {
+          showToast("Google Auth Error", e.message, "error");
+        }
+      };
+
+      onAuthStateChanged(auth, (user) => {
+        currentUser = user;
+        if (user) {
+          document.getElementById("userAccountEmail").textContent = user.email;
+          if (user.displayName) userProfile.name = user.displayName;
+          if (user.photoURL)
+            document.getElementById("userAvatarImg").src = user.photoURL;
+          syncProfileUI();
+          fetchPrescriptions();
+        } else {
+          document.getElementById("userAccountEmail").textContent =
+            currentLang === "bn" ? "গেস্ট রোগী" : "Guest Patient";
+        }
+      });
+
+      window.handleSignOut = async () => {
+        await signOut(auth);
+        showToast(
+          currentLang === "bn" ? "সাইন আউট" : "Signed Out",
+          currentLang === "bn"
+            ? "আপনি সাইন আউট করেছেন।"
+            : "You have been logged out.",
+        );
+      };
+
+      // Prescriptions Archive
+      window.fetchPrescriptions = async () => {
+        const container = document.getElementById("prescriptionRecordCards");
+        if (!container || !WORKSPACE_ID) return;
+        try {
+          const snap = await getDocs(
+            query(
+              collection(db, "prescriptions"),
+              where("workspaceId", "==", WORKSPACE_ID),
+            ),
+          );
+          const list = [];
+          snap.forEach((d) => list.push({ id: d.id, ...d.data() }));
+
+          if (list.length === 0) {
+            container.innerHTML = `<p class="text-center py-8 text-xs text-slate-400">${
+              currentLang === "bn"
+                ? "কোনো প্রেসক্রিপশন পাওয়া যায়নি।"
+                : "No prescriptions found for this practice."
+            }</p>`;
+            return;
+          }
+
+          window.cachedRxList = list;
+          container.innerHTML = list
+            .map(
+              (rx) => `
+          <div class="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between">
+            <div>
+              <span class="font-bold text-xs text-slate-900 block font-mono">${
+                rx.prescriptionNumber || "RX-Doc"
+              }</span>
+              <span class="text-[11px] text-slate-500 block mt-0.5">${
+                rx.diagnosis || "Clinical visit"
+              } • ${rx.date}</span>
+            </div>
+            <button onclick="displayOfficialPrescription('${
+              rx.id
+            }')" class="w-8 h-8 rounded-full bg-slate-100 text-slate-700 flex items-center justify-center hover:bg-slate-200 transition">
+              <i class="fa-solid fa-arrow-right text-xs"></i>
+            </button>
+          </div>
+        `,
+            )
+            .join("");
+        } catch (e) {
+          console.error(e);
+        }
+      };
+
+      // Official Prescription Pad Display (STRICTLY IN ENGLISH)
+      window.displayOfficialPrescription = (id) => {
+        const rx = (window.cachedRxList || []).find((r) => r.id === id);
+        if (!rx) return;
+
+        document.getElementById("rxModalPatient").textContent = rx.patientName;
+        document.getElementById("rxModalAgeGender").textContent = `${
+          rx.patientAge || "32"
+        }y / ${rx.patientGender || "Male"}`;
+        document.getElementById("rxModalDate").textContent = rx.date;
+        document.getElementById("rxModalId").textContent =
+          rx.prescriptionNumber || id.slice(0, 8);
+        document.getElementById("rxModalDiagnosis").textContent =
+          rx.diagnosis || "Essential Hypertension";
+        document.getElementById("rxModalInvestigations").textContent =
+          rx.investigations || "12-lead ECG, Lipid Profile";
+        document.getElementById("rxModalVitals").innerHTML = `BP: ${
+          rx.vitals?.bp || "120/80 mmHg"
+        }<br>Pulse: ${rx.vitals?.pulse || "74 bpm"}<br>Weight: ${
+          rx.vitals?.weight || "68 kg"
+        }`;
+        document.getElementById("rxModalAdvice").textContent =
+          rx.advice || "Adequate hydration. Low sodium diet.";
+        document.getElementById("rxModalFollowUp").textContent =
+          rx.followUpDate || "After 14 Days";
+
+        const list = document.getElementById("rxModalDrugsList");
+        if (rx.medicines && rx.medicines.length > 0) {
+          list.innerHTML = rx.medicines
+            .map(
+              (m, i) => `
+          <div class="border-b border-slate-100 pb-1.5">
+            <strong class="text-slate-900 text-xs block">${i + 1}. ${
+                m.name
+              } <span class="text-slate-500 font-normal">(${
+                m.strength
+              })</span></strong>
+            <span class="text-slate-600 font-mono text-[11px] block pl-3">${
+              m.frequency
+            } — ${m.duration} (${m.instructions})</span>
+          </div>
+        `,
+            )
+            .join("");
+        } else {
+          list.innerHTML = `<p class="italic text-slate-400">No drugs listed.</p>`;
+        }
+
+        document.getElementById("rxModal").classList.remove("hidden");
+      };
+
+      window.closeRxModal = () =>
+        document.getElementById("rxModal").classList.add("hidden");
+
+      // ================= INITIALIZATION ON LAUNCH =================
+      syncProfileUI();
+      applyTranslations();
+
+      // Check if a doctor was previously linked
+      if (activeDoctorCode && doctorsDirectory[activeDoctorCode]) {
+        morphAppToDoctor(activeDoctorCode);
+      } else {
+        // Show Unlinked Code Entry Screen by default
+        document
+          .getElementById("unlinkedOnboardingView")
+          .classList.remove("hidden");
+        document.getElementById("linkedMainApp").classList.add("hidden");
+      }
+    </script>
+  </body>
+</html>
