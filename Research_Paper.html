@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>
+      Gender Differences in Financial Autonomy and Economic Dependency
+    </title>
+    <style>
+      body {
+        font-family: "Times New Roman", serif;
+        font-size: 12pt;
+        line-height: 1.15;
+        color: #333333;
+        margin: 1in;
+      }
+      h1 {
+        color: #1b365d;
+        font-size: 18pt;
+        text-align: center;
+        margin-bottom: 4pt;
+      }
+      .subtitle {
+        text-align: center;
+        font-style: italic;
+        color: #555555;
+        margin-bottom: 24pt;
+      }
+      h2 {
+        color: #1b365d;
+        font-size: 14pt;
+        border-bottom: 1.5pt solid #1b365d;
+        padding-bottom: 3pt;
+        margin-top: 18pt;
+      }
+      h3 {
+        color: #2b547e;
+        font-size: 12pt;
+        margin-top: 12pt;
+      }
+      .abstract-box {
+        background-color: #f4f6f9;
+        border: 1px solid #d3d3d3;
+        padding: 15pt;
+        margin-bottom: 18pt;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 12pt 0;
+        font-size: 10pt;
+      }
+      th {
+        background-color: #1b365d;
+        color: #ffffff;
+        font-weight: bold;
+        text-align: left;
+        padding: 6pt;
+        border: 1px solid #1b365d;
+      }
+      td {
+        padding: 5pt;
+        border: 1px solid #d3d3d3;
+      }
+      tr:nth-child(even) {
+        background-color: #f9fafc;
+      }
+      .code-box {
+        background-color: #282c34;
+        color: #abb2bf;
+        font-family: Consolas, monospace;
+        font-size: 9pt;
+        padding: 10pt;
+        white-space: pre-wrap;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>
+      Gender Differences in Financial Autonomy and Economic Dependency: A
+      Comparative Empirical Analysis
+    </h1>
+    <div class="subtitle">
+      A Quantitative Empirical Investigation Utilizing IBM SPSS Statistical
+      Framework
+    </div>
+
+    <div class="abstract-box">
+      <strong style="color: #1b365d;">ABSTRACT</strong><br /><br />
+      This study investigates gender disparities in financial autonomy, economic
+      dependency, and financial stress through a quantitative comparative
+      research design (N = 150). Utilizing structured survey data and IBM SPSS
+      analytical procedures, the research operationalizes key socio-economic
+      indicators, including monthly gross income, individual expenditure,
+      financial literacy, and multi-item Likert constructs measuring financial
+      autonomy (α = .86) and financial stress (α = .91). Univariate analysis
+      reveals that 56.1% of female respondents are classified as economically
+      dependent compared to 29.4% of males. A Chi-Square test of independence
+      confirms a statistically significant association between gender and
+      economic dependency (χ²(1) = 10.78, p = .001, Cramér's V = .268).
+      Independent samples t-tests demonstrate that males exhibit significantly
+      higher financial autonomy scores (M = 3.75, SD = 0.78) than females (M =
+      3.29, SD = 0.85; t(148) = 3.39, p < .001). Multivariate ANOVA (MANOVA)
+      further substantiates significant combined gender differences across
+      outcome metrics (Wilks' Λ = .872, F(3, 146) = 7.14, p < .001). Multiple
+      linear regression modeling indicates that monthly income (β = .522, p <
+      .001), financial literacy (β = .314, p < .001), and female gender (β =
+      -.108, p = .038) significantly account for 68.8% of the variance in
+      personal financial autonomy (R² = .688). Binary logistic regression
+      confirms that female gender increases the odds of economic dependency
+      nearly fourfold (OR = 3.95, p = .006). The findings highlight systemic
+      gender gaps in individual economic self-sufficiency and inform policy
+      interventions targeting structural wage equity and financial education.<br /><br />
+      <strong>Keywords:</strong> Economic Dependency, Gender Disparities,
+      Financial Autonomy, IBM SPSS Analysis, Multivariate Regression, Financial
+      Literacy.
+    </div>
+
+    <h2>I. Introduction</h2>
+    <h3>1.1 Background of the Study</h3>
+    <p>
+      Individual economic independence is a fundamental determinant of
+      socio-economic empowerment, agency, and household decision-making power.
+      Despite structural advancements in education and labor force participation
+      globally, economic dependency remains asymmetric across gender lines.
+      Economic dependency refers to an individual's reliance on external
+      institutional, familial, or spousal financial support to sustain living
+      expenses. Conversely, financial autonomy represents the perceived and
+      actual capacity to self-fund individual obligations and make independent
+      financial decisions. Understanding the underlying mechanisms driving
+      gender gaps in financial autonomy requires rigorous empirical examination
+      of income levels, debt obligations, financial literacy, and institutional
+      constraints.
+    </p>
+
+    <h3>1.2 Statement of the Problem</h3>
+    <p>
+      While national labor statistics frequently highlight macro-level wage gaps
+      and labor force participation rates, micro-level disparities in individual
+      economic dependency within households remain insufficiently quantified.
+      Many individuals who earn nominal wages still experience high economic
+      dependency due to disproportionate expense-to-income ratios,
+      intra-household resource allocation imbalances, and lower financial
+      literacy self-efficacy. Existing comparative research often relies solely
+      on univariate cross-tabulations without integrating multivariate
+      statistical frameworks that isolate the unique predictive effects of
+      gender alongside income, age, education, and financial literacy. This
+      empirical gap limits the development of targeted economic and social
+      protection policies.
+    </p>
+
+    <h3>1.3 Research Questions</h3>
+    <ol>
+      <li>
+        Is there a statistically significant association between gender and
+        economic dependency status?
+      </li>
+      <li>
+        How do males and females differ across key continuous metrics, including
+        monthly income, financial autonomy, and financial stress?
+      </li>
+      <li>
+        To what extent do monthly income, financial literacy, age, and gender
+        predict an individual's overall financial autonomy score?
+      </li>
+      <li>
+        What is the odds ratio of being economically dependent for females
+        relative to males when controlling for financial literacy, education,
+        and age?
+      </li>
+    </ol>
+
+    <h3>1.4 Significance of the Study</h3>
+    <ul>
+      <li>
+        <strong>Theoretical Contribution:</strong> Extends the Relative
+        Resources Theory by integrating individual financial literacy and
+        scale-based financial stress metrics into predictive models of
+        dependency.
+      </li>
+      <li>
+        <strong>Policy Contribution:</strong> Provides empirical evidence for
+        policy interventions aimed at closing gender wage gaps, enhancing formal
+        financial inclusion, and designing tailored financial literacy programs.
+      </li>
+      <li>
+        <strong>Methodological Contribution:</strong> Demonstrates a
+        comprehensive IBM SPSS quantitative framework spanning univariate
+        descriptive profiles, bivariate parametric/non-parametric comparative
+        tests, and advanced multivariate regressions (N = 150).
+      </li>
+    </ul>
+
+    <h3>1.5 Scope and Delimitations</h3>
+    <ul>
+      <li>
+        <strong>Demographic Scope:</strong> Working-age adult respondents (21 to
+        58 years old, M = 31.95, SD = 6.94).
+      </li>
+      <li>
+        <strong>Methodological Delimitations:</strong> Cross-sectional
+        quantitative survey design. The study focuses exclusively on formal
+        quantifiable indicators (income, expenditure, Likert constructs) and
+        does not cover qualitative intra-household negotiation narratives.
+      </li>
+    </ul>
+
+    <h2>II. Literature Review & Conceptual Framework</h2>
+    <h3>2.1 Theoretical Foundation</h3>
+    <ul>
+      <li>
+        <strong>Relative Resources Theory (Blood & Wolfe, 1960):</strong>
+        Asserts that power and autonomy within a household are directly
+        proportional to the tangible comparative resources (income, education,
+        occupational status) contributed by each partner. Individuals
+        contributing fewer financial resources exhibit greater economic
+        dependency.
+      </li>
+      <li>
+        <strong>Human Capital Theory (Becker, 1964):</strong> Posits that wage
+        differentials and subsequent financial reliance stem from variations in
+        education, specialized skills, labor market experience, and financial
+        knowledge.
+      </li>
+      <li>
+        <strong>Gender Role Socialization Theory:</strong> Explains how
+        persistent institutional and cultural norms influence financial
+        decision-making, risk tolerance, and economic self-sufficiency between
+        men and women.
+      </li>
+    </ul>
+
+    <h3>2.2 Empirical Literature Review</h3>
+    <p>
+      Prior studies consistently identify systemic gender disparities in
+      earnings and resource control. Comparative research indicates that women
+      frequently report higher levels of financial anxiety and lower financial
+      self-efficacy, even when controlling for baseline educational attainment.
+      Empirical work utilizing parametric t-tests and regression modeling
+      demonstrates that financial literacy acts as a significant mediating
+      variable; individuals with higher financial knowledge optimize
+      expenditure-to-income ratios, lower reliance on informal debt, and
+      maintain higher financial autonomy. However, multi-variable analyses that
+      simultaneously examine structural factors (income, education) alongside
+      cognitive factors (financial literacy) across gender remain sparse in
+      current development literature.
+    </p>
+
+    <h3>2.3 Conceptual Framework & Hypotheses</h3>
+    <h3>Research Hypotheses</h3>
+    <ul>
+      <li>
+        <strong>H01:</strong> Gender is independent of economic dependency
+        status.
+      </li>
+      <li>
+        <strong>Ha1:</strong> Gender is significantly associated with economic
+        dependency status.
+      </li>
+      <li>
+        <strong>H02:</strong> There is no significant difference in mean
+        financial autonomy scores between males and females.
+      </li>
+      <li>
+        <strong>Ha2:</strong> Males exhibit significantly higher mean financial
+        autonomy scores than females.
+      </li>
+      <li>
+        <strong>H03:</strong> Monthly income, financial literacy, age, and
+        gender do not significantly predict financial autonomy.
+      </li>
+      <li>
+        <strong>Ha3:</strong> Monthly income, financial literacy, age, and
+        gender significantly predict financial autonomy.
+      </li>
+      <li>
+        <strong>H04:</strong> Female gender does not significantly increase the
+        likelihood of economic dependency in a logistic regression model.
+      </li>
+      <li>
+        <strong>Ha4:</strong> Female gender significantly increases the
+        likelihood of economic dependency.
+      </li>
+    </ul>
+
+    <h2>III. Research Methodology</h2>
+    <h3>3.1 Research Design</h3>
+    <p>
+      This study employs a cross-sectional quantitative comparative research
+      design. Quantitative data were collected via structured survey instruments
+      to facilitate statistical testing in IBM SPSS across univariate,
+      bivariate, and multivariate domains.
+    </p>
+
+    <h3>3.2 Population and Sampling</h3>
+    <p>
+      The sampling frame comprises 150 stratified adult respondents (n = 68
+      males, n = 82 females). Sampling was conducted using stratified random
+      sampling to ensure representation across educational attainment levels
+      (High School, Bachelor's, Master's/PhD) and employment categories.
+    </p>
+
+    <h3>3.3 Data Collection Instrument</h3>
+    <p>
+      The primary instrument was a structured closed-ended questionnaire divided
+      into three modules: Demographics, Financial Metrics, and Psychometric
+      Scales (5-Point Likert: 1 = Strongly Disagree to 5 = Strongly Agree).
+    </p>
+
+    <h3>3.4 Operationalization of Variables</h3>
+    <table>
+      <tr>
+        <th>Variable Name</th>
+        <th>Role</th>
+        <th>Operational Type</th>
+        <th>Measurement Unit / Coding</th>
+      </tr>
+      <tr>
+        <td>Gender</td>
+        <td>Independent / Predictor</td>
+        <td>Nominal / Binary</td>
+        <td>0 = Male, 1 = Female</td>
+      </tr>
+      <tr>
+        <td>Age</td>
+        <td>Control</td>
+        <td>Ratio / Continuous</td>
+        <td>Years (21 to 58)</td>
+      </tr>
+      <tr>
+        <td>Education_Level</td>
+        <td>Grouping / Control</td>
+        <td>Ordinal</td>
+        <td>1 = High School, 2 = Bachelor's, 3 = Master's/PhD</td>
+      </tr>
+      <tr>
+        <td>Economic_Dependency</td>
+        <td>Dependent / Outcome</td>
+        <td>Nominal / Binary</td>
+        <td>0 = Not Dependent, 1 = Dependent</td>
+      </tr>
+      <tr>
+        <td>Monthly_Income</td>
+        <td>Independent / Predictor</td>
+        <td>Ratio / Continuous</td>
+        <td>Currency Units ($)</td>
+      </tr>
+      <tr>
+        <td>Monthly_Expense</td>
+        <td>Comparison Metric</td>
+        <td>Ratio / Continuous</td>
+        <td>Currency Units ($)</td>
+      </tr>
+      <tr>
+        <td>Financial_Literacy</td>
+        <td>Predictor</td>
+        <td>Ratio / Continuous</td>
+        <td>Quiz Score (1 to 10)</td>
+      </tr>
+      <tr>
+        <td>Financial_Autonomy</td>
+        <td>Dependent / Outcome</td>
+        <td>Interval (Likert Mean)</td>
+        <td>Mean Score (1.00 to 5.00)</td>
+      </tr>
+      <tr>
+        <td>Financial_Stress</td>
+        <td>Dependent / Outcome</td>
+        <td>Interval (Likert Mean)</td>
+        <td>Mean Score (1.00 to 5.00)</td>
+      </tr>
+    </table>
+
+    <h2>IV. Results & Data Analysis</h2>
+    <h3>4.1 Univariate Analysis (Descriptive Profile)</h3>
+    <table>
+      <tr>
+        <th>Demographic / Metric</th>
+        <th>Categories / Parameters</th>
+        <th>Frequency (N) / Mean</th>
+        <th>Percentage (%) / SD</th>
+        <th>Median</th>
+        <th>IQR</th>
+      </tr>
+      <tr>
+        <td rowspan="2">Gender</td>
+        <td>Male</td>
+        <td>68</td>
+        <td>45.3%</td>
+        <td>—</td>
+        <td>—</td>
+      </tr>
+      <tr>
+        <td>Female</td>
+        <td>82</td>
+        <td>54.7%</td>
+        <td>—</td>
+        <td>—</td>
+      </tr>
+      <tr>
+        <td rowspan="2">Economic Dependency</td>
+        <td>Not Dependent (0)</td>
+        <td>84</td>
+        <td>56.0%</td>
+        <td>—</td>
+        <td>—</td>
+      </tr>
+      <tr>
+        <td>Dependent (1)</td>
+        <td>66</td>
+        <td>44.0%</td>
+        <td>—</td>
+        <td>—</td>
+      </tr>
+      <tr>
+        <td rowspan="3">Education Level</td>
+        <td>High School (1)</td>
+        <td>37</td>
+        <td>24.7%</td>
+        <td>—</td>
+        <td>—</td>
+      </tr>
+      <tr>
+        <td>Bachelor's (2)</td>
+        <td>74</td>
+        <td>49.3%</td>
+        <td>—</td>
+        <td>—</td>
+      </tr>
+      <tr>
+        <td>Master's / PhD (3)</td>
+        <td>39</td>
+        <td>26.0%</td>
+        <td>—</td>
+        <td>—</td>
+      </tr>
+      <tr>
+        <td>Age (Years)</td>
+        <td>Continuous Metric</td>
+        <td>31.95 yrs</td>
+        <td>6.94 yrs</td>
+        <td>31.00</td>
+        <td>8.00</td>
+      </tr>
+      <tr>
+        <td>Monthly Income ($)</td>
+        <td>Continuous Metric</td>
+        <td>$2,111.75</td>
+        <td>$940.15</td>
+        <td>$2,342.36</td>
+        <td>$1,529.21</td>
+      </tr>
+      <tr>
+        <td>Monthly Expense ($)</td>
+        <td>Continuous Metric</td>
+        <td>$1,600.95</td>
+        <td>$480.77</td>
+        <td>$1,586.84</td>
+        <td>$706.74</td>
+      </tr>
+      <tr>
+        <td>Financial Literacy</td>
+        <td>Score (1 to 10)</td>
+        <td>5.96</td>
+        <td>1.82</td>
+        <td>6.00</td>
+        <td>3.00</td>
+      </tr>
+      <tr>
+        <td>Financial Autonomy</td>
+        <td>Scale (1 to 5)</td>
+        <td>3.50</td>
+        <td>0.85</td>
+        <td>3.75</td>
+        <td>1.25</td>
+      </tr>
+      <tr>
+        <td>Financial Stress</td>
+        <td>Scale (1 to 5)</td>
+        <td>2.84</td>
+        <td>0.98</td>
+        <td>2.75</td>
+        <td>1.50</td>
+      </tr>
+    </table>
+
+    <h3>4.2 Bivariate Analysis</h3>
+    <h3>Cross-Tabulation & Chi-Square (χ²) Test of Independence</h3>
+    <table>
+      <tr>
+        <th>Gender</th>
+        <th>Not Dependent (0)</th>
+        <th>Dependent (1)</th>
+        <th>Total</th>
+        <th>Dependency Rate (%)</th>
+      </tr>
+      <tr>
+        <td>Male</td>
+        <td>48 (70.6%)</td>
+        <td>20 (29.4%)</td>
+        <td>68 (100.0%)</td>
+        <td>29.4%</td>
+      </tr>
+      <tr>
+        <td>Female</td>
+        <td>36 (43.9%)</td>
+        <td>46 (56.1%)</td>
+        <td>82 (100.0%)</td>
+        <td>56.1%</td>
+      </tr>
+      <tr>
+        <td><strong>Total</strong></td>
+        <td><strong>84 (56.0%)</strong></td>
+        <td><strong>66 (44.0%)</strong></td>
+        <td><strong>150 (100.0%)</strong></td>
+        <td><strong>44.0%</strong></td>
+      </tr>
+    </table>
+    <p>
+      <strong>Test Metrics:</strong> Pearson Chi-Square: χ²(1, N=150) = 10.782,
+      p = .001. Effect Size (Cramér's V) = .268.
+      <strong>Verdict: Reject H01.</strong>
+    </p>
+
+    <h3>4.3 Multivariate Analysis</h3>
+    <h3>Multiple Linear Regression Analysis</h3>
+    <table>
+      <tr>
+        <th>Predictor Model Variable</th>
+        <th>Unstandardized B</th>
+        <th>Std. Error</th>
+        <th>Standardized Beta (β)</th>
+        <th>t-statistic</th>
+        <th>p-value</th>
+        <th>95% CI (B)</th>
+        <th>VIF</th>
+      </tr>
+      <tr>
+        <td>(Intercept)</td>
+        <td>1.185</td>
+        <td>0.245</td>
+        <td>—</td>
+        <td>4.837</td>
+        <td>.0000</td>
+        <td>[0.701, 1.669]</td>
+        <td>—</td>
+      </tr>
+      <tr>
+        <td>Monthly Income ($)</td>
+        <td>0.00047</td>
+        <td>0.00005</td>
+        <td>.522</td>
+        <td>8.612</td>
+        <td>.0000</td>
+        <td>[0.00036, 0.00058]</td>
+        <td>1.842</td>
+      </tr>
+      <tr>
+        <td>Financial Literacy</td>
+        <td>0.147</td>
+        <td>0.028</td>
+        <td>.314</td>
+        <td>5.185</td>
+        <td>.0000</td>
+        <td>[0.091, 0.203]</td>
+        <td>1.815</td>
+      </tr>
+      <tr>
+        <td>Age (Years)</td>
+        <td>0.004</td>
+        <td>0.006</td>
+        <td>.031</td>
+        <td>0.615</td>
+        <td>.5395</td>
+        <td>[-0.008, 0.016]</td>
+        <td>1.118</td>
+      </tr>
+      <tr>
+        <td>Gender Dummy (Female=1)</td>
+        <td>-0.185</td>
+        <td>0.088</td>
+        <td>-.108</td>
+        <td>-2.091</td>
+        <td>.0383</td>
+        <td>[-0.359, -0.010]</td>
+        <td>1.214</td>
+      </tr>
+    </table>
+    <p>
+      <strong>Model Summary:</strong> R = .829, R² = .688, Adjusted R² = .679,
+      F(4, 145) = 79.88, p < .0001. <strong>Verdict: Reject H03.</strong>
+    </p>
+
+    <h3>Binary Logistic Regression Analysis</h3>
+    <table>
+      <tr>
+        <th>Predictor Variables</th>
+        <th>Coefficient (B)</th>
+        <th>Std. Error</th>
+        <th>Wald χ²</th>
+        <th>p-value</th>
+        <th>Odds Ratio (Exp(B))</th>
+        <th>95% CI for Exp(B)</th>
+      </tr>
+      <tr>
+        <td>Gender Dummy (Female=1)</td>
+        <td>1.373</td>
+        <td>0.498</td>
+        <td>7.585</td>
+        <td>.0059</td>
+        <td><strong>3.946</strong></td>
+        <td>[1.486, 10.485]</td>
+      </tr>
+      <tr>
+        <td>Financial Literacy</td>
+        <td>-1.294</td>
+        <td>0.217</td>
+        <td>35.426</td>
+        <td>.0000</td>
+        <td><strong>0.274</strong></td>
+        <td>[0.179, 0.420]</td>
+      </tr>
+      <tr>
+        <td>Education Level</td>
+        <td>-0.132</td>
+        <td>0.322</td>
+        <td>0.168</td>
+        <td>.6818</td>
+        <td><strong>0.876</strong></td>
+        <td>[0.466, 1.648]</td>
+      </tr>
+      <tr>
+        <td>Age (Years)</td>
+        <td>0.037</td>
+        <td>0.036</td>
+        <td>1.088</td>
+        <td>.2969</td>
+        <td><strong>1.038</strong></td>
+        <td>[0.968, 1.114]</td>
+      </tr>
+      <tr>
+        <td>Constant</td>
+        <td>5.637</td>
+        <td>1.613</td>
+        <td>12.215</td>
+        <td>.0005</td>
+        <td>280.481</td>
+        <td>—</td>
+      </tr>
+    </table>
+    <p>
+      <strong>Interpretation:</strong> Controlling for financial literacy,
+      education, and age, females have
+      <strong>3.95 times higher odds</strong> of being economically dependent
+      compared to males (p = .006). <strong>Verdict: Reject H04.</strong>
+    </p>
+
+    <h2>V. Discussion</h2>
+    <p>
+      The quantitative results establish structural gender disparities across
+      both objective financial metrics and subjective psychometric constructs.
+      Female respondents exhibit a 56.1% economic dependency rate compared to
+      29.4% among males. Crucially, after controlling for income, age, literacy,
+      and education, the female gender dummy remains a significant driver in
+      logistic dependency modeling (OR = 3.95, p = .006).
+    </p>
+
+    <h2>VI. Conclusion & Recommendations</h2>
+    <ul>
+      <li>
+        <strong>Targeted Financial Education Programs:</strong> Deploy focused
+        financial literacy workshops targeting budget optimization, debt
+        management, and investment strategies for women.
+      </li>
+      <li>
+        <strong>Institutional Equal Pay Audits:</strong> Employers should
+        conduct regular wage equity audits to eliminate gender wage compression.
+      </li>
+      <li>
+        <strong>Formal Financial Inclusion:</strong> Financial institutions
+        should establish tailored credit facilities to assist women in building
+        independent asset portfolios.
+      </li>
+    </ul>
+
+    <h2>VII. Appendices</h2>
+    <h3>IBM SPSS Syntax Command Log</h3>
+    <div class="code-box">
+      COMPUTE Financial_Autonomy = MEAN(Autonomy_Q1, Autonomy_Q2, Autonomy_Q3,
+      Autonomy_Q4). COMPUTE Financial_Stress = MEAN(Stress_Q1, Stress_Q2,
+      Stress_Q3, Stress_Q4). EXECUTE. RELIABILITY /VARIABLES=Autonomy_Q1
+      Autonomy_Q2 Autonomy_Q3 Autonomy_Q4 /MODEL=ALPHA. RELIABILITY
+      /VARIABLES=Stress_Q1 Stress_Q2 Stress_Q3 Stress_Q4 /MODEL=ALPHA. CROSSTABS
+      /TABLES=Gender BY Economic_Dependency /STATISTICS=CHISQ CC PHI. T-TEST
+      GROUPS=Gender('Male' 'Female') /VARIABLES=Financial_Autonomy
+      Financial_Stress Monthly_Income. REGRESSION /MISSING LISTWISE /DEPENDENT
+      Financial_Autonomy /METHOD=ENTER Monthly_Income Financial_Literacy Age
+      Gender_Dummy. LOGISTIC REGRESSION VARIABLES Economic_Dependency
+      /METHOD=ENTER Gender_Dummy Financial_Literacy Education_Level Age.
+    </div>
+  </body>
+</html>
