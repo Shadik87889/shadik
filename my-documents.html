@@ -122,7 +122,7 @@
 
             <!-- Verified Online Presence Links -->
             <div class="flex items-center gap-2 mt-3.5">
-              <!-- LinkedIn Link with Crisp Vector Icon -->
+              <!-- LinkedIn Link -->
               <a
                 href="https://www.linkedin.com/in/md-shadik-hossain-talukder-41b064346"
                 target="_blank"
@@ -191,7 +191,7 @@
               onclick="filterCategory('identity', this)"
               class="filter-tab px-3.5 py-1.5 rounded-xl text-xs font-medium whitespace-nowrap text-zinc-400 hover:text-white transition duration-150"
             >
-              Identity
+              Identity & Family
             </button>
             <button
               onclick="filterCategory('academics', this)"
@@ -200,16 +200,10 @@
               SSC & HSC
             </button>
             <button
-              onclick="filterCategory('ventures', this)"
+              onclick="filterCategory('documents', this)"
               class="filter-tab px-3.5 py-1.5 rounded-xl text-xs font-medium whitespace-nowrap text-zinc-400 hover:text-white transition duration-150"
             >
-              Initiatives
-            </button>
-            <button
-              onclick="filterCategory('admissions', this)"
-              class="filter-tab px-3.5 py-1.5 rounded-xl text-xs font-medium whitespace-nowrap text-zinc-400 hover:text-white transition duration-150"
-            >
-              ICCR
+              Other Records
             </button>
           </nav>
         </div>
@@ -303,18 +297,20 @@
       const BASE_DIR = "./my-vault/docs/";
 
       const documents = [
-        // ================= 1. IDENTITY =================
+        // ================= 1. IDENTITY & FAMILY =================
         {
+          id: "passport",
           title: "Passport",
           category: "identity",
           type: "PDF",
-          size: "Official",
-          meta: "Government of Bangladesh",
-          fileName: "Passport - Shadik.pdf",
+          size: "2.3 MB",
+          meta: "Md Shadik Hossain Talukder",
+          fileName: "Passport - Md Shadik Hossain Talukder.pdf",
           icon: "book-open",
         },
         {
-          title: "Photo",
+          id: "photo",
+          title: "Shadik's Photo",
           category: "identity",
           type: "PNG",
           size: "1.4 MB",
@@ -323,6 +319,7 @@
           icon: "user",
         },
         {
+          id: "nid",
           title: "National ID (NID)",
           category: "identity",
           type: "PDF",
@@ -332,6 +329,7 @@
           icon: "credit-card",
         },
         {
+          id: "birth-cert",
           title: "Birth Certificate",
           category: "identity",
           type: "PDF",
@@ -340,9 +338,30 @@
           fileName: "MdShadikHossain_Birth_Certificate.pdf",
           icon: "file-check",
         },
-
-        // ================= 2. SSC & HSC =================
         {
+          id: "father-nid",
+          title: "Father's National ID",
+          category: "identity",
+          type: "PDF",
+          size: "258 KB",
+          meta: "Father - NID Card",
+          fileName: "Father - NID.pdf",
+          icon: "users",
+        },
+        {
+          id: "mother-nid",
+          title: "Mother's National ID",
+          category: "identity",
+          type: "PDF",
+          size: "261 KB",
+          meta: "Mother - NID Card",
+          fileName: "Mother - NID..pdf",
+          icon: "users",
+        },
+
+        // ================= 2. SSC & HSC ACADEMICS =================
+        {
+          id: "ssc-cert",
           title: "SSC Certificate",
           category: "academics",
           type: "PDF",
@@ -352,15 +371,17 @@
           icon: "file-text",
         },
         {
+          id: "ssc-trans",
           title: "SSC Transcript",
           category: "academics",
           type: "PDF",
           size: "4.8 MB",
-          meta: "SSC Marksheet",
+          meta: "SSC Academic Transcript",
           fileName: "MdShadikHossain_SSC_Transcript.pdf",
           icon: "file-spreadsheet",
         },
         {
+          id: "ssc-scholarship",
           title: "SSC Talentpool Scholarship",
           category: "academics",
           type: "JPG",
@@ -370,6 +391,7 @@
           icon: "sparkles",
         },
         {
+          id: "hsc-cert",
           title: "HSC Certificate",
           category: "academics",
           type: "PDF",
@@ -379,15 +401,38 @@
           icon: "file-text",
         },
         {
+          id: "hsc-trans",
           title: "HSC Transcript",
           category: "academics",
           type: "PDF",
           size: "4.8 MB",
-          meta: "HSC Marksheet",
+          meta: "HSC Academic Transcript",
           fileName: "MdShadikHossain_HSC_Transcript.pdf",
           icon: "file-spreadsheet",
         },
         {
+          id: "testimonial",
+          title: "Academic Testimonial",
+          category: "academics",
+          type: "PDF",
+          size: "4.0 MB",
+          meta: "College Testimonial Letter",
+          fileName: "MdShadikHossain_Testimonial.pdf",
+          icon: "award",
+        },
+        // ================= 3. OTHER RECORDS =================
+        {
+          id: "handwritten",
+          title: "Handwritten Statement",
+          category: "documents",
+          type: "PDF",
+          size: "68 KB",
+          meta: "Handwritten Document",
+          fileName: "Handwritten.pdf",
+          icon: "pen-tool",
+        },
+        {
+          id: "anthem-cert",
           title: "National Anthem Certificate",
           category: "academics",
           type: "PNG",
@@ -395,46 +440,6 @@
           meta: "Award Certificate",
           fileName: "national_anthem_certificate.png",
           icon: "trophy",
-        },
-
-        // ================= 3. INITIATIVES =================
-        {
-          title: "CashShilpo",
-          category: "ventures",
-          type: "PDF",
-          size: "1.7 MB",
-          meta: "POS & Business Management Software",
-          fileName: "CashShilpo_POS & Business Management Soft Interface.pdf",
-          icon: "layout",
-        },
-        {
-          title: "The Daily Origin",
-          category: "ventures",
-          type: "PDF",
-          size: "440 KB",
-          meta: "Platform Interface",
-          fileName: "The Daily Origin - Interface.pdf",
-          icon: "newspaper",
-        },
-
-        // ================= 4. ADMISSIONS & ICCR (AT THE END) =================
-        {
-          title: "University Offer Letter (ICCR)",
-          category: "admissions",
-          type: "PDF",
-          size: "1.6 MB",
-          meta: "Admission Letter",
-          fileName: "university offer letter.pdf",
-          icon: "graduation-cap",
-        },
-        {
-          title: "ICCR Offer Letter",
-          category: "admissions",
-          type: "PDF",
-          size: "94 KB",
-          meta: "ICCR Scholarship Letter",
-          fileName: "iccr offer letter.pdf",
-          icon: "award",
         },
       ];
 
@@ -474,7 +479,7 @@
                     </div>
                     
                     <div class="flex items-center justify-end gap-2 pt-4 mt-5 border-t border-white/[0.05]">
-                        <button onclick="openPreview('${doc.title}', '${doc.type} • ${doc.size}', '${doc.fileName}')" class="px-3 py-1.5 rounded-lg text-xs font-medium text-zinc-300 hover:text-white bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.06] transition">
+                        <button onclick="openPreview('${doc.id}')" class="px-3 py-1.5 rounded-lg text-xs font-medium text-zinc-300 hover:text-white bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.06] transition">
                             Preview
                         </button>
                         <a href="${fullPath}" download class="p-1.5 rounded-lg text-zinc-400 hover:text-white bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.06] transition" title="Download">
@@ -502,19 +507,24 @@
         }
       }
 
-      function openPreview(title, meta, fileName) {
-        const path = getDocPath(fileName);
-        document.getElementById("modal-title").innerText = title;
-        document.getElementById("modal-meta").innerText = meta;
+      function openPreview(docId) {
+        const doc = documents.find((d) => d.id === docId);
+        if (!doc) return;
+
+        const path = getDocPath(doc.fileName);
+        document.getElementById("modal-title").innerText = doc.title;
+        document.getElementById(
+          "modal-meta",
+        ).innerText = `${doc.type} • ${doc.size}`;
         document.getElementById("modal-download").href = path;
 
         const frame = document.getElementById("preview-frame");
         const img = document.getElementById("preview-image");
 
         const isImage =
-          fileName.endsWith(".png") ||
-          fileName.endsWith(".jpg") ||
-          fileName.endsWith(".jpeg");
+          doc.fileName.endsWith(".png") ||
+          doc.fileName.endsWith(".jpg") ||
+          doc.fileName.endsWith(".jpeg");
 
         if (isImage) {
           frame.classList.add("hidden");

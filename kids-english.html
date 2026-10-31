@@ -1,0 +1,1319 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Conic3D Studio // Clean Geometric Laboratory</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <style>
+      :root {
+        --bg: #07090e;
+        --card: rgba(13, 17, 26, 0.82);
+        --card-border: rgba(255, 255, 255, 0.08);
+        --cyan: #00f2fe;
+        --violet: #a855f7;
+        --gold: #fbbf24;
+        --text: #f1f5f9;
+        --muted: #94a3b8;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        user-select: none;
+        -webkit-user-select: none;
+      }
+
+      body {
+        background: radial-gradient(circle at center, #0f172a 0%, #05070c 100%);
+        color: var(--text);
+        font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display",
+          "Segoe UI", Roboto, sans-serif;
+        overflow: hidden;
+        width: 100vw;
+        height: 100vh;
+      }
+
+      #webgl-container {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 1;
+      }
+
+      /* Top Preset Navigator */
+      .top-bar {
+        position: absolute;
+        top: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 10;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        background: var(--card);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        padding: 6px 10px;
+        border-radius: 999px;
+        border: 1px solid var(--card-border);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+      }
+
+      .brand-pill {
+        font-size: 0.76rem;
+        font-weight: 800;
+        letter-spacing: 1.2px;
+        color: var(--cyan);
+        padding: 0 12px 0 6px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        border-right: 1px solid var(--card-border);
+      }
+
+      .preset-btn {
+        background: transparent;
+        border: 1px solid transparent;
+        color: var(--muted);
+        padding: 6px 14px;
+        border-radius: 999px;
+        font-size: 0.82rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+
+      .preset-btn:hover {
+        color: #fff;
+        background: rgba(255, 255, 255, 0.05);
+      }
+
+      .preset-btn.active {
+        background: #fff;
+        color: #050811;
+        font-weight: 700;
+        box-shadow: 0 0 16px rgba(255, 255, 255, 0.35);
+      }
+
+      /* Floating Studio Cards */
+      .panel {
+        position: absolute;
+        background: var(--card);
+        backdrop-filter: blur(24px);
+        -webkit-backdrop-filter: blur(24px);
+        border: 1px solid var(--card-border);
+        border-radius: 20px;
+        padding: 18px 20px;
+        z-index: 10;
+        box-shadow: 0 24px 48px rgba(0, 0, 0, 0.55);
+      }
+
+      /* Left Controls */
+      .left-panel {
+        top: 86px;
+        left: 24px;
+        width: 310px;
+      }
+
+      .status-badge {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 6px;
+      }
+
+      .conic-title {
+        font-size: 1.35rem;
+        font-weight: 800;
+        letter-spacing: -0.5px;
+        color: #fff;
+      }
+
+      .ecc-pill {
+        font-size: 0.78rem;
+        font-weight: 700;
+        font-family: ui-monospace, monospace;
+        padding: 3px 8px;
+        border-radius: 6px;
+        background: rgba(0, 242, 254, 0.12);
+        color: var(--cyan);
+        border: 1px solid rgba(0, 242, 254, 0.25);
+      }
+
+      .conic-explain {
+        font-size: 0.8rem;
+        color: var(--muted);
+        line-height: 1.4;
+        margin-bottom: 16px;
+        padding-bottom: 14px;
+        border-bottom: 1px solid var(--card-border);
+      }
+
+      .slider-row {
+        margin-bottom: 13px;
+      }
+
+      .slider-meta {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: #cbd5e1;
+        margin-bottom: 5px;
+      }
+
+      .slider-val {
+        font-family: ui-monospace, monospace;
+        color: var(--cyan);
+      }
+
+      input[type="range"] {
+        -webkit-appearance: none;
+        width: 100%;
+        height: 4px;
+        background: rgba(255, 255, 255, 0.12);
+        border-radius: 999px;
+        outline: none;
+      }
+
+      input[type="range"]::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        width: 14px;
+        height: 14px;
+        border-radius: 50%;
+        background: #fff;
+        cursor: pointer;
+        box-shadow: 0 0 10px rgba(255, 255, 255, 0.6);
+        transition: transform 0.1s;
+      }
+
+      input[type="range"]::-webkit-slider-thumb:hover {
+        transform: scale(1.2);
+      }
+
+      .toggles-list {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 7px;
+        margin-top: 14px;
+      }
+
+      .toggle-chip {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid var(--card-border);
+        color: var(--muted);
+        padding: 7px 8px;
+        border-radius: 10px;
+        font-size: 0.72rem;
+        font-weight: 600;
+        cursor: pointer;
+        text-align: center;
+        transition: all 0.2s;
+      }
+
+      .toggle-chip.active {
+        background: rgba(0, 242, 254, 0.15);
+        border-color: rgba(0, 242, 254, 0.4);
+        color: #fff;
+      }
+
+      /* Right 2D HUD */
+      .right-panel {
+        bottom: 24px;
+        right: 24px;
+        width: 300px;
+      }
+
+      .hud-title {
+        font-size: 0.72rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: var(--muted);
+        margin-bottom: 8px;
+        display: flex;
+        justify-content: space-between;
+      }
+
+      #canvas2d {
+        width: 100%;
+        height: 150px;
+        background: rgba(0, 0, 0, 0.5);
+        border-radius: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        margin-bottom: 10px;
+      }
+
+      .formula-badge {
+        background: rgba(0, 0, 0, 0.4);
+        border-radius: 8px;
+        padding: 8px;
+        border: 1px solid var(--card-border);
+        font-family: ui-monospace, monospace;
+        font-size: 0.82rem;
+        color: var(--gold);
+        text-align: center;
+        margin-bottom: 8px;
+      }
+
+      .hud-metrics {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 6px;
+        font-size: 0.72rem;
+        color: var(--muted);
+      }
+
+      .hud-metrics span {
+        color: #fff;
+        font-weight: 600;
+      }
+
+      /* Legend */
+      .clean-legend {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 10px;
+        padding-top: 8px;
+        border-top: 1px solid var(--card-border);
+        font-size: 0.68rem;
+        color: var(--muted);
+      }
+
+      .legend-item {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+      }
+
+      .legend-indicator {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+      }
+
+      .hint-label {
+        position: absolute;
+        bottom: 24px;
+        left: 24px;
+        z-index: 5;
+        font-size: 0.72rem;
+        color: rgba(255, 255, 255, 0.3);
+        pointer-events: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="webgl-container"></div>
+
+    <!-- Presets -->
+    <div class="top-bar">
+      <div class="brand-pill">
+        <svg
+          width="15"
+          height="15"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2.5"
+        >
+          <polygon points="12 2 22 21 2 21 12 2" />
+        </svg>
+        CONIC 3D
+      </div>
+      <button class="preset-btn active" data-preset="circle">Circle</button>
+      <button class="preset-btn" data-preset="ellipse">Ellipse</button>
+      <button class="preset-btn" data-preset="parabola">Parabola</button>
+      <button class="preset-btn" data-preset="hyperbola">Hyperbola</button>
+      <button class="preset-btn" data-preset="degenerate">Degenerate</button>
+    </div>
+
+    <!-- Controls Panel -->
+    <div class="panel left-panel">
+      <div class="status-badge">
+        <div class="conic-title" id="conic-name">CIRCLE</div>
+        <div class="ecc-pill" id="ecc-display">e = 0.000</div>
+      </div>
+      <div class="conic-explain" id="conic-desc">
+        Plane is strictly horizontal. Slices the upper cyan nappe into a circle.
+      </div>
+
+      <!-- Sliders -->
+      <div class="slider-row">
+        <div class="slider-meta">
+          <span>Plane Tilt (&beta;)</span>
+          <span class="slider-val" id="val-tilt">0.0&deg;</span>
+        </div>
+        <input
+          type="range"
+          id="slider-tilt"
+          min="0"
+          max="85"
+          step="0.5"
+          value="0"
+        />
+      </div>
+
+      <div class="slider-row">
+        <div class="slider-meta">
+          <span>Plane Offset (d)</span>
+          <span class="slider-val" id="val-height">1.50</span>
+        </div>
+        <input
+          type="range"
+          id="slider-height"
+          min="-2.6"
+          max="2.6"
+          step="0.05"
+          value="1.5"
+        />
+      </div>
+
+      <div class="slider-row">
+        <div class="slider-meta">
+          <span>Cone Angle (&alpha;)</span>
+          <span class="slider-val" id="val-alpha">45&deg;</span>
+        </div>
+        <input
+          type="range"
+          id="slider-alpha"
+          min="25"
+          max="60"
+          step="1"
+          value="45"
+        />
+      </div>
+
+      <div class="slider-row">
+        <div class="slider-meta">
+          <span>Plane Azimuth (Yaw)</span>
+          <span class="slider-val" id="val-azimuth">0&deg;</span>
+        </div>
+        <input
+          type="range"
+          id="slider-azimuth"
+          min="0"
+          max="360"
+          step="1"
+          value="0"
+        />
+      </div>
+
+      <!-- Toggles -->
+      <div class="toggles-list">
+        <button class="toggle-chip active" id="btn-toggle-plane">
+          Cutting Plane
+        </button>
+        <button class="toggle-chip active" id="btn-toggle-axes">3D Axes</button>
+        <button class="toggle-chip" id="btn-toggle-dandelin">
+          Dandelin Proof
+        </button>
+        <button class="toggle-chip" id="btn-toggle-spin">Auto-Rotate</button>
+      </div>
+    </div>
+
+    <!-- 2D HUD Panel -->
+    <div class="panel right-panel">
+      <div class="hud-title">
+        <span>2D Section View</span>
+        <span style="color: var(--cyan);">&#9678; Orthogonal</span>
+      </div>
+      <canvas id="canvas2d" width="300" height="150"></canvas>
+      <div class="formula-badge" id="formula-display">
+        x&sup2; + y&sup2; = 1.50&sup2;
+      </div>
+      <div class="hud-metrics">
+        <div>Semi-Major (a): <span id="stat-a">1.50</span></div>
+        <div>Semi-Minor (b): <span id="stat-b">1.50</span></div>
+        <div>Focal Dist (c): <span id="stat-c">0.00</span></div>
+        <div>Plane Relation: <span id="stat-slope">Horizontal</span></div>
+      </div>
+
+      <div class="clean-legend">
+        <div class="legend-item">
+          <div class="legend-indicator" style="background: #0284c7;"></div>
+          Upper Nappe
+        </div>
+        <div class="legend-item">
+          <div class="legend-indicator" style="background: #7c3aed;"></div>
+          Lower Nappe
+        </div>
+        <div class="legend-item">
+          <div class="legend-indicator" style="background: #fbbf24;"></div>
+          Conic Cut
+        </div>
+      </div>
+    </div>
+
+    <div class="hint-label">
+      Left Drag: Orbit &bull; Right Drag: Pan &bull; Wheel: Zoom
+    </div>
+
+    <script>
+      /* =========================================================================
+       1. STATE & MATHEMATICAL CORE
+       ========================================================================= */
+      const state = {
+        tilt: 0,
+        height: 1.5,
+        alpha: 45,
+        azimuth: 0,
+        showPlane: true,
+        showAxes: true,
+        showDandelin: false, // OFF by default to eliminate initial clutter
+        autoRotate: false,
+        conicType: "circle",
+        eccentricity: 0,
+      };
+
+      const CONE_HEIGHT = 3.4;
+
+      /* =========================================================================
+       2. THREE.JS STUDIO SCENE & LIGHTING
+       ========================================================================= */
+      const container = document.getElementById("webgl-container");
+      const scene = new THREE.Scene();
+      scene.fog = new THREE.FogExp2(0x07090e, 0.038);
+
+      const camera = new THREE.PerspectiveCamera(
+        42,
+        window.innerWidth / window.innerHeight,
+        0.1,
+        100,
+      );
+      camera.position.set(6.8, 3.8, 7.8);
+
+      const renderer = new THREE.WebGLRenderer({
+        antialias: true,
+        alpha: true,
+        powerPreference: "high-performance",
+      });
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      renderer.toneMapping = THREE.ACESFilmicToneMapping;
+      renderer.toneMappingExposure = 1.05;
+      container.appendChild(renderer.domElement);
+
+      const controls = new THREE.OrbitControls(camera, renderer.domElement);
+      controls.enableDamping = true;
+      controls.dampingFactor = 0.05;
+      controls.maxDistance = 22;
+      controls.minDistance = 2.5;
+
+      // Clean Studio 3-Point Lighting
+      const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+      scene.add(ambientLight);
+
+      const keyLight = new THREE.DirectionalLight(0xffffff, 0.9);
+      keyLight.position.set(5, 8, 6);
+      scene.add(keyLight);
+
+      const rimLightCyan = new THREE.DirectionalLight(0x00f2fe, 0.6);
+      rimLightCyan.position.set(-6, 5, -5);
+      scene.add(rimLightCyan);
+
+      const rimLightViolet = new THREE.DirectionalLight(0xa855f7, 0.5);
+      rimLightViolet.position.set(6, -6, -4);
+      scene.add(rimLightViolet);
+
+      const worldGroup = new THREE.Group();
+      scene.add(worldGroup);
+
+      // Subtle dark circular ground floor (studio disc)
+      const floorGeo = new THREE.CircleGeometry(6.5, 64);
+      const floorMat = new THREE.MeshBasicMaterial({
+        color: 0x0a0f1d,
+        depthWrite: false,
+      });
+      const floor = new THREE.Mesh(floorGeo, floorMat);
+      floor.rotation.x = -Math.PI / 2;
+      floor.position.y = -CONE_HEIGHT - 0.05;
+      worldGroup.add(floor);
+
+      /* =========================================================================
+       3. SLEEK MINIMALIST AXES (NO CLUTTERED TEXT BOXES)
+       ========================================================================= */
+      const axesGroup = new THREE.Group();
+      axesGroup.renderOrder = 2;
+      worldGroup.add(axesGroup);
+
+      function createMinimalAxis(dir, len, hexColor) {
+        const group = new THREE.Group();
+        const shaft = new THREE.Mesh(
+          new THREE.CylinderGeometry(0.015, 0.015, len, 12),
+          new THREE.MeshBasicMaterial({
+            color: hexColor,
+            transparent: true,
+            opacity: 0.85,
+          }),
+        );
+        shaft.position.y = len / 2;
+        const tip = new THREE.Mesh(
+          new THREE.ConeGeometry(0.05, 0.16, 12),
+          new THREE.MeshBasicMaterial({ color: hexColor }),
+        );
+        tip.position.y = len + 0.08;
+        group.add(shaft, tip);
+
+        const target = dir.clone().normalize();
+        group.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), target);
+        return group;
+      }
+
+      // World X (Red), Y (Green), Z (Blue)
+      axesGroup.add(
+        createMinimalAxis(new THREE.Vector3(1, 0, 0), 4.2, 0xf87171),
+      );
+      axesGroup.add(
+        createMinimalAxis(
+          new THREE.Vector3(0, 1, 0),
+          CONE_HEIGHT * 1.25,
+          0x34d399,
+        ),
+      );
+      axesGroup.add(
+        createMinimalAxis(
+          new THREE.Vector3(0, -1, 0),
+          CONE_HEIGHT * 1.25,
+          0x10b981,
+        ),
+      );
+      axesGroup.add(
+        createMinimalAxis(new THREE.Vector3(0, 0, 1), 4.2, 0x60a5fa),
+      );
+
+      // Apex Dot (Center)
+      const apexDot = new THREE.Mesh(
+        new THREE.SphereGeometry(0.07, 24, 24),
+        new THREE.MeshBasicMaterial({ color: 0xffffff }),
+      );
+      axesGroup.add(apexDot);
+
+      /* =========================================================================
+       4. PRISTINE FROSTED DUAL-CONE (NO WIREFRAME CAGES)
+       ========================================================================= */
+      let coneUpperMesh, coneLowerMesh, rimUpper, rimLower;
+
+      // Studio Glass Material for Upper Nappe
+      const matUpper = new THREE.MeshPhysicalMaterial({
+        color: 0x0284c7,
+        transparent: true,
+        opacity: 0.32,
+        roughness: 0.15,
+        metalness: 0.1,
+        transmission: 0.35,
+        ior: 1.3,
+        side: THREE.DoubleSide,
+        depthWrite: false,
+      });
+
+      // Studio Glass Material for Lower Nappe
+      const matLower = new THREE.MeshPhysicalMaterial({
+        color: 0x7c3aed,
+        transparent: true,
+        opacity: 0.32,
+        roughness: 0.15,
+        metalness: 0.1,
+        transmission: 0.35,
+        ior: 1.3,
+        side: THREE.DoubleSide,
+        depthWrite: false,
+      });
+
+      function rebuildCones() {
+        if (coneUpperMesh) worldGroup.remove(coneUpperMesh);
+        if (coneLowerMesh) worldGroup.remove(coneLowerMesh);
+        if (rimUpper) worldGroup.remove(rimUpper);
+        if (rimLower) worldGroup.remove(rimLower);
+
+        const k = Math.tan((state.alpha * Math.PI) / 180);
+        const radius = CONE_HEIGHT * k;
+
+        // Smooth Cone Surfaces
+        const upperGeo = new THREE.ConeGeometry(
+          radius,
+          CONE_HEIGHT,
+          80,
+          1,
+          true,
+        );
+        upperGeo.translate(0, CONE_HEIGHT / 2, 0);
+        coneUpperMesh = new THREE.Mesh(upperGeo, matUpper);
+        coneUpperMesh.renderOrder = 1;
+
+        const lowerGeo = new THREE.ConeGeometry(
+          radius,
+          CONE_HEIGHT,
+          80,
+          1,
+          true,
+        );
+        lowerGeo.rotateX(Math.PI);
+        lowerGeo.translate(0, -CONE_HEIGHT / 2, 0);
+        coneLowerMesh = new THREE.Mesh(lowerGeo, matLower);
+        coneLowerMesh.renderOrder = 1;
+
+        // Crisp circular base rings (Gives clear edge definition without wireframe mess)
+        const rimUpperPts = [];
+        const rimLowerPts = [];
+        for (let i = 0; i <= 64; i++) {
+          const theta = (i / 64) * Math.PI * 2;
+          rimUpperPts.push(
+            new THREE.Vector3(
+              radius * Math.cos(theta),
+              CONE_HEIGHT,
+              radius * Math.sin(theta),
+            ),
+          );
+          rimLowerPts.push(
+            new THREE.Vector3(
+              radius * Math.cos(theta),
+              -CONE_HEIGHT,
+              radius * Math.sin(theta),
+            ),
+          );
+        }
+        rimUpper = new THREE.Line(
+          new THREE.BufferGeometry().setFromPoints(rimUpperPts),
+          new THREE.LineBasicMaterial({
+            color: 0x38bdf8,
+            transparent: true,
+            opacity: 0.6,
+          }),
+        );
+        rimLower = new THREE.Line(
+          new THREE.BufferGeometry().setFromPoints(rimLowerPts),
+          new THREE.LineBasicMaterial({
+            color: 0xc084fc,
+            transparent: true,
+            opacity: 0.6,
+          }),
+        );
+        rimUpper.renderOrder = 2;
+        rimLower.renderOrder = 2;
+
+        worldGroup.add(coneUpperMesh, coneLowerMesh, rimUpper, rimLower);
+      }
+      rebuildCones();
+
+      /* =========================================================================
+       5. CUTTING PLANE (CLEAN FROSTED SHEET)
+       ========================================================================= */
+      const planeGroup = new THREE.Group();
+      planeGroup.renderOrder = 3;
+      worldGroup.add(planeGroup);
+
+      const planeSize = 6.8;
+      const planeMesh = new THREE.Mesh(
+        new THREE.PlaneGeometry(planeSize, planeSize),
+        new THREE.MeshPhysicalMaterial({
+          color: 0x00f2fe,
+          transparent: true,
+          opacity: 0.18,
+          roughness: 0.1,
+          transmission: 0.4,
+          side: THREE.DoubleSide,
+          depthWrite: false,
+        }),
+      );
+      planeMesh.rotateX(Math.PI / 2);
+      planeGroup.add(planeMesh);
+
+      // Glowing subtle border
+      const planeBorder = new THREE.LineSegments(
+        new THREE.EdgesGeometry(new THREE.PlaneGeometry(planeSize, planeSize)),
+        new THREE.LineBasicMaterial({
+          color: 0x00f2fe,
+          transparent: true,
+          opacity: 0.85,
+        }),
+      );
+      planeBorder.rotateX(Math.PI / 2);
+      planeGroup.add(planeBorder);
+
+      /* =========================================================================
+       6. INTERSECTION CURVE (THE HERO: SHARP NEON LASER TUBE)
+       ========================================================================= */
+      let curveMesh1 = null,
+        curveMesh2 = null;
+
+      const curveMat = new THREE.MeshStandardMaterial({
+        color: 0xffea00,
+        emissive: 0xffa200,
+        emissiveIntensity: 1.4,
+        roughness: 0.1,
+        metalness: 0.9,
+        depthTest: true,
+      });
+
+      /* =========================================================================
+       7. DANDELIN SPHERES (DELICATE HOLOGRAPHIC PROOFS)
+       ========================================================================= */
+      const dandelinGroup = new THREE.Group();
+      dandelinGroup.renderOrder = 4;
+      worldGroup.add(dandelinGroup);
+
+      const dandelinMat = new THREE.MeshStandardMaterial({
+        color: 0xf43f5e,
+        transparent: true,
+        opacity: 0.35,
+        roughness: 0.2,
+        depthWrite: false,
+      });
+      const sphere1 = new THREE.Mesh(
+        new THREE.SphereGeometry(1, 32, 32),
+        dandelinMat,
+      );
+      const sphere2 = new THREE.Mesh(
+        new THREE.SphereGeometry(1, 32, 32),
+        dandelinMat,
+      );
+      dandelinGroup.add(sphere1, sphere2);
+
+      const focusGeo = new THREE.SphereGeometry(0.08, 16, 16);
+      const focusMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
+      const focus1 = new THREE.Mesh(focusGeo, focusMat);
+      const focus2 = new THREE.Mesh(focusGeo, focusMat);
+      dandelinGroup.add(focus1, focus2);
+
+      /* =========================================================================
+       8. ANALYTICAL SOLVER & SCENE REBUILD
+       ========================================================================= */
+      function updateSimulator() {
+        const alphaRad = (state.alpha * Math.PI) / 180;
+        const tiltRad = (state.tilt * Math.PI) / 180;
+        const azimRad = (state.azimuth * Math.PI) / 180;
+        const y0 = state.height;
+
+        // Plane Transformation
+        planeGroup.position.set(0, y0, 0);
+        planeGroup.rotation.set(0, 0, 0);
+        planeGroup.rotation.y = azimRad;
+        planeGroup.rotation.x = tiltRad;
+
+        // Eccentricity
+        const e = Math.sin(tiltRad) / Math.cos(alphaRad);
+        state.eccentricity = e;
+
+        // Conic Classification
+        const slopeCone = 90 - state.alpha;
+        let name = "ELLIPSE";
+        let desc = "";
+
+        if (Math.abs(y0) < 0.05) {
+          name = "DEGENERATE";
+          if (state.tilt < slopeCone - 0.5)
+            desc =
+              "Plane intersects apex only, collapsing into a single point.";
+          else if (Math.abs(state.tilt - slopeCone) <= 0.5)
+            desc =
+              "Plane is tangent to cone generator wall, forming a single straight line.";
+          else
+            desc =
+              "Plane slices through apex steeper than slope, forming two intersecting lines.";
+        } else if (state.tilt < 0.3) {
+          name = "CIRCLE";
+          desc =
+            "Plane is horizontal (parallel to cone base). Slices upper cyan nappe into a circle.";
+        } else if (state.tilt < slopeCone - 0.5) {
+          name = "ELLIPSE";
+          desc =
+            "Plane tilts gently (< cone wall). Slices entirely through one nappe into a closed loop.";
+        } else if (Math.abs(state.tilt - slopeCone) <= 0.5) {
+          name = "PARABOLA";
+          desc =
+            "Plane angle matches cone generator slope exactly. Forms a single infinite parabolic curve.";
+        } else {
+          name = "HYPERBOLA";
+          desc =
+            "Plane is steeper than cone slope. Simultaneously slices BOTH nappes into twin symmetric branches.";
+        }
+
+        state.conicType = name.toLowerCase();
+        document.getElementById("conic-name").textContent = name;
+        document.getElementById("ecc-display").textContent = `e = ${e.toFixed(
+          3,
+        )}`;
+        document.getElementById("conic-desc").textContent = desc;
+
+        // Analytic Conic Coefficients
+        const k = Math.tan(alphaRad);
+        const cosT = Math.cos(tiltRad);
+        const sinT = Math.sin(tiltRad);
+        const A = cosT * cosT - k * k * sinT * sinT;
+        const B = 2 * k * k * y0 * sinT;
+        const C = k * k * y0 * y0;
+
+        rebuildIntersectionCurve(A, B, C, k, y0, tiltRad, azimRad);
+        updateDandelin(y0, tiltRad, alphaRad, azimRad);
+        draw2DProjection(A, B, C, e, y0, k);
+
+        // Toggles visibility
+        planeGroup.visible = state.showPlane;
+        axesGroup.visible = state.showAxes;
+        dandelinGroup.visible = state.showDandelin;
+      }
+
+      function rebuildIntersectionCurve(A, B, C, k, y0, tiltRad, azimRad) {
+        if (curveMesh1) {
+          worldGroup.remove(curveMesh1);
+          curveMesh1.geometry.dispose();
+          curveMesh1 = null;
+        }
+        if (curveMesh2) {
+          worldGroup.remove(curveMesh2);
+          curveMesh2.geometry.dispose();
+          curveMesh2 = null;
+        }
+
+        const toWorld = (u, v) => {
+          const lx = u;
+          const ly = y0 - v * Math.sin(tiltRad);
+          const lz = v * Math.cos(tiltRad);
+          const cosA = Math.cos(azimRad);
+          const sinA = Math.sin(azimRad);
+          return new THREE.Vector3(
+            lx * cosA + lz * sinA,
+            ly,
+            -lx * sinA + lz * cosA,
+          );
+        };
+
+        // 1. Circle / Ellipse (A > 0.002)
+        if (A > 0.002) {
+          const delta = B * B + 4 * A * C;
+          if (delta > 0) {
+            const vc = -B / (2 * A);
+            const av = Math.sqrt(delta) / (2 * A);
+            const bu = Math.sqrt(delta / (4 * A));
+            const pts = [];
+            for (let i = 0; i <= 90; i++) {
+              const theta = (i / 90) * Math.PI * 2;
+              const pt = toWorld(
+                bu * Math.cos(theta),
+                vc + av * Math.sin(theta),
+              );
+              if (Math.abs(pt.y) <= CONE_HEIGHT * 1.02) pts.push(pt);
+            }
+            if (pts.length > 3) {
+              const curve = new THREE.CatmullRomCurve3(pts, true);
+              curveMesh1 = new THREE.Mesh(
+                new THREE.TubeGeometry(curve, 90, 0.038, 8, true),
+                curveMat,
+              );
+              curveMesh1.renderOrder = 10;
+              worldGroup.add(curveMesh1);
+            }
+          }
+        }
+        // 2. Parabola (|A| <= 0.002)
+        else if (Math.abs(A) <= 0.002) {
+          if (Math.abs(B) > 0.001) {
+            const pts = [];
+            // Clip cleanly at cone height limits
+            const uMax = Math.min(
+              3.2,
+              Math.sqrt(
+                Math.max(
+                  0.1,
+                  2 * k * k * Math.abs(y0) * (CONE_HEIGHT - Math.abs(y0) / 2),
+                ),
+              ),
+            );
+            for (let i = 0; i <= 70; i++) {
+              const u = -uMax + (i / 70) * (2 * uMax);
+              const v = (C - u * u) / B;
+              const pt = toWorld(u, v);
+              if (Math.abs(pt.y) <= CONE_HEIGHT * 1.01) pts.push(pt);
+            }
+            if (pts.length > 3) {
+              const curve = new THREE.CatmullRomCurve3(pts, false);
+              curveMesh1 = new THREE.Mesh(
+                new THREE.TubeGeometry(curve, 70, 0.038, 8, false),
+                curveMat,
+              );
+              curveMesh1.renderOrder = 10;
+              worldGroup.add(curveMesh1);
+            }
+          }
+        }
+        // 3. Hyperbola (A < -0.002)
+        else {
+          const absA = Math.abs(A);
+          const vc = -B / (2 * A);
+          const delta = B * B + 4 * A * C;
+          const av = Math.sqrt(Math.max(0.001, delta)) / (2 * absA);
+          const bu = Math.sqrt(Math.max(0.001, delta) / (4 * absA));
+
+          const pts1 = [],
+            pts2 = [];
+          for (let i = 0; i <= 50; i++) {
+            const t = -1.6 + (i / 50) * 3.2;
+            const u = bu * Math.sinh(t);
+            const pt1 = toWorld(u, vc + av * Math.cosh(t));
+            const pt2 = toWorld(u, vc - av * Math.cosh(t));
+            if (Math.abs(pt1.y) <= CONE_HEIGHT * 1.01) pts1.push(pt1);
+            if (Math.abs(pt2.y) <= CONE_HEIGHT * 1.01) pts2.push(pt2);
+          }
+          if (pts1.length > 3) {
+            const c1 = new THREE.CatmullRomCurve3(pts1, false);
+            curveMesh1 = new THREE.Mesh(
+              new THREE.TubeGeometry(c1, 50, 0.038, 8, false),
+              curveMat,
+            );
+            curveMesh1.renderOrder = 10;
+            worldGroup.add(curveMesh1);
+          }
+          if (pts2.length > 3) {
+            const c2 = new THREE.CatmullRomCurve3(pts2, false);
+            curveMesh2 = new THREE.Mesh(
+              new THREE.TubeGeometry(c2, 50, 0.038, 8, false),
+              curveMat,
+            );
+            curveMesh2.renderOrder = 10;
+            worldGroup.add(curveMesh2);
+          }
+        }
+      }
+
+      function updateDandelin(y0, tiltRad, alphaRad, azimRad) {
+        if (!state.showDandelin || Math.abs(y0) < 0.1) {
+          sphere1.visible = false;
+          sphere2.visible = false;
+          focus1.visible = false;
+          focus2.visible = false;
+          return;
+        }
+
+        const cosT = Math.cos(tiltRad);
+        const sinT = Math.sin(tiltRad);
+        const sinA = Math.sin(alphaRad);
+        const ratio = sinA / cosT;
+
+        if (Math.abs(1 - ratio) > 0.02) {
+          const ys1 = y0 / (1 - ratio);
+          const r1 = Math.abs(ys1) * sinA;
+          sphere1.position.set(0, ys1, 0);
+          sphere1.scale.set(r1, r1, r1);
+          sphere1.visible = true;
+
+          const f1_y = ys1 - (ys1 - y0) * sinT * sinT;
+          const f1_z = -(ys1 - y0) * sinT * cosT;
+          focus1.position.set(
+            f1_z * Math.sin(azimRad),
+            f1_y,
+            f1_z * Math.cos(azimRad),
+          );
+          focus1.visible = true;
+        } else {
+          sphere1.visible = false;
+          focus1.visible = false;
+        }
+
+        if (Math.abs(1 + ratio) > 0.02) {
+          const ys2 = y0 / (1 + ratio);
+          const r2 = Math.abs(ys2) * sinA;
+          sphere2.position.set(0, ys2, 0);
+          sphere2.scale.set(r2, r2, r2);
+          sphere2.visible = true;
+
+          const f2_y = ys2 - (ys2 - y0) * sinT * sinT;
+          const f2_z = -(ys2 - y0) * sinT * cosT;
+          focus2.position.set(
+            f2_z * Math.sin(azimRad),
+            f2_y,
+            f2_z * Math.cos(azimRad),
+          );
+          focus2.visible = true;
+        } else {
+          sphere2.visible = false;
+          focus2.visible = false;
+        }
+      }
+
+      /* =========================================================================
+       9. 2D HUD ORTHOGONAL PROJECTION
+       ========================================================================= */
+      const canvas2d = document.getElementById("canvas2d");
+      const ctx = canvas2d.getContext("2d");
+
+      function draw2DProjection(A, B, C, e, y0, k) {
+        const w = canvas2d.width;
+        const h = canvas2d.height;
+        ctx.clearRect(0, 0, w, h);
+
+        const cx = w / 2;
+        const cy = h / 2;
+        const scale = 24;
+
+        // Coordinate axes
+        ctx.strokeStyle = "rgba(255,255,255,0.08)";
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(0, cy);
+        ctx.lineTo(w, cy);
+        ctx.moveTo(cx, 0);
+        ctx.lineTo(cx, h);
+        ctx.stroke();
+
+        ctx.lineWidth = 2.5;
+        ctx.strokeStyle = "#00f2fe";
+
+        const statA = document.getElementById("stat-a");
+        const statB = document.getElementById("stat-b");
+        const statC = document.getElementById("stat-c");
+        const statSlope = document.getElementById("stat-slope");
+        const formulaBox = document.getElementById("formula-display");
+
+        if (state.tilt < 0.3) {
+          const r = Math.abs(y0) * k;
+          ctx.beginPath();
+          ctx.arc(cx, cy, r * scale, 0, Math.PI * 2);
+          ctx.stroke();
+
+          formulaBox.innerHTML = `x&sup2; + y&sup2; = ${(r * r).toFixed(2)}`;
+          statA.textContent = r.toFixed(2);
+          statB.textContent = r.toFixed(2);
+          statC.textContent = "0.00";
+          statSlope.textContent = "Horizontal";
+        } else if (A > 0.002) {
+          const delta = B * B + 4 * A * C;
+          const vc = -B / (2 * A);
+          const av = Math.sqrt(delta) / (2 * A);
+          const bu = Math.sqrt(delta / (4 * A));
+          const cFocal = Math.sqrt(Math.max(0, av * av - bu * bu));
+
+          ctx.beginPath();
+          ctx.ellipse(
+            cx,
+            cy - vc * (scale * 0.4),
+            bu * scale,
+            av * scale,
+            0,
+            0,
+            Math.PI * 2,
+          );
+          ctx.stroke();
+
+          formulaBox.innerHTML = `x&sup2;/${(bu * bu).toFixed(1)} + y&sup2;/${(
+            av * av
+          ).toFixed(1)} = 1`;
+          statA.textContent = av.toFixed(2);
+          statB.textContent = bu.toFixed(2);
+          statC.textContent = cFocal.toFixed(2);
+          statSlope.textContent = "< Generator";
+        } else if (Math.abs(A) <= 0.002) {
+          ctx.beginPath();
+          let first = true;
+          for (let px = -w / 2; px <= w / 2; px += 2) {
+            const u = px / scale;
+            const v = (C - u * u) / B;
+            const py = cy - v * scale;
+            if (first) {
+              ctx.moveTo(cx + px, py);
+              first = false;
+            } else ctx.lineTo(cx + px, py);
+          }
+          ctx.stroke();
+
+          formulaBox.innerHTML = `y = ${(1 / Math.abs(B)).toFixed(2)} x&sup2;`;
+          statA.textContent = "∞";
+          statB.textContent = "∞";
+          statC.textContent = (Math.abs(B) / 4).toFixed(2);
+          statSlope.textContent = "Parallel";
+        } else {
+          const absA = Math.abs(A);
+          const delta = B * B + 4 * A * C;
+          const av = Math.sqrt(Math.max(0.01, delta)) / (2 * absA);
+          const bu = Math.sqrt(Math.max(0.01, delta) / (4 * absA));
+          const cFocal = Math.sqrt(av * av + bu * bu);
+
+          ctx.beginPath();
+          for (let t = -1.5; t <= 1.5; t += 0.08) {
+            const u = bu * Math.sinh(t);
+            const v = av * Math.cosh(t);
+            const px = cx + u * scale;
+            const py = cy - v * (scale * 0.4);
+            if (t === -1.5) ctx.moveTo(px, py);
+            else ctx.lineTo(px, py);
+          }
+          ctx.stroke();
+
+          ctx.beginPath();
+          for (let t = -1.5; t <= 1.5; t += 0.08) {
+            const u = bu * Math.sinh(t);
+            const v = -av * Math.cosh(t);
+            const px = cx + u * scale;
+            const py = cy - v * (scale * 0.4);
+            if (t === -1.5) ctx.moveTo(px, py);
+            else ctx.lineTo(px, py);
+          }
+          ctx.stroke();
+
+          formulaBox.innerHTML = `y&sup2;/${(av * av).toFixed(1)} - x&sup2;/${(
+            bu * bu
+          ).toFixed(1)} = 1`;
+          statA.textContent = av.toFixed(2);
+          statB.textContent = bu.toFixed(2);
+          statC.textContent = cFocal.toFixed(2);
+          statSlope.textContent = "> Generator";
+        }
+      }
+
+      /* =========================================================================
+       10. PRESET TRANSITIONS & UI BINDINGS
+       ========================================================================= */
+      const PRESETS = {
+        circle: { tilt: 0, height: 1.6, alpha: 45 },
+        ellipse: { tilt: 26, height: 1.4, alpha: 45 },
+        parabola: { tilt: 45, height: 1.2, alpha: 45 },
+        hyperbola: { tilt: 68, height: 1.1, alpha: 45 },
+        degenerate: { tilt: 0, height: 0.0, alpha: 45 },
+      };
+
+      let targetState = null;
+      let animProgress = 1;
+
+      function animateToPreset(key) {
+        document
+          .querySelectorAll(".preset-btn")
+          .forEach((b) =>
+            b.classList.toggle("active", b.dataset.preset === key),
+          );
+        targetState = { ...PRESETS[key] };
+        animProgress = 0;
+      }
+
+      const sTilt = document.getElementById("slider-tilt");
+      const sHeight = document.getElementById("slider-height");
+      const sAlpha = document.getElementById("slider-alpha");
+      const sAzimuth = document.getElementById("slider-azimuth");
+
+      function syncUI() {
+        sTilt.value = state.tilt;
+        document.getElementById("val-tilt").innerHTML = `${state.tilt.toFixed(
+          1,
+        )}&deg;`;
+        sHeight.value = state.height;
+        document.getElementById(
+          "val-height",
+        ).textContent = state.height.toFixed(2);
+        sAlpha.value = state.alpha;
+        document.getElementById("val-alpha").innerHTML = `${state.alpha}&deg;`;
+        sAzimuth.value = state.azimuth;
+        document.getElementById(
+          "val-azimuth",
+        ).innerHTML = `${state.azimuth}&deg;`;
+      }
+
+      sTilt.addEventListener("input", (e) => {
+        state.tilt = parseFloat(e.target.value);
+        targetState = null;
+        syncUI();
+        updateSimulator();
+      });
+      sHeight.addEventListener("input", (e) => {
+        state.height = parseFloat(e.target.value);
+        targetState = null;
+        syncUI();
+        updateSimulator();
+      });
+      sAlpha.addEventListener("input", (e) => {
+        state.alpha = parseFloat(e.target.value);
+        targetState = null;
+        rebuildCones();
+        syncUI();
+        updateSimulator();
+      });
+      sAzimuth.addEventListener("input", (e) => {
+        state.azimuth = parseFloat(e.target.value);
+        syncUI();
+        updateSimulator();
+      });
+
+      document.querySelectorAll(".preset-btn").forEach((btn) => {
+        btn.addEventListener("click", () =>
+          animateToPreset(btn.dataset.preset),
+        );
+      });
+
+      const btnPlane = document.getElementById("btn-toggle-plane");
+      btnPlane.addEventListener("click", () => {
+        state.showPlane = !state.showPlane;
+        btnPlane.classList.toggle("active", state.showPlane);
+        updateSimulator();
+      });
+
+      const btnAxes = document.getElementById("btn-toggle-axes");
+      btnAxes.addEventListener("click", () => {
+        state.showAxes = !state.showAxes;
+        btnAxes.classList.toggle("active", state.showAxes);
+        updateSimulator();
+      });
+
+      const btnDandelin = document.getElementById("btn-toggle-dandelin");
+      btnDandelin.addEventListener("click", () => {
+        state.showDandelin = !state.showDandelin;
+        btnDandelin.classList.toggle("active", state.showDandelin);
+        updateSimulator();
+      });
+
+      const btnSpin = document.getElementById("btn-toggle-spin");
+      btnSpin.addEventListener("click", () => {
+        state.autoRotate = !state.autoRotate;
+        btnSpin.classList.toggle("active", state.autoRotate);
+      });
+
+      /* =========================================================================
+       11. RENDER LOOP
+       ========================================================================= */
+      function animate() {
+        requestAnimationFrame(animate);
+
+        if (targetState && animProgress < 1) {
+          animProgress += 0.035;
+          state.tilt += (targetState.tilt - state.tilt) * 0.16;
+          state.height += (targetState.height - state.height) * 0.16;
+          state.alpha += (targetState.alpha - state.alpha) * 0.16;
+
+          if (
+            Math.abs(state.tilt - targetState.tilt) < 0.05 &&
+            Math.abs(state.height - targetState.height) < 0.01
+          ) {
+            state.tilt = targetState.tilt;
+            state.height = targetState.height;
+            state.alpha = targetState.alpha;
+            targetState = null;
+          }
+
+          rebuildCones();
+          syncUI();
+          updateSimulator();
+        }
+
+        if (state.autoRotate) {
+          worldGroup.rotation.y += 0.006;
+        }
+
+        controls.update();
+        renderer.render(scene, camera);
+      }
+
+      window.addEventListener("resize", () => {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+      });
+
+      // Initialize
+      syncUI();
+      updateSimulator();
+      animate();
+    </script>
+  </body>
+</html>
