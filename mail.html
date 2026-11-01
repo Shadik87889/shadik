@@ -1,0 +1,972 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <title>ShadikMail - Internal Mobile Mail</title>
+    <!-- Tailwind CSS & Lucide Icons -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+      body {
+        -webkit-tap-highlight-color: transparent;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          Helvetica, Arial, sans-serif;
+      }
+      .custom-scrollbar::-webkit-scrollbar {
+        width: 4px;
+      }
+      .custom-scrollbar::-webkit-scrollbar-thumb {
+        background: #cbd5e1;
+        border-radius: 4px;
+      }
+    </style>
+  </head>
+  <body
+    class="bg-slate-900 text-slate-800 antialiased h-screen w-screen overflow-hidden flex flex-col justify-center items-center"
+  >
+    <!-- ==================== AUTHENTICATION SCREEN ==================== -->
+    <div
+      id="auth-screen"
+      class="fixed inset-0 z-50 bg-slate-950 flex flex-col justify-center items-center px-4"
+    >
+      <div
+        class="w-full max-w-sm bg-white rounded-3xl p-6 shadow-2xl space-y-5 border border-slate-100"
+      >
+        <!-- Brand Logo -->
+        <div class="text-center space-y-1">
+          <div
+            class="inline-flex items-center justify-center w-14 h-14 bg-indigo-600 text-white rounded-2xl shadow-lg shadow-indigo-200"
+          >
+            <i data-lucide="mail" class="w-8 h-8"></i>
+          </div>
+          <h1 class="text-2xl font-black text-slate-900 tracking-tight">
+            ShadikMail
+          </h1>
+          <p class="text-xs text-slate-400 font-medium tracking-wide">
+            Secure Internal Mail System
+          </p>
+        </div>
+
+        <!-- Auth Error / Success Alert -->
+        <div
+          id="auth-alert"
+          class="hidden p-3 rounded-xl text-xs font-semibold"
+        ></div>
+
+        <!-- Form -->
+        <form id="auth-form" class="space-y-3">
+          <div id="name-field-group" class="hidden">
+            <label
+              class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1"
+              >Your Name</label
+            >
+            <div class="relative">
+              <i
+                data-lucide="user"
+                class="w-4 h-4 text-slate-400 absolute left-3 top-3"
+              ></i>
+              <input
+                type="text"
+                id="auth-name"
+                placeholder="Shadik"
+                class="w-full pl-9 pr-3 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-slate-50"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label
+              class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1"
+              >Account Email</label
+            >
+            <div class="relative">
+              <i
+                data-lucide="at-sign"
+                class="w-4 h-4 text-slate-400 absolute left-3 top-3"
+              ></i>
+              <input
+                type="email"
+                id="auth-email"
+                required
+                placeholder="user@domain.com"
+                class="w-full pl-9 pr-3 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-slate-50"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label
+              class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1"
+              >Password</label
+            >
+            <div class="relative">
+              <i
+                data-lucide="lock"
+                class="w-4 h-4 text-slate-400 absolute left-3 top-3"
+              ></i>
+              <input
+                type="password"
+                id="auth-password"
+                required
+                placeholder="••••••••"
+                class="w-full pl-9 pr-3 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-slate-50"
+              />
+            </div>
+          </div>
+
+          <button
+            type="submit"
+            id="auth-submit-btn"
+            class="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl shadow-md shadow-indigo-200 active:scale-95 transition text-sm flex items-center justify-center gap-2"
+          >
+            <span>Sign In</span>
+            <i data-lucide="arrow-right" class="w-4 h-4"></i>
+          </button>
+        </form>
+
+        <!-- Divider -->
+        <div class="relative flex py-1 items-center">
+          <div class="flex-grow border-t border-slate-200"></div>
+          <span class="flex-shrink mx-3 text-xs text-slate-400 font-medium"
+            >or continue with</span
+          >
+          <div class="flex-grow border-t border-slate-200"></div>
+        </div>
+
+        <!-- Google Sign In -->
+        <button
+          id="google-login-btn"
+          type="button"
+          class="w-full py-2.5 bg-white border border-slate-200 text-slate-700 font-semibold rounded-xl text-sm shadow-sm hover:bg-slate-50 active:scale-95 transition flex items-center justify-center gap-2"
+        >
+          <svg class="w-4 h-4" viewBox="0 0 24 24">
+            <path
+              fill="#4285F4"
+              d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+            />
+            <path
+              fill="#34A853"
+              d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+            />
+            <path
+              fill="#FBBC05"
+              d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"
+            />
+            <path
+              fill="#EA4335"
+              d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"
+            />
+          </svg>
+          <span>Google Account</span>
+        </button>
+
+        <!-- Switch Modes -->
+        <p class="text-center text-xs text-slate-500">
+          <span id="auth-switch-text">Don't have an account?</span>
+          <button
+            id="auth-switch-btn"
+            type="button"
+            class="text-indigo-600 font-bold ml-1 hover:underline"
+          >
+            Sign Up
+          </button>
+        </p>
+      </div>
+    </div>
+
+    <!-- ==================== MAIN APPLICATION CONTAINER ==================== -->
+    <div
+      id="app-container"
+      class="hidden flex-1 flex flex-col h-full overflow-hidden max-w-md w-full bg-white shadow-2xl relative"
+    >
+      <!-- Top Navigation Header -->
+      <header
+        class="p-4 bg-white border-b border-slate-100 flex items-center justify-between z-10 shrink-0"
+      >
+        <div class="flex items-center gap-3">
+          <div
+            class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-indigo-600 to-violet-500 text-white font-bold flex items-center justify-center text-sm shadow-md shadow-indigo-100"
+            id="user-avatar"
+          >
+            S
+          </div>
+          <div>
+            <h2
+              id="user-display-name"
+              class="text-sm font-bold text-slate-800 leading-tight"
+            >
+              User
+            </h2>
+            <p
+              id="user-display-email"
+              class="text-[11px] text-slate-400 font-mono truncate max-w-[170px]"
+            >
+              loading...
+            </p>
+          </div>
+        </div>
+        <button
+          id="logout-btn"
+          title="Sign Out"
+          class="p-2.5 rounded-xl hover:bg-red-50 hover:text-red-600 text-slate-400 active:scale-95 transition"
+        >
+          <i data-lucide="log-out" class="w-5 h-5"></i>
+        </button>
+      </header>
+
+      <!-- Navigation Tabs -->
+      <div class="flex border-b border-slate-100 bg-slate-50/70 p-1 shrink-0">
+        <button
+          id="tab-inbox"
+          class="flex-1 py-2.5 text-xs font-bold text-indigo-600 border-b-2 border-indigo-600 flex items-center justify-center gap-1.5 transition"
+        >
+          <i data-lucide="inbox" class="w-4 h-4"></i>
+          <span>Inbox</span>
+          <span
+            id="inbox-badge"
+            class="hidden ml-1 px-1.5 py-0.5 bg-indigo-600 text-white text-[10px] font-bold rounded-full"
+            >0</span
+          >
+        </button>
+        <button
+          id="tab-sent"
+          class="flex-1 py-2.5 text-xs font-semibold text-slate-400 border-b-2 border-transparent flex items-center justify-center gap-1.5 transition"
+        >
+          <i data-lucide="send" class="w-4 h-4"></i>
+          <span>Sent</span>
+        </button>
+      </div>
+
+      <!-- Messages List -->
+      <main
+        class="flex-1 overflow-y-auto custom-scrollbar p-3 relative"
+        id="mail-list"
+      >
+        <!-- Loading indicator -->
+        <div
+          id="loading-state"
+          class="flex flex-col items-center justify-center h-48 space-y-2 text-slate-400"
+        >
+          <div
+            class="w-6 h-6 border-2 border-indigo-600 border-t-transparent rounded-full animate-spin"
+          ></div>
+          <span class="text-xs font-medium">Syncing ShadikMail...</span>
+        </div>
+
+        <!-- Empty state -->
+        <div
+          id="empty-state"
+          class="hidden flex flex-col items-center justify-center h-64 text-slate-400 space-y-2"
+        >
+          <i
+            data-lucide="mail-open"
+            class="w-10 h-10 stroke-1 text-slate-300"
+          ></i>
+          <p class="text-xs font-semibold">No messages in this mailbox</p>
+        </div>
+
+        <!-- Dynamic Message Cards list -->
+        <div id="messages-container" class="space-y-2.5"></div>
+      </main>
+
+      <!-- Floating Compose Button (FAB) -->
+      <button
+        id="open-compose-btn"
+        class="absolute bottom-6 right-5 w-14 h-14 bg-indigo-600 hover:bg-indigo-700 text-white rounded-full shadow-2xl shadow-indigo-300 flex items-center justify-center active:scale-90 transition z-20"
+      >
+        <i data-lucide="edit-3" class="w-6 h-6"></i>
+      </button>
+    </div>
+
+    <!-- ==================== MESSAGE DETAIL MODAL ==================== -->
+    <div
+      id="detail-modal"
+      class="hidden fixed inset-0 z-40 bg-black/50 backdrop-blur-sm flex flex-col justify-end"
+    >
+      <div
+        class="w-full max-w-md mx-auto bg-white rounded-t-3xl max-h-[92vh] h-[85vh] flex flex-col shadow-2xl overflow-hidden animate-in slide-in-from-bottom duration-200"
+      >
+        <!-- Modal Header -->
+        <div
+          class="p-4 border-b border-slate-100 flex items-center justify-between shrink-0"
+        >
+          <button
+            id="close-detail-btn"
+            class="p-2 text-slate-400 hover:text-slate-700 rounded-full"
+          >
+            <i data-lucide="arrow-left" class="w-5 h-5"></i>
+          </button>
+          <span
+            class="text-[11px] font-bold text-slate-400 uppercase tracking-widest"
+            >Message Viewer</span
+          >
+          <button
+            id="delete-mail-btn"
+            class="p-2 text-red-400 hover:text-red-600 rounded-full"
+          >
+            <i data-lucide="trash-2" class="w-5 h-5"></i>
+          </button>
+        </div>
+
+        <!-- Modal Body -->
+        <div class="flex-1 overflow-y-auto p-5 space-y-4 custom-scrollbar">
+          <div>
+            <h2
+              id="detail-subject"
+              class="text-lg font-bold text-slate-900 leading-snug"
+            >
+              Subject
+            </h2>
+            <div
+              class="mt-3 flex items-center justify-between text-xs border-y border-slate-100 py-3"
+            >
+              <div>
+                <p class="text-slate-900 font-bold" id="detail-sender">
+                  From: someone
+                </p>
+                <p
+                  class="text-slate-400 font-mono text-[11px] mt-0.5"
+                  id="detail-recipient"
+                >
+                  To: me
+                </p>
+              </div>
+              <span
+                id="detail-time"
+                class="text-[10px] text-slate-500 font-medium bg-slate-100 px-2 py-1 rounded-md"
+                >Time</span
+              >
+            </div>
+          </div>
+
+          <div
+            id="detail-body"
+            class="text-sm text-slate-700 whitespace-pre-wrap leading-relaxed py-2 font-normal"
+          >
+            Message content...
+          </div>
+        </div>
+
+        <!-- Reply Footer -->
+        <div class="p-4 border-t border-slate-100 bg-slate-50 shrink-0">
+          <button
+            id="reply-btn"
+            class="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold flex items-center justify-center gap-2 active:scale-95 transition shadow-sm"
+          >
+            <i data-lucide="reply" class="w-4 h-4"></i>
+            <span>Reply to Sender</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== COMPOSE MESSAGE MODAL ==================== -->
+    <div
+      id="compose-modal"
+      class="hidden fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex flex-col justify-end"
+    >
+      <div
+        class="w-full max-w-md mx-auto bg-white rounded-t-3xl h-[92vh] flex flex-col shadow-2xl overflow-hidden animate-in slide-in-from-bottom duration-200"
+      >
+        <!-- Compose Header -->
+        <div
+          class="p-4 border-b border-slate-100 flex items-center justify-between shrink-0"
+        >
+          <div class="flex items-center gap-2">
+            <div
+              class="w-7 h-7 bg-indigo-50 text-indigo-600 rounded-lg flex items-center justify-center"
+            >
+              <i data-lucide="send" class="w-4 h-4"></i>
+            </div>
+            <h3 class="text-sm font-bold text-slate-900">New ShadikMail</h3>
+          </div>
+          <button
+            id="close-compose-btn"
+            class="p-2 text-slate-400 hover:text-slate-700 rounded-full"
+          >
+            <i data-lucide="x" class="w-5 h-5"></i>
+          </button>
+        </div>
+
+        <!-- Form -->
+        <form
+          id="compose-form"
+          class="flex-1 flex flex-col p-4 space-y-3 overflow-hidden"
+        >
+          <div>
+            <label
+              class="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1"
+              >To (Recipient Email Address)</label
+            >
+            <input
+              type="email"
+              id="compose-to"
+              required
+              placeholder="target@domain.com"
+              class="w-full px-3 py-2.5 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+            />
+          </div>
+
+          <div>
+            <label
+              class="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1"
+              >Subject</label
+            >
+            <input
+              type="text"
+              id="compose-subject"
+              required
+              placeholder="Subject title"
+              class="w-full px-3 py-2.5 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+            />
+          </div>
+
+          <div class="flex-1 flex flex-col">
+            <label
+              class="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1"
+              >Message</label
+            >
+            <textarea
+              id="compose-body"
+              required
+              placeholder="Write your internal email here..."
+              class="flex-1 w-full p-3 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:outline-none resize-none leading-relaxed custom-scrollbar"
+            ></textarea>
+          </div>
+
+          <div class="pt-2">
+            <button
+              type="submit"
+              id="send-mail-btn"
+              class="w-full py-3.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl shadow-lg shadow-indigo-200 flex items-center justify-center gap-2 active:scale-95 transition text-sm"
+            >
+              <i data-lucide="send" class="w-4 h-4"></i>
+              <span>Send ShadikMail</span>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- ==================== FIREBASE V10 SDK ==================== -->
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
+      import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-analytics.js";
+      import {
+        getFirestore,
+        collection,
+        doc,
+        addDoc,
+        deleteDoc,
+        updateDoc,
+        onSnapshot,
+        query,
+        where,
+        serverTimestamp,
+      } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
+      import {
+        getAuth,
+        createUserWithEmailAndPassword,
+        signInWithEmailAndPassword,
+        signOut,
+        onAuthStateChanged,
+        GoogleAuthProvider,
+        signInWithPopup,
+        updateProfile,
+      } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
+
+      // Your Exact Project Credentials (social-media-8ef6a)
+      const firebaseConfig = {
+        apiKey: "AIzaSyDPl7Q8dvENxtIvqtI_1E8bPPrbTWa4XU0",
+        authDomain: "social-media-8ef6a.firebaseapp.com",
+        projectId: "social-media-8ef6a",
+        storageBucket: "social-media-8ef6a.firebasestorage.app",
+        messagingSenderId: "243134973550",
+        appId: "1:243134973550:web:3ec961824bdc7b5ee7887f",
+        measurementId: "G-CZB578DQN4",
+      };
+
+      // Initialize Firebase
+      const app = initializeApp(firebaseConfig);
+      try {
+        getAnalytics(app);
+      } catch (e) {}
+      const db = getFirestore(app);
+      const auth = getAuth(app);
+
+      // App State
+      let currentUser = null;
+      let isSignUpMode = false;
+      let activeTab = "inbox";
+      let inboxMessages = [];
+      let sentMessages = [];
+      let currentViewingMessage = null;
+      let unsubscribeInbox = null;
+      let unsubscribeSent = null;
+
+      // Elements
+      const authScreen = document.getElementById("auth-screen");
+      const appContainer = document.getElementById("app-container");
+      const authForm = document.getElementById("auth-form");
+      const authEmail = document.getElementById("auth-email");
+      const authPassword = document.getElementById("auth-password");
+      const authName = document.getElementById("auth-name");
+      const nameFieldGroup = document.getElementById("name-field-group");
+      const authSwitchBtn = document.getElementById("auth-switch-btn");
+      const authSwitchText = document.getElementById("auth-switch-text");
+      const authSubmitBtn = document.getElementById("auth-submit-btn");
+      const authAlert = document.getElementById("auth-alert");
+      const googleLoginBtn = document.getElementById("google-login-btn");
+      const logoutBtn = document.getElementById("logout-btn");
+
+      const userDisplayName = document.getElementById("user-display-name");
+      const userDisplayEmail = document.getElementById("user-display-email");
+      const userAvatar = document.getElementById("user-avatar");
+
+      const tabInbox = document.getElementById("tab-inbox");
+      const tabSent = document.getElementById("tab-sent");
+      const inboxBadge = document.getElementById("inbox-badge");
+      const messagesContainer = document.getElementById("messages-container");
+      const loadingState = document.getElementById("loading-state");
+      const emptyState = document.getElementById("empty-state");
+
+      const composeModal = document.getElementById("compose-modal");
+      const openComposeBtn = document.getElementById("open-compose-btn");
+      const closeComposeBtn = document.getElementById("close-compose-btn");
+      const composeForm = document.getElementById("compose-form");
+      const composeTo = document.getElementById("compose-to");
+      const composeSubject = document.getElementById("compose-subject");
+      const composeBody = document.getElementById("compose-body");
+      const sendMailBtn = document.getElementById("send-mail-btn");
+
+      const detailModal = document.getElementById("detail-modal");
+      const closeDetailBtn = document.getElementById("close-detail-btn");
+      const detailSubject = document.getElementById("detail-subject");
+      const detailSender = document.getElementById("detail-sender");
+      const detailRecipient = document.getElementById("detail-recipient");
+      const detailTime = document.getElementById("detail-time");
+      const detailBody = document.getElementById("detail-body");
+      const replyBtn = document.getElementById("reply-btn");
+      const deleteMailBtn = document.getElementById("delete-mail-btn");
+
+      lucide.createIcons();
+
+      // Toggle Sign In / Sign Up
+      authSwitchBtn.addEventListener("click", () => {
+        isSignUpMode = !isSignUpMode;
+        hideAlert();
+        if (isSignUpMode) {
+          nameFieldGroup.classList.remove("hidden");
+          authSubmitBtn.querySelector("span").textContent = "Create Account";
+          authSwitchText.textContent = "Already have an account?";
+          authSwitchBtn.textContent = "Sign In";
+        } else {
+          nameFieldGroup.classList.add("hidden");
+          authSubmitBtn.querySelector("span").textContent = "Sign In";
+          authSwitchText.textContent = "Don't have an account?";
+          authSwitchBtn.textContent = "Sign Up";
+        }
+      });
+
+      // Form Submit Authentication
+      authForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const email = authEmail.value.trim().toLowerCase();
+        const pass = authPassword.value;
+        const name = authName.value.trim();
+
+        hideAlert();
+        authSubmitBtn.disabled = true;
+        authSubmitBtn.classList.add("opacity-50");
+
+        try {
+          if (isSignUpMode) {
+            const cred = await createUserWithEmailAndPassword(
+              auth,
+              email,
+              pass,
+            );
+            if (name) {
+              await updateProfile(cred.user, { displayName: name });
+            }
+          } else {
+            await signInWithEmailAndPassword(auth, email, pass);
+          }
+        } catch (err) {
+          showAlert(formatFirebaseError(err.message), "error");
+        } finally {
+          authSubmitBtn.disabled = false;
+          authSubmitBtn.classList.remove("opacity-50");
+        }
+      });
+
+      // Google Sign-In
+      googleLoginBtn.addEventListener("click", async () => {
+        try {
+          hideAlert();
+          const provider = new GoogleAuthProvider();
+          await signInWithPopup(auth, provider);
+        } catch (err) {
+          showAlert(formatFirebaseError(err.message), "error");
+        }
+      });
+
+      // Sign Out
+      logoutBtn.addEventListener("click", async () => {
+        if (unsubscribeInbox) unsubscribeInbox();
+        if (unsubscribeSent) unsubscribeSent();
+        await signOut(auth);
+      });
+
+      // Authentication Observer
+      onAuthStateChanged(auth, (user) => {
+        currentUser = user;
+        if (user) {
+          authScreen.classList.add("hidden");
+          appContainer.classList.remove("hidden");
+
+          const name = user.displayName || user.email.split("@")[0];
+          userDisplayName.textContent = name;
+          userDisplayEmail.textContent = user.email;
+          userAvatar.textContent = name.charAt(0).toUpperCase();
+
+          listenForMessages();
+        } else {
+          authScreen.classList.remove("hidden");
+          appContainer.classList.add("hidden");
+          messagesContainer.innerHTML = "";
+        }
+      });
+
+      // Real-Time Inbox & Sent Listeners
+      function listenForMessages() {
+        if (!currentUser) return;
+        loadingState.classList.remove("hidden");
+
+        const userEmail = currentUser.email.toLowerCase();
+
+        // INBOX
+        const inboxQuery = query(
+          collection(db, "messages"),
+          where("recipientEmail", "==", userEmail),
+        );
+
+        unsubscribeInbox = onSnapshot(
+          inboxQuery,
+          (snapshot) => {
+            inboxMessages = [];
+            snapshot.forEach((docSnap) => {
+              inboxMessages.push({ id: docSnap.id, ...docSnap.data() });
+            });
+
+            // Sort newest first client-side (avoids Firestore composite index requirement)
+            inboxMessages.sort(
+              (a, b) =>
+                (b.createdAt?.toMillis() || 0) - (a.createdAt?.toMillis() || 0),
+            );
+
+            // Unread badge count
+            const unreadCount = inboxMessages.filter((m) => !m.read).length;
+            if (unreadCount > 0) {
+              inboxBadge.textContent = unreadCount;
+              inboxBadge.classList.remove("hidden");
+            } else {
+              inboxBadge.classList.add("hidden");
+            }
+
+            if (activeTab === "inbox") renderList();
+          },
+          (err) => console.error("Inbox query error:", err),
+        );
+
+        // SENT
+        const sentQuery = query(
+          collection(db, "messages"),
+          where("senderEmail", "==", userEmail),
+        );
+
+        unsubscribeSent = onSnapshot(
+          sentQuery,
+          (snapshot) => {
+            sentMessages = [];
+            snapshot.forEach((docSnap) => {
+              sentMessages.push({ id: docSnap.id, ...docSnap.data() });
+            });
+
+            sentMessages.sort(
+              (a, b) =>
+                (b.createdAt?.toMillis() || 0) - (a.createdAt?.toMillis() || 0),
+            );
+
+            if (activeTab === "sent") renderList();
+          },
+          (err) => console.error("Sent query error:", err),
+        );
+      }
+
+      // Render messages
+      function renderList() {
+        loadingState.classList.add("hidden");
+        messagesContainer.innerHTML = "";
+
+        const currentList =
+          activeTab === "inbox" ? inboxMessages : sentMessages;
+
+        if (currentList.length === 0) {
+          emptyState.classList.remove("hidden");
+          return;
+        }
+
+        emptyState.classList.add("hidden");
+
+        currentList.forEach((msg) => {
+          const isInbox = activeTab === "inbox";
+          const isUnread = isInbox && !msg.read;
+
+          const card = document.createElement("div");
+          card.className = `p-3.5 rounded-2xl border transition active:scale-[0.99] cursor-pointer ${
+            isUnread
+              ? "bg-indigo-50/70 border-indigo-200"
+              : "bg-white border-slate-100 hover:border-slate-200"
+          }`;
+
+          const initials = (isInbox
+            ? msg.senderName || msg.senderEmail
+            : msg.recipientEmail
+          )
+            .charAt(0)
+            .toUpperCase();
+          const displayParty = isInbox
+            ? msg.senderName || msg.senderEmail
+            : `To: ${msg.recipientEmail}`;
+          const timeFormatted = formatTime(msg.createdAt);
+
+          card.innerHTML = `
+          <div class="flex items-start gap-3">
+            <div class="w-9 h-9 rounded-xl ${
+              isUnread
+                ? "bg-indigo-600 text-white"
+                : "bg-slate-100 text-slate-700"
+            } flex items-center justify-center font-bold text-xs shrink-0 mt-0.5">
+              ${initials}
+            </div>
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center justify-between gap-2">
+                <span class="text-xs font-bold ${
+                  isUnread ? "text-indigo-950 font-black" : "text-slate-700"
+                } truncate">
+                  ${escapeHtml(displayParty)}
+                </span>
+                <span class="text-[10px] text-slate-400 shrink-0 font-medium">${timeFormatted}</span>
+              </div>
+              <p class="text-xs ${
+                isUnread
+                  ? "font-bold text-slate-900"
+                  : "text-slate-800 font-semibold"
+              } truncate mt-0.5">
+                ${escapeHtml(msg.subject || "(No Subject)")}
+              </p>
+              <p class="text-[11px] text-slate-500 truncate line-clamp-1 mt-0.5">
+                ${escapeHtml(msg.body || "")}
+              </p>
+            </div>
+          </div>
+        `;
+
+          card.addEventListener("click", () => openMessageDetail(msg));
+          messagesContainer.appendChild(card);
+        });
+
+        lucide.createIcons();
+      }
+
+      // Tabs toggle
+      tabInbox.addEventListener("click", () => {
+        activeTab = "inbox";
+        tabInbox.className =
+          "flex-1 py-2.5 text-xs font-bold text-indigo-600 border-b-2 border-indigo-600 flex items-center justify-center gap-1.5 transition";
+        tabSent.className =
+          "flex-1 py-2.5 text-xs font-semibold text-slate-400 border-b-2 border-transparent flex items-center justify-center gap-1.5 transition";
+        renderList();
+      });
+
+      tabSent.addEventListener("click", () => {
+        activeTab = "sent";
+        tabSent.className =
+          "flex-1 py-2.5 text-xs font-bold text-indigo-600 border-b-2 border-indigo-600 flex items-center justify-center gap-1.5 transition";
+        tabInbox.className =
+          "flex-1 py-2.5 text-xs font-semibold text-slate-400 border-b-2 border-transparent flex items-center justify-center gap-1.5 transition";
+        renderList();
+      });
+
+      // Compose Modal
+      openComposeBtn.addEventListener("click", () => {
+        composeForm.reset();
+        composeModal.classList.remove("hidden");
+        lucide.createIcons();
+      });
+
+      closeComposeBtn.addEventListener("click", () => {
+        composeModal.classList.add("hidden");
+      });
+
+      // Send Mail Action
+      composeForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const recipient = composeTo.value.trim().toLowerCase();
+        const subject = composeSubject.value.trim();
+        const body = composeBody.value.trim();
+
+        if (!recipient || !body) return;
+
+        sendMailBtn.disabled = true;
+        sendMailBtn.innerHTML = `<span>Sending...</span>`;
+
+        try {
+          await addDoc(collection(db, "messages"), {
+            senderUid: currentUser.uid,
+            senderEmail: currentUser.email.toLowerCase(),
+            senderName:
+              currentUser.displayName || currentUser.email.split("@")[0],
+            recipientEmail: recipient,
+            subject: subject || "(No Subject)",
+            body: body,
+            createdAt: serverTimestamp(),
+            read: false,
+          });
+
+          composeModal.classList.add("hidden");
+          composeForm.reset();
+        } catch (err) {
+          alert("Failed to send message: " + err.message);
+        } finally {
+          sendMailBtn.disabled = false;
+          sendMailBtn.innerHTML = `<i data-lucide="send" class="w-4 h-4"></i><span>Send ShadikMail</span>`;
+          lucide.createIcons();
+        }
+      });
+
+      // Message Details
+      async function openMessageDetail(msg) {
+        currentViewingMessage = msg;
+        detailSubject.textContent = msg.subject || "(No Subject)";
+        detailSender.textContent = `From: ${
+          msg.senderName || msg.senderEmail
+        } <${msg.senderEmail}>`;
+        detailRecipient.textContent = `To: ${msg.recipientEmail}`;
+        detailTime.textContent = formatTime(msg.createdAt, true);
+        detailBody.textContent = msg.body;
+
+        detailModal.classList.remove("hidden");
+        lucide.createIcons();
+
+        // Auto mark read if viewing in inbox
+        if (activeTab === "inbox" && !msg.read) {
+          try {
+            await updateDoc(doc(db, "messages", msg.id), { read: true });
+          } catch (err) {
+            console.warn("Could not mark as read", err);
+          }
+        }
+      }
+
+      closeDetailBtn.addEventListener("click", () => {
+        detailModal.classList.add("hidden");
+      });
+
+      // Delete Mail
+      deleteMailBtn.addEventListener("click", async () => {
+        if (!currentViewingMessage) return;
+        if (confirm("Delete this message?")) {
+          try {
+            await deleteDoc(doc(db, "messages", currentViewingMessage.id));
+            detailModal.classList.add("hidden");
+          } catch (err) {
+            alert("Error deleting: " + err.message);
+          }
+        }
+      });
+
+      // Reply
+      replyBtn.addEventListener("click", () => {
+        if (!currentViewingMessage) return;
+        const replyTo = currentViewingMessage.senderEmail;
+        const replySub = currentViewingMessage.subject.startsWith("Re:")
+          ? currentViewingMessage.subject
+          : `Re: ${currentViewingMessage.subject}`;
+
+        detailModal.classList.add("hidden");
+        composeModal.classList.remove("hidden");
+
+        composeTo.value = replyTo;
+        composeSubject.value = replySub;
+        composeBody.value = `\n\n--- Original Message ---\n${currentViewingMessage.body}`;
+        composeBody.focus();
+        composeBody.setSelectionRange(0, 0);
+      });
+
+      // Helpers
+      function showAlert(text, type = "error") {
+        authAlert.textContent = text;
+        authAlert.className = `p-3 rounded-xl text-xs font-semibold ${
+          type === "error"
+            ? "bg-red-50 text-red-600 border border-red-200"
+            : "bg-emerald-50 text-emerald-600 border border-emerald-200"
+        }`;
+        authAlert.classList.remove("hidden");
+      }
+
+      function hideAlert() {
+        authAlert.classList.add("hidden");
+      }
+
+      function formatFirebaseError(msg) {
+        if (msg.includes("auth/invalid-credential"))
+          return "Invalid email or password.";
+        if (msg.includes("auth/email-already-in-use"))
+          return "This email is already registered.";
+        if (msg.includes("auth/weak-password"))
+          return "Password must be at least 6 characters.";
+        if (msg.includes("auth/popup-closed-by-user"))
+          return "Google sign-in was cancelled.";
+        return msg.replace("Firebase: ", "");
+      }
+
+      function formatTime(timestamp, detailed = false) {
+        if (!timestamp) return "Just now";
+        const date = timestamp.toDate ? timestamp.toDate() : new Date();
+        if (detailed) {
+          return date.toLocaleDateString([], {
+            month: "short",
+            day: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+          });
+        }
+        const now = new Date();
+        if (date.toDateString() === now.toDateString()) {
+          return date.toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+          });
+        }
+        return date.toLocaleDateString([], { month: "short", day: "numeric" });
+      }
+
+      function escapeHtml(text) {
+        const map = {
+          "&": "&amp;",
+          "<": "&lt;",
+          ">": "&gt;",
+          '"': "&quot;",
+          "'": "&#039;",
+        };
+        return text.replace(/[&<>"']/g, (m) => map[m]);
+      }
+    </script>
+  </body>
+</html>
